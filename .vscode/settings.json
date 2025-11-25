@@ -1,18 +1,28 @@
 {
+  "latex-workshop.formatting.latex": "latexindent",
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.latex.recipe.default": "lastUsed",
   "latex-workshop.latex.recipes": [
     {
       "name": "latex_itb_ta Thesis",
-      "tools": ["latex_itb_make_thesis", "latex_itb_move_thesis"]
+      "tools": [
+        "latex_itb_make_thesis",
+        "latex_itb_move_thesis"
+      ]
     },
     {
       "name": "latex_itb_ta Yudisium",
-      "tools": ["latex_itb_make_yudisium", "latex_itb_move_yudisium"]
+      "tools": [
+        "latex_itb_make_yudisium",
+        "latex_itb_move_yudisium"
+      ]
     },
     {
       "name": "latex_itb_ta Paper",
-      "tools": ["latex_itb_make_paper", "latex_itb_move_paper"]
+      "tools": [
+        "latex_itb_make_paper",
+        "latex_itb_move_paper"
+      ]
     }
   ],
   "latex-workshop.latex.tools": [
@@ -64,24 +74,43 @@
     {
       "name": "latex_itb_move_thesis",
       "command": "cp",
-      "args": ["-f", "%OUTDIR%/thesis.pdf", "%DIR%/../output/thesis.pdf"],
+      "args": [
+        "-f",
+        "%OUTDIR%/thesis.pdf",
+        "%DIR%/../output/thesis.pdf"
+      ],
       "env": {}
     },
     {
       "name": "latex_itb_move_yudisium",
       "command": "cp",
-      "args": ["-f", "%OUTDIR%/yudisium.pdf", "%DIR%/../output/yudisium.pdf"],
+      "args": [
+        "-f",
+        "%OUTDIR%/yudisium.pdf",
+        "%DIR%/../output/yudisium.pdf"
+      ],
       "env": {}
     },
     {
       "name": "latex_itb_move_paper",
       "command": "cp",
-      "args": ["-f", "%OUTDIR%/paper.pdf", "%DIR%/../output/paper.pdf"],
+      "args": [
+        "-f",
+        "%OUTDIR%/paper.pdf",
+        "%DIR%/../output/paper.pdf"
+      ],
       "env": {}
     }
   ],
   "latex-workshop.synctex.afterBuild.enabled": true,
   "latex-workshop.latex.outDir": "%DIR%/../build",
   "latex-workshop.latex.autoBuild.run": "onSave",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/*.bak*": true,
+  },
+  "editor.wordWrap": "on",
+  "[latex]": {
+    "editor.wordWrap": "on"
+  }
 }

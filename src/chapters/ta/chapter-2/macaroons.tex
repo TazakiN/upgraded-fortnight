@@ -1,0 +1,7 @@
+\section{Macaroons}
+\label{sec:macaroons}
+
+Macaroons merupakan sebuah terobosan dalam sistem kredensial otorisasi, dengan memadukan kepraktisan seperti cookie dan fleksibilitas ekspresif dari sistem berbasis kunci publik contohnya SPKI/SDSI. \autocite{birgisson2014macaroons} Keunggulan utama Macaroons terletak pada penggunaan rantai HMAC \textit{(chained-HMAC)}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat caveat yang sesuai dengan konteks penggunaan.
+
+Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{caveat} pihak pertama (\textit{first-party caveats}) yang diverifikasi oleh layanan target, \textit{caveat} pihak ketiga (\textit{third-party caveats}) yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi \autocite{birgisson2014macaroons}.
+

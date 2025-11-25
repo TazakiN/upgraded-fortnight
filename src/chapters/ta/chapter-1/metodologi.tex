@@ -1,0 +1,52 @@
+\section{Metodologi}
+
+Metodologi yang digunakan dalam Tugas Akhir ini terdiri dari empat tahap pelaksanaan, sebagai berikut:
+
+\begin{enumerate}
+	\item \textbf{Studi Literatur dan Analisis Kebutuhan} \\
+	      Tahap awal ini berfokus pada pengumpulan fondasi teoretis dan kontekstual. Kegiatan yang dilakukan meliputi:
+	      \begin{itemize}
+		      \item Studi literatur mendalam mengenai arsitektur DecMed, teknologi DLT (khususnya IOTA), model \textit{Capability-based Access Control} (CapBAC), dan implementasi Macaroons untuk manajemen akses.
+		      \item Analisis komparatif terhadap penelitian terkait untuk mengidentifikasi kelemahan dan peluang pengembangan dari solusi yang sudah ada.
+		      \item Analisis regulasi, khususnya Permenkes No. 24 Tahun 2022, untuk memastikan kerangka kerja yang diusulkan sejalan dengan kebutuhan hukum di Indonesia.
+		      \item Perumusan kebutuhan fungsional dan non-fungsional sistem berdasarkan hasil studi dan analisis.
+	      \end{itemize}
+
+	\item \textbf{Perancangan Arsitektur dan Model Kontrol Akses} \\
+	      Berdasarkan analisis kebutuhan, tahap ini berfokus pada perancangan teknis sistem. Kegiatan utamanya adalah:
+	      \begin{itemize}
+		      \item Merancang arsitektur sistem RME terdesentralisasi yang mengadaptasi dan mengembangkan arsitektur DecMed.
+		      \item Merancang model kontrol akses berbasis Macaroons secara rinci, termasuk mendefinisikan struktur \textit{caveats} (batasan) untuk granularitas akses.
+		      \item Mendesain alur kerja (workflow) untuk proses-proses kunci, seperti: penerbitan (\textit{minting}) kapabilitas, atenuasi (\textit{attenuation}) kapabilitas oleh pasien, dan verifikasi kapabilitas oleh pihak ketiga.
+		      \item Merancang skema khusus untuk mekanisme delegasi RME dalam skenario gawat darurat.
+	      \end{itemize}
+
+	\item \textbf{Implementasi Prototipe} \\
+	      Tahap ini adalah realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan yang dilakukan mencakup:
+	      \begin{itemize}
+		      \item Konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan sistem penyimpanan data terdistribusi (IPFS).
+		      \item Pengembangan layanan (services) inti, termasuk logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons.
+		      \item Implementasi \textit{business logic} untuk menangani skenario akses normal (misalnya, pasien ke dokter) dan skenario akses gawat darurat.
+		      \item Integrasi seluruh komponen menjadi satu kerangka kerja (framework) prototipe yang kohesif.
+	      \end{itemize}
+
+	\item \textbf{Pengujian dan Evaluasi Fungsional} \\
+	      Tahap akhir ini bertujuan untuk memvalidasi dan mengevaluasi kinerja prototipe. Kegiatan yang dilakukan adalah:
+	      \begin{itemize}
+		      \item Melakukan pengujian fungsional untuk memverifikasi bahwa semua alur kerja yang dirancang berjalan sesuai ekspektasi.
+		      \item Mensimulasikan berbagai skenario akses, dengan fokus utama pada pengujian mekanisme delegasi gawat darurat, untuk memvalidasi efektivitas dan keamanan model kontrol akses.
+		      \item Menganalisis hasil pengujian untuk menilai apakah prototipe berhasil mengatasi masalah yang diidentifikasi (penyebarluasan akses dan delegasi gawat darurat) dan memenuhi tujuan penelitian.
+	      \end{itemize}
+\end{enumerate}
+
+% \begin{enumerate}
+% 	\item \textbf{Tahap Perencanaan} \\
+% 	      Tahap ini berfokus pada perencanaan implementasi dari Capability-based Access Control pada DecMed dengan memanfaatkan teknologi Macaroons dan perencanaan mekanisme delegasi RME untuk kasus gawat darurat. Kegiatan utama pada tahap ini me  liputi analisis komparatif penelitian-penelitian yang ada dan analisis terhadap regulasi yang berlaku saat ini.
+% 	\item \textbf{Tahap Perancangan} \\
+% 	      Setelah dilakukan perencanaan pada tahap sebelumnya, pada tahap ini akan dilakukan perancangan dari sistem yang dikembangkan. Perancangan dimulai dari menentukan kebutuhan fungsional dan nonfungsional sistem. Setelah seluruh kebutuhan telah ditentukan kemudian akan dilanjutkan dengan merancang arsitektur dan alur kerja dari sistem. Rancangan tersebut selanjutnya digunakan pada tahap implementasi.
+% 	\item \textbf{Tahap Implementasi} \\
+% 	      Pada tahap ini, kerangka kerja yang telah dirancang pada tahap sebelumnya akan diimplementasikan dalam bentuk nyata. Proses implementasi mencakup konfigurasi service-service yang digunakan serta implementasi business logic sistem. Tahap ini juga memastikan kerangka kerja dapat diimplementasikan secara fungsional sesuai dengan rancangan yang telah dibuat sebelumnya.
+% 	\item \textbf{Tahap Pengujian dan Simulasi} \\
+% 	      Tahap terakhir bertujuan untuk menguji dan memvalidasi kerangka kerja yang telah diimplementasikan. Pengujian meliputi evaluasi fungsionalitas sistem, termasuk menguji masing-masing komponen dan sistem secara keseluruhan. Proses ini bertujuan untuk memastikan kerangka kerja yang dirancang mampu memenuhi kebutuhan fungsional dan nonfungsional yang telah didefinisikan serta memenuhi standar yang diharapkan.
+
+% \end{enumerate}

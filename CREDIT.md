@@ -6,7 +6,7 @@ oleh:
 - Petra Novandi <me@petrabarus.net>
 - Faris Rizki Ekananda <work@farisekananda.dev>
 
-Edited By:
+Edited By:`
 
 - Muhammad Garebaldhie ER Rahman <mgarebaldhie80@gmail.com>
 

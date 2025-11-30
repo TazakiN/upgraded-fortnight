@@ -28,12 +28,16 @@
 \titlespacing*{\subsubsubsection}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-% Judul bahasa Indonesia
-\usepackage[bahasa]{babel}
-
 % Format citation
 \usepackage[utf8]{inputenc}
+
+% Judul bahasa Indonesia
+\usepackage[bahasa]{babel}
+\usepackage{csquotes}
+\DeclareQuoteAlias{american}{bahasa}
+
 \usepackage[style=apa,backend=biber]{biblatex}
+
 \usepackage{longtable}
 \usepackage{graphicx}
 \usepackage{subfig}
@@ -49,6 +53,11 @@
 \usepackage{titlesec}       % Package Format judul
 \usepackage{titletoc}       % Package Format judul di toc
 \usepackage{tocbibind}      % Package untuk masukkan toc, lot, lof ke Daftar Isi
+
+\usepackage{silence}
+\WarningFilter{scrwfile}{THIS IS AN EXPERIMENTAL PACKAGE!}
+\WarningFilter{sectsty}{Command \underbar  has changed}
+\WarningFilter{sectsty}{Command \underline  has changed}
 \usepackage{scrwfile}       % Package untuk membuat Daftar Lampiran dari toc
 \usepackage{parskip}
 \usepackage{afterpage}
@@ -173,3 +182,4 @@
 
 % Format to ignore underflow hbadness
 \hbadness=99999
+\setlength{\emergencystretch}{3em}

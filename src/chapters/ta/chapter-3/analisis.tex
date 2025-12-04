@@ -1,0 +1,35 @@
+\section{Analisis Masalah}
+\label{sec:analisis-masalah}
+
+\subsection{Analisis Sistem DecMed}
+\label{subsec:analisis-sistem-decmed}
+Sistem DecMed dibangun di atas arsitektur DLT IOTA dan IPFS. Sistem ini menggunakan model CapBAC statis di mana hak akses direpresentasikan sebagai token kapabilitas pada smart contract. Meskipun menjamin desentralisasi, analisis terhadap arsitektur ini menemukan keterbatasan fundamental dalam fleksibilitas dan penanganan situasi kritis.
+
+\subsection{Identifikasi Masalah}
+\label{subsec:identifikasi-masalah}
+Berdasarkan evaluasi terhadap DecMed dan regulasi Permenkes No. 24 Tahun 2022, teridentifikasi tiga masalah utama:
+
+\begin{enumerate}[leftmargin=*]
+    \item Model CapBAC pada DecMed bersifat biner (izin/tolak) dan statis. \textbf{Sistem tidak mendukung \textit{attenuation}} (pengurangan hak akses saat delegasi).
+    \item Sistem menerapkan prinsip \textit{deny-by-default} yang bergantung pada kunci privat pasien untuk re-enkripsi, sehingga dalam kondisi pasien tidak sadar (koma/trauma/gawat darurat), data medis terkunci total, yang berpotensi membahayakan nyawa pasien.
+    \item Belum tersedianya mekanisme audit khusus untuk akses darurat.
+\end{enumerate}
+
+\subsection{Analisis Kebutuhan Sistem}
+\label{subsec:analisis-kebutuhan-sistem}
+Untuk mengatasi persoalan di atas, sistem memerlukan peningkatan fungsional yang dirangkum dalam Tabel \ref{tab:kebutuhan-fungsional-tambahan}.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Kebutuhan Fungsional Tambahan}
+    \label{tab:kebutuhan-fungsional-tambahan}
+    \small
+    \begin{tabular}{|p{0.25\textwidth}|p{0.65\textwidth}|}
+        \hline
+        \textbf{Fungsionalitas}       & \textbf{Deskripsi Kebutuhan}                                                                                        \\ \hline
+        Delegasi Offline              & Pasien menerbitkan token akses yang dapat didelegasikan secara berantai oleh tenaga kesehatan tanpa koneksi pasien. \\ \hline
+        Atenuasi Akses                & Kemampuan membatasi ruang lingkup (waktu, jenis data) pada token delegasi.                                          \\ \hline
+        Protokol \textit{Break-Glass} & Mekanisme akses data tanpa kunci privat pasien yang hanya aktif saat status darurat dideklarasikan.                 \\ \hline
+        Audit \textit{Immutable}      & Pencatatan insiden darurat pada \textit{ledger} IOTA yang tidak dapat dihapus untuk audit forensik.                 \\ \hline
+    \end{tabular}
+\end{table}

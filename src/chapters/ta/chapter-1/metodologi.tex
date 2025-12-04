@@ -3,40 +3,26 @@
 Metodologi yang digunakan dalam Tugas Akhir ini terdiri dari empat tahap pelaksanaan, sebagai berikut:
 
 \begin{enumerate}
-	\item \textbf{Studi Literatur dan Analisis Kebutuhan} \\
-	      Tahap awal ini berfokus pada pengumpulan fondasi teoretis dan kontekstual. Kegiatan yang dilakukan meliputi:
-	      \begin{itemize}
-		      \item Studi literatur mendalam mengenai arsitektur DecMed, teknologi DLT (khususnya IOTA), model \textit{Capability-based Access Control} (CapBAC), dan implementasi Macaroons untuk manajemen akses.
-		      \item Analisis komparatif terhadap penelitian terkait untuk mengidentifikasi kelemahan dan peluang pengembangan dari solusi yang sudah ada.
-		      \item Analisis regulasi, khususnya Permenkes No. 24 Tahun 2022, untuk memastikan kerangka kerja yang diusulkan sejalan dengan kebutuhan hukum di Indonesia.
-		      \item Perumusan kebutuhan fungsional dan non-fungsional sistem berdasarkan hasil studi dan analisis.
-	      \end{itemize}
+	\item \textbf{Studi Literatur dan Analisis Kebutuhan}
+	      \label{subsec:studi-literatur-dan-analisis-kebutuhan}
 
-	\item \textbf{Perancangan Arsitektur dan Model Kontrol Akses} \\
-	      Berdasarkan analisis kebutuhan, tahap ini berfokus pada perancangan teknis sistem. Kegiatan utamanya adalah:
-	      \begin{itemize}
-		      \item Merancang arsitektur sistem RME terdesentralisasi yang mengadaptasi dan mengembangkan arsitektur DecMed.
-		      \item Merancang model kontrol akses berbasis Macaroons secara rinci, termasuk mendefinisikan struktur \textit{caveats} (batasan) untuk granularitas akses.
-		      \item Mendesain alur kerja (workflow) untuk proses-proses kunci, seperti: penerbitan (\textit{minting}) kapabilitas, atenuasi (\textit{attenuation}) kapabilitas oleh pasien, dan verifikasi kapabilitas oleh pihak ketiga.
-		      \item Merancang skema khusus untuk mekanisme delegasi RME dalam skenario gawat darurat.
-	      \end{itemize}
+	      Tahap awal ini berfokus pada pengumpulan fondasi teoretis dan kontekstual melalui studi literatur mendalam mengenai arsitektur DecMed, teknologi DLT (khususnya IOTA), model CapBAC, dan implementasi Macaroons untuk manajemen akses. Selain itu, dilakukan analisis komparatif terhadap penelitian terkait untuk mengidentifikasi kelemahan dan peluang pengembangan dari solusi yang sudah ada, serta analisis regulasi, khususnya Permenkes No. 24 Tahun 2022, untuk memastikan kerangka kerja yang diusulkan sejalan dengan kebutuhan hukum di Indonesia. Tahap ini diakhiri dengan perumusan kebutuhan fungsional dan non-fungsional sistem berdasarkan hasil studi dan analisis tersebut.
 
-	\item \textbf{Implementasi Prototipe} \\
-	      Tahap ini adalah realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan yang dilakukan mencakup:
-	      \begin{itemize}
-		      \item Konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan sistem penyimpanan data terdistribusi (IPFS).
-		      \item Pengembangan layanan (services) inti, termasuk logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons.
-		      \item Implementasi \textit{business logic} untuk menangani skenario akses normal (misalnya, pasien ke dokter) dan skenario akses gawat darurat.
-		      \item Integrasi seluruh komponen menjadi satu kerangka kerja (framework) prototipe yang kohesif.
-	      \end{itemize}
+	\item \textbf{Perancangan Arsitektur dan Model Kontrol Akses}
+	      \label{subsec:perancangan-arsitektur-dan-model-kontrol-akses}
 
-	\item \textbf{Pengujian dan Evaluasi Fungsional} \\
-	      Tahap akhir ini bertujuan untuk memvalidasi dan mengevaluasi kinerja prototipe. Kegiatan yang dilakukan adalah:
-	      \begin{itemize}
-		      \item Melakukan pengujian fungsional untuk memverifikasi bahwa semua alur kerja yang dirancang berjalan sesuai ekspektasi.
-		      \item Mensimulasikan berbagai skenario akses, dengan fokus utama pada pengujian mekanisme delegasi gawat darurat, untuk memvalidasi efektivitas dan keamanan model kontrol akses.
-		      \item Menganalisis hasil pengujian untuk menilai apakah prototipe berhasil mengatasi masalah yang diidentifikasi (penyebarluasan akses dan delegasi gawat darurat) dan memenuhi tujuan penelitian.
-	      \end{itemize}
+	      Berdasarkan analisis kebutuhan, tahap selanjutnya berfokus pada perancangan teknis sistem, yang dimulai dengan merancang arsitektur sistem RME terdesentralisasi yang mengadaptasi dan mengembangkan arsitektur DecMed. Perancangan ini juga mencakup model kontrol akses berbasis Macaroons secara rinci, termasuk mendefinisikan struktur \textit{caveats} (batasan) untuk granularitas akses, serta mendesain alur kerja (\textit{workflow}) untuk proses-proses kunci seperti penerbitan (\textit{minting}) kapabilitas, atenuasi (\textit{attenuation}) oleh pasien, dan verifikasi kapabilitas oleh pihak ketiga. Selain itu, dirancang pula skema khusus untuk mekanisme delegasi RME dalam skenario gawat darurat.
+
+	\item \textbf{Implementasi Prototipe}
+	      \label{subsec:implementasi-prototipe}
+
+	      Tahap ini merupakan realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan dimulai dengan konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan sistem penyimpanan data terdistribusi (IPFS). Selanjutnya dilakukan pengembangan \textit{services} inti yang mencakup logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons, serta implementasi \textit{business logic} untuk menangani skenario akses normal (misalnya, pasien ke dokter) dan skenario akses gawat darurat. Seluruh komponen kemudian diintegrasikan menjadi satu \textit{framework} prototipe yang kohesif.
+
+	\item \textbf{Pengujian dan Evaluasi Fungsional}
+	      \label{subsec:pengujian-dan-evaluasi-fungsional}
+
+	      Tahap akhir bertujuan untuk memvalidasi dan mengevaluasi kinerja prototipe melalui pengujian fungsional guna memverifikasi bahwa semua alur kerja yang dirancang berjalan sesuai ekspektasi. Simulasi berbagai skenario akses dilakukan dengan fokus utama pada pengujian mekanisme delegasi gawat darurat untuk memvalidasi efektivitas dan keamanan model kontrol akses. Hasil pengujian kemudian dianalisis untuk menilai keberhasilan prototipe dalam mengatasi masalah penyebarluasan akses dan delegasi gawat darurat, serta pemenuhan tujuan penelitian.
+
 \end{enumerate}
 
 % \begin{enumerate}

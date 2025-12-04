@@ -1,0 +1,44 @@
+\section{Gambaran Umum }
+\label{sec:rancangan}
+
+\subsection{Integrasi Macaroons untuk Delegasi Granular}
+\label{subsec:integrasi-macaroons-untuk-delegasi-granular}
+
+Sistem mengadopsi Macaroons untuk menggantikan token statis yang digunakan dalam DecMed, memungkinkan delegasi akses yang lebih fleksibel dan terdesentralisasi. Struktur dasar Macaroon dan mekanisme perhitungan tanda tangan secara rekursif telah dijelaskan pada subbab \ref{subsec:struktur-macaroon}. Dalam implementasi ini, $RootKey$ diturunkan dari \textit{seed} IOTA pasien untuk menjamin integritas dan kedaulatan data.
+
+\subsubsection{Desain Caveats}
+\label{subsubsec:desain-caveats}
+Sistem mengimplementasikan \textit{caveats} spesifik:
+\begin{itemize}[noitemsep]
+    \item \textbf{Time-Bound:} Membatasi durasi akses (presisi detik).
+    \item \textbf{Data Scope:} Membatasi akses ke jenis data tertentu (misal: \texttt{resource = lab\_result}).
+    \item \textbf{Contextual:} Memvalidasi konteks jaringan (misal: \texttt{context = emergency}).
+\end{itemize}
+
+\subsection{Mekanisme Break-Glass Berbasis LiBAC}
+\label{subsec:mekanisme-break-glass-libac}
+
+Sistem DecMed mengadopsi protokol \textit{Lightweight Break-glass Access Control} (LiBAC) untuk menangani situasi gawat darurat di mana pasien tidak dapat memberikan persetujuan akses secara aktif. Protokol ini menggunakan pendekatan \textit{split-knowledge} yang melibatkan partisipasi kooperatif antara \textit{Proxy Re-Encryption Server} dan sistem lokal Fasyankes, yang dipicu oleh \textit{Emergency Contact Person} (ECP). Detail matematis protokol LiBAC telah dijelaskan pada subbab \ref{subsec:libac-arsitektur}.
+
+Dalam implementasi DecMed, peran entitas LiBAC dipetakan sebagai berikut:
+\begin{itemize}[noitemsep]
+    \item Pasien sebagai Pemilik Data.
+    \item Proxy Re-Encryption Server sebagai Cloud Platform yang menyimpan pecahan kunci pertama.
+    \item Sistem Lokal Fasyankes sebagai Healthcare Infrastructure Provider yang menyimpan pecahan kunci kedua.
+    \item IOTA Tangle sebagai Audit Log yang mencatat setiap upaya rekonstruksi kunci secara \textit{immutable}.
+\end{itemize}
+
+Pada fase registrasi, sistem menjalankan algoritma inisialisasi LiBAC yang secara matematis telah dijelaskan pada subbab \ref{subsubsec:libac-keygen}. Proses ini meliputi (1) penentuan kata sandi darurat oleh pasien, (2) pembangkitan break-glass key, (3) pembagian kunci menjadi dua token terenkripsi, dan (4) penyimpanan token tersebut di Proxy Server dan Fasyankes.
+
+Ketika kondisi darurat terjadi, ECP dapat memulihkan akses melalui protokol ekstraksi yang dijelaskan pada subbab \ref{subsubsec:libac-extract}. Proses ini mencakup (1) pencatatan audit di IOTA Tangle, (2) rekonstruksi kunci melalui kolaborasi Proxy Server dan Fasyankes, dan (3) dekripsi data rekam medis secara langsung dengan membypass kebijakan PRE normal.
+
+Setelah Proxy Server dan sistem Fasyankes berhasil memvalidasi permintaan darurat (melalui protokol LiBAC dan pengecekan IOTA), Proxy Server tidak hanya mengembalikan pecahan kunci, tetapi juga menerbitkan Macaroon baru. Berbeda dengan Macaroon normal yang diturunkan dari \textit{seed} pasien, token ini diturunkan dari \textit{Emergency Root Key} milik sistem, dengan struktur \textit{caveats} yang ketat:
+
+\begin{itemize}
+    \item \texttt{target\_patient = [Patient\_ID]}
+    \item \texttt{access\_context = "emergency\_breakglass"}
+    \item \texttt{validity < 1 hour} (Durasi akses sangat singkat)
+    \item \texttt{audit\_proof = [IOTA\_Transaction\_Hash]} (Mengikat akses ke bukti audit immutable)
+\end{itemize}
+
+Interaksi dengan sistem kemudian dilanjutkan dengan menggunakan Macaroon darurat ini.

@@ -5,3 +5,13 @@ Macaroons merupakan sebuah terobosan dalam sistem kredensial otorisasi, dengan m
 
 Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{caveat} pihak pertama (\textit{first-party caveats}) yang diverifikasi oleh layanan target, \textit{caveat} pihak ketiga (\textit{third-party caveats}) yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi \autocite{birgisson2014macaroons}.
 
+\subsection{Struktur Macaroon}
+\label{subsec:struktur-macaroon}
+
+Sebuah Macaroon $M$ didefinisikan dengan struktur: $M = \{id, location, [c_1, c_2, \dots, c_n], sig\}$, dimana $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $[c_1, c_2, \dots, c_n]$ adalah daftar \textit{caveat}, dan $sig$ adalah tanda tangan. Tanda tangan ($sig$) dihitung secara rekursif untuk menjamin integritas setiap penambahan batasan (\textit{caveat}):
+\begin{align*}
+    sig_0 & = \text{HMAC}(RootKey, id)    \\
+    sig_n & = \text{HMAC}(sig_{n-1}, c_n)
+\end{align*}
+Dimana $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Perawat B), tanpa mengetahui $RootKey$ yang asli. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel.
+

@@ -1,0 +1,13 @@
+\section{\textit{Proxy Re-Encryption} (PRE)}
+\label{sec:proxy-re-encryption}
+
+\textit{Proxy Re-Encryption} adalah skema kriptografi yang memungkinkan pihak ketiga (disebut proxy) mengubah suatu \textit{ciphertext} yang awalnya dienkripsi untuk satu pengguna menjadi \textit{ciphertext} baru yang bisa didekripsi oleh pengguna lain, tanpa pernah membuka \textit{plaintext} dan tanpa memegang kunci privat kedua pihak. Teknik ini dipakai untuk mendelegasikan hak dekripsi secara aman, misalnya pada skenario berbagi data terenkripsi di \textit{cloud}. PRE pertama kali diperkenalkan oleh Blaze et al. \autocite{blaze1998divertible} sebagai solusi untuk mendelegasikan hak dekripsi secara aman.
+
+Gambaran simulasi dari PRE dapat dilihat pada Gambar \ref{fig:basic-reencryption-scheme}. Dalam PRE, pemilik data (misalnya Alice) mengenkripsi datanya dengan kunci publik miliknya dan menyimpannya di server atau cloud. Ketika Alice ingin memberi akses ke Bob, ia membuat \textit{re-encryption key} dari kunci miliknya dan kunci Bob, lalu memberikannya ke proxy agar proxy bisa mengubah \textit{ciphertext} milik Alice menjadi \textit{ciphertext} yang dapat didekripsi Bob, tanpa pernah melihat isi datanya.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{chapter-2/basic-reencryption-scheme.png}
+	\caption{Gambaran simulasi dari PRE \autocite{sumathi2013scehss}}
+	\label{fig:basic-reencryption-scheme}
+\end{figure}

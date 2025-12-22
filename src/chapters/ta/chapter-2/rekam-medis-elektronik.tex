@@ -3,34 +3,49 @@
 \subsection{Definisi RME}
 \label{subsec:definisi-rme}
 
-\textit{World Health Organization} (\textit{WHO}) mendefinisikan Rekam Medis Elektronik (\textit{RME}) sebagai sebuah catatan kesehatan \textit{waktu nyata} yang memiliki akses terhadap bukti-bukti terkait yang bisa membantu proses pengambilan keputusan dalam usaha untuk menyembuhkan seorang pasien \autocite{who2012management}.
+% \textit{World Health Organization} (\textit{WHO}) mendefinisikan Rekam Medis Elektronik (\textit{RME}) sebagai sebuah catatan kesehatan \textit{waktu nyata} yang memiliki akses terhadap bukti-bukti terkait yang bisa membantu proses pengambilan keputusan dalam usaha untuk menyembuhkan seorang pasien \autocite{who2012management}.
 
-Di Indonesia, definisi dari Rekam Medis dan Rekam Medis Elektronik didefinisikan pada Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022, "Rekam Medis adalah dokumen yang berisikan identitas pasien, pemeriksaan, pengobatan, tindakan, dan pelayanan lain yang telah diberikan pada pasien" sedangkan "Rekam Medis Elektronik adalah Rekam Medis yang dibuat dengan menggunakan \textit{sistem elektronik} yang diperuntukkan bagi penyelenggaraan Rekam Medis." \autocite{permenkes24_2022}.
+Di Indonesia, definisi dari Rekam Medis dan Rekam Medis Elektronik didefinisikan pada Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 (Permenkes 24/2022). "Rekam Medis adalah dokumen yang berisikan identitas pasien, pemeriksaan, pengobatan, tindakan, dan pelayanan lain yang telah diberikan pada pasien" sedangkan "Rekam Medis Elektronik adalah Rekam Medis yang dibuat dengan menggunakan sistem elektronik yang diperuntukkan bagi penyelenggaraan Rekam Medis." \autocite{permenkes24_2022}.
 
-Berdasarkan definisi tersebut, rekam medis adalah salah satu komponen vital dalam \textit{sistem} kesehatan di Indonesia. Selain itu, rekam medis juga bukanlah sebuah catatan biasa yang dibuat lalu disimpan, melainkan sebuah catatan yang terus diperbaharui dari awal hingga akhir pengobatan. Keberadaan Rekam Medis bertujuan untuk meningkatkan mutu pelayanan kesehatan dan memberikan kepastian hukum dalam peristiwa medis.
+Berdasarkan definisi tersebut, rekam medis adalah salah satu komponen vital dalam sistem kesehatan di Indonesia. Rekam medis bukanlah sebuah catatan biasa yang dibuat lalu disimpan, melainkan sebuah catatan yang terus diperbarui. Keberadaan Rekam Medis bertujuan untuk meningkatkan mutu pelayanan kesehatan dan memberikan kepastian hukum dalam peristiwa medis.
+% \autocite{KemkesKESLAN2023}
 
 \subsection{Isi RME}
 \label{subsec:isi-rme}
 
-Berdasarkan Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 Pasal (27) ayat (1), isi dari Rekam Medis Elektronik adalah sebagai berikut:
+Berdasarkan Permenkes 24/2022 Pasal 27 Ayat 1 \autocite{permenkes24_2022}, isi dari Rekam Medis Elektronik terbagi menjadi dua bagian, yaitu:
 
 \begin{enumerate}
 	\item Dokumentasi Administratif
 	\item Dokumentasi Klinis
 \end{enumerate}
 
-Adapun Fasilitas Pelayanan Kesehatan (\textit{Fasyankes}) dapat mengembangkan isi Rekam Medis Elektronik sebagaimana dimaksud pada ayat (1) sesuai dengan kebutuhan pelayanan kesehatan \autocite{permenkes24_2022}.
+Panduan lebih rinci terkait isi dari Rekam Medis Elektronik diatur pada Keputusan Menteri Kesehatan Nomor HK.01.07/MENKES/1423/2022 tentang Pedoman Variabel dan metadata pada Penyelenggaraan Rekam Medis Elektronik \autocite{kemenkes1423-2022}. Keputusan ini mengatur variabel dan metadata yang terdapat pada RME dengan data set yang terdiri dari:
 
-Untuk memberikan panduan yang lebih rinci terkait isi dari Rekam Medis Elektronik, Kementerian Kesehatan Republik Indonesia mengeluarkan Keputusan Menteri Kesehatan Nomor HK.01.07/MENKES/1423/2022 tentang Pedoman \textit{Variabel} dan \textit{Meta Data} pada Penyelenggaraan Rekam Medis Elektronik \autocite{kepmenkes1423_2022}. Keputusan ini mengatur \textit{variabel} dan \textit{metadata} yang harus ada dalam \textit{sistem RME}.
+\begin{enumerate}[label=\arabic*.]
+	\item IGD (Instalasi Gawat Darurat).
+	\item Rawat Jalan.
+	\item Rawat Inap.
+	\item Laboratorium.
+	\item Apotek.
+\end{enumerate}
 
-% kalo ditampilin keknya mirip banget sama punya ka hari
+Dokumen ini juga menyebutkan secara implisit mengenai aktor yang terlibat dalam pengelolaan data RME, yaitu:
+
+\begin{itemize}
+	\item Petugas Pendaftaran: Mengisi identitas umum.
+	\item Tenaga Medis (Dokter/Perawat): Mengisi tanda-tanda vital (tensi, nadi).
+	\item Dokter Spesialis/DPJP: Mengisi diagnosis utama/sekunder.
+	\item Petugas Lab: Menginput nilai hasil pemeriksaan.
+	\item Apoteker: Melakukan pengkajian resep (telaah farmasi).
+\end{itemize}
+
+Gambaran umum terkait metadata dari masing-masing data set dapat dilihat pada lampiran \ref{lampiran:metadata-rme}.
 
 \subsection{Kepemilikian dan Hak Akses RME}
 \label{subsec:kepemilikian-hak-akses-rme}
 
-Berdasarkan Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 Pasal (25) ayat (1), Dokumen dari Rekam Medis Elektronik adalah milik dari \textit{Fasyankes}. \textit{Fasyankes} bertanggung jawab atas dokumen Rekam Medis tersebut. \autocite{permenkes24_2022}.
-
-Pasal selanjutnya yaitu Pasal (26) ayat (1), menyatakan bahwa Isi dari Rekam Medis Elektronik adalah milik dari pasien \autocite{permenkes24_2022}. Sehingga segala hal terkait penyampaian isi rekam medis hanya bisa dilakukan atas persetujuan pasien. Tenaga medis bisa memiliki akses terhadap rekam medis pasien yang tersimpan, untuk melakukan beberapa \textit{aksi} yaitu:
+Berdasarkan Permenkes 24/2022 Pasal 25 Ayat 1, dokumen dari Rekam Medis Elektronik adalah milik dari Fasyankes \autocite{permenkes24_2022}. Fasyankes bertanggung jawab atas pengelolaan dokumen Rekam Medis Elektronik. Pasal selanjutnya yaitu Pasal 26 Ayat 1, menyatakan bahwa Isi dari Rekam Medis Elektronik adalah milik pasien \autocite{permenkes24_2022}. Sehingga segala hal terkait penyampaian isi rekam medis hanya bisa dilakukan atas persetujuan pasien. Tenaga medis bisa memiliki akses terhadap rekam medis pasien untuk melakukan beberapa aksi yaitu:
 
 \begin{enumerate}
 	\item Menambahkan data baru.
@@ -38,25 +53,23 @@ Pasal selanjutnya yaitu Pasal (26) ayat (1), menyatakan bahwa Isi dari Rekam Med
 	\item Melihat Data.
 \end{enumerate}
 
-Berdasarkan pasal (32), semua pihak memiliki kewajiban untuk melindungi kerahasiaan dari data rekam medis. pihak yang dimaksud pada ayat ini adalah:
+% cari tahu buat apa atenuasi ini/ mmisal psikolog, dokter anak, lebih ke rujukan 
+% perlu cari case pendelegasian data untuk apa
+% miasal ketika sakit, lalu dihandle dokter umum, lalu dirujuk ke dokter jantung. ketika kontrol lagi, maka RME dibuka lagi khusus untuk dokter mata. Jadi ketika dikasih ke mata, dokter umum cuman ngasih bagian mata doang hipotesisnya dokter umum jadi tulang punggung
+
+Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) menjadi landasan yuridis utama yang menetapkan standar keamanan bagi sistem yang mengelola data masyarakat Indonesia, termasuk data rekam medis. Secara spesifik, Pasal 4 ayat 2 huruf a UU PDP mengklasifikasikan data dan informasi kesehatan sebagai Data Pribadi Spesifik \autocite{uu27-2022-pdp}. Pengendali Data Pribadi diwajibkan untuk melindungi dan memastikan keamanan data yang diprosesnya (Pasal 35), serta secara eksplisit wajib melindungi data dari pemrosesan yang tidak sah (Pasal 38) dan mencegah akses yang tidak sah melalui sistem keamanan yang andal (Pasal 39) \autocite{uu27-2022-pdp}.
+
+Berdasarkan Permenkes 24/2022 Pasal 32, semua pihak memiliki kewajiban untuk melindungi kerahasiaan dari data rekam medis. Pihak yang dimaksud pada ayat ini adalah:
 
 \begin{enumerate}
-	\item Tenaga Kesehatan pemberi pelayanan kesehatan, dokter dan dokter gigi, dan/atau Tenaga Kesehatan lain yang memiliki akses terhadap data dan \textit{informasi} kesehatan Pasien.
+	\item Tenaga Kesehatan pemberi pelayanan kesehatan, dokter dan dokter gigi, dan/atau Tenaga Kesehatan lain yang memiliki akses terhadap data dan informasi kesehatan Pasien.
 	\item Pimpinan Fasilitas Pelayanan Kesehatan.
 	\item Tenaga yang berkaitan dengan pembiayaan pelayanan kesehatan.
 	\item Badan hukum/korporasi dan/atau Fasilitas Pelayanan Kesehatan.
-	\item Mahasiswa/siswa yang bertugas dalam pemeriksaan, pengobatan, perawatan, dan/atau \textit{manajemen informasi} di Fasilitas Pelayanan Kesehatan.
-	\item Pihak lain yang memiliki akses terhadap data dan \textit{informasi} kesehatan Pasien di Fasilitas Pelayanan Kesehatan.
+	\item Mahasiswa/siswa yang bertugas dalam pemeriksaan, pengobatan, perawatan, dan/atau manajemen informasi di Fasilitas Pelayanan Kesehatan.
+	\item Pihak lain yang memiliki akses terhadap data dan informasi kesehatan Pasien di Fasilitas Pelayanan Kesehatan.
 \end{enumerate}
 
-% \subsection{Ancaman Siber terhadap RME}
-% \label{subsec:ancaman-terhadap-rme}
+Lebih lanjut, UU PDP Pasal 32 Ayat 1 mewajibkan Pengendali Data Pribadi untuk menyediakan \textit{audit trail} pemrosesan data pribadi \autocite{uu27-2022-pdp}. Kewajiban ini menuntut adanya transparansi mengenai siapa yang mengakses data, kapan akses dilakukan, dan tindakan apa yang dilakukan terhadap data tersebut.
 
-% Ancaman Siber didefinisikan sebagai semua keadaan, kejadian, atau aksi --- yang seringkali diterhadap Rekam Medis Elektronik dapat dikategorikan menjadi beberapa jenis, antara lain:
-
-% \begin{enumerate}
-% 	\item Ancaman dari luar.
-% 	\item Ancaman dari dalam.
-% \end{enumerate}
-
-% Ancaman dari luar dapat dikategorikan menjadi beberapa jenis, antara lain:
+Dari serangkaian regulasi tersebut, dapat disimpulkan bahwa model keamanan yang bersifat biner (hanya membedakan antara pemilik data dan pengguna biasa) tidak lagi memadai untuk memenuhi kepatuhan hukum. Perlindungan data spesifik dan kewajiban pencatatan \textit{audit trail} menuntut implementasi hak akses yang granular pada level sistem. Granularitas ini diperlukan untuk memastikan bahwa setiap entitas dalam fasyankes (seperti dokter, perawat, atau administrasi) hanya memiliki akses terhadap elemen data yang relevan dengan fungsi dan wewenangnya.

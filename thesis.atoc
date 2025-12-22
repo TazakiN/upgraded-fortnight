@@ -1,0 +1,28 @@
+\value {tocdepth}=-1
+\babel@toc {bahasa}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\contentsline {chapter}{Daftar Isi}{ii}{chapter*.2}%
+\contentsline {chapter}{\numberline {I}Pendahuluan}{1}{chapter.1}%
+\contentsline {section}{\numberline {I.1}Latar Belakang}{1}{section.1.1}%
+\contentsline {section}{\numberline {I.2}Rumusan Masalah}{1}{section.1.2}%
+\contentsline {section}{\numberline {I.3}Tujuan}{2}{section.1.3}%
+\contentsline {section}{\numberline {I.4}Batasan Masalah}{2}{section.1.4}%
+\contentsline {section}{\numberline {I.5}Metodologi}{2}{section.1.5}%
+\contentsline {section}{\numberline {I.6}Jadwal Pelaksanaan Tugas Akhir}{3}{section.1.6}%
+\contentsline {chapter}{\numberline {II}Studi Literatur}{4}{chapter.2}%
+\contentsline {section}{\numberline {II.1}Rekam Medis Elektronik}{4}{section.2.1}%
+\contentsline {subsection}{\numberline {II.1.1}Definisi RME}{4}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {II.1.2}Isi RME}{4}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {II.1.3}Kepemilikian dan Hak Akses RME}{5}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {II.1.4}Ancaman Siber terhadap RME}{6}{subsection.2.1.4}%
+\contentsline {section}{\numberline {II.2}IOTA}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {II.2.1}DLT}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {II.2.2}Definisi IOTA}{7}{subsection.2.2.2}%
+\contentsline {section}{\numberline {II.3}Kontrol Akses}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {II.3.1}Definisi Kontrol Akses}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {II.3.2}Model Kontrol Akses}{8}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {II.3.3}Model Capability-Based Access Control (CapBAC)}{8}{subsection.2.3.3}%
+\contentsline {section}{\numberline {II.4}Macaroons}{9}{section.2.4}%
+\contentsline {section}{\numberline {II.5}Prosedur Break Glass}{10}{section.2.5}%
+\contentsline {chapter}{}{13}{chapter*.5}%
+\contentsfinish 

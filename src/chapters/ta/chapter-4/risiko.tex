@@ -1,0 +1,27 @@
+\section{Risiko}
+\label{sec:risiko}
+
+Dalam pelaksanaan Tugas Akhir ini, teridentifikasi beberapa risiko teknis dan operasional yang berpotensi menghambat pengerjaan. Berikut adalah 5 (lima) risiko tertinggi beserta rencana mitigasinya:
+
+\begin{enumerate}
+      \item \textbf{Kompleksitas Implementasi \textit{Third-Party Caveat} pada Macaroons} \\
+            Implementasi \textit{Third-Party Caveat} untuk mekanisme \textit{discharge} token antara Gateway dan Oracle memiliki logika kriptografi yang kompleks dan jarang didokumentasikan secara mendalam pada pustaka standar. \\
+            \textit{Mitigasi:} Melakukan studi literatur mendalam pada spesifikasi teknis Macaroons (Google Research Paper) di awal pengerjaan. Menggunakan pustaka yang stabil dan membuat \textit{prototype} kecil khusus untuk mekanisme mempelajari implementasi \textit{Third-Party Caveat} sebelum diintegrasikan ke sistem utama.
+
+      \item \textbf{Sumber Daya \textit{Hardware} yang Terbatas} \\
+            Laptop yang digunakan oleh penulis memiliki keterbatasan \textit{memory}, yang terbukti menyebabkan \textit{error} saat menjalankan sistem DecMed yang ada saat ini secara lokal. \\
+            \textit{Mitigasi:} Menggunakan jaringan IOTA \textit{Testnet} publik dan layanan IPFS pihak ketiga untuk proses pengujian, guna meringankan beban kerja \textit{hardware} selama tahap pengembangan dan pengujian sistem.
+
+      \item \textbf{Integrasi dengan Sistem DecMed Original} \\
+            Terdapat kendala untuk mengintegrasikan rancangan saat ini ke sistem DecMed yang original karena beberapa bagian yang belum tersedia, seperti mekanisme penanganan rekam medis untuk setiap \textit{data set}, yang berpotensi menghambat kecepatan pengerjaan tugas akhir. \\
+            \textit{Mitigasi:} Menyesuaikan komponen terkait (aplikasi klien dan \textit{smart contract}) agar selaras dengan rancangan skema data yang telah disusun untuk tugas akhir saat ini.
+
+      \item \textbf{Latensi Tinggi pada Proses \textit{Break-Glass}} \\
+            Proses \textit{break-glass} melibatkan banyak langkah sekuensial (Resolusi Identitas $\rightarrow$ Request Gateway $\rightarrow$ Validasi Oracle $\rightarrow$ Log IOTA $\rightarrow$ Fetch IPFS) yang berpotensi membuat durasi akses darurat menjadi terlalu lama untuk standar medis. \\
+            \textit{Mitigasi:} Melakukan optimasi pada kode (penggunaan \textit{concurrency/goroutines}). Jika latensi IOTA menjadi hambatan utama, mekanisme \textit{logging} dapat dibuat bersifat \textit{asynchronous}
+
+      \item \textbf{Integrasi Ketergantungan Komponen (Dependency Hell)} \\
+            Sistem terdiri dari banyak komponen terpisah (Client, Gateway, Oracle, IPFS, IOTA) yang harus berkomunikasi via HTTP/REST API. Perubahan kecil pada satu format JSON dapat merusak komunikasi antar komponen. \\
+            \textit{Mitigasi:} Menetapkan spesifikasi API yang ketat sebelum mulai coding. Menggunakan \textit{containerization} untuk setiap komponen untuk memastikan lingkungan eksekusi yang konsisten.
+\end{enumerate}
+

@@ -1,0 +1,202 @@
+\chapter{Skema Penyimpanan Data On-Chain dan Off-Chain}
+\label{lampiran:skema-penyimpanan}
+
+Data rekam medis sensitif yang berukuran besar disimpan secara \textit{Off-Chain} (IPFS), sedangkan metadata kontrol akses dan log audit disimpan secara \textit{On-Chain} (IOTA Tangle).
+
+\section*{Skema Data Off-Chain (IPFS Storage)}
+\label{sec:skema-offchain}
+
+% TABEL 1: DATA ADMINISTRATIF
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+    \caption{Rancangan Skema Data Administratif} \label{tab:offchain-admin}                             \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                         & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                         & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    % METADATA
+    \multirow{3}{2.8cm}{\textbf{Header \& Metadata}}
+                      & \texttt{record\_id}
+                      & UUID unik (v4) sebagai identitas file.                                          \\ \cline{2-3}
+                      & \texttt{dataset\_category}
+                      & Bernilai \texttt{"ADMINISTRATIVE"}.                                             \\ \cline{2-3}
+                      & \texttt{patient\_did}
+                      & DID Pasien pemilik data.                                                        \\ \hline
+
+    % PAYLOAD DATA
+    \multirow{5}{2.8cm}{\textbf{Payload Data}}
+                      & \texttt{full\_name}
+                      & Nama lengkap sesuai KTP.                                                        \\ \cline{2-3}
+                      & \texttt{nik}
+                      & Nomor Induk Kependudukan (16 digit).                                            \\ \cline{2-3}
+                      & \texttt{dob}
+                      & Tanggal lahir (\textit{Date of Birth}) format YYYY-MM-DD.                       \\ \cline{2-3}
+                      & \texttt{insurance\_type}
+                      & Jenis penjamin (BPJS/Pribadi/Asuransi Lain).                                    \\ \cline{2-3}
+                      & \texttt{emergency\_contact}
+                      & Nomor kontak darurat keluarga terdekat.                                         \\ \hline
+\end{longtable}
+
+\vspace{0.5cm}
+
+% TABEL 2: DATA KLINIS
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+    \caption{Rancangan Skema Data Klinis (Rawat Jalan)} \label{tab:offchain-clinical}                     \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                           & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                           & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    % METADATA
+    \multirow{5}{2.8cm}{\textbf{Header \& Metadata}}
+                      & \texttt{record\_id}
+                      & UUID unik file ini.                                                               \\ \cline{2-3}
+                      & \texttt{dataset\_category}
+                      & Kategori unit merujuk pada \autoref{tab:mapping-dataset}.                         \\ \cline{2-3}
+                      & \texttt{visit\_date}
+                      & Tanggal kunjungan/pemeriksaan.                                                    \\ \cline{2-3}
+                      & \texttt{author\_did}
+                      & DID Dokter/Nakes pembuat rekam medis.                                             \\ \cline{2-3}
+                      & \texttt{related\_admin\_id}
+                      & (Opsional) UUID merujuk ke file Data Administratif.                               \\ \hline
+
+    % PAYLOAD DATA
+    \multirow{4}{2.8cm}{\textbf{Payload Data}}
+                      & \texttt{anamnesis}
+                      & Teks keluhan utama dan riwayat penyakit.                                          \\ \cline{2-3}
+                      & \texttt{vital\_signs}
+                      & Objek berisi tekanan darah, suhu, nadi, dll.                                      \\ \cline{2-3}
+                      & \texttt{diagnosis}
+                      & Array berisi kode ICD-10 dan nama penyakit.                                       \\ \cline{2-3}
+                      & \texttt{medication}
+                      & Array berisi resep obat (nama, dosis, frekuensi).                                 \\ \hline
+
+    % ATTACHMENTS
+    \multirow{2}{2.8cm}{\textbf{Lampiran}}
+                      & \texttt{cid}
+                      & Hash IPFS untuk file tambahan (PDF/Gambar).                                       \\ \cline{2-3}
+                      & \texttt{file\_name}
+                      & Nama asli file lampiran (misal: \texttt{"lab\_darah.pdf"}).                       \\ \hline
+\end{longtable}
+
+\section*{Skema Data On-Chain (IOTA)}
+\label{sec:skema-onchain}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+    \caption{Rancangan Skema Metadata On-Chain} \label{tab:onchain-schema}                                      \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                 & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                 & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    \multirow{2}{2.8cm}{\textbf{Header Event}}
+                      & \texttt{timestamp}
+                      & Waktu presisi saat event terjadi.                                                       \\ \cline{2-3}
+                      & \texttt{event}
+                      & Jenis aksi (\textit{contoh}: \texttt{RECORD\_UPLOAD}).                                  \\ \hline
+
+    \multirow{2}{2.8cm}{\textbf{Identitas}}
+                      & \texttt{patient\_did}
+                      & Pengenal unik desentralisasi milik pasien.                                              \\ \cline{2-3}
+                      & \texttt{fasyankes\_did}
+                      & Pengenal unik desentralisasi milik instansi Fasyankes.                                  \\ \hline
+
+    \multirow{3}{2.8cm}{\textbf{ACL Tags}}
+                      & \texttt{dataset\_category}
+                      & Kategori data merujuk pada \autoref{tab:mapping-dataset}.                               \\ \cline{2-3}
+                      & \texttt{visit\_date}
+                      & Tanggal kunjungan atau pembuatan rekam medis.                                           \\ \cline{2-3}
+                      & \texttt{fasyankes\_id}
+                      & ID instansi untuk validasi cakupan akses gateway.                                       \\ \hline
+
+    \multirow{2}{2.8cm}{\textbf{Pointer Data (IPFS)}}
+                      & \texttt{ipfs\_cid}
+                      & \textit{Content Identifier} sebagai penunjuk lokasi file di IPFS.                       \\ \cline{2-3}
+                      & \texttt{integrity\_hash}
+                      & Hash SHA-256 data asli untuk verifikasi integritas.                                     \\ \hline
+
+    \multirow{2}{2.8cm}{\textbf{Manajemen Kunci}}
+                      & \texttt{algo}
+                      & Algoritma enkripsi kunci (misal: \texttt{RSA-OAEP-256}).                                \\ \cline{2-3}
+                      & \texttt{wrapped\_key}
+                      & Kunci simetris AES yang terenkripsi oleh gateway.                                       \\ \hline
+\end{longtable}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+    \caption{Rancangan Skema Log Akses Darurat} \label{tab:onchain-emergency}                        \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                      & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                      & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    % Header Protocol
+    \multirow{2}{2.8cm}{\textbf{Header Event}}
+                      & \texttt{event}
+                      & Jenis kejadian (\texttt{"EMERGENCY\_BREAK\_GLASS"}).                         \\ \cline{2-3}
+                      & \texttt{timestamp}
+                      & Waktu presisi saat kejadian terjadi.                                         \\ \hline
+
+    % Aktor Terlibat
+    \multirow{3}{2.8cm}{\textbf{Aktor Terlibat}}
+                      & \texttt{requestor\_did}
+                      & DID Dokter yang meminta akses darurat.                                       \\ \cline{2-3}
+                      & \texttt{patient\_did}
+                      & DID Pasien yang datanya diakses secara paksa.                                \\ \cline{2-3}
+                      & \texttt{fasyankes\_id}
+                      & ID Rumah Sakit tempat kejadian berlangsung.                                  \\ \hline
+
+    % Konteks Validasi
+    \multirow{4}{2.8cm}{\textbf{Konteks Validasi}}
+                      & \texttt{client\_ip}
+                      & Alamat IP perangkat dokter (untuk validasi lokasi).                          \\ \cline{2-3}
+                      & \texttt{location\_tag}
+                      & Penanda lokasi fisik (misal: \texttt{"ICU\_UNIT\_A"}).                       \\ \cline{2-3}
+                      & \texttt{reason}
+                      & Alasan medis (misal: \texttt{"Cardiac Arrest"}).                             \\ \cline{2-3}
+                      & \texttt{access\_duration}
+                      & Durasi jendela akses yang diberikan.                                         \\ \hline
+
+    % Otorisasi Oracle
+    \multirow{2}{2.8cm}{\textbf{Otorisasi Oracle}}
+                      & \texttt{oracle\_did}
+                      & Identitas layanan Oracle yang memvalidasi permintaan.                        \\ \cline{2-3}
+                      & \texttt{verdict}
+                      & Keputusan sistem (\texttt{"GRANTED"}).                                       \\ \hline
+\end{longtable}
+
+\section*{Tabel Pemetaan Variabel Metadata}
+\label{sec:mapping-dataset}
+
+Tabel berikut menunjukkan bagaimana variabel metadata dari KMK No. 1423/2022 dipetakan ke dalam \textit{Tagging} sistem untuk keperluan filtering akses.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Mapping Dataset Kategori untuk Kontrol Akses}
+    \label{tab:mapping-dataset}
+    \begin{tabular}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.5cm}|}
+        \hline
+        \textbf{Kelompok Data KMK} & \textbf{Tag \texttt{dataset\_category}} & \textbf{Contoh Isi Variabel}        \\ \hline
+        Data Administratif         & \texttt{ADMINISTRATIVE}                 & NIK, Nama, Penanggung Jawab         \\ \hline
+        IGD                        & \texttt{IGD}                            & Triase, Kondisi Awal, Tindakan Cito \\ \hline
+        Rawat Jalan                & \texttt{RAWAT\_JALAN}                   & Anamnesis Poli, Diagnosis Utama     \\ \hline
+        Rawat Inap                 & \texttt{RAWAT\_INAP}                    & CPPT, Discharge Summary             \\ \hline
+        Laboratorium               & \texttt{LABORATORIUM}                   & Hasil Lab, Gambar Rontgen           \\ \hline
+        Apotek                     & \texttt{APOTEK}                         & Daftar Obat, Telaah Resep           \\ \hline
+    \end{tabular}
+\end{table}

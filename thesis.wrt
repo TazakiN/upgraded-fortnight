@@ -1,0 +1,115 @@
+\@writefile{atoc}{\value {tocdepth}=-1}
+\@writefile{toc}{\babel@toc {bahasa}{}\relax }
+\@writefile{atoc}{\babel@toc {bahasa}{}\relax }
+\@writefile{lof}{\babel@toc {bahasa}{}\relax }
+\@writefile{lot}{\babel@toc {bahasa}{}\relax }
+\@writefile{atoc}{\babel@toc {bahasa}{}\relax }
+\@writefile{toc}{\contentsline {chapter}{DAFTAR ISI}{ii}{chapter*.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{DAFTAR ISI}{ii}{chapter*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{DAFTAR LAMPIRAN}{iii}{chapter*.4}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{DAFTAR LAMPIRAN}{iii}{chapter*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{DAFTAR GAMBAR}{iv}{chapter*.5}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{DAFTAR GAMBAR}{iv}{chapter*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{DAFTAR TABEL}{v}{chapter*.6}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{DAFTAR TABEL}{v}{chapter*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {I}Pendahuluan}{1}{chapter.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{\numberline {I}Pendahuluan}{1}{chapter.1}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {I.1}Latar Belakang}{1}{section.1.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.1}Latar Belakang}{1}{section.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I.2}Rumusan Masalah}{3}{section.1.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.2}Rumusan Masalah}{3}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I.3}Tujuan}{3}{section.1.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.3}Tujuan}{3}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I.4}Batasan Masalah}{3}{section.1.4}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.4}Batasan Masalah}{3}{section.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I.5}Metodologi}{4}{section.1.5}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.5}Metodologi}{4}{section.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I.6}Sistematika Pembahasan}{5}{section.1.6}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {I.6}Sistematika Pembahasan}{5}{section.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {II}Studi Literatur}{7}{chapter.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{\numberline {II}Studi Literatur}{7}{chapter.2}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {II.1}Rekam Medis Elektronik}{7}{section.2.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.1}Rekam Medis Elektronik}{7}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.1.1}Definisi RME}{7}{subsection.2.1.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.1.1}Definisi RME}{7}{subsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.1.2}Isi RME}{7}{subsection.2.1.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.1.2}Isi RME}{7}{subsection.2.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.1.3}Kepemilikian dan Hak Akses RME}{8}{subsection.2.1.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.1.3}Kepemilikian dan Hak Akses RME}{8}{subsection.2.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.2}IOTA}{9}{section.2.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.2}IOTA}{9}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.2.1}DLT}{9}{subsection.2.2.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.2.1}DLT}{9}{subsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.2.2}IOTA}{10}{subsection.2.2.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.2.2}IOTA}{10}{subsection.2.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.2.3}Arsitektur IOTA}{11}{subsection.2.2.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.2.3}Arsitektur IOTA}{11}{subsection.2.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {II.1}{\ignorespaces Struktur \textit {Tangle} pada \textit {IOTA} \blx@tocontentsinit {0}\autocite {chandel2020using}}}{11}{figure.caption.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {II.2}{\ignorespaces Siklus transaksi IOTA Rebased \blx@tocontentsinit {0}\autocite {sedi2025from}}}{11}{figure.caption.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.3}\textit {Proxy Re-Encryption} (PRE)}{11}{section.2.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.3}\textit {Proxy Re-Encryption} (PRE)}{11}{section.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {II.3}{\ignorespaces Gambaran simulasi dari PRE \blx@tocontentsinit {0}\autocite {sumathi2013scehss}}}{12}{figure.caption.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.4}Capability-Based Access Control (CapBAC)}{12}{section.2.4}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.4}Capability-Based Access Control (CapBAC)}{12}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.4.1}Definisi Kontrol Akses}{12}{subsection.2.4.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.4.1}Definisi Kontrol Akses}{12}{subsection.2.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.4.2}Model Kontrol Akses}{13}{subsection.2.4.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.4.2}Model Kontrol Akses}{13}{subsection.2.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.4.3}Model CapBAC}{13}{subsection.2.4.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.4.3}Model CapBAC}{13}{subsection.2.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.5}Macaroons}{14}{section.2.5}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.5}Macaroons}{14}{section.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.5.1}Struktur Macaroon}{15}{subsection.2.5.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.5.1}Struktur Macaroon}{15}{subsection.2.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.5.2}Arsitektur Macaroons}{15}{subsection.2.5.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.5.2}Arsitektur Macaroons}{15}{subsection.2.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.6}Prosedur Break Glass}{16}{section.2.6}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.6}Prosedur Break Glass}{16}{section.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II.6.1}Arsitektur LiBAC Berbasis Password Terdistribusi}{17}{subsection.2.6.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {II.6.1}Arsitektur LiBAC Berbasis Password Terdistribusi}{17}{subsection.2.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II.7}Penelitian Terkait}{17}{section.2.7}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {II.7}Penelitian Terkait}{17}{section.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {III}Analisis dan Rancangan Solusi}{18}{chapter.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{\numberline {III}Analisis dan Rancangan Solusi}{18}{chapter.3}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {III.1}Analisis Masalah}{18}{section.3.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {III.1}Analisis Masalah}{18}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III.1.1}Analisis Sistem DecMed}{18}{subsection.3.1.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {III.1.1}Analisis Sistem DecMed}{18}{subsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III.1.2}Identifikasi Masalah}{18}{subsection.3.1.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {III.1.2}Identifikasi Masalah}{18}{subsection.3.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III.1.3}Analisis Kebutuhan Sistem}{18}{subsection.3.1.3}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {III.1.3}Analisis Kebutuhan Sistem}{18}{subsection.3.1.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {III.1}{\ignorespaces Kebutuhan Fungsional Tambahan}}{19}{table.caption.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III.2}Gambaran Umum Solusi}{19}{section.3.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {section}{\numberline {III.2}Gambaran Umum Solusi}{19}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III.2.1}Integrasi Macaroons untuk Delegasi Granular}{19}{subsection.3.2.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {III.2.1}Integrasi Macaroons untuk Delegasi Granular}{19}{subsection.3.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {III.2.1.1}Desain Caveats}{19}{subsubsection.3.2.1.1}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsubsection}{\numberline {III.2.1.1}Desain Caveats}{19}{subsubsection.3.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III.2.2}Mekanisme Break-Glass Berbasis LiBAC}{19}{subsection.3.2.2}\protected@file@percent }
+\@writefile{atoc}{\contentsline {subsection}{\numberline {III.2.2}Mekanisme Break-Glass Berbasis LiBAC}{19}{subsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{DAFTAR PUSTAKA}{21}{section*.11}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{DAFTAR PUSTAKA}{21}{section*.11}\protected@file@percent }
+\@writefile{toc}{\value {tocdepth}=-1}
+\@writefile{atoc}{\value {tocdepth}=-1}
+\@writefile{atoc}{\value {tocdepth}=2}
+\@writefile{toc}{\ttl@change@i {\@ne }{chapter}{0pt}{\bfseries }{Lampiran \thecontentslabel .\quad }{}{\hfill \contentspage }\relax }
+\@writefile{atoc}{\ttl@change@i {\@ne }{chapter}{0pt}{\bfseries }{Lampiran \thecontentslabel .\quad }{}{\hfill \contentspage }\relax }
+\@writefile{toc}{\ttl@change@v {chapter}{}{}{}\relax }
+\@writefile{atoc}{\ttl@change@v {chapter}{}{}{}\relax }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Kamus Data Rekam Medis Elektronik}{21}{appendix.A}\protected@file@percent }
+\@writefile{atoc}{\contentsline {chapter}{\numberline {A}Kamus Data Rekam Medis Elektronik}{21}{appendix.A}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Metadata Variabel RME}}{21}{table.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsfinish }
+\@writefile{atoc}{\contentsfinish }
+\@writefile{lof}{\contentsfinish }
+\@writefile{lot}{\contentsfinish }
+\@writefile{atoc}{\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file }

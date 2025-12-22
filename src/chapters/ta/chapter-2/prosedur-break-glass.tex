@@ -1,57 +1,9 @@
-\section{Prosedur Break Glass}
-\label{sec:prosedur-break-glass}
+\section{Break-Glass}
+\label{sec:break-glass}
 
-Mekanisme \textit{break-glass} mengatasi ketegangan kritis dalam kontrol akses layanan kesehatan: mempertahankan \textit{protokol} keamanan yang ketat sambil memungkinkan kemampuan \textit{override} darurat ketika perawatan pasien memerlukan akses segera ke rekam medis. Mekanisme ini berakar pada prinsip layanan kesehatan bahwa perawatan pasien lebih diutamakan daripada pembatasan kontrol akses dalam situasi yang mengancam jiwa \autocite{yeng2022analysing}.
+\textit{Break-glass} adalah mekanisme darurat yang memungkinkan pengguna dengan akses terbatas untuk mendapatkan akses terhadap informasi penting dalam situasi kritis, tanpa menunggu proses otorisasi standar \autocite{alamin2025did}. Dalam konteks healthcare, \textit{break-glass} adalah prosedur yang memungkinkan profesional medis untuk mengakses data rekam medis pasien tanpa persetujuan pasien, tetapi hanya dalam keadaan darurat medis yang mengancam jiwa. Mekanisme ini berakar pada prinsip layanan kesehatan bahwa perawatan pasien lebih diutamakan daripada pembatasan kontrol akses dalam situasi yang mengancam jiwa \autocite{yeng2022analysing}.
 
-Konsep akses \textit{break-glass} berasal dari mekanisme keamanan fisik di mana kaca harus dipecahkan untuk mengakses peralatan darurat, meninggalkan bukti penggunaan yang terlihat. Dalam \textit{sistem} layanan kesehatan digital, ini diterjemahkan menjadi mekanisme \textit{override} yang: (1) memberikan akses segera kepada personel darurat yang berwenang, (2) membuat \textit{jejak audit} yang tidak dapat diubah, dan (3) memicu proses peninjauan pasca-kejadian.
+Konsep akses \textit{break-glass} berasal dari mekanisme keamanan fisik di mana kaca harus dipecahkan untuk mengakses peralatan darurat, meninggalkan bukti penggunaan yang terlihat \autocite{NEMA2004BreakGlass}. Dalam sistem layanan kesehatan digital, ini diterjemahkan menjadi mekanisme yang: (1) memberikan akses segera kepada personel darurat yang berwenang, (2) membuat jejak audit yang tidak dapat diubah, dan (3) memicu proses peninjauan pasca-kejadian.
 
-Beberapa pendekatan arsitektur untuk mekanisme \textit{break-glass} telah diusulkan. \textit{Sistem} Kontrol Akses \textit{Break-Glass} Ringan (\textit{Lightweight Break-Glass Access Control/LiBAC}) mengimplementasikan \textit{mode} akses ganda: akses berbasis \textit{atribut} untuk situasi normal dan akses \textit{break-glass} yang melewati kebijakan akses selama keadaan darurat \autocite{yang2018lightweight}. \textit{Sistem} ini terbukti aman secara formal dalam model standar sambil mempertahankan efisiensi yang sesuai untuk \textit{jaringan IoT} layanan kesehatan.
+% Beberapa pendekatan arsitektur untuk mekanisme \textit{break-glass} telah diusulkan. (\textit{Lightweight Break-Glass Access Control/LiBAC}) mengimplementasikan mode akses ganda: akses berbasis atribut untuk situasi normal dan akses \textit{break-glass} yang melewati kebijakan akses selama keadaan darurat \autocite{yang2018lightweight}. Sistem ini terbukti aman secara formal dalam model standar sambil mempertahankan efisiensi yang sesuai untuk layanan kesehatan.
 
-\subsection{Arsitektur LiBAC Berbasis Password Terdistribusi}
-\label{subsec:libac-arsitektur}
-
-Protokol LiBAC memungkinkan \textit{Emergency Contact Person} (ECP) untuk memulihkan kunci akses tanpa perlu bergantung pada satu otoritas pusat, melainkan menggunakan skema pembagian pengetahuan (\textit{split-knowledge}) antara Penyedia Infrastruktur Kesehatan (HIP) dan Platform Cloud (CP) \autocite{yeng2022analysing}. Berbeda dengan penyimpanan kunci pada \textit{escrow} tunggal, pasien menginisialisasi keamanan data daruratnya dengan menetapkan kata sandi ($pw$) yang hanya diketahui oleh pasien dan ECP yang ditunjuk.
-
-\subsubsection{Pembangkitan Kunci Break-Glass dan Pembagian Rahasia}
-\label{subsubsec:libac-keygen}
-
-Proses pembangkitan kunci break-glass dijalankan pada algoritma \textit{KeyGen.BK} dengan langkah-langkah berikut:
-
-\begin{enumerate}
-    \item Pasien memilih kata sandi $pw$ dan menghitung nilai hash $\zeta = H_1(ID_{PA}, pw)$, di mana $ID_{PA}$ adalah identitas pasien.
-    \item Pasien membangkitkan \textit{Break-glass Key} ($BK$) secara acak, dimana $BK = K$ dengan $K \in_R \mathbb{G}$.
-    \item Sistem memecah petunjuk pemulihan $BK$ menjadi dua pesan terpisah ($bk_1$ dan $bk_2$) menggunakan parameter publik dari CP ($P_{CP}$) dan HIP ($P_{HIP}$).
-          \begin{align*}
-              bk_1 & = (K_1, \Lambda_1) \quad \text{dikirim ke CP}  \\
-              bk_2 & = (K_2, \Lambda_2) \quad \text{dikirim ke HIP}
-          \end{align*}
-          Dimana $\Lambda_1$ dan $\Lambda_2$ merupakan komponen terenkripsi yang memastikan CP maupun HIP tidak dapat mendekripsi $BK$ ataupun mengetahui $pw$ secara independen tanpa kolusi.
-\end{enumerate}
-
-\subsubsection{Protokol Ekstraksi Kunci Darurat}
-\label{subsubsec:libac-extract}
-
-Dalam situasi gawat darurat, ECP mengeksekusi protokol pemulihan kunci yang menjamin kerahasiaan kata sandi terhadap server (HIP dan CP) melalui teknik \textit{blinding}.
-
-\begin{enumerate}
-    \item \textbf{Permintaan Terenkapsulasi:} ECP menggunakan kata sandi $pw$ untuk membuat permintaan yang diacak dengan bilangan random $s \in_R \mathbb{Z}_p^*$. ECP mengirimkan $\Gamma_1$ ke CP dan $\Gamma_2$ ke HIP:
-          \begin{equation}
-              \Gamma_1 = (P_{HIP})^\zeta \cdot g_1^s, \quad \Gamma_2 = (P_{CP})^\zeta \cdot g_1^s
-          \end{equation}
-
-    \item \textbf{Respon Parsial:} CP dan HIP memproses permintaan menggunakan $bk_1$ dan $bk_2$ yang mereka simpan tanpa mengetahui nilai $s$ ataupun $pw$.
-          \begin{itemize}
-              \item CP menghitung dan mengembalikan: $\Psi_1 = K_1 \cdot (\Lambda_1 \cdot \Gamma_1)^{\theta_1}$
-              \item HIP menghitung dan mengembalikan: $\Psi_2 = K_2 \cdot (\Lambda_2 \cdot \Gamma_2)^{\theta_2}$
-          \end{itemize}
-          Dimana $\theta_1$ dan $\theta_2$ adalah kunci privat masing-masing server.
-
-    \item \textbf{Rekonstruksi Kunci:} ECP menggabungkan kedua respon parsial tersebut untuk mendapatkan kembali $BK$:
-          \begin{equation}
-              BK = (\Psi_1 \cdot \Psi_2) \cdot (P_{CP} \cdot P_{HIP})^{-s}
-          \end{equation}
-
-    \item \textbf{Dekripsi Darurat:} Kunci $BK$ yang berhasil direkonstruksi kemudian digunakan pada algoritma $Dec_2$ untuk mendekripsi \textit{ciphertext} rekam medis secara langsung, memintas batasan kebijakan atribut atau waktu yang ada pada akses normal. Validitas data diverifikasi dengan memeriksa integritas $M || 0^\varpi$.
-\end{enumerate}
-
-Implementasi LiBAC menjamin keamanan \textit{fully secure} di bawah asumsi \textit{Decisional Bilinear Diffie-Hellman} (DBDH), di mana server tidak dapat mempelajari kredensial pasien meskipun mereka berpartisipasi dalam proses pemulihan.

@@ -39,8 +39,13 @@
 \DeclareQuoteAlias{american}{bahasa}
 
 \usepackage[style=apa,backend=biber]{biblatex}
+% Tambahan terjemahan string biblatex yang belum tersedia untuk bahasa Indonesia
+\DefineBibliographyStrings{bahasa}{%
+	number = {Nomor},%
+}
 
 \usepackage{longtable}
+\usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{subfig}
 \usepackage{titling}

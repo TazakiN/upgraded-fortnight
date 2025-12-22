@@ -6,17 +6,37 @@
 
 \textit{Distributed Ledger Technology} adalah sebuah paradigma perubahan dalam cara data direkam, disimpan, dan diverifikasi di beberapa lokasi tanpa kontrol terpusat. \textit{DLT} mencakup berbagai implementasi termasuk \textit{blockchain} dan struktur alternatif seperti \textit{Directed Acyclic Graphs} (\textit{DAGs}), setiap implementasi menawarkan pendekatan yang berbeda untuk mencapai konsensus, keamanan, dan skalabilitas dalam \textit{jaringan} terdesentralisasi \autocite{savadatti2025survey}.
 
-\textit{Sistem DLT} merevolusi komputasi yang aman dan skalabel melalui beberapa prinsip utama. Mereka menyediakan penyimpanan data terdesentralisasi di mana \textit{informasi} direplikasi di banyak \textit{node}, sehingga menghilangkan \textit{single point of failure} \autocite{maza2025distributed}. Karakteristik \textit{immutability} memastikan bahwa setelah data dicatat, data tersebut menjadi tahan terhadap upaya perubahan melalui \textit{hashing} kriptografi dan mekanisme konsensus. Transparansi memungkinkan semua partisipan \textit{jaringan} untuk memverifikasi transaksi sembari tetap menjaga kontrol privasi yang sesuai. \textit{Smart contract} (\textit{kontrak pintar}) memungkinkan perjanjian yang dieksekusi secara otomatis untuk menegakkan aturan yang telah ditentukan tanpa perantara, sehingga mengurangi biaya operasional dan meningkatkan efisiensi \autocite{mohammed2025blockchain}.
+\textit{Sistem DLT} merevolusi komputasi yang aman dan \textit{scalable} melalui beberapa prinsip utama. Mereka menyediakan penyimpanan data terdesentralisasi di mana informasi direplikasi di banyak \textit{node}, sehingga menghilangkan \textit{single point of failure} \autocite{maza2025distributed}. Karakteristik \textit{immutability} memastikan bahwa setelah data dicatat, data tersebut menjadi tahan terhadap upaya perubahan melalui \textit{hashing} kriptografi dan mekanisme konsensus. Transparansi memungkinkan semua partisipan pada jaringan untuk memverifikasi transaksi sembari tetap menjaga kontrol privasi yang sesuai. \textit{Smart contract} memungkinkan perjanjian yang dieksekusi secara otomatis untuk menegakkan aturan yang telah ditentukan tanpa perantara, sehingga mengurangi biaya operasional dan meningkatkan efisiensi \autocite{mohammed2025blockchain}.
 
-\subsection{Definisi IOTA}
+\subsection{IOTA}
+\label{subsec:iota}
 
-\textit{IOTA} merupakan \textit{DLT} khusus yang dirancang secara spesifik untuk \textit{jaringan} dan aplikasi \textit{Internet-of-Things} (\textit{IoT}). Berbeda dengan arsitektur \textit{blockchain} tradisional, \textit{IOTA} menggunakan struktur \textit{Directed Acyclic Graph} (\textit{DAG}) yang disebut \textit{Tangle} sebagai buku besar yang terdistribusi \autocite{sealey2022iota}. Gambar \ref{fig:tangle} menunjukkan contoh dari struktur \textit{Tangle}.
+IOTA merupakan DLT khusus yang dirancang secara spesifik untuk jaringan dan aplikasi \textit{Internet-of-Things} IoT. IOTA diluncurkan tahun 2015 dengan visi menciptakan mesin ekonomi terdesentralisasi tanpa biaya transaksi. IOTA melalui evolusi protokol dari versi 1.0 (berbasis \textit{Coordinator}), 1.5 Chrysalis (peningkatan \textit{throughput}), hingga 2.0 dengan Coordicide (desentralisasi penuh) yang menghilangkan otoritas sentral. Dengan desentralisasi penuh, IOTA menjadi lebih \textit{scalable} dan desentralisasi, meningkatkan keandalan dan kemampuan untuk menangani peningkatan beban transaksi \autocite{sedi2025from}.
+
+Filosofi IOTA memiliki berdasar pada prinsip setiap peserta yang ingin melakukan transaksi harus terlebih dahulu memvalidasi dua transaksi sebelumnya melalui \textit{proof-of-work} ringan, menciptakan sistem \textit{pay-it-forward} yang \textit{self-sustaining} dan \textit{self-regulating}. Dalam model ini, tidak ada \textit{miner} khusus yang memerlukan kompensasi, sehingga biaya transaksi menjadi nol.
+
+IOTA Rebased merupakan perubahan arsitektur fundamental dari visi IOTA 2.0 yang dibangun pada dasar teknologi yang berbeda. Perubahan ini menangani batasan desentralisasi dan skalabilitas yang menghambat pertumbuhan ekosistem dan penerapan IoT praktis dari arsitektur sebelumnya \autocite{sedi2025from}. Dengan IOTA Rebased, sistem IOTA menjadi lebih \textit{scalable} dan desentralisasi, meningkatkan keandalan dan kemampuan untuk menangani peningkatan beban transaksi.
+
+\subsection{Arsitektur IOTA}
+\label{subsec:arsitektur-iota}
+
+Berbeda dengan arsitektur \textit{blockchain}, IOTA menggunakan struktur \textit{Directed Acyclic Graph} (\textit{DAG}) yang disebut \textit{Tangle} sebagai buku besar yang terdistribusi \autocite{sealey2022iota}.
+
+% Gambar \ref{fig:tangle} menunjukkan contoh dari struktur \textit{Tangle}.
+
+% \begin{figure}[ht]
+% 	\centering
+% 	\includegraphics[width=0.75\textwidth]{chapter-2/The-structure-of-the-tangle.png}
+% 	\caption{Struktur \textit{Tangle} pada \textit{IOTA} \autocite{chandel2020using}}
+% 	\label{fig:tangle}
+% \end{figure}
+
+Pada IOTA Rebased, validasi dan konsensus dilakukan oleh komite validator berbasis \textit{Delegated Proof‑of‑Stake} (DPoS) yang menjalankan protokol \textit{Byzantine Fault Tolerant} (Mysticeti) di atas \textit{Tangle/DAG} \autocite{iota_consensus}. Transaksi baru yang terkirim ke mempool kemudian diverifikasi oleh \textit{IOTA full node}, lalu “dikunci” dan difinalisasi lewat voting para validator yang dipilih oleh para pemegang token \autocite{iota_transaction_lifecycle} \autocite{sedi2025from} seperti yang terlihat pada Gambar \ref{fig:transaction-lifecycle}. Skema ini menghasilkan implikasi utama berupa skalabilitas tinggi, finalitas transaksi cepat sub-detik, dan desentralisasi \textit{permissionless}, sambil menjaga transaksi \textit{feeless-like} di \textit{Tangle/DAG}.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.6\textwidth]{chapter-2/The-structure-of-the-tangle.png}
-	\caption{Struktur \textit{Tangle} pada \textit{IOTA} \autocite{chandel2020using}}
-	\label{fig:tangle}
+	\includegraphics[width=1.0\textwidth]{chapter-2/IOTA-transaction-lifecycle.png}
+	\caption{Siklus transaksi IOTA Rebased \autocite{sedi2025from}}
+	\label{fig:transaction-lifecycle}
 \end{figure}
 
-\textit{IOTA Rebased} merupakan perubahan arsitektur fundamental dari visi \textit{IOTA 2.0} berbasis \textit{DAG} ke \textit{sistem} berbasis \textit{blockchain} yang dibangun pada dasar teknologi yang berbeda. Perubahan ini menangani batasan desentralisasi dan skalabilitas yang menghambat pertumbuhan \textit{ekosistem} dan penerapan \textit{IoT} praktis dari arsitektur sebelumnya \autocite{sedi2025from}. Dengan \textit{IOTA Rebased}, \textit{sistem blockchain} menjadi lebih \textit{scalable} dan desentralisasi, meningkatkan keandalan dan kemampuan untuk menangani peningkatan beban transaksi.

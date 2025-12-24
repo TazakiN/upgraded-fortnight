@@ -3,22 +3,21 @@
 
 \subsection{Analisis Sistem DecMed dan Regulasi}
 \label{subsec:analisis-sistem-decmed-dan-regulasi}
-Sistem DecMed dibangun di atas arsitektur DLT IOTA dan IPFS menggunakan enkripsi memanfaatkan proxy re-encryption (PRE). Dalam sistem ini, hak akses dikelola melalui token kapabilitas statis pada \textit{smart contract}. Mekanisme ini memiliki keterbatasan dimana pasien harus aktif untuk memberikan akses baru untuk setiap tenaga medis yang terlibat. Selain itu, pendelegasian hak akses bersifat biner (mengizinkan akses semua data atau tidak sama sekali), yang tidak sesuai UU PDP yang menekankan perlindungan data spesifik.
+Sistem DecMed dibangun di atas arsitektur DLT IOTA dan IPFS menggunakan enkripsi memanfaatkan proxy re-encryption (PRE). Dalam sistem ini, hak akses dikelola melalui token kapabilitas statis pada \textit{smart contract}. Mekanisme ini memiliki keterbatasan dimana pasien harus aktif untuk memberikan akses baru untuk tenaga medis yang terlibat, tidak adanya mekanisme akses darurat ketika pasien tidak sadar sesuai dengan Permenkes No. 24 tahun 2022. Selain itu, pendelegasian hak akses bersifat biner (mengizinkan akses semua data atau tidak sama sekali), yang tidak sesuai UU PDP dan Permenkes No. 24 Tahun 2022 yang menekankan perlindungan data spesifik sesuai dengan kebutuhan.
 
 \subsection{Identifikasi Masalah}
 \label{subsec:identifikasi-masalah}
-Berdasarkan evaluasi terhadap DecMed dan regulasi Permenkes No. 24 Tahun 2022, teridentifikasi tiga masalah utama:
+Berdasarkan evaluasi terhadap sistem DecMed dan regulasi yang berlaku, teridentifikasi tiga masalah utama:
 
 % TODO
 % munculin data dulu, baru analisis, terus rancang solusi
 % contohnya kesimpulan fitur untuk pisahin data yang bisa diakses di on chain dan off chain
 
 \begin{enumerate}[leftmargin=*]
-	\item Model CapBAC pada DecMed bersifat biner (izin/tolak) dan statis. Sistem tidak mendukung \textit{attenuation} (pengurangan hak akses saat delegasi).
+	\item Model CapBAC pada DecMed bersifat biner (izin/tolak) dan statis. Sistem tidak mendukung hak akses yang granular.
 	      % TODO 
 	      % cari data di indonesia yang begini, misal dokter tuh harusnya cuman bisa akses begini. sehingga perlu attenuation.
-	      % \item Sistem menerapkan prinsip \textit{deny-by-default} yang bergantung pada kunci privat pasien untuk re-enkripsi, sehingga dalam kondisi pasien tidak sadar (koma/trauma/gawat darurat), data medis terkunci total, yang berpotensi membahayakan nyawa pasien.
-	\item Pada keadaan darurat, data rekam medis pasien terkunci total, yang berpotensi membahayakan nyawa pasien.
+	\item Pada keadaan darurat, data rekam medis di sistem DecMed terkunci total, yang berpotensi membahayakan nyawa pasien.
 	\item Belum tersedianya mekanisme audit khusus untuk akses darurat.
 \end{enumerate}
 

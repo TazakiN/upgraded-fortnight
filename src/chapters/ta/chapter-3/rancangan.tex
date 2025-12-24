@@ -1,41 +1,3 @@
-% \section{Gambaran Umum Solusi}
-% \label{sec:rancangan}
-
-% \subsection{Integrasi Macaroons untuk Delegasi Granular}
-% \label{subsec:integrasi-macaroons-untuk-delegasi-granular}
-
-% Sistem mengadopsi Macaroons untuk menggantikan token statis yang digunakan dalam DecMed, memungkinkan delegasi akses yang lebih fleksibel dan terdesentralisasi. Struktur dasar Macaroon dan mekanisme perhitungan tanda tangan secara rekursif telah dijelaskan pada subbab \ref{subsec:struktur-macaroon}. Dalam implementasi ini, $RootKey$ diturunkan dari \textit{seed} IOTA pasien untuk menjamin integritas dan kedaulatan data.
-
-% \subsubsection{Arsitektur Sistem}
-% \label{subsubsec:arsitektur-sistem}
-
-% Sistem mengadopsi arsitektur dari DecMed, dengan perubahan besar pada penggantian PRE dengan Access Gateway dan penambahan Emergency Oracle. Rancangan arsitektur sistem dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem}.
-
-% \subsection{Rancangan Mekanisme Break-Glass (Discharge Macaroons)}
-% \label{subsec:mekanisme-break-glass}
-% Penanganan akses darurat dirancang menggunakan mekanisme \textit{Third-Party Caveats}. Mekanisme ini memisahkan otorisasi menjadi dua bagian: syarat yang ditanamkan oleh pasien (\textit{Root Macaroon}) dan bukti pemenuhan syarat yang dikeluarkan oleh Oracle (\textit{Discharge Macaroon}).
-
-% \subsubsection{Alur Kerja Break-Glass}
-% \label{subsubsec:alur-kerja-break-glass}
-
-% Saat pendaftaran, sistem pasien secara otomatis membuat "Token Darurat" ($M_{emerg}$) yang berisi \textit{Third-Party Caveat}. Token ini dapat diakses melalui jaringan RS, namun tidak bisa digunakan sendirian karena "terkunci" oleh syarat pihak ketiga validasi \textit{Third-Party Caveat}.
-
-% Saat kondisi darurat terjadi, Dokter meminta akses melalui aplikasi. Aplikasi selanjutnya menghubungi \texttt{EmergencyOracle}.
-
-% \texttt{EmergencyOracle} melakukan dua hal krusial:
-% \begin{itemize}
-% 	\item Memverifikasi kredensial dokter dan konteks akses.
-% 	\item Oracle mengirim transaksi data kosong ke jaringan IOTA yang berisi permintaan akses, ID Dokter, dan ID Pasien. Transaksi ini berfungsi sebagai log audit yang \textit{immutable}.
-% \end{itemize}
-
-% Setelah log terkonfirmasi di Tangle, Oracle menerbitkan \textit{Discharge Macaroon} ($D_{key}$) kepada Dokter.
-
-% Dokter menyatukan "Token Darurat" ($M_{emerg}$) dan "Discharge Macaroon" ($D_{key}$) lalu mengirimkannya ke PRE. PRE memverifikasi integritas kedua token secara matematis. Jika valid, kunci dekripsi data diserahkan ke dokter.
-
-% Pendekatan ini menjamin bahwa akses darurat hanya bisa terjadi jika Oracle terlibat (sehingga tercatat di log IOTA), tanpa memerlukan persetujuan aktif dari pasien yang sedang tidak sadar.
-
-% % pasien tetep ngasih akses ke dokter (terbatas), tapi kalo akses ke data statistik positif sakit juga dikasih ke dokter
-
 \section{Gambaran Umum Solusi} \label{sec:gambaran-umum}
 
 Solusi yang diusulkan memodifikasi arsitektur DecMed dengan mengganti mekanisme kontrol akses berbasis PRE menjadi CapBAC menggunakan token Macaroons. Perubahan ini bertujuan untuk memberikan pasien kendali penuh atas granularitas akses data medis mereka serta memungkinkan penerapan mekanisme akses darurat.
@@ -46,9 +8,9 @@ Secara garis besar, solusi ini terdiri dari tiga poin utama: (1) integrasi Macar
 
 Berbeda dengan sistem terdahulu di mana delegasi memerlukan pembuatan ulang kunci enkripsi di server, sistem ini memanfaatkan \textit{Offline Attenuation} dari Macaroons. \texttt{RootKey} diturunkan secara deterministik menggunakan  \textit{seed} IOTA pasien, menjamin bahwa pasien adalah satu-satunya entitas yang dapat menerbitkan (\textit{Root Macaroon}).
 
-Pasien dapat melakukan atenuasi secara lokal di perangkat mereka dengan menambahkan \textit{caveats} seperti batasan waktu atau jenis data set yang diizinkan. Token kemudian dikirimkan langsung ke perangkat dokter melalui mekanisme pertukaran kunci yang aman (misalnya pemindaian QR Code). Dokter dapat melakukan delegasi akses lagi ke pihak lain yang terlibat tanpa bantuan pasien. \textit{Sequence diagram} dari skenario delegasi akses dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-delegasi-akses}.
+Pasien dapat melakukan atenuasi secara lokal di perangkat mereka dengan menambahkan \textit{caveats} pada token yang akan dikirimkan. Token kemudian dikirimkan langsung ke perangkat tenaga medis terkait melalui mekanisme pertukaran kunci yang aman (misalnya pemindaian QR Code). Dokter dapat melakukan delegasi akses lagi ke pihak lain yang terlibat tanpa bantuan pasien. Rancangan detail \textit{caveats} dapat dilihat pada Lampiran \ref{lampiran:skema-caveats}. \textit{Sequence diagram} dari skenario delegasi akses dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-delegasi-akses}.
 
-Revokasi akses adalah salah satu fitur yang menghilang sebagai \textit{trade-off} dari penghapusan PRE. Masalah ini dapat diselesaikan dengan memanfaatkan sebuah \textit{database} yang terhubung pada \textit{Access Gateway}. \textit{Database} ini berfungsi sebagai \textit{revocation list} yang menyimpan informasi tentang token yang telah direvoke.
+% Revokasi akses adalah salah satu fitur yang menghilang sebagai \textit{trade-off} dari penghapusan PRE. Masalah ini dapat diselesaikan dengan memanfaatkan sebuah \textit{database} yang terhubung pada \textit{Access Gateway}. \textit{Database} ini berfungsi sebagai \textit{revocation list} yang menyimpan informasi tentang token yang telah direvoke.
 
 \subsection{Mekanisme Akses Data RME} \label{subsec:mekanisme-akses-data-rme}
 
@@ -58,7 +20,7 @@ Sequence diagram dari skenario ketika akses menulis data RME dilakukan dapat dil
 
 \subsection{Mekanisme Akses Darurat (Break-Glass)} \label{subsec:mekanisme-break-glass}
 
-Penanganan situasi gawat darurat difasilitasi melalui mekanisme \textit{Third-Party Caveats}. Dokter dapat menerbitkan "Token Darurat" ($M_{emerg}$) yang memiliki syarat khusus: token hanya valid jika disertai \textit{Digital Macaroon} dari \textit{Emergency Oracle}.
+Penanganan situasi gawat darurat difasilitasi melalui mekanisme \textit{Third-Party Caveats}. Dokter dapat menerbitkan "Token Darurat" ($M_{emerg}$) yang memiliki syarat khusus: token hanya valid jika disertai \textit{Discharge Macaroon} dari \textit{Emergency Oracle}.
 
 Alur kerja mekanisme \textit{Break-Glass} adalah sebagai berikut:
 \begin{enumerate}

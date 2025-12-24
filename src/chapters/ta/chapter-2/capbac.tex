@@ -5,35 +5,33 @@
 \label{subsec:definisi-kontrol-akses}
 Kontrol Akses adalah proses pengaturan akses ke sumber daya (data, sistem informasi, perangkat, atau area tertentu) \autocite{sandhu1994access}. Proses ini memutuskan apakah seorang subjek harus diberikan atau ditolak aksesnya berdasarkan aturan tertentu. Akses dapat berarti memakai, memasuki, atau menggunakan. Kontrol Akses bertujuan untuk mencegah aktivitas yang dapat menimbulkan pelanggaran keamanan seperti kebocoran data atau modifikasi tidak sah.
 
-\subsection{Model Kontrol Akses}
-\label{subsec:model-kontrol-akses}
-Model Kontrol Akses adalah model yang menjelaskan bagaimana kebijakan akses diterapkan dalam sistem. Setiap model memiliki kelebihan dan kekurangan masing-masing. Pemilihan model yang tepat tergantung pada kebutuhan dan konteks sistem. Ketika sebuah model dirasa tidak cukup untuk memenuhi kebutuhan, maka dapat digunakan model hybrid yang merupakan perpaduan dari beberapa model tradisional dan modern \autocite{sohofi2025literature}.
+Framework dari sebuah kontrol akses sistem kemudian disebut sebagai model kontrol akses. Setiap model memiliki kelebihan dan kekurangan masing-masing. Pemilihan model yang tepat tergantung pada kebutuhan dan konteks sistem. Ketika sebuah model dirasa tidak cukup untuk memenuhi kebutuhan, maka dapat digunakan model hybrid yang merupakan perpaduan dari beberapa model tradisional dan modern \autocite{sohofi2025literature}.
 
-Pada setiap model kontrol akses, terdapat 3 tahapan dasar yang harus dilalui oleh seorang pengguna ketika ingin mengakses sumber daya di dalam sistem yaitu:
+% Pada setiap model kontrol akses, terdapat 3 tahapan dasar yang harus dilalui oleh seorang pengguna ketika ingin mengakses sumber daya di dalam sistem yaitu:
 
-\begin{enumerate}
-	\item \textbf{Identifikasi} \\
-	      Kontrol akses diinisiasi dengan identifikasi subjek menggunakan identitas unik yang membedakan antar pengguna di dalam lingkup sistem.
-	\item \textbf{Autentikasi} \\
-	      Autentikasi adalah proses verifikasi identitas pengguna untuk memastikan bahwa pengguna yang mengakses sistem adalah pengguna yang valid. Metode klaim identitas bisa beragam, namun umumnya ada diantara empat kategori berikut \autocite{Kiennert2015}:
-	      \begin{itemize}
-		      \item \textit{\textbf{Something that you are}} (biometrik: sidik jari, iris atau retina, suara, DNA, dll.);
-		      \item \textit{\textbf{Something that you possess}} (perangkat autentikasi, seperti kunci, kartu chip, dll.);
-		      \item \textit{\textbf{Something that you know}} (kode, password, dll.);
-		      \item \textit{\textbf{Something that you can do}} (misalnya tanda tangan).
-	      \end{itemize}
-	\item \textbf{Otorisasi} \\
-	      Otorisasi adalah proses pemberian izin atau akses kepada pengguna untuk mengakses sumber daya tertentu.
-\end{enumerate}
+% \begin{enumerate}
+% 	\item \textbf{Identifikasi} \\
+% 	      Kontrol akses diinisiasi dengan identifikasi subjek menggunakan identitas unik yang membedakan antar pengguna di dalam lingkup sistem.
+% 	\item \textbf{Autentikasi} \\
+% 	      Autentikasi adalah proses verifikasi identitas pengguna untuk memastikan bahwa pengguna yang mengakses sistem adalah pengguna yang valid. Metode klaim identitas bisa beragam, namun umumnya ada diantara empat kategori berikut \autocite{Kiennert2015}:
+% 	      \begin{itemize}
+% 		      \item \textit{\textbf{Something that you are}} (biometrik: sidik jari, iris atau retina, suara, DNA, dll.);
+% 		      \item \textit{\textbf{Something that you possess}} (perangkat autentikasi, seperti kunci, kartu chip, dll.);
+% 		      \item \textit{\textbf{Something that you know}} (kode, password, dll.);
+% 		      \item \textit{\textbf{Something that you can do}} (misalnya tanda tangan).
+% 	      \end{itemize}
+% 	\item \textbf{Otorisasi} \\
+% 	      Otorisasi adalah proses pemberian izin atau akses kepada pengguna untuk mengakses sumber daya tertentu.
+% \end{enumerate}
 
 \subsection{Model CapBAC}
 \label{subsec:model-capbac}
 
-\textit{Capability-Based Access Control} (CapBAC) adalah model kontrol akses di mana hak akses direpresentasikan sebagai \textit{"capability token"} yang tidak dapat dipalsukan dan dipegang oleh subjek (pengguna, perangkat, layanan), bukan sebagai entri dalam daftar hak pada objek \autocite{xu2018blendcac}. Dalam model ini, setiap \textit{"capability token"} mengikat identitas subjek dengan identitas objek serta sekumpulan hak operasi yang diizinkan (misalnya baca, tulis, eksekusi), sehingga siapa pun yang memegang token tersebut berwenang melakukan operasi yang tercantum pada objek terkait \autocite{li2022capability}.
+\textit{Capability-Based Access Control} (CapBAC) adalah model kontrol akses di mana hak akses direpresentasikan sebagai \textit{"capability token"} yang tidak dapat dipalsukan dan dipegang oleh subjek (pengguna, perangkat, layanan), bukan sebagai entri dalam daftar hak pada objek. Dalam model ini, setiap \textit{capability token} mengikat identitas subjek dengan identitas objek serta sekumpulan hak operasi yang diizinkan (misalnya baca, tulis, eksekusi), sehingga siapa pun yang memegang token tersebut berwenang melakukan operasi yang tercantum pada objek terkait \autocite{li2022capability}.
 
 Secara garis besar, model CapBAC bekerja dalam 2 tahapan, (1) Pengguna meminta capability token dari sebuah \textit{Authorization Server}, kemudian (2) Pengguna menggunakan capability token yang diperoleh dari tahap pertama untuk melakukan akses ke \textit{Resource Server} \autocite{li2022capability}.
 \textit{Sequence diagram} dari model CapBAC dapat dilihat pada Gambar \ref{fig:sequence-diagram-capbac}.
-CapBAC memungkinkan otorisasi terdesentralisasi karena memiliki kemampuan untuk membuat bukti otorisasi yang tidak dapat dipalsukan \autocite{nakamura2020exploiting}.
+CapBAC memungkinkan otorisasi terdesentralisasi karena mengandalkan token kapabilitas yang tidak dapat dipalsukan sebagai bukti.
 
 % ? Apakah gapapa taro gambar ini?
 \begin{figure}[ht]

@@ -1,3 +1,15 @@
 \section{Penelitian Terkait}
 \label{sec:penelitian-terkait}
-% TODO : 
+
+Singh dkk. (2025) mengidentifikasi kelemahan pada model akses kontrol RBAC dan ABAC dalam implementasi di sistem RME dan mengusulkan sebuah akses kontrol \textit{hybrid} untuk mengatasi kelemahan terebut \autocite{singh2025granular}. Sistem yang diusulkan membuat implementasi empat smart contract pada jaringan Ethereum, di mana data rekam medis fisik disimpan di \textit{off-chain} menggunakan IPFS. Strategi hibrida ini memprioritaskan pengecekan izin berbasis peran (RBAC) sebagai baseline keamanan yang cepat dan hanya menjalankan evaluasi atribut (ABAC) yang lebih kompleks untuk menangani kondisi kontekstual spesifik atau pengecualian seperti akses darurat, guna meminimalkan biaya komputasi on-chain. Hasil penelitian menunjukkan bahwa model ini mampu memberikan granularitas kontrol yang halus dengan performa yang tetap efisien, di mana penggunaan gas rata-rata hanya meningkat sekitar 15\% dibandingkan model RBAC murni (jauh lebih rendah dari ABAC murni), memiliki waktu respon rata-rata 50 ms, serta mempertahankan throughput stabil pada kisaran 27 transaksi per detik. Pendekatan ini secara efektif meningkatkan interoperabilitas dan akuntabilitas sistem EHR terdesentralisasi sekaligus memenuhi prinsip transparansi dan persetujuan pasien yang disyaratkan oleh regulasi HIPAA dan GDPR.
+
+Yang dkk. (2018) mengimplementasikan mode akses ganda: akses berbasis atribut untuk situasi normal dan akses \textit{break-glass} yang melewati kebijakan akses selama keadaan darurat \autocite{yang2018lightweight}. Sistem ini dibangun dengan membagi kunci untuk akses pada 2 layanan berbeda. Ketika akses darurat dibutuhkan, kedua kunci tersebut kemudian digabungkan untuk memberikan akses kepada data pasien. Sistem ini terbukti aman secara formal dalam model standar sambil mempertahankan efisiensi yang sesuai untuk layanan kesehatan.
+
+Al Amin dkk. (2025) mengusulkan sebuah kerangka kerja kepatuhan kebijakan berbasis \textit{blockchain} dan \textit{smart contract} untuk mengelola akses darurat terhadap \textit{Protected Health Information} (PHI) guna menjamin akuntabilitas dan transparansi \autocite{alamin2025did}.
+Pendekatan ini mengintegrasikan \textit{Patient-Provider Agreement} (PPA) yang diformalkan dalam tuple
+
+\begin{equation}
+    \mathrm{PPA} = (\mathrm{PC}, \mathrm{PrC}, \mathrm{TIC}, \mathrm{SIC}, \mathrm{EIC}, \mathrm{ROC})
+\end{equation}
+
+untuk memastikan bahwa preferensi pasien, termasuk hak untuk mengunci data sensitif tertentu melalui \textit{Emergency Informed Consent} (EIC), tetap dihormati bahkan dalam situasi darurat. Keamanan sistem diperkuat dengan mekanisme persetujuan multi-signature antara dokter pemohon dan supervisor, serta penerapan \textit{Separation-of-Duty} (SoD) yang mendistribusikan tanggung jawab di antara entitas yang berbeda. Pada sistem yang diusulkan, seluruh aktivitas akses darurat dicatat secara immutable dalam private audit \textit{blockchain}

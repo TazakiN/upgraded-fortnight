@@ -17,12 +17,19 @@ dimana $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan targe
 	sig_0 & = \text{HMAC}(RootKey, id)    \\
 	sig_n & = \text{HMAC}(sig_{n-1}, c_n)
 \end{align*}
-Dimana $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Dokter B), tanpa mengetahui $RootKey$ yang asli. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel.
+Dimana $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Dokter B), tanpa mengetahui $RootKey$ yang asli. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{resources/chapter-2/macaroons.png}
+	\caption{Contoh delegasi dan atenuasi kewenangan pada Macaroon. Klien C memegang Macaroon yang diturunkan dari layanan forum FS untuk mengakses data pada layanan TS dengan batasan waktu, lokasi IP, dan target data yang spesifik. \autocite{birgisson2014macaroons}}
+	\label{fig:delegasi-macaroon}
+\end{figure}
 
 \subsection{Arsitektur Macaroons}
 \label{subsec:arsitektur-macaroons}
 
-Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{caveat} pihak pertama (\textit{first-party caveats}) yang diverifikasi oleh layanan target, \textit{caveat} pihak ketiga (\textit{third-party caveats}) yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama \autocite{birgisson2014macaroons}. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi.
+Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{first-party caveats} yang diverifikasi oleh layanan target, \textit{third-party caveats} yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama \autocite{birgisson2014macaroons}. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi.
 
 \textit{First-party caveat} adalah syarat/ketentuan yang bisa diverifikasi langsung oleh pihak yang memegang kunci rahasia macaroon (biasanya \textit{resource server} atau \textit{authorization server} yang menerbitkan token) \autocite{birgisson2014macaroons}. Bentuknya biasanya sebuah predikat/kondisi seperti \texttt{user = 123}, \texttt{expires < t}, atau \texttt{method = GET} yang dapat dicek secara lokal ketika \textit{request} datang.
 

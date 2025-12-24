@@ -1,33 +1,31 @@
 \section{Gambaran Umum Solusi} \label{sec:gambaran-umum}
 
-Solusi yang diusulkan memodifikasi arsitektur DecMed dengan mengganti mekanisme kontrol akses berbasis PRE menjadi CapBAC menggunakan token Macaroons. Perubahan ini bertujuan untuk memberikan pasien kendali penuh atas granularitas akses data medis mereka serta memungkinkan penerapan mekanisme akses darurat.
+Solusi yang diusulkan memodifikasi arsitektur DecMed dengan mengintegrasikan PRE yang diperkuat dengan kontrol akses CapBAC berbasis \textit{Asymmetric Macaroons}. Penelitian ini berfokus pada pembaruan mekanisme otorisasi dan akses darurat.
 
-Secara garis besar, solusi ini terdiri dari tiga poin utama: (1) integrasi Macaroons untuk delegasi akses, (2) perubahan komponen PRE menjadi \textit{Access Gateway}, (3) \textit{Emergency Oracle} untuk mekanisme \textit{Break-Glass}. Arsitektur sistem secara keseluruhan dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem}. Skema penyimpanan data \textit{on-chain} dan \textit{off-chain} dapat dilihat pada Lampiran \ref{lampiran:skema-penyimpanan}.
+Secara garis besar, solusi ini terdiri dari tiga poin utama: (1) implementasi \textit{Asymmetric Macaroons} untuk delegasi akses terdesentralisasi, (2) \textit{Server PRE} sebagai validator akses dan transformator kunci, serta (3) \textit{Emergency Oracle} untuk mekanisme \textit{Break-Glass}. Arsitektur sistem secara keseluruhan dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem} dan skema penyimpanan \textit{on-chain} dan \textit{off-chain} dapat dilihat pada Lampiran \ref{lampiran:skema-penyimpanan}.
 
 \subsection{Integrasi Macaroons dan Delegasi Akses} \label{subsec:integrasi-macaroons}
 
-Berbeda dengan sistem terdahulu di mana delegasi memerlukan pembuatan ulang kunci enkripsi di server, sistem ini memanfaatkan \textit{Offline Attenuation} dari Macaroons. \texttt{RootKey} diturunkan secara deterministik menggunakan  \textit{seed} IOTA pasien, menjamin bahwa pasien adalah satu-satunya entitas yang dapat menerbitkan (\textit{Root Macaroon}).
+Sistem ini menerapkan konsep \textit{Signature-Derived Root} pada Macaroons. \texttt{RootKey} dari setiap token diturunkan secara dinamis dari hasil \textit{Digital Signature} menggunakan kunci privat (\textit{wallet}) pasien terhadap ID token. \textit{Server} PRE dapat memverifikasi macaroon dengan mencocokkan tanda tangan digital terhadap \textit{wallet address} pasien yang terdaftar di jaringan IOTA.
 
-Pasien dapat melakukan atenuasi secara lokal di perangkat mereka dengan menambahkan \textit{caveats} pada token yang akan dikirimkan. Token kemudian dikirimkan langsung ke perangkat tenaga medis terkait melalui mekanisme pertukaran kunci yang aman (misalnya pemindaian QR Code). Dokter dapat melakukan delegasi akses lagi ke pihak lain yang terlibat tanpa bantuan pasien. Rancangan detail \textit{caveats} dapat dilihat pada Lampiran \ref{lampiran:skema-caveats}. \textit{Sequence diagram} dari skenario delegasi akses dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-delegasi-akses}.
-
-% Revokasi akses adalah salah satu fitur yang menghilang sebagai \textit{trade-off} dari penghapusan PRE. Masalah ini dapat diselesaikan dengan memanfaatkan sebuah \textit{database} yang terhubung pada \textit{Access Gateway}. \textit{Database} ini berfungsi sebagai \textit{revocation list} yang menyimpan informasi tentang token yang telah direvoke.
+Dokter dapat melakukan delegasi akses kepada pihak lain tanpa interaksi kembali dengan pasien, tentunya dengan kemampuan menambahkan \textit{caveats} secara lokal. Dengan demikian, pasien memegang kendali penuh atas penerbitan akses. Rancangan detail \textit{caveats} dapat dilihat pada Lampiran \ref{lampiran:skema-caveats}.
 
 \subsection{Mekanisme Akses Data RME} \label{subsec:mekanisme-akses-data-rme}
 
-Fungsi PRE pada DecMed digantikan oleh \textit{Access Gateway}. Komponen ini bertindak sebagai validator akses yang \textit{stateless}. Tugas \textit{Access Gateway} adalah memverifikasi integritas tanda tangan HMAC pada Macaroon dan melakukan \textit{key unwrapping} untuk memberikan kunci dekripsi simetris (AES) jika verifikasi berhasil.
+Pengelolaan akses data ditangani oleh \textit{server} PRE yang memvalidasi token Macaroon sebelum melakukan \textit{Re-Encryption}. Tahapan validasi meliputi pengecekan tanda tangan digital dan evaluasi \textit{caveats} yang melekat pada token. Detail operasional dan urutan langkah dalam mekanisme akses data ini dijelaskan pada Lampiran \ref{lampiran:mekanisme-akses-data}.
 
-Sequence diagram dari skenario ketika akses menulis data RME dilakukan dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-akses-write-data-rme}. Sedangkan sequence diagram dari skenario ketika akses membaca data RME dilakukan dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-akses-read-data-rme}.
+\subsection{Mekanisme Akses Darurat (\textit{Break-Glass})} \label{subsec:mekanisme-break-glass}
 
-\subsection{Mekanisme Akses Darurat (Break-Glass)} \label{subsec:mekanisme-break-glass}
+Sistem ini menerapkan mekanisme \textit{Key Recovery} yang terdesentralisasi untuk menjamin ketersediaan data saat pasien tidak sadar, sekaligus mencegah penyalahgunaan akses oleh salah satu pihak.
 
-Penanganan situasi gawat darurat difasilitasi melalui mekanisme \textit{Third-Party Caveats}. Dokter dapat menerbitkan "Token Darurat" ($M_{emerg}$) yang memiliki syarat khusus: token hanya valid jika disertai \textit{Discharge Macaroon} dari \textit{Emergency Oracle}.
+\subsubsection{Enkapsulasi Kunci Ganda}
+\label{subsec:enkapsulasi-kunci-ganda}
 
-Alur kerja mekanisme \textit{Break-Glass} adalah sebagai berikut:
+Untuk mempersiapkan kondisi darurat sejak awal, aplikasi klien melakukan enkapsulasi kunci simetris (AES) ke dalam dua bentuk kapsul saat data pertama kali diunggah:
 \begin{enumerate}
-	\item Dokter melakukan lookup \texttt{DID} pasien dengan menggunakan NIK pasien.
-	\item Dokter meminta akses darurat ke \textit{Access Gateway} dengan menyertakan \texttt{DID} pasien. Access Gateway membuat ($M_{emerg}$) untuk dokter.
-	\item \textit{Emergency Oracle} memverifikasi kredensial dokter dan menuliskan log transaksi ke IOTA. Dokter mendapatkan \textit{Discharge Macaroon} ($D_{key}$) dari \textit{Emergency Oracle}.
-	\item Dokter menyatukan $M_{emerg}$ dan $D_{key}$, lalu mengirimkannya ke \textit{Access Gateway}. \textit{Access Gateway} membuka akses data.
+	\item \textbf{Normal Capsule:} Kunci AES dienkripsi menggunakan Kunci Publik Pasien (untuk akses reguler dan delegasi).
+	\item \textbf{Emergency Capsule:} Kunci AES yang sama dienkripsi menggunakan \textit{Global Public Key} milik konsorsium \textit{Emergency Oracle}.
 \end{enumerate}
 
-Sequence diagram dari skenario ketika akses darurat dilakukan dapat dilihat pada Lampiran \ref{lampiran:sequence-diagram-akses-darurat}.
+\subsubsection{Desentralisasi \textit{Oracle} dengan SSS}
+Untuk memitigasi risiko SPoF, \textit{Emergency Oracle} menggunakan skema \textit{Shamir's Secret Sharing} (SSS) dengan konfigurasi \(3\)-of-\(5\). Detail langkah pemulihan akses darurat dapat dilihat pada Lampiran \ref{lampiran:mekanisme-break-glass}.

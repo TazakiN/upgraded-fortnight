@@ -5,15 +5,15 @@ Dalam pelaksanaan Tugas Akhir ini, teridentifikasi beberapa risiko teknis dan op
 
 \begin{enumerate}
       \item \textbf{Decmed Original yang Kompleks} \\
-            Sistem terdiri dari banyak komponen terpisah (Client, Gateway, IPFS, IOTA) yang harus berkomunikasi via HTTP/REST API. Perubahan kecil pada satu format JSON dapat merusak komunikasi antar komponen. \\
+            Sistem terdiri dari banyak komponen terpisah (\textit{Client}, PRE, IPFS, IOTA) yang harus berkomunikasi via HTTP/REST API. Perubahan kecil pada satu format JSON dapat merusak komunikasi antar komponen. \\
             Mitigasi:  Menetapkan spesifikasi API dan \textit{Smart Contract} yang jelas sebelum mulai implementasi. Menggunakan \textit{containerization} untuk setiap komponen untuk memastikan lingkungan eksekusi yang konsisten.
 
-      \item \textbf{Kompleksitas Implementasi \textit{Third-Party Caveat} pada Macaroons} \\
-            Implementasi \textit{Third-Party Caveat} untuk mekanisme \textit{discharge} token antara Gateway dan Oracle memiliki mekanisme yang dinilai penulis kompleksdan jarang didokumentasikan secara mendalam pada pustaka standar. \\
-            Mitigasi: Melakukan studi literatur mendalam pada spesifikasi teknis Macaroons \autocite{birgisson2014macaroons} di awal pengerjaan. Menggunakan pustaka yang stabil dan membuat \textit{prototype} kecil khusus untuk mekanisme mempelajari implementasi \textit{Third-Party Caveat} sebelum diintegrasikan ke sistem utama.
+      \item \textbf{Kompleksitas Implementasi \textit{Signature-Derived Root} pada Macaroons} \\
+            Implementasi \textit{Signature-Derived Root} untuk delegasi akses terdesentralisasi menggunakan kunci privat dompet (\textit{wallet}) pasien memiliki mekanisme kriptografi yang lebih kompleks dibandingkan Macaroons standar. \\
+            Mitigasi: Melakukan studi literatur mendalam pada spesifikasi teknis Macaroons \autocite{birgisson2014macaroons} dan skema \textit{asymmetric Macaroons} di awal pengerjaan. Membuat \textit{prototype} kecil khusus untuk memvalidasi penurunan \textit{RootKey} dari tanda tangan digital sebelum diintegrasikan.
 
       \item \textbf{\textit{Resource Hardware} yang Terbatas} \\
-            Laptop yang digunakan oleh penulis memiliki keterbatasan \textit{memory}, yang terbukti menyebabkan \textit{error} saat menjalankan sistem DecMed yang ada saat ini secara lokal. \\
+            Kompleksitas arsitektur yang melibatkan node IOTA, IPFS, dan layanan PRE membutuhkan sumber daya memori yang besar yang mungkin melebihi kapasitas lingkungan pengembangan lokal. \\
             Mitigasi: Menggunakan jaringan IOTA \textit{Testnet} publik dan layanan IPFS pihak ketiga untuk proses pengujian, guna meringankan beban kerja \textit{hardware} selama tahap pengembangan dan pengujian sistem.
 
       \item \textbf{Integrasi dengan Sistem DecMed Original} \\
@@ -21,7 +21,7 @@ Dalam pelaksanaan Tugas Akhir ini, teridentifikasi beberapa risiko teknis dan op
             Mitigasi: Menyesuaikan komponen terkait (aplikasi klien dan \textit{smart contract}) agar selaras dengan rancangan skema data yang telah disusun untuk tugas akhir saat ini.
 
       \item \textbf{Latensi Tinggi pada Proses \textit{Break-Glass}} \\
-            Proses \textit{break-glass} melibatkan banyak langkah sekuensial (Resolusi Identitas $\rightarrow$ Request Gateway $\rightarrow$ Validasi Oracle $\rightarrow$ Log IOTA $\rightarrow$ Fetch IPFS) yang berpotensi membuat durasi akses darurat menjadi terlalu lama untuk standar medis. \\
-            Mitigasi: Melakukan optimasi pada kode (penggunaan \textit{concurrency}). Jika latensi IOTA menjadi hambatan utama, mekanisme \textit{logging} dapat dibuat bersifat \textit{asynchronous}
+            Proses \textit{break-glass} melibatkan banyak langkah sekuensial (Request \textit{Gateway} $\rightarrow$ Validasi 3-of-5 \textit{Oracle} $\rightarrow$ Rekonstruksi Kunci SSS $\rightarrow$ Log IOTA $\rightarrow$ PRE) yang berpotensi membuat durasi akses darurat menjadi terlalu lama untuk standar medis. \\
+            Mitigasi: Melakukan optimasi pada kode (penggunaan \textit{concurrency} saat menghubungi $n$ \textit{node Oracle}). Jika latensi IOTA menjadi hambatan utama, mekanisme \textit{logging} dapat dibuat bersifat \textit{asynchronous}.
 \end{enumerate}
 

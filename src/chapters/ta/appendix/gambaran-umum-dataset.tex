@@ -1,7 +1,7 @@
 % \chapter{Daftar Variabel dan Metadata Rekam Medis Elektronik}
 % \label{lampiran:metadata-rme}
 
-% \section*{A. Kelompok Data Administratif dan Identitas (Berlaku Umum)}
+% \section{A. Kelompok Data Administratif dan Identitas (Berlaku Umum)}
 % Variabel ini digunakan pada semua titik layanan (IGD, Rawat Jalan, Rawat Inap):
 % \begin{itemize}
 % 	\item \textbf{Identitas Pasien:} Nama Lengkap, No. Rekam Medis, NIK, No. Paspor/KITAS (WNA), Nama Ibu Kandung, Tempat/Tanggal Lahir, Jenis Kelamin, Agama, Suku, Bahasa yang Dikuasai.
@@ -11,7 +11,7 @@
 % 	\item \textbf{Cara Pembayaran:} JKN, Mandiri, atau Asuransi Lainnya.
 % \end{itemize}
 
-% \section*{B. Instalasi Gawat Darurat (IGD)}
+% \section{B. Instalasi Gawat Darurat (IGD)}
 % \begin{enumerate}
 % 	\item \textbf{Triase dan Penilaian Awal:}
 % 	      \begin{itemize}
@@ -40,7 +40,7 @@
 % 	      \end{itemize}
 % \end{enumerate}
 
-% \section*{C. Rawat Jalan dan Rawat Inap}
+% \section{C. Rawat Jalan dan Rawat Inap}
 % Variabel pada rawat jalan dan inap memiliki kemiripan dengan IGD namun dengan penambahan spesifik:
 % \begin{enumerate}
 % 	\item \textbf{Asesmen Awal Medis \& Keperawatan:}
@@ -67,7 +67,7 @@
 % 	      \end{itemize}
 % \end{enumerate}
 
-% \section*{D. Laboratorium dan Radiologi (Pemeriksaan Penunjang)}
+% \section{D. Laboratorium dan Radiologi (Pemeriksaan Penunjang)}
 % \begin{enumerate}
 % 	\item \textbf{Permintaan Pemeriksaan:}
 % 	      \begin{itemize}
@@ -82,7 +82,7 @@
 % 	      \end{itemize}
 % \end{enumerate}
 
-% \section*{E. Resep dan Obat (Apotek)}
+% \section{E. Resep dan Obat (Apotek)}
 % \begin{enumerate}
 % 	\item \textbf{Data Resep:}
 % 	      \begin{itemize}
@@ -105,52 +105,52 @@
 Tabel berikut menjabarkan metadata variabel Rekam Medis Elektronik yang diadopsi dari KMK No. HK.01.07/MENKES/1423/2022 \autocite{kemenkes1423-2022}.
 
 \begin{longtable}{|p{4cm}|p{5cm}|p{5cm}|}
-	\caption{Metadata Variabel RME} \label{tab:metadata-rme}                                                    \\
+	\caption{Metadata Variabel RME} \label{tab:metadata-rme}                                                         \\
 	\hline
-	\textbf{Kelompok Data} & \textbf{Variabel Utama}   & \textbf{Keterangan/Format}                             \\ \hline
+	\textbf{Kelompok Data} & \textbf{Variabel Utama}   & \textbf{Keterangan/Format}                                  \\ \hline
 	\endfirsthead
 	\hline
-	\textbf{Kelompok Data} & \textbf{Variabel Utama}   & \textbf{Keterangan/Format}                             \\ \hline
+	\textbf{Kelompok Data} & \textbf{Variabel Utama}   & \textbf{Keterangan/Format}                                  \\ \hline
 	\endhead
 
 	% Identitas
 	\multirow{5}{4cm}{Identitas Pasien}
-	                       & Nama Lengkap              & Teks (Sesuai KTP)                                      \\ \cline{2-3}
-	                       & NIK                       & Numerik (16 digit)                                     \\ \cline{2-3}
-	                       & No. Rekam Medis           & Karakter (Unik per RS)                                 \\ \cline{2-3}
-	                       & Tgl Lahir / Jenis Kelamin & DD/MM/YYYY / Laki-laki atau Perempuan                  \\ \cline{2-3}
-	                       & Nama Ibu Kandung          & Teks                                                   \\ \hline
+	                       & Nama Lengkap              & Teks (Sesuai KTP)                                           \\ \cline{2-3}
+	                       & NIK                       & Numerik (16 digit)                                          \\ \cline{2-3}
+	                       & No. Rekam Medis           & Karakter (Unik per RS)                                      \\ \cline{2-3}
+	                       & Tgl Lahir / Jenis Kelamin & DD/MM/YYYY / Laki-laki atau Perempuan                       \\ \cline{2-3}
+	                       & Nama Ibu Kandung          & Teks                                                        \\ \hline
 
 	% Anamnesis
 	\multirow{4}{4cm}{Anamnesis (IGD/RJ/RI)}
-	                       & Keluhan Utama             & Free text                                              \\ \cline{2-3}
-	                       & Riwayat Penyakit          & Free text (Penyakit terdahulu/keluarga)                \\ \cline{2-3}
-	                       & Riwayat Alergi            & Kategori (Obat/Makanan/Udara)                          \\ \cline{2-3}
-	                       & Riwayat Pengobatan        & Obat yang sedang dikonsumsi                            \\ \hline
+	                       & Keluhan Utama             & Free text                                                   \\ \cline{2-3}
+	                       & Riwayat Penyakit          & Free text (Penyakit terdahulu/keluarga)                     \\ \cline{2-3}
+	                       & Riwayat Alergi            & Kategori (Obat/Makanan/Udara)                               \\ \cline{2-3}
+	                       & Riwayat Pengobatan        & Obat yang sedang dikonsumsi                                 \\ \hline
 
 	% Pemeriksaan Fisik
 	\multirow{4}{4cm}{Pemeriksaan Fisik}
-	                       & Tanda Vital               & TD (mmHg), Nadi (x/mnt), Suhu (C), Nafas (x/mnt)       \\ \cline{2-3}
-	                       & Tingkat Kesadaran         & GCS / EWS (Alert, Voice, Pain, Unresponsive)           \\ \cline{2-3}
-	                       & Anatomi Tubuh             & Kepala, Thorax, Abdomen, Ekstremitas (Normal/Kelainan) \\ \cline{2-3}
-	                       & Skala Nyeri               & VAS / NRS (0-10)                                       \\ \hline
+	                       & Tanda Vital               & Tekanan Darah (mmHg), Nadi (x/mnt), Suhu (C), Nafas (x/mnt) \\ \cline{2-3}
+	                       & Tingkat Kesadaran         & Alert, Voice, Pain, Unresponsive                            \\ \cline{2-3}
+	                       & Anatomi Tubuh             & Kepala, Thorax, Abdomen, Ekstremitas (Normal/Kelainan)      \\ \cline{2-3}
+	                       & Skala Nyeri               & VAS / NRS (0-10)                                            \\ \hline
 
 	% Diagnosis & Tindakan
 	\multirow{3}{4cm}{Diagnosis \& Tindakan}
-	                       & Diagnosis (Awal/Akhir)    & Kode ICD-10                                            \\ \cline{2-3}
-	                       & Tindakan Medis            & Kode ICD-9 CM                                          \\ \cline{2-3}
-	                       & Informed Consent          & Persetujuan/Penolakan Tindakan                         \\ \hline
+	                       & Diagnosis (Awal/Akhir)    & Kode ICD-10                                                 \\ \cline{2-3}
+	                       & Tindakan Medis            & Kode ICD-9 CM                                               \\ \cline{2-3}
+	                       & Informed Consent          & Persetujuan/Penolakan Tindakan                              \\ \hline
 
 	% Resep
 	\multirow{4}{4cm}{Peresepan (E-Resep)}
-	                       & Item Obat                 & Nama Obat, Kekuatan Sediaan                            \\ \cline{2-3}
-	                       & Signa / Aturan Pakai      & Dosis, Rute, Frekuensi (mis: 3x1)                      \\ \cline{2-3}
-	                       & Telaah Resep              & Administrasi, Farmasetik, Klinis                       \\ \cline{2-3}
-	                       & Status Resep              & Pending, Processed, Delivered                          \\ \hline
+	                       & Item Obat                 & Nama Obat, Kekuatan Sediaan                                 \\ \cline{2-3}
+	                       & Signa / Aturan Pakai      & Dosis, Rute, Frekuensi (mis: 3x1)                           \\ \cline{2-3}
+	                       & Telaah Resep              & Administrasi, Farmasetik, Klinis                            \\ \cline{2-3}
+	                       & Status Resep              & Pending, Processed, Delivered                               \\ \hline
 
 	% Lab / Rad
 	\multirow{3}{4cm}{Pemeriksaan Penunjang}
-	                       & Permintaan                & Jenis Pemeriksaan, Cito/Non-Cito                       \\ \cline{2-3}
-	                       & Hasil                     & Nilai, Satuan, Nilai Rujukan                           \\ \cline{2-3}
-	                       & Interpretasi              & Bacaan Dokter Spesialis                                \\ \hline
+	                       & Permintaan                & Jenis Pemeriksaan, Cito/Non-Cito                            \\ \cline{2-3}
+	                       & Hasil                     & Nilai, Satuan, Nilai Rujukan                                \\ \cline{2-3}
+	                       & Interpretasi              & Bacaan Dokter Spesialis                                     \\ \hline
 \end{longtable}

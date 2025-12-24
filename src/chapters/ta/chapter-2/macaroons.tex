@@ -1,7 +1,7 @@
 \section{Macaroons}
 \label{sec:macaroons}
 
-Macaroon adalah credential otorisasi berbasis bearer yang mendukung delegasi terdesentralisasi antar principal dalam sistem terdistribusi. Macaroon diperkenalkan oleh Birgisson et al. (2014) \autocite{birgisson2014macaroons}. Keunggulan utama Macaroon terletak pada penggunaan \textit{chained-HMAC}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat caveat yang sesuai dengan konteks penggunaan.
+Macaroon adalah \textit{credential} otorisasi berbasis \textit{bearer} yang mendukung delegasi terdesentralisasi dalam sistem terdistribusi \autocite{birgisson2014macaroons}. Keunggulan utama Macaroon terletak pada penggunaan \textit{chained-HMAC}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat \textit{caveat} yang sesuai dengan konteks penggunaan.
 
 \subsection{Struktur Macaroon}
 \label{subsec:struktur-macaroon}
@@ -33,5 +33,23 @@ Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{first-party cavea
 
 \textit{First-party caveat} adalah syarat/ketentuan yang bisa diverifikasi langsung oleh pihak yang memegang kunci rahasia macaroon (biasanya \textit{resource server} atau \textit{authorization server} yang menerbitkan token) \autocite{birgisson2014macaroons}. Bentuknya biasanya sebuah predikat/kondisi seperti \texttt{user = 123}, \texttt{expires < t}, atau \texttt{method = GET} yang dapat dicek secara lokal ketika \textit{request} datang.
 
-\textit{Third-party caveat} adalah syarat yang tidak bisa diverifikasi langsung oleh pemegang token, tetapi memerlukan bukti dari layanan pihak ketiga dalam bentuk \textit{discharge macaroon} \autocite{birgisson2014macaroons}. Caveat ini berisi lokasi (URL/\textit{identifier} layanan ketiga), \textit{identifier caveat}, dan kunci rahasia yang dipakai pihak ketiga untuk menandatangani \textit{discharge macaroon}.
+\textit{Third-party caveat} adalah syarat yang tidak bisa diverifikasi langsung oleh pemegang token, tetapi memerlukan bukti dari layanan pihak ketiga dalam bentuk \textit{discharge macaroon} \autocite{birgisson2014macaroons}. \textit{Caveat} ini berisi lokasi (URL/\textit{identifier} layanan ketiga), \textit{identifier} \textit{caveat}, dan kunci rahasia yang dipakai pihak ketiga untuk menandatangani \textit{discharge macaroon}.
 
+\subsection{\textit{Asymmetric Macaroons}}
+\label{subsec:asymmetric-macaroons}
+
+Meskipun konstruksi asli Macaroons menawarkan efisiensi tinggi melalui penggunaan kriptografi simetris (HMAC), ketergantungan pada \textit{shared secret key} ($RootKey$) menimbulkan tantangan dalam manajemen kunci pada sistem berskala besar. Verifikator (layanan target) harus memiliki akses ke kunci rahasia yang sama dengan \textit{issuer} untuk memvalidasi token, yang menciptakan risiko SPoF pada sisi penyimpanan kunci.
+
+Untuk mengatasi keterbatasan tersebut, konsep Macaroons telah dikembangkan lebih lanjut dengan mengintegrasikan kriptografi asimetris (\textit{Public-Key Cryptography}). Salah satu implementasi signifikan dari pendekatan ini adalah token Biscuit \autocite{couprie2019biscuit}. Dalam skema asimetris atau \textit{hybrid} ini, mekanisme pembangkitan tanda tangan awal ($sig_0$) dimodifikasi.
+
+Alih-alih menggunakan kunci rahasia bersama, \textit{issuer} menggunakan kunci privat ($PrivKey$) untuk menandatangani elemen awal token. Persamaan dasar untuk inisiasi token berubah menjadi:
+
+\begin{equation*}
+	sig_0 = \text{Sign}(PrivKey_{issuer}, id)
+\end{equation*}
+atau dalam implementasi:
+\begin{equation*}
+	RootKey_{derived} = \text{Hash}(\text{Sign}(PrivKey_{issuer}, id))
+\end{equation*}
+
+Dengan mekanisme ini, proses verifikasi dapat dilakukan secara publik. Layanan target hanya memerlukan kunci publik ($PubKey_{issuer}$) untuk memvalidasi otentisitas akar token, tanpa perlu menyimpan rahasia apapun. Setelah akar tervalidasi secara asimetris, rantai \textit{caveat} selanjutnya ($sig_1, sig_2, \dots$) tetap dapat diproses menggunakan mekanisme HMAC standar untuk mempertahankan efisiensi komputasi. Pendekatan ini menggabungkan keamanan \textit{non-repudiation} dari kriptografi asimetris dengan performa atenuasi dari kriptografi simetris.

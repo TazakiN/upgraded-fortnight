@@ -1,0 +1,22 @@
+\chapter{Mekanisme Akses Data RME}
+\label{lampiran:mekanisme-akses-data}
+
+Komponen \textit{Proxy Re-Encryption} (PRE) bertindak sebagai satu-satunya titik masuk untuk permintaan data medis. Tahapan kerja PRE adalah sebagai berikut:
+
+\begin{enumerate}
+	\item Menerima permintaan akses beserta token Macaroon.
+	\item Melakukan resolusi identitas pasien dari ID token untuk mendapatkan kunci publik atau alamat dompet yang sesuai.
+	\item Mengevaluasi seluruh (\textit{caveats}) yang melekat pada token
+	\item Memverifikasi validitas tanda tangan kriptografis pada token.
+	\item Menjalankan fungsi \textit{Re-Encryption} untuk mengubah enkripsi data pasien agar dapat diakses oleh dokter, hanya jika validasi token berhasil.
+\end{enumerate}
+
+Detail urutan langkah dalam mekanisme akses data ini dapat dilihat pada Gambar \ref{fig:seq-akses-normal}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{resources/appendix/sequence_akses_normal.png}
+	\caption{\textit{Sequence Diagram} Alur Akses Data RME}
+	\label{fig:seq-akses-normal}
+\end{figure}
+

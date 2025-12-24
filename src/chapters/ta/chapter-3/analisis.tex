@@ -3,7 +3,7 @@
 
 \subsection{Analisis Sistem DecMed dan Regulasi}
 \label{subsec:analisis-sistem-decmed-dan-regulasi}
-Sistem DecMed dibangun di atas arsitektur DLT IOTA dan IPFS menggunakan enkripsi memanfaatkan proxy re-encryption (PRE). Dalam sistem ini, hak akses dikelola melalui token kapabilitas statis pada \textit{smart contract}. Mekanisme ini memiliki keterbatasan dimana pasien harus aktif untuk memberikan akses baru untuk tenaga medis yang terlibat, tidak adanya mekanisme akses darurat ketika pasien tidak sadar sesuai dengan Permenkes No. 24 tahun 2022. Selain itu, pendelegasian hak akses bersifat biner (mengizinkan akses semua data atau tidak sama sekali), yang tidak sesuai UU PDP dan Permenkes No. 24 Tahun 2022 yang menekankan perlindungan data spesifik sesuai dengan kebutuhan.
+Sistem DecMed dibangun di atas arsitektur DLT IOTA dan IPFS menggunakan enkripsi memanfaatkan \textit{Proxy Re-Encryption} (PRE). Dalam sistem ini, hak akses dikelola melalui token kapabilitas statis pada \textit{smart contract}. Mekanisme ini memiliki keterbatasan dimana pasien harus aktif untuk memberikan akses baru untuk tenaga medis yang terlibat dan ketika pasien dalam keadaan darurat rekam medis sama sekali tidak bisa diakses. Selain itu, pendelegasian hak akses bersifat biner (mengizinkan akses semua data atau tidak sama sekali), yang tidak sesuai dengan prinsip \textit{need-to-know} pada subbab \ref{subsec:kepemilikian-hak-akses-rme}.
 
 \subsection{Identifikasi Masalah}
 \label{subsec:identifikasi-masalah}
@@ -18,7 +18,7 @@ Berdasarkan evaluasi terhadap sistem DecMed dan regulasi yang berlaku, teridenti
 	      % TODO 
 	      % cari data di indonesia yang begini, misal dokter tuh harusnya cuman bisa akses begini. sehingga perlu attenuation.
 	\item Pada keadaan darurat, data rekam medis di sistem DecMed terkunci total, yang berpotensi membahayakan nyawa pasien.
-	\item Belum tersedianya mekanisme audit khusus untuk akses darurat.
+	\item Belum tersedianya mekanisme \textit{audit} khusus untuk akses darurat.
 \end{enumerate}
 
 \subsection{Analisis Kebutuhan Sistem}
@@ -27,15 +27,15 @@ Untuk mengatasi masalah pada subbab \ref{subsec:identifikasi-masalah}, sistem me
 
 \begin{table}[!ht]
 	\centering
-	\caption{Kebutuhan Fungsional Tambahan}
+	\caption{Pemetaan Masalah dengan Kebutuhan Fungsi Tambahan}
 	\label{tab:kebutuhan-fungsional-tambahan}
 	\small
-	\begin{tabular}{|p{0.25\textwidth}|p{0.65\textwidth}|}
+	\begin{tabular}{|c|p{0.25\textwidth}|p{0.55\textwidth}|}
 		\hline
-		\textbf{Fungsionalitas}       & \textbf{Deskripsi Kebutuhan}                                                                                        \\ \hline
-		Delegasi Offline              & Pasien menerbitkan token akses yang dapat didelegasikan secara berantai oleh tenaga kesehatan tanpa koneksi pasien. \\ \hline
-		Atenuasi Akses                & Kemampuan membatasi ruang lingkup (waktu, jenis data) pada token delegasi.                                          \\ \hline
-		Protokol \textit{Break-Glass} & Mekanisme akses data tanpa kunci privat pasien yang hanya aktif saat status darurat dideklarasikan.                 \\ \hline
-		Audit \textit{Immutable}      & Pencatatan insiden darurat pada \textit{ledger} IOTA yang tidak dapat dihapus untuk audit forensik.                 \\ \hline
+		\textbf{Masalah} & \textbf{Fungsionalitas}       & \textbf{Deskripsi Kebutuhan}                                                                                        \\ \hline
+		1                & Delegasi Offline              & Pasien menerbitkan token akses yang dapat didelegasikan secara berantai oleh tenaga kesehatan tanpa koneksi pasien. \\ \hline
+		1                & Atenuasi Akses                & Kemampuan membatasi ruang lingkup (waktu, jenis data) pada token delegasi.                                          \\ \hline
+		2                & Protokol \textit{Break-Glass} & Mekanisme akses data tanpa kunci privat pasien yang hanya aktif saat status darurat dideklarasikan.                 \\ \hline
+		3                & Audit \textit{Immutable}      & Pencatatan insiden darurat pada \textit{ledger} IOTA yang tidak dapat dihapus untuk \textit{audit} forensik.        \\ \hline
 	\end{tabular}
 \end{table}

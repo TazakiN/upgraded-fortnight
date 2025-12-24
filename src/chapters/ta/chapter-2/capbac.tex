@@ -1,11 +1,11 @@
-\section{Capability-Based Access Control (CapBAC)}
+\section{\textit{Capability-Based Access Control} (CapBAC)}
 \label{sec:capbac}
 
 \subsection{Definisi Kontrol Akses}
 \label{subsec:definisi-kontrol-akses}
 Kontrol Akses adalah proses pengaturan akses ke sumber daya (data, sistem informasi, perangkat, atau area tertentu) \autocite{sandhu1994access}. Proses ini memutuskan apakah seorang subjek harus diberikan atau ditolak aksesnya berdasarkan aturan tertentu. Akses dapat berarti memakai, memasuki, atau menggunakan. Kontrol Akses bertujuan untuk mencegah aktivitas yang dapat menimbulkan pelanggaran keamanan seperti kebocoran data atau modifikasi tidak sah.
 
-Framework dari sebuah kontrol akses sistem kemudian disebut sebagai model kontrol akses. Setiap model memiliki kelebihan dan kekurangan masing-masing. Pemilihan model yang tepat tergantung pada kebutuhan dan konteks sistem. Ketika sebuah model dirasa tidak cukup untuk memenuhi kebutuhan, maka dapat digunakan model hybrid yang merupakan perpaduan dari beberapa model tradisional dan modern \autocite{sohofi2025literature}.
+\textit{Framework} dari sebuah kontrol akses sistem kemudian disebut sebagai model kontrol akses. Setiap model memiliki kelebihan dan kekurangan masing-masing. Pemilihan model yang tepat tergantung pada kebutuhan dan konteks sistem. Ketika sebuah model dirasa tidak cukup untuk memenuhi kebutuhan, maka dapat digunakan model \textit{hybrid} yang merupakan perpaduan dari beberapa model tradisional dan modern \autocite{sohofi2025literature}.
 
 % Pada setiap model kontrol akses, terdapat 3 tahapan dasar yang harus dilalui oleh seorang pengguna ketika ingin mengakses sumber daya di dalam sistem yaitu:
 
@@ -27,18 +27,16 @@ Framework dari sebuah kontrol akses sistem kemudian disebut sebagai model kontro
 \subsection{Model CapBAC}
 \label{subsec:model-capbac}
 
-\textit{Capability-Based Access Control} (CapBAC) adalah model kontrol akses di mana hak akses direpresentasikan sebagai \textit{"capability token"} yang tidak dapat dipalsukan dan dipegang oleh subjek (pengguna, perangkat, layanan), bukan sebagai entri dalam daftar hak pada objek. Dalam model ini, setiap \textit{capability token} mengikat identitas subjek dengan identitas objek serta sekumpulan hak operasi yang diizinkan (misalnya baca, tulis, eksekusi), sehingga siapa pun yang memegang token tersebut berwenang melakukan operasi yang tercantum pada objek terkait \autocite{li2022capability}.
+\textit{Capability-Based Access Control} (CapBAC) adalah model kontrol akses yang hak aksesnya direpresentasikan sebagai \textit{"capability token"} yang tidak dapat dipalsukan dan dipegang oleh subjek (pengguna, perangkat, layanan), bukan sebagai entri dalam daftar hak pada objek. Dalam model ini, setiap \textit{capability token} mengikat identitas subjek dengan identitas objek serta sekumpulan hak operasi yang diizinkan (misalnya baca, tulis, eksekusi), sehingga siapa pun yang memegang token tersebut berwenang melakukan operasi yang tercantum pada objek terkait \autocite{li2022capability}.
 
 Secara garis besar, model CapBAC bekerja dalam 2 tahapan, (1) Pengguna meminta capability token dari sebuah \textit{Authorization Server}, kemudian (2) Pengguna menggunakan capability token yang diperoleh dari tahap pertama untuk melakukan akses ke \textit{Resource Server} \autocite{li2022capability}.
 \textit{Sequence diagram} dari model CapBAC dapat dilihat pada Gambar \ref{fig:sequence-diagram-capbac}.
 CapBAC memungkinkan otorisasi terdesentralisasi karena mengandalkan token kapabilitas yang tidak dapat dipalsukan sebagai bukti.
 
-% ? Apakah gapapa taro gambar ini?
+% TODO % ? Apakah gapapa taro gambar ini?
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{resources/chapter-2/capbac-seqdiagram.png}
 	\caption{\textit{Sequence diagram} dari model CapBAC. (Dokumentasi penulis)}
 	\label{fig:sequence-diagram-capbac}
 \end{figure}
-
-% Model CapBAC sudah memiliki beberapa implementasi yang telah dikembangkan seperti pada perangkat IoT \autocite{gusmeroli2013capability} dan teknologi Blockchain \autocite{liu2021capability}. Modifikasi juga dapat dilakukan pada model CapBAC seperti \textit{Enhanced Context-Aware Capability-Based Access Control} (ECACBAC) \autocite{ahamed2019enhanced} yang menambahkan konteks bagaimana akses dilakukan oleh pengguna dalam model token kapabilitas yang meningkatkan \textit{trustworthiness} dari akses, dan \textit{Traceable Capability-Based Access Control} (TCAC) \autocite{li2022traceable} yang menambahkan \textit{time-aware capability tree} ke dalam model token kapabilitas. Setiap modifikasi dari model akses kontrol memiliki kelebihan dan kekurangan masing-masing, namun semua modifikasi ini memiliki tujuan yang sama yaitu untuk meningkatkan keamanan dan kemudahan dalam penggunaan model CapBAC pada konteks sistem yang dibangun.

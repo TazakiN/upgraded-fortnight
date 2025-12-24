@@ -8,13 +8,13 @@
 Berdasarkan latar belakang yang telah diuraikan pada subbab \ref{sec:latarbelakang}, maka rumusan masalah yang dibahas dalam tugas akhir ini adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Bagaimana merancang mekanisme kontrol akses granular pada arsitektur RME terdesentralisasi (DecMed) dengan memanfaatkan atribut attenuation pada Macaroons?
-	\item Bagaimana mengembangkan mekanisme delegasi RME untuk kasus gawat darurat?
+	\item Bagaimana merancang mekanisme kontrol akses granular pada arsitektur RME terdesentralisasi (DecMed) dengan memanfaatkan atribut \textit{attenuation} pada Macaroons?
+	\item Bagaimana merancang mekanisme akses darurat (\textit{break-glass}) yang aman, dan auditable pada sistem RME berbasis IOTA?
 \end{enumerate}
 
 \section{Tujuan}
 
-Tujuan dari Tugas Akhir ini adalah mengimplementasikan kerangka kerja kontrol akses pada sistem manajemen Rekam Medis Elektronik (RME) berbasis arsitektur DecMed dengan memanfaatkan teknologi Macaroons. Pengembangan ini difokuskan untuk memfasilitasi delegasi hak akses yang bersifat granular serta menyediakan mekanisme akses gawat darurat (\textit{break-glass}) tanpa prosedur otentikasi yang kompleks, dengan tetap menjamin integritas data dan pencatatan audit yang \textit{immutable}.
+Tujuan dari Tugas Akhir ini adalah mengimplementasikan kerangka kerja kontrol akses pada sistem manajemen Rekam Medis Elektronik (RME) berbasis arsitektur DecMed dengan memanfaatkan teknologi Macaroons. Pengembangan ini difokuskan untuk memfasilitasi delegasi hak akses yang bersifat granular serta menyediakan mekanisme akses gawat darurat (\textit{break-glass}) tanpa prosedur otentikasi yang kompleks, dengan tetap menjamin integritas data dan pencatatan \textit{audit} yang \textit{immutable}.
 
 \section{Batasan Masalah}
 
@@ -24,7 +24,7 @@ antara lain:
 \begin{enumerate}
 	\item Sistem manajemen RME dirancang sebagai pengembangan dari arsitektur DecMed yang memanfaatkan DLT IOTA dan IPFS;
 	\item Fokus penelitian pada mekanisme otorisasi dan delegasi akses; penanganan keamanan terkait kehilangan kredensial pengguna berada di luar lingkup pembahasan;
-	\item Validasi pada mekanisme \textit{break-glass} dibatasi pada validasi IP jaringan dari fasyankes; verifikasi kondisi medis aktual pasien berada di luar lingkup sistem.
+	\item Validasi pada mekanisme \textit{break-glass} dilakukan melalui \textit{smart contract} untuk memverifikasi apakah personel yang melakukan permintaan akses merupakan anggota resmi fasyankes dan memiliki wewenang untuk penanganan darurat; verifikasi kondisi medis aktual pasien berada di luar lingkup sistem.
 	\item Pada keadaan darurat, diasumsikan bahwa data NIK diketahui oleh tenaga medis yang meminta akses darurat.
 \end{enumerate}
 

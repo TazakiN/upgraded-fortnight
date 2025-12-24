@@ -3,12 +3,9 @@
 \subsection{Definisi RME}
 \label{subsec:definisi-rme}
 
-% \textit{World Health Organization} (\textit{WHO}) mendefinisikan Rekam Medis Elektronik (\textit{RME}) sebagai sebuah catatan kesehatan \textit{waktu nyata} yang memiliki akses terhadap bukti-bukti terkait yang bisa membantu proses pengambilan keputusan dalam usaha untuk menyembuhkan seorang pasien \autocite{who2012management}.
-
 Di Indonesia, definisi dari Rekam Medis dan Rekam Medis Elektronik didefinisikan pada Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 (Permenkes 24/2022). "Rekam Medis adalah dokumen yang berisikan identitas pasien, pemeriksaan, pengobatan, tindakan, dan pelayanan lain yang telah diberikan pada pasien" sedangkan "Rekam Medis Elektronik adalah Rekam Medis yang dibuat dengan menggunakan sistem elektronik yang diperuntukkan bagi penyelenggaraan Rekam Medis." \autocite{permenkes24_2022}.
 
 Berdasarkan definisi tersebut, rekam medis adalah salah satu komponen vital dalam sistem kesehatan di Indonesia. Rekam medis bukanlah sebuah catatan biasa yang dibuat lalu disimpan, melainkan sebuah catatan yang terus diperbarui. Keberadaan Rekam Medis bertujuan untuk meningkatkan mutu pelayanan kesehatan dan memberikan kepastian hukum dalam peristiwa medis.
-% \autocite{KemkesKESLAN2023}
 
 \subsection{Isi RME}
 \label{subsec:isi-rme}
@@ -42,8 +39,8 @@ Dokumen ini juga menyebutkan secara implisit mengenai aktor yang terlibat dalam 
 
 Gambaran umum terkait metadata dari masing-masing data set dapat dilihat pada lampiran \ref{lampiran:metadata-rme}.
 
-\subsection{Kepemilikian dan Hak Akses RME}
-\label{subsec:kepemilikian-hak-akses-rme}
+\subsection{Kepemilikan dan Hak Akses RME}
+\label{subsec:kepemilikan-hak-akses-rme}
 
 Berdasarkan Permenkes 24/2022 Pasal 25 Ayat 1, dokumen dari Rekam Medis Elektronik adalah milik dari Fasyankes \autocite{permenkes24_2022}. Fasyankes bertanggung jawab atas pengelolaan dokumen Rekam Medis Elektronik. Pasal selanjutnya yaitu Pasal 26 Ayat 1, menyatakan bahwa Isi dari Rekam Medis Elektronik adalah milik pasien \autocite{permenkes24_2022}. Sehingga segala hal terkait penyampaian isi rekam medis hanya bisa dilakukan atas persetujuan pasien. Tenaga medis bisa memiliki akses terhadap rekam medis pasien untuk melakukan beberapa aksi yaitu:
 
@@ -53,6 +50,7 @@ Berdasarkan Permenkes 24/2022 Pasal 25 Ayat 1, dokumen dari Rekam Medis Elektron
 	\item Melihat atau membaca data.
 \end{enumerate}
 
+% TODO %
 % cari tahu buat apa atenuasi ini/ mmisal psikolog, dokter anak, lebih ke rujukan 
 % perlu cari case pendelegasian data untuk apa
 % miasal ketika sakit, lalu dihandle dokter umum, lalu dirujuk ke dokter jantung. ketika kontrol lagi, maka RME dibuka lagi khusus untuk dokter mata. Jadi ketika dikasih ke mata, dokter umum cuman ngasih bagian mata doang hipotesisnya dokter umum jadi tulang punggung
@@ -72,4 +70,6 @@ Berdasarkan Permenkes 24/2022 Pasal 32, semua pihak memiliki kewajiban untuk mel
 
 Lebih lanjut, UU PDP Pasal 32 Ayat 1 mewajibkan Pengendali Data Pribadi untuk menyediakan \textit{audit trail} pemrosesan data pribadi \autocite{uu27-2022-pdp}. Kewajiban ini menuntut adanya transparansi mengenai siapa yang mengakses data, kapan akses dilakukan, dan tindakan apa yang dilakukan terhadap data tersebut.
 
-Dari serangkaian regulasi tersebut, dapat disimpulkan bahwa model keamanan yang bersifat biner (hanya membedakan antara pemilik data dan pengguna biasa) tidak lagi memadai untuk memenuhi kepatuhan hukum. Perlindungan data spesifik dan kewajiban pencatatan \textit{audit trail} menuntut implementasi hak akses yang granular pada level sistem. Granularitas ini diperlukan untuk memastikan bahwa setiap entitas dalam fasyankes (seperti dokter, perawat, atau administrasi) hanya memiliki akses terhadap elemen data yang relevan dengan fungsi dan wewenangnya.
+Dari serangkaian regulasi tersebut, dapat disimpulkan bahwa model keamanan yang bersifat biner (hanya membedakan antara pemilik data dan pengguna biasa) tidak memadai untuk memenuhi kepatuhan hukum. Perlindungan data spesifik dan kewajiban pencatatan \textit{audit trail} menuntut implementasi hak akses yang granular pada level sistem. Granularitas ini diperlukan untuk memastikan bahwa setiap entitas dalam fasyankes (seperti dokter, perawat, atau administrasi) hanya memiliki akses terhadap elemen data yang relevan dengan fungsi dan wewenangnya.
+
+Implementasi hak akses yang granular ini sangat krusial dalam praktik pelayanan kesehatan untuk memenuhi prinsip \textit{least privilege}. Sebagai contoh, ketika pasien datang dan berinteraksi dengan petugas administrasi, maka petugas administrasi hanya boleh mengakses data yang relevan yaitu data administratif pasien. Kemudian ketika seorang dokter penanggung jawab pasien (DPJP) mendelegasikan proses pencatatan rekam medis pada dokter residen, maka dokter residen hanya boleh melakukan akses tulis data klinis pasien saja.

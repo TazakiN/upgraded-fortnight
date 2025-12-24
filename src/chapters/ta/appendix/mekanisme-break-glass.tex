@@ -1,0 +1,18 @@
+\chapter{Mekanisme Akses Darurat (\textit{Break-Glass})}
+\label{lampiran:mekanisme-break-glass}
+
+\begin{enumerate}
+	\item Dokter mengajukan permintaan darurat ke jaringan \textit{Oracle}.
+	\item Setiap \textit{node Oracle} memverifikasi kredensial dokter dan mencatat persetujuan (\textit{partial discharge}) jika valid.
+	\item Sistem memerlukan persetujuan minimal dari 3 \textit{node} ($t=3$) untuk dapat merekonstruksi kunci privat sementara.
+	\item Setelah ambang batas tercapai, \textit{Server PRE} menggabungkan pecahan tersebut untuk mendekripsi \textit{Emergency Capsule}, lalu segera melakukan re-enkripsi untuk dokter pemohon.
+\end{enumerate}
+
+Detail urutan langkah dalam mekanisme akses darurat ini dapat dilihat pada Gambar \ref{fig:seq-break-glass}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{resources/appendix/sequence_break_glass.png}
+	\caption{\textit{Sequence Diagram} Alur Akses Darurat (\textit{Threshold Oracle 3-of-5})}
+	\label{fig:seq-break-glass}
+\end{figure}

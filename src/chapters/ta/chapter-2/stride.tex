@@ -1,0 +1,79 @@
+\section{Pemodelan Ancaman STRIDE}
+\label{sec:stride}
+
+Metode pemodelan ancaman STRIDE merupakan salah satu pendekatan klasik dalam \textit{threat modeling} yang dikembangkan oleh Microsoft pada akhir tahun 1990 untuk membantu tim pengembang dan arsitek perangkat lunak mengidentifikasi serta mengkategorikan berbagai ancaman keamanan secara sistematis sejak tahap desain. Akronim STRIDE berasal dari enam kategori ancaman, yaitu \textit{Spoofing}, \textit{Tampering}, \textit{Repudiation}, \textit{Information Disclosure}, \textit{Denial of Service}, dan \textit{Elevation of Privilege}.
+Tujuan utama STRIDE adalah mengintegrasikan praktik keamanan sejak awal siklus hidup pengembangan perangkat lunak (\textit{secure by design}), sehingga potensi kerentanan dapat diidentifikasi, diklasifikasi, dan dikendalikan sebelum sistem diterapkan secara operasional \autocite{shostack2014threatmodeling,microsoft2006msdnstride}.
+
+Dalam konteks desain sistem perangkat lunak, STRIDE biasanya digunakan bersama \textit{Data Flow Diagram} (DFD) untuk memetakan elemen sistem (pemrosesan data, penyimpanan data, alur data, dan \textit{trust boundaries}) terhadap kemungkinan ancaman pada masing-masing komponen.
+Pendekatan ini membantu mengenali jenis serangan yang mungkin terjadi dan merancang kontrol keamanan yang sesuai, seperti otentikasi, enkripsi, kontrol akses, dan \textit{audit log} \autocite{shostack2014threatmodeling}.
+
+\subsection{Komponen STRIDE}
+\label{subsec:stride-komponen}
+
+\subsubsection{Spoofing}
+\label{subsubsec:stride-spoofing}
+
+\textit{Spoofing} merujuk pada upaya penyerang untuk memalsukan identitas entitas tertentu, seperti pengguna, sistem, atau layanan, agar dianggap sah dalam sistem.
+Contoh ancaman meliputi pencurian kredensial, \textit{session hijacking}, dan penggunaan sertifikat atau token yang dipalsukan.
+Dalam STRIDE, pertanyaan kunci yang sering diajukan adalah: ``Siapa saja yang dapat memalsukan identitas entitas ini?'' sehingga dapat dinilai apakah mekanisme otentikasi sudah memadai \autocite{shostack2014threatmodeling}.
+
+\subsubsection{Tampering}
+\label{subsubsec:stride-tampering}
+
+\textit{Tampering} menggambarkan ancaman di mana data atau kode yang melewati alur sistem dimodifikasi secara tidak sah, sehingga integritas informasi tidak dapat dipertanggungjawabkan.
+Contohnya modifikasi pesan komunikasi pada serangan \textit{man-in-the-middle}, pengubahan berkas konfigurasi, atau injeksi kode jahat ke dalam \textit{software}.
+Analis memeriksa apakah saluran atau penyimpanan data dilengkapi mekanisme deteksi dan pencegahan perubahan, seperti pemeriksaan integritas pesan, \textit{hashing}, atau tanda tangan digital \autocite{shostack2014threatmodeling}.
+
+\subsubsection{Repudiation}
+\label{subsubsec:stride-repudiation}
+
+\textit{Repudiation} merujuk pada situasi ketika suatu entitas dapat menyangkal bahwa suatu tindakan atau transaksi pernah dilakukan, karena tidak adanya bukti audit yang memadai.
+Ancaman ini kritis pada sistem yang memerlukan pertanggungjawaban (\textit{accountability}), misalnya transaksi keuangan atau layanan pemerintahan digital.
+Analis memastikan aktivitas penting terekam dalam log yang sulit dimanipulasi dan didukung mekanisme \textit{non-repudiation} (misalnya tanda tangan digital atau log berbasis waktu) \autocite{shostack2014threatmodeling}.
+
+\subsubsection{Information disclosure}
+\label{subsubsec:stride-information-disclosure}
+
+\textit{Information disclosure} menggambarkan ancaman yang menyebabkan informasi sensitif terbuka kepada pihak yang tidak berhak, sehingga kerahasiaan data terganggu.
+Contohnya kebocoran melalui log, penyimpanan tanpa enkripsi, atau izin akses yang terlalu luas.
+Evaluasi dilakukan terhadap perlindungan kerahasiaan data yang mengalir antar komponen, misalnya enkripsi dalam transmisi dan penyimpanan serta prinsip \textit{least privilege} \autocite{shostack2014threatmodeling}.
+
+\subsubsection{Denial of Service}
+\label{subsubsec:stride-dos}
+
+\textit{Denial of Service} (DoS) merujuk pada ancaman yang mengganggu kegunaan atau ketersediaan layanan bagi pengguna sah, baik melalui pengurasan sumber daya maupun penghentian fungsi sistem.
+Contohnya \textit{flooding} jaringan, kehabisan sumber daya (\textit{resource exhaustion}), atau eksploitasi kerentanan yang memicu \textit{crash} atau \textit{hang}.
+Analis mengidentifikasi komponen yang kritis bagi ketersediaan dan menilai mitigasi seperti \textit{rate limiting}, \textit{load balancing}, atau \textit{timeout} \autocite{shostack2014threatmodeling}.
+
+\subsubsection{Elevation of Privilege}
+\label{subsubsec:stride-eop}
+
+\textit{Elevation of privilege} menggambarkan ancaman di mana penyerang memperoleh hak akses lebih tinggi daripada yang seharusnya, misalnya dari pengguna biasa menjadi administrator.
+Serangan ini sering memanfaatkan celah konfigurasi, kerentanan, atau model kontrol akses yang lemah.
+Analis memeriksa apakah otorisasi (\textit{authorization}) dan pemisahan peran (\textit{role-based access control}) diterapkan ketat serta apakah ada komponen yang dapat dieksploitasi untuk menaikkan hak secara tidak sah \autocite{shostack2014threatmodeling}.
+
+% \subsection{Pemetaan STRIDE terhadap properti keamanan dasar}
+% \label{subsec:stride-pemetaan}
+
+% STRIDE dipetakan langsung ke properti keamanan yang umum dalam literatur, seperti kerahasiaan, integritas, ketersediaan, otentikasi, otorisasi, dan \textit{non-repudiation}.
+% Tabel~\ref{tab:stride-security-mapping} merangkum korelasi antara elemen STRIDE dengan properti yang paling relevan \autocite{shostack2014threatmodeling}.
+
+% \begin{table}[ht]
+%     \centering
+%     \caption{Pemetaan elemen STRIDE terhadap properti keamanan utama}
+%     \label{tab:stride-security-mapping}
+%     \begin{tabularx}{\textwidth}{@{}l l X@{}}
+%         \toprule
+%         \textbf{Elemen STRIDE}          & \textbf{Properti utama}  & \textbf{Keterangan singkat}                                                \\
+%         \midrule
+%         \textit{Spoofing}               & Otentikasi               & Ancaman terhadap identifikasi dan verifikasi entitas.                      \\
+%         \textit{Tampering}              & Integritas               & Ancaman terhadap keutuhan data atau kode aplikasi.                         \\
+%         \textit{Repudiation}            & \textit{Non-repudiation} & Ancaman terhadap kemampuan membuktikan bahwa suatu tindakan telah terjadi. \\
+%         \textit{Information disclosure} & Kerahasiaan              & Ancaman terhadap kerahasiaan data sensitif.                                \\
+%         \textit{Denial of service}      & Ketersediaan             & Ancaman terhadap ketersediaan layanan bagi pengguna sah.                   \\
+%         \textit{Elevation of privilege} & Otorisasi                & Ancaman terhadap mekanisme hak akses dan kontrol peran.                    \\
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}
+
+% Dengan demikian, analisis melalui STRIDE tidak hanya membantu mengidentifikasi ancaman, tetapi juga memperjelas bagian properti keamanan mana yang paling rentan dan memerlukan penguatan kontrol dalam rancangan sistem \autocite{shostack2014threatmodeling,microsoft2022threatmodelingtool}.

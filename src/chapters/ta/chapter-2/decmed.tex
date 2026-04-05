@@ -1,0 +1,22 @@
+\section{DecMed}
+\label{sec:decmed}
+
+Sistem DecMed adalah sebuah kerangka kerja manajemen RME terdesentralisasi yang dibangun di atas DLT IOTA \autocite{purnama2026access}. Pengembangan sistem ini bertujuan untuk mengatasi tantangan fragmentasi data antar institusi kesehatan dan risiko keamanan dari penyimpanan terpusat yang ada di Indonesia.
+
+Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{off-chain} memanfaatkan IPFS untuk menyimpan data klinis pasien yang berukuran besar dan sudah terenkripsi. Sementara itu, penyimpanan \textit{on-chain} memanfaatkan DLT IOTA untuk menyimpan data administratif dan metadata klinis, termasuk CID dari IPFS, guna menjamin integritas data. Untuk memastikan kedaulatan data pasien, DecMed mengimplementasikan CapBAC yang diintegrasikan dengan PRE.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{resources/chapter-2/decmed_archi.png}
+    \caption{Arsitektur DecMed \autocite{sadewa2025decmed}.}
+    \label{fig:decmed-archi}
+\end{figure}
+
+Client DecMed terdiri dari 3 komponen utama, yaitu:
+\begin{enumerate}
+    \item \textit{Patient Client}
+    \item \textit{Doctor Client}
+    \item \textit{Ministry Client}
+\end{enumerate}
+
+masing-masing \textit{client} digunakan oleh pihak yang berbeda sesuai dengan namanya. \textit{Patient Client} digunakan oleh pasien untuk memberikan akses kepada tenaga medis untuk mengakses data rekam medis, \textit{Doctor Client} digunakan oleh dokter untuk mengakses data rekam medis, dan \textit{Ministry Client} digunakan oleh pemerintah untuk melakukan manajemen terhadap rumah sakit yang terdaftar di sistem.

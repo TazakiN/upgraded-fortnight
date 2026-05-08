@@ -1,14 +1,96 @@
 \subsection{Analisis Sistem DecMed}
 \label{subsec:analisis-sistem-decmed}
 
-Sebagaimana dijelaskan pada Bab \ref{sec:decmed}, DecMed adalah sistem manajemen RME terdesentralisasi dengan memanfaatkan IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, serta PRE untuk mendukung distribusi akses data yang aman. Arsitektur ini sudah memberikan fondasi untuk menjaga integritas data dan mengurangi ketergantungan pada penyimpanan terpusat. Namun, mekanisme kontrol akses yang digunakan masih bertumpu pada token kapabilitas statis, sehingga belum sepenuhnya mendukung kebutuhan otorisasi yang lebih rinci pada skenario layanan kesehatan yang kolaboratif.
+Sebagaimana dijelaskan pada Bab \ref{sec:decmed}, DecMed adalah kerangka kerja manajemen RME terdesentralisasi dengan menggunakan DLT IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, serta PRE untuk mendukung distribusi akses data yang aman. Arsitektur ini sudah memberikan fondasi untuk menjaga integritas data dan mengurangi ketergantungan pada penyimpanan terpusat. Terdapat 3 aktor utama pada DecMed, yaitu:
 
-Keterbatasan pertama terletak pada representasi hak akses yang masih bersifat \textit{coarse-grained}. Token akses pada DecMed belum dirancang untuk membawa batasan kontekstual, misalnya jenis data yang boleh diakses, aksi yang diizinkan, masa berlaku akses, atau batasan delegasi lanjutan. Padahal, pada praktik pelayanan kesehatan, setiap tenaga medis tidak selalu membutuhkan keseluruhan isi RME pasien. Kondisi ini menunjukkan bahwa mekanisme akses kontrol pada DecMed belum cukup untuk menjawab kebutuhan kontrol akses granular sebagaimana dirumuskan pada tujuan pertama Tugas Akhir ini.
+\begin{enumerate}
+    \item Pasien
+    \item Tenaga Kesehatan (terdiri dari dokter dan petugas administrasi)
+    \item Pemerintah
+\end{enumerate}
 
-Apabila dibandingkan dengan karakteristik Macaroons pada Subbab \ref{sec:macaroons}, keterbatasan tersebut menjadi semakin jelas. Token pada DecMed pada dasarnya hanya merepresentasikan hak akses yang telah ditetapkan saat token diterbitkan, sehingga sulit menambahkan batasan baru secara aman ketika akses perlu diteruskan kepada pihak lain. Sebaliknya, Macaroons menyediakan struktur \textit{chained-HMAC} dan \textit{caveat} yang memungkinkan setiap proses delegasi sekaligus membawa batasan tambahan, misalnya batasan terhadap jenis data, masa berlaku, atau konteks penggunaan. Oleh karena itu, pemanfaatan Macaroons bukan sekadar pilihan implementasi alternatif, melainkan kebutuhan teknis untuk memenuhi tuntutan otorisasi granular dan delegasi terbatas.
+Pada DecMed, masing-masing aktor memiliki kepentingan yang berbeda, dan memiliki aplikasi \textit{client} yang berbeda pula. Setiap \textit{client} digunakan oleh pihak yang berbeda sesuai dengan namanya. \textit{Patient Client} digunakan oleh pasien, \textit{Hospital Client} digunakan oleh tenaga kesehatan di sebuah fasyankes, dan \textit{Ministry Client} digunakan oleh pemerintah. Detail dari setiap kebutuhan fungsional dari masing-masing aktor dapat dilihat pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}.
 
-Keterbatasan kedua berkaitan dengan organisasi data pada lapisan \textit{off-chain}. DecMed memang telah memisahkan penyimpanan \textit{on-chain} dan \textit{off-chain}, tetapi pendekatan tersebut belum secara eksplisit menunjukkan segmentasi data klinis yang cukup rinci untuk menegakkan kebijakan akses \textit{fine-grained}. Jika data klinis masih dikelola sebagai objek terenkripsi yang terlalu besar atau terlalu umum, maka pemberian akses kepada seorang tenaga medis berisiko membuka cakupan data yang lebih luas daripada yang dibutuhkan. Dengan demikian, diperlukan rancangan penyimpanan \textit{off-chain} yang tersegmentasi agar granularitas kebijakan dapat ditegakkan hingga level himpunan data yang relevan.
+% ===============================================
+% = Masalah Delegasi Akses
+% ===============================================
 
-Keterbatasan ketiga muncul pada proses pendelegasian akses. Pada DecMed, pasien menjadi pihak yang harus terlibat saat akses baru perlu diterbitkan untuk tenaga medis lain. Asumsi ini kurang sesuai dengan alur pelayanan kesehatan yang bersifat dinamis, dimana dokter penanggung jawab pasien dapat perlu mendelegasikan sebagian hak akses kepada residen, perawat, atau unit laboratorium tanpa harus menunggu pasien kembali \textit{online}. Oleh sebab itu, DecMed memerlukan mekanisme delegasi berantai yang tetap aman tetapi dapat dilakukan secara luring melalui proses atenuasi hak akses. Kebutuhan inilah yang menjadi dasar pemanfaatan Macaroons pada penelitian ini.
+% ? ini keknya mending dibahas di analisis-skenario-layanan-klinis.tex
+Sebagaimana dijelaskan pada Subbab \ref{sec:latarbelakang}, DecMed memiliki kelemahan fungsional pada implementasinya karena mekanisme delegasi akses masih bergantung pada keterlibatan langsung pasien. Fungsi ini berkaitan erat dengan kebutuhan fungsional pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}, khususnya ID F06 dan F07. Mekanisme ini kurang efisien mengingat alur pelayanan kesehatan yang kolaboratif dan dinamis, dimana dokter penanggung jawab pasien dapat perlu mendelegasikan sebagian hak akses kepada residen, perawat, atau unit laboratorium tanpa harus menunggu kehadiran pasien. Selain itu, tempat seperti rumah sakit yang seringkali melayani banyak pasien sekaligus akan mengganggu alur pelayanan kesehatan jika pasien perlu menemui setiap tenaga medis yang akan menangani mereka.
 
-Kelemahan fungsional pada granularitas, segmentasi data, dan pendelegasian ini tidak hanya berdampak pada efisiensi operasional medis, tetapi juga membuka celah keamanan yang signifikan. Untuk memetakan risiko tersebut secara sistematis, dilakukan analisis ancaman menggunakan kerangka kerja STRIDE pada subbab berikutnya.
+
+% ===============================================
+% = Masalah Token Kapabilitas
+% ===============================================
+
+Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMed memanfaatkan token otorisasi yang berupa token JWT sebagai pembawa bukti otorisasi akses. Ketika pasien ingin mendelegasikan akses ke beberapa tenaga medis, maka pasien akan melakukan penerbitan ulang token oleh pasien kepada setiap tenaga medis yang terlibat. Token yang diterbitkan oleh pasien membawa 3 informasi utama, yaitu:
+
+\begin{enumerate}
+    \item \textit{Address} IOTA pemegang token
+    \item \textit{Role} (bernilai \texttt{AdministrativePersonnel},      \texttt{MedicalPersonnel}, atau \texttt{Patient})
+    \item \textit{Purpose} (bernilai \texttt{Read} atau \texttt{Update})
+\end{enumerate}
+
+Token JWT yang digunakan pada DecMed masih bertumpu pada token kapabilitas yang bersifat \textit{coarse-grained}. Token ini belum sepenuhnya mendukung kebutuhan otorisasi yang lebih granular. Penentuan hak akses seorang pengguna dilakukan hanya berdasarkan \textit{role} dan \textit{purpose} yang ada pada token yang disertakan saat melakukan \textit{request} ke PRE. Token akses pada DecMed belum dirancang untuk membawa batasan kontekstual, misalnya jenis data yang boleh diakses, aksi yang diizinkan, atau batasan delegasi akses. Padahal, pada praktik pelayanan kesehatan, setiap tenaga medis tidak selalu membutuhkan keseluruhan isi RME pasien (sesuai dengan prinsip \textit{need-to-know}).
+% ? apakah ini perlu dimasukkan?
+Kondisi ini menunjukkan bahwa mekanisme kontrol akses pada DecMed belum cukup untuk menjawab kebutuhan kontrol akses granular.
+
+% ===============================================
+% = Masalah Segmentasi Data Klinis
+% ===============================================
+
+Data klinis pada DecMed disimpan dalam 2 sistem penyimpanan yang berbeda, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{on-chain} digunakan untuk menyimpan metadata klinis dan CID dari data klinis yang disimpan di \textit{off-chain}. Penyimpanan \textit{off-chain} digunakan untuk menyimpan data administratif dan klinis yang sudah terenkripsi. Pemisahan ini sesuai dengan kebutuhan yang dibahas pada \ref{subsec:isi-rme} terkait bagian administratif dan klinis.
+
+Penyimpanan data klinis pasien di penyimpanan \textit{on-chain} hanya menyimpan metadatanya saja. Metadata tersebut yang menyimpan informasi CID beserta kunci untuk pasien mendekripsi data medis terkait. Struktur penyimpanannya terikat dengan \textit{struct} data \texttt{PatientAccount} penyimpanan \textit{on-chain}. Berikut adalah potongan kode dari \textit{struct} \texttt{PatientAccount} dan \texttt{PatientMedicalMetadata}:
+
+\begin{lstlisting}[language=Move]
+...
+public struct PatientAccount has store {
+    access_log: TableVec<PatientAccessLog>,
+    address: address,
+    administrative_metadata: PatientAdministrativeMetadata,
+    is_profile_completed: bool,
+    medical_metadata: TableVec<PatientMedicalMetadata>,
+}
+...
+public struct PatientMedicalMetadata has copy, drop, store {
+    index: u64,
+    metadata: String,
+}
+...
+\end{lstlisting}
+
+Variabel \texttt{metadata} pada \textit{struct} \texttt{PatientMedicalMetadata} merupakan serialisasi dari \textit{struct} berikut:
+
+\begin{lstlisting}[language=Rust]
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MedicalMetadata {
+    pub capsule: String, // capsule untuk PRE re-encryption
+    pub cid: String, // pointer ke data di IPFS
+    pub created_at: String, // timestamp
+    pub enc_key_and_nonce: String, // kunci dan nonce yang terenkripsi
+}
+\end{lstlisting}
+
+Sedangkan untuk data klinis yang sudah terenkripsi, akan disimpan di penyimpanan \textit{off-chain} sebagai sebuah \textit{Encrypted Blob}. Struktur penyimpanannya diimplementasikan sesuai dengan \textit{struct} \texttt{MedicalData} berikut:
+
+\begin{lstlisting}[language=Rust]
+...
+pub struct MedicalData {
+    pub anamnesis: String,
+    pub physical_check: String,
+    pub psychological_check: String,
+    pub diagnose: String,
+    pub therapy: String,
+}
+...
+\end{lstlisting}
+
+Penyimpanan data klinis pada DecMed hanya berfokus pada data rawat jalan, sehingga mengikuti format metadata penyimpanan data klinis sesuai dengan ketentuan pada KMK No. HK.01.07/Menkes/1423/2022 \autocite{kemenkes1423-2022} tentang Pedoman Variabel dan Metadata Rekam Medis terkait data klinis rawat jalan. Pada \textit{struct} \texttt{MedicalData} data klinis masih disimpan dengan format yang sederhana, tanpa ada kategorisasi yang jelas. Hal ini berkaitan dengan organisasi data pada lapisan \textit{off-chain}. DecMed memang telah memisahkan penyimpanan \textit{on-chain} dan \textit{off-chain}, tetapi pendekatan tersebut belum secara eksplisit menunjukkan segmentasi data klinis yang cukup rinci untuk menegakkan kebijakan akses granular. Jika data klinis masih dikelola sebagai objek terenkripsi yang terlalu besar atau terlalu umum, maka pemberian akses kepada seorang tenaga medis berisiko membuka cakupan data yang lebih luas daripada yang dibutuhkan.
+% ? apakah ini perlu dimasukkan?
+% Dengan demikian, diperlukan rancangan baru terkait pemrosesan data \textit{off-chain} agar granularitas kebijakan dapat ditegakkan hingga tingkat himpunan data yang relevan.
+
+% * bahas di analisis-skenario-layanan-klinis.tex
+% Keterbatasan ketiga muncul pada proses pendelegasian akses. Pada DecMed, pasien menjadi pihak yang harus terlibat saat akses baru perlu diterbitkan untuk tenaga medis lain. Asumsi ini kurang sesuai dengan alur pelayanan kesehatan yang bersifat dinamis, dimana dokter penanggung jawab pasien dapat perlu mendelegasikan sebagian hak akses kepada residen, perawat, atau unit laboratorium tanpa harus menunggu pasien kehadiran pasien. Oleh sebab itu, DecMed memerlukan mekanisme delegasi berantai yang tetap aman tetapi dapat dilakukan tanpa memerlukan intervensi langsung dari pasien melalui proses atenuasi hak akses. Kebutuhan inilah yang menjadi dasar pemanfaatan Macaroons pada penelitian ini.
+
+\input{chapters/ta/chapter-3/analisis/analisis-stride-decmed.tex}

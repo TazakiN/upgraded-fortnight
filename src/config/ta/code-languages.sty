@@ -1,0 +1,72 @@
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Definisi kustom warna agar tampilan lebih adem dan profesional
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+\definecolor{codeblue}{rgb}{0.13,0.13,1}
+
+% ==========================================
+% 1. Definisi Bahasa Move yang Lebih Lengkap
+% ==========================================
+\lstdefinelanguage{Move}{
+	% Kata kunci utama (control flow, visibility, deklarasi)
+	keywords={public, struct, has, store, key, drop, copy, fun, let, mut, return, abort, module, use, entry, acquires, as, break, const, continue, else, false, friend, if, loop, macro, native, phantom, spec, true, while, inline},
+	keywordstyle=\color{codeblue}\bfseries,
+	% Tipe data bawaan dan struktur umum
+	ndkeywords={address, bool, u8, u16, u32, u64, u128, u256, vector, signer, String, Option},
+	ndkeywordstyle=\color{codepurple}\bfseries,
+	sensitive=true,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{codegreen}\itshape,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]"
+}
+
+% ==========================================
+% 2. Definisi Bahasa Rust yang Lebih Lengkap
+% ==========================================
+\lstdefinelanguage{Rust}{
+	% Kata kunci utama Rust
+	keywords={as, break, const, continue, crate, else, enum, extern, false, fn, for, if, impl, in, let, loop, match, mod, move, mut, pub, ref, return, self, Self, static, struct, super, trait, true, type, unsafe, use, where, while, async, await, dyn, union},
+	keywordstyle=\color{codeblue}\bfseries,
+	% Tipe data primitif dan struktur standar library
+	ndkeywords={i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32, f64, bool, char, str, String, Vec, Option, Result, Box, Rc, Arc, Cell, RefCell, HashMap},
+	ndkeywordstyle=\color{codepurple}\bfseries,
+	sensitive=true,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	% Komentar dokumentasi Rust (///)
+	morecomment=[l]{///},
+	commentstyle=\color{codegreen}\itshape,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]"
+}
+
+% ==========================================
+% 3. Pengaturan Global (Tampilan Blok Kode)
+% ==========================================
+\lstset{
+	backgroundcolor=\color{backcolour}, % Warna latar belakang abu-abu sangat terang
+	basicstyle=\ttfamily\small,         % Font monospace dengan ukuran kecil
+	columns=fullflexible,               % Spasi antar karakter lebih natural
+	breakatwhitespace=false,
+	breaklines=true,                    % Otomatis pindah baris jika teks terlalu panjang
+	captionpos=b,                       % Posisi caption di bawah (b = bottom)
+	keepspaces=true,                    % Menjaga spasi tetap terlihat
+	% Pengaturan Frame dan Nomor Baris
+	frame=single,                       % Garis tepi kotak
+	rulecolor=\color{black!30},         % Warna garis tepi kotak lebih halus
+	numbers=left,                       % Posisi penomoran baris di kiri
+	numbersep=10pt,                     % Jarak antara nomor baris dan kode
+	numberstyle=\tiny\color{codegray},  % Gaya angka penomoran baris
+	showspaces=false,
+	showstringspaces=false,             % Tidak menampilkan underscore pada spasi di dalam string
+	showtabs=false,
+	tabsize=4,                          % Ukuran tab diset ke 4 spasi
+	xleftmargin=2em,                    % Margin kiri agar nomor baris tidak menabrak teks paragraf
+	framexleftmargin=1.5em              % Jarak dalam frame sebelah kiri
+}

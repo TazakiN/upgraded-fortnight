@@ -8,18 +8,16 @@
 Berdasarkan latar belakang yang telah diuraikan pada subbab \ref{sec:latarbelakang}, maka rumusan masalah yang dibahas dalam tugas akhir ini adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Bagaimana rancangan mekanisme kontrol akses granular pada arsitektur DecMed dengan memanfaatkan Macaroons?
-	\item Bagaimana rancangan skema penyimpanan data \textit{off-chain} yang tersegmentasi untuk mendukung kontrol akses granular?
-	\item Bagaimana rancangan fitur (\textit{offline attenuation}) pada token otorisasi untuk memfasilitasi pendelegasian hak akses berantai antar tenaga medis tanpa memerlukan intervensi langsung dari pasien?
+	\item Bagaimana rancangan mekanisme kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan Macaroons?
+	\item Bagaimana rancangan fitur \textit{offline attenuation} pada token otorisasi untuk memfasilitasi pendelegasian hak akses antar tenaga medis tanpa memerlukan intervensi langsung dari pasien?
 \end{enumerate}
 
 \section{Tujuan}
 
 Tujuan dari Tugas Akhir ini adalah:
 \begin{enumerate}
-	\item Menerapkan \textit{framework} kontrol akses pada arsitektur DecMed dengan memanfaatkan teknologi Macaroons. Pengembangan ini difokuskan untuk memfasilitasi delegasi hak akses yang bersifat granular.
-	\item Merancang dan mengimplementasikan skema penyimpanan data \textit{off-chain} yang tersegmentasi untuk mendukung kontrol akses granular.
-	\item Menerapkan fitur atenuasi \textit{offline} pada token otorisasi untuk memfasilitasi pendelegasian hak akses berantai antar tenaga medis tanpa memerlukan intervensi langsung dari pasien.
+	\item Menerapkan kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan teknologi Macaroons.
+	\item Menerapkan fitur atenuasi \textit{offline} pada token otorisasi untuk memfasilitasi pendelegasian hak akses antar tenaga medis.
 \end{enumerate}
 
 \section{Batasan Masalah}
@@ -27,7 +25,8 @@ Tujuan dari Tugas Akhir ini adalah:
 Terdapat beberapa batasan masalah dari Tugas Akhir ini. Batasan masalah tersebut antara lain:
 
 \begin{enumerate}
-	\item Sistem manajemen RME dirancang sebagai peopngembangan dari arsitektur DecMed;
+	\item Kerangka Kerja yang dikembangkan pada Tugas Akhir ini adalah kerangka kerja DecMed;
+	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor tertentu, tidak membahas keseluruhan kemungkinan skenario layanan klinis.
 \end{enumerate}
 
 \input{chapters/ta/chapter-1/metodologi.tex}

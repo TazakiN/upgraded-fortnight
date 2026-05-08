@@ -1,6 +1,51 @@
 \section{Penelitian Terkait}
 \label{sec:penelitian-terkait}
 
-% TODO 
+\noindent Bagian ini meninjau beberapa penelitian yang relevan dengan perancangan kontrol akses granular pada sistem RME berbasis DLT.
 
-% Singh dkk. (2025) mengidentifikasi kelemahan pada model akses kontrol RBAC dan ABAC dalam implementasi di sistem RME dan mengusulkan sebuah akses kontrol \textit{hybrid} untuk mengatasi kelemahan terebut \autocite{singh2025granular}. Sistem yang diusulkan membuat implementasi empat \textit{smart contract} pada jaringan Ethereum. Pada sistem yang diusulkan data rekam medis fisik disimpan di \textit{off-chain} menggunakan IPFS. Strategi hibrida ini memprioritaskan pengecekan izin berbasis peran (RBAC) sebagai \textit{baseline} keamanan yang cepat dan hanya menjalankan evaluasi atribut (ABAC) yang lebih kompleks untuk menangani kondisi kontekstual spesifik atau pengecualian seperti akses darurat, guna meminimalkan biaya komputasi \textit{on-chain}. Hasil penelitian menunjukkan bahwa model ini mampu memberikan granularitas kontrol yang halus dengan performa yang tetap efisien. Pada hasil pengujiannya, penggunaan \textit{gas} rata-rata hanya meningkat sekitar 15\% dibandingkan model RBAC murni (jauh lebih rendah dari ABAC murni), memiliki waktu respon rata-rata 50 ms, serta mempertahankan \textit{throughput} stabil pada kisaran 27 transaksi per detik. Pendekatan ini secara efektif meningkatkan interoperabilitas dan akuntabilitas sistem EHR terdesentralisasi sekaligus memenuhi prinsip transparansi dan persetujuan pasien yang disyaratkan oleh regulasi HIPAA dan GDPR.
+\subsection{Hybrid RBAC dan ABAC pada Sistem RME Berbasis Blockchain}
+\label{subsec:hybrid-rbac-abac}
+
+Singh dkk.\ mengusulkan model kontrol akses hibrida untuk sistem RME berbasis Blockchain dengan menggabungkan RBAC dan ABAC \autocite{singh2025granular}. Penelitian ini berangkat dari keterbatasan dua model tersebut ketika digunakan secara terpisah. RBAC dinilai terlalu kaku karena keputusan akses hanya bergantung pada peran pengguna. Pendekatan ini menyulitkan penerapan kontrol akses yang \textit{fine-grained} dan berpotensi menimbulkan \textit{role explosion} ketika kebutuhan akses semakin beragam. Di sisi lain, ABAC menawarkan fleksibilitas yang lebih tinggi karena keputusan akses mempertimbangkan atribut pengguna, objek, dan konteks, namun kompleksitas perancangan dan pengelolaan kebijakannya juga meningkat.
+
+Penelitian tersebut menunjukkan bahwa semakin banyak atribut yang digunakan dalam ABAC, semakin besar pula kemungkinan konflik kebijakan dan beban evaluasi aturan \autocite{singh2025granular}. Oleh karena itu, penulis mengusulkan pendekatan \textit{hybrid}, yaitu RBAC digunakan sebagai lapisan awal untuk menyaring akses berdasarkan peran utama, sedangkan ABAC digunakan untuk menambahkan batasan kontekstual yang lebih rinci. Hasil evaluasi pada \textit{smart contract} menunjukkan bahwa pendekatan \textit{hybrid} ini cukup efisien dari sisi konsumsi \textit{gas} dan tetap relatif sederhana untuk diimplementasikan dibandingkan penggunaan ABAC murni.
+
+% Meskipun demikian, solusi tersebut masih memiliki keterbatasan. Implementasi yang diusulkan sangat terikat pada ekosistem Ethereum, dan proses otorisasi harus dieksekusi melalui \textit{smart contract} \autocite{singh2025granular}. Ketergantungan ini dapat menjadi kendala pada skenario layanan klinis yang membutuhkan respons cepat, delegasi berulang, atau fleksibilitas implementasi di luar platform Blockchain tertentu.
+
+\subsection{Model Kontrol Akses Empat Lapis untuk RME Berbasis Blockchain}
+\label{subsec:empat-lapis-emr}
+
+Liu dan Chen meneliti model kontrol akses untuk RME berbasis Blockchain dengan menempatkan RME sebagai kasus \textit{big data}. Peran DLT dalam mengatasi masalah tersebut relevan untuk menjelaskan mengapa pendekatan DLT layak dipertimbangkan sebagai alternatif terhadap sistem RME terpusat, karena DLT menawarkan integritas data yang lebih kuat, jejak audit yang transparan, dan distribusi kendali yang lebih baik.
+
+Untuk menjawab permasalahan tersebut, penelitian ini mengusulkan model otorisasi empat lapis yang terdiri dari:
+\begin{enumerate}
+    \item \textit{Role Check} menggunakan RBAC,
+    \item \textit{Identity Verification} menggunakan \textit{Identity-Based Encryption} (IBE),
+    \item \textit{Policy Execution} menggunakan \textit{smart contract}, dan
+    \item \textit{Data Volume Check} menggunakan pendekatan \textit{entropy}.
+\end{enumerate}
+
+% Model ini menunjukkan bahwa kontrol akses pada RME tidak cukup hanya memeriksa identitas atau peran, tetapi juga perlu mempertimbangkan mekanisme verifikasi identitas yang kuat, eksekusi kebijakan yang dapat diaudit, serta karakteristik volume data yang diakses \autocite{liu2025accesscontrol}. Kontribusi utama penelitian ini bagi Tugas Akhir adalah argumen bahwa DLT pantas digunakan untuk menggantikan atau melengkapi sistem terpusat karena dapat menjawab tiga masalah mendasar pada pengelolaan data medis.
+
+% Namun, fokus utama penelitian ini berada pada arsitektur otorisasi berlapis, bukan pada mekanisme delegasi akses yang praktis di lingkungan klinis yang kolaboratif. Dengan demikian, penelitian ini memberikan dasar konseptual yang kuat untuk adopsi DLT pada RME, tetapi masih menyisakan ruang untuk pengembangan mekanisme kontrol akses yang lebih ringan dan fleksibel pada tingkat operasional.
+
+\subsection{Kontrol Akses Granular Menggunakan \textit{Composable NFT}}
+\label{subsec:composable-nft-rme}
+
+Amaracitra mengusulkan model \textit{Decentralized Medical Record} (DMR) yang menggunakan \textit{composable NFT} untuk mencapai keamanan data, interoperabilitas, dan privasi melalui akses data yang granular \autocite{amaracitra2025composable}. Nilai utama dari penelitian ini terletak pada cara data RME dipecah menjadi unit-unit yang lebih kecil, sehingga tidak seluruh data pasien harus selalu dibuka dalam satu paket akses.
+
+Dalam model tersebut, struktur data DMR disusun secara hierarkis ke dalam beberapa token, yaitu:
+\begin{enumerate}
+    \item \textit{DMR Token} sebagai token induk (\textit{root}/\textit{parent}),
+    \item \textit{Medical Record Token},
+    \item \textit{Doctor Diagnoses Token},
+    \item \textit{Laboratory Test Token}, dan
+    \item \textit{Pharmacy Data Token}.
+\end{enumerate}
+
+Pemisahan ini penting karena menunjukkan bahwa granularitas akses tidak hanya bergantung pada mekanisme otorisasi, tetapi juga pada cara data medis dimodelkan sejak awal \autocite{amaracitra2025composable}. Dengan struktur seperti ini, akses dapat diberikan hanya pada bagian data yang relevan dengan kebutuhan tenaga kesehatan tertentu. Misalnya, tenaga laboratorium dapat berinteraksi dengan data pemeriksaan laboratorium tanpa harus memperoleh akses ke keseluruhan rekam medis pasien.
+
+% apa ini perlu dimasukkan?
+Secara keseluruhan, ketiga penelitian tersebut menunjukkan bahwa tantangan utama pada RME terdesentralisasi bukan hanya terletak pada pemilihan platform DLT, tetapi juga pada keseimbangan antara granularitas akses, kompleksitas kebijakan, dan kemudahan implementasi. Penelitian ini mengambil pelajaran dari ketiganya: kebutuhan akan kontrol akses yang lebih kontekstual dari model \textit{hybrid} RBAC dengan ABAC, justifikasi adopsi DLT dari model empat lapis EMR, serta pentingnya pemodelan data yang granular.
+% Celah yang masih terbuka adalah bagaimana menyediakan mekanisme delegasi akses yang tetap granular tetapi lebih ringan dan lebih sesuai untuk alur kerja klinis yang kolaboratif.
+

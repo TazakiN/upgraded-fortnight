@@ -1,23 +1,129 @@
-\section{Gambaran Umum Solusi} \label{sec:gambaran-umum}
+\section{Rancangan Solusi}
+\label{sec:rancangan-solusi}
 
-Solusi yang diusulkan memodifikasi arsitektur DecMed dengan mengintegrasikan PRE yang diperkuat oleh mekanisme kontrol akses berbasis Macaroons. Perancangan ini secara langsung diturunkan dari hasil analisis pada bab sebelumnya, yaitu kebutuhan akan kontrol akses granular, skema penyimpanan data \textit{off-chain} yang tersegmentasi, dan delegasi berantai dengan atenuasi \textit{offline}.
+Berdasarkan analisis masalah pada Subbab \ref{sec:analisis-masalah}, solusi yang diusulkan adalah pembaruan mekanisme kontrol akses DecMed dengan mengintegrasikan Macaroons pada alur CapBAC dan PRE yang sudah tersedia. Rancangan ini tidak mengganti fondasi utama DecMed, yaitu pemanfaatan IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, dan PRE sebagai mekanisme pembagian akses data terenkripsi. Perubahan difokuskan pada lapisan otorisasi agar akses terhadap RME dapat dinyatakan secara lebih granular dan dapat didelegasikan secara berantai tanpa harus selalu melibatkan pasien.
 
-Secara garis besar, solusi ini terdiri dari tiga komponen utama: (1) integrasi Macaroons untuk membangun kontrol akses granular, (2) penyusunan skema penyimpanan data \textit{off-chain} terenkripsi yang tersegmentasi, dan (3) perancangan delegasi berantai dengan atenuasi \textit{offline} untuk mendukung alur layanan kesehatan kolaboratif. Arsitektur sistem secara keseluruhan dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem}, sedangkan skema penyimpanan \textit{on-chain} dan \textit{off-chain} dapat dilihat pada Lampiran \ref{lampiran:skema-penyimpanan}.
+Rancangan solusi diturunkan dari tiga kebutuhan utama yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah}. Pertama, token otorisasi perlu membawa batasan rinci terkait aktor, jenis data, aksi, masa berlaku, dan konteks penggunaan. Kedua, data RME yang disimpan secara \textit{off-chain} perlu disegmentasi agar batasan akses tersebut dapat ditegakkan pada unit data yang tepat. Ketiga, pemegang akses yang sah perlu dapat menurunkan hak aksesnya kepada pihak lain dengan batasan yang lebih sempit melalui atenuasi \textit{offline}. Dengan demikian, solusi yang dirancang langsung menjawab rumusan masalah pada Bab \ref{chap:pendahuluan}, yaitu rancangan kontrol akses granular berbasis Macaroons dan rancangan fitur \textit{offline attenuation} untuk delegasi antar tenaga medis.
 
-\subsection{Integrasi Macaroons untuk Kontrol Akses Granular} \label{subsec:integrasi-macaroons}
+\subsection{Prinsip Perancangan}
+\label{subsec:prinsip-perancangan}
 
-Komponen pertama dari solusi adalah penerapan Macaroons sebagai mekanisme kontrol akses yang dapat membawa batasan kontekstual secara eksplisit. Sistem ini menerapkan konsep \textit{Signature-Derived Root} pada Macaroons, dimana \texttt{RootKey} dari setiap token diturunkan secara dinamis dari hasil \textit{digital signature} menggunakan kunci privat (\textit{wallet}) pasien terhadap ID token. Dengan pendekatan ini, token otorisasi tidak hanya menyatakan bahwa akses diberikan, tetapi juga dapat membawa pembatasan seperti jenis data, aksi yang diizinkan, masa berlaku, dan konteks penggunaan.
+Rancangan solusi ini dibangun di atas beberapa prinsip yang konsisten dengan kebutuhan RME, regulasi perlindungan data, dan karakteristik DecMed.
 
-\textit{Server} PRE berperan sebagai pihak yang memvalidasi token Macaroon dengan mencocokkan tanda tangan digital terhadap \textit{wallet address} pasien yang terdaftar di jaringan IOTA, sekaligus mengevaluasi \textit{caveats} yang melekat pada token. Dengan demikian, kebijakan akses granular dapat ditegakkan pada saat permintaan akses diproses. Rancangan detail \textit{caveats} yang digunakan untuk membatasi hak akses dapat dilihat pada Lampiran \ref{lampiran:skema-caveats}.
+\begin{enumerate}[leftmargin=*]
+	\item \textit{Patient-centric access control}. Pasien tetap menjadi pihak awal yang memberi kewenangan akses terhadap RME miliknya. Pasien menerbitkan token awal kepada tenaga medis atau pihak fasyankes yang terlibat dalam pelayanan.
+	\item \textit{Least privilege} dan \textit{need-to-know}. Setiap token hanya boleh membuka data dan aksi yang diperlukan oleh aktor pada tahap layanan tertentu. Petugas administrasi, dokter, dan petugas laboratorium tidak menerima cakupan akses yang sama.
+	\item Pemisahan penyimpanan dan otorisasi. IPFS tetap digunakan untuk menyimpan data RME terenkripsi, sedangkan IOTA menyimpan metadata, CID, dan jejak akses. Keputusan otorisasi tidak ditentukan oleh keberadaan CID saja, tetapi oleh token Macaroon yang tervalidasi oleh \textit{server} PRE.
+	\item Atenuasi hak akses. Hak akses yang sudah diberikan dapat dipersempit oleh pemegang token tanpa mengetahui \texttt{RootKey} token awal. Hak akses turunan tidak boleh lebih luas daripada hak akses induknya.
+\end{enumerate}
 
-\subsection{Skema Penyimpanan Data \textit{Off-Chain} Terenkripsi dan Tersegmentasi} \label{subsec:mekanisme-akses-data-rme}
+\subsection{Gambaran Umum Arsitektur Solusi}
+\label{subsec:gambaran-umum-arsitektur-solusi}
 
-Komponen kedua dari solusi adalah penyusunan skema penyimpanan data \textit{off-chain} yang lebih tersegmentasi agar kebijakan akses \textit{fine-grained} dapat ditegakkan secara teknis. Dalam rancangan ini, data RME tidak diperlakukan sebagai satu objek terenkripsi yang monolitik, melainkan dipisahkan ke dalam unit data yang merepresentasikan kebutuhan akses yang berbeda, seperti data administratif, riwayat klinis, permintaan pemeriksaan, dan hasil pemeriksaan penunjang. Dengan pemisahan tersebut, setiap aktor pada skenario layanan kesehatan kolaboratif hanya dapat diberi akses pada himpunan data yang benar-benar relevan dengan tugasnya.
+Arsitektur solusi mempertahankan tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client}. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas administrasi, dokter, dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
 
-Pengelolaan akses terhadap unit data tersebut tetap ditangani oleh \textit{server} PRE yang memvalidasi token Macaroon sebelum melakukan proses \textit{re-encryption}. Tahapan validasi meliputi pengecekan tanda tangan digital dan evaluasi \textit{caveats} yang melekat pada token, sehingga segmentasi penyimpanan dan kebijakan akses dapat bekerja secara terpadu. Detail operasional dan urutan langkah dalam mekanisme akses data ini dijelaskan pada Lampiran \ref{lampiran:mekanisme-akses-data}.
+Perubahan utama berada pada \textit{server} PRE dan struktur token akses. Pada DecMed awal, token akses masih membawa informasi yang relatif terbatas, seperti \textit{address}, \textit{role}, dan \textit{purpose}. Pada rancangan ini, token tersebut diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil.
 
-\subsection{Delegasi Berantai dengan Atenuasi \textit{Offline}} \label{subsec:mekanisme-delegasi-offline}
+Secara konseptual, arsitektur solusi terdiri dari empat komponen kerja berikut.
 
-Komponen ketiga dari solusi adalah mekanisme delegasi berantai yang memungkinkan tenaga medis meneruskan sebagian hak akses kepada pihak lain tanpa memerlukan penerbitan ulang token oleh pasien. Dalam rancangan ini, dokter penanggung jawab pasien dapat menurunkan hak akses kepada petugas laboratorium atau tenaga medis lain dengan menambahkan \textit{caveats} baru secara lokal. Setiap delegasi menghasilkan token turunan dengan ruang lingkup otorisasi yang semakin sempit, sehingga prinsip \textit{least privilege} tetap dapat dijaga selama perpindahan akses terjadi.
+\begin{enumerate}[leftmargin=*]
+	\item Lapisan \textit{client}, yaitu aplikasi pasien dan fasyankes yang menerbitkan, membawa, dan mengatenuasi Macaroon.
+	\item Lapisan otorisasi berbasis Macaroons, yaitu struktur token dan mekanisme evaluasi \textit{caveats} untuk menyatakan batasan akses.
+	\item Lapisan PRE, yaitu komponen yang menjadi titik penegakan kebijakan sebelum kunci atau data terenkripsi dire-enkripsi untuk penerima akses.
+	\item Lapisan penyimpanan, yaitu IOTA untuk metadata, CID, dan \textit{audit trail}, serta IPFS untuk data RME terenkripsi yang telah disegmentasi.
+\end{enumerate}
 
-Pendekatan ini dirancang untuk mendukung alur layanan kesehatan yang kolaboratif dan dinamis, dimana perpindahan tugas dapat terjadi dengan cepat antarunit pelayanan. Dengan adanya atenuasi \textit{offline}, proses delegasi dapat berlangsung secara efisien tanpa harus melibatkan pasien kembali untuk setiap kebutuhan teknis otorisasi. Rancangan ini sekaligus menjadi jawaban terhadap kebutuhan layanan klinis yang telah diidentifikasi pada tahap analisis, khususnya ketika dokter perlu memberikan akses terbatas kepada unit penunjang tanpa membuka keseluruhan data klinis pasien.
+Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem}, sedangkan rancangan penyimpanan \textit{on-chain} dan \textit{off-chain} dijelaskan pada Lampiran \ref{lampiran:skema-penyimpanan}.
+
+\subsection{Rancangan Token Otorisasi Berbasis Macaroons}
+\label{subsec:rancangan-token-macaroons}
+
+Macaroons digunakan sebagai pengganti token kapabilitas DecMed yang sebelumnya bersifat \textit{coarse-grained}. Token Macaroon tetap mengikuti model CapBAC karena token berperan sebagai bukti kapabilitas yang dibawa oleh pemegang akses. Perbedaannya, Macaroon dapat menyimpan batasan kontekstual dalam bentuk \textit{caveats} dan dapat diatenuasi secara lokal oleh pemegang token.
+
+Token awal diterbitkan oleh pasien melalui \textit{Patient Client}. Pada rancangan ini, \texttt{RootKey} Macaroon diturunkan dari tanda tangan digital pasien terhadap \texttt{token\_id}. Pendekatan ini mempertahankan sifat \textit{patient-centric} karena akar kewenangan token tetap berasal dari \textit{wallet} pasien. Token awal kemudian memuat \textit{caveats} dasar yang menyatakan cakupan akses, misalnya alamat pemegang token, kategori data, hak akses, masa berlaku, dan batasan delegasi.
+
+Rancangan \textit{caveats} minimal yang digunakan pada token ditunjukkan pada Tabel \ref{tab:rancangan-caveats-utama}. Detail skema \textit{caveats} pendukung dijelaskan lebih lanjut pada Lampiran \ref{lampiran:skema-caveats}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Rancangan \textit{Caveats} Utama pada Token Macaroons}
+	\label{tab:rancangan-caveats-utama}
+	\small
+	\begin{tabular}{|p{0.24\textwidth}|p{0.26\textwidth}|p{0.4\textwidth}|}
+		\hline
+		\textbf{\textit{Caveat}} & \textbf{Contoh Nilai} & \textbf{Fungsi} \\ \hline
+		\texttt{holder\_address} & Alamat \textit{wallet} dokter atau petugas & Mengikat token kepada pemegang akses yang sah. \\ \hline
+		\texttt{dataset\_category} & \texttt{ADMINISTRATIVE}, \texttt{RAWAT\_JALAN}, \texttt{LABORATORIUM} & Membatasi kategori data yang dapat diakses. \\ \hline
+		\texttt{access\_rights} & \texttt{READ}, \texttt{WRITE}, \texttt{CORRECTION} & Membatasi aksi yang dapat dilakukan terhadap data. \\ \hline
+		\texttt{expiration\_time} & Waktu kedaluwarsa token & Membatasi masa berlaku akses. \\ \hline
+		\texttt{delegation\_depth} & \texttt{0}, \texttt{1}, atau nilai terbatas lain & Membatasi jumlah penurunan hak akses yang masih diperbolehkan. \\ \hline
+	\end{tabular}
+\end{table}
+
+Dengan struktur tersebut, token untuk petugas administrasi dapat dibatasi hanya pada \texttt{dataset\_category = ADMINISTRATIVE} dengan hak baca dan tulis terbatas. Token untuk dokter dapat mencakup data klinis rawat jalan dengan hak baca dan tulis klinis. Token turunan untuk petugas laboratorium dapat dibatasi pada kategori \texttt{LABORATORIUM}, hak baca permintaan pemeriksaan, dan hak tulis hasil pemeriksaan.
+
+\subsection{Rancangan Segmentasi Data \textit{Off-Chain}}
+\label{subsec:rancangan-segmentasi-offchain}
+
+Kontrol akses granular tidak dapat ditegakkan hanya dengan mengganti token apabila data RME masih disimpan sebagai satu \textit{encrypted blob} yang terlalu besar. Oleh karena itu, rancangan ini memecah data \textit{off-chain} menjadi beberapa unit data terenkripsi berdasarkan kategori layanan dan kebutuhan akses. Segmentasi tersebut mengikuti pembagian isi RME yang telah dibahas pada Subbab \ref{subsec:isi-rme}, yaitu dokumentasi administratif dan dokumentasi klinis, serta mengacu pada kelompok data seperti rawat jalan, laboratorium, dan apotek.
+
+Setiap segmen data di IPFS memiliki CID dan metadata sendiri di IOTA. Metadata tersebut memuat informasi seperti \texttt{dataset\_category}, \texttt{ipfs\_cid}, \texttt{integrity\_hash}, serta kapsul kunci yang diperlukan oleh PRE. Dengan demikian, ketika seorang aktor meminta akses terhadap suatu segmen, \textit{server} PRE dapat mencocokkan \textit{caveats} pada token dengan metadata segmen data yang diminta. Apabila token hanya mengizinkan akses terhadap data laboratorium, maka token tersebut tidak dapat digunakan untuk meminta segmen riwayat klinis rawat jalan yang tidak relevan.
+
+Pada skenario layanan kesehatan kolaboratif, segmentasi data ini menghasilkan pemisahan akses sebagai berikut.
+
+\begin{enumerate}[leftmargin=*]
+	\item Petugas administrasi mengakses segmen data administratif dan pendaftaran kunjungan.
+	\item Dokter penanggung jawab pasien mengakses segmen klinis yang relevan, seperti rawat jalan dan hasil pemeriksaan penunjang yang diperlukan untuk pengambilan keputusan klinis.
+	\item Petugas laboratorium mengakses segmen permintaan pemeriksaan dan menulis segmen hasil pemeriksaan tanpa membuka keseluruhan riwayat klinis pasien.
+\end{enumerate}
+
+Rancangan ini menjadikan segmentasi penyimpanan sebagai prasyarat teknis bagi penegakan prinsip \textit{need-to-know}. Skema penyimpanan rinci dapat dilihat pada Lampiran \ref{lampiran:skema-penyimpanan}.
+
+\subsection{Rancangan Alur Akses Data}
+\label{subsec:rancangan-alur-akses-data}
+
+Alur akses normal dimulai ketika pasien menerbitkan Macaroon kepada aktor yang berwenang. Token tersebut dibawa oleh pengguna melalui \textit{Hospital Client} saat melakukan permintaan akses data. Permintaan akses berisi token, identitas segmen data yang diminta, dan aksi yang ingin dilakukan.
+
+\textit{Server} PRE menjalankan proses validasi dalam beberapa tahap. Pertama, \textit{server} memverifikasi akar token berdasarkan tanda tangan digital pasien dan identitas pasien yang tersimpan pada jaringan IOTA. Kedua, \textit{server} mengevaluasi seluruh \textit{caveats}, termasuk pemegang token, masa berlaku, kategori data, dan hak akses. Ketiga, \textit{server} mencocokkan kategori data pada token dengan metadata \textit{on-chain} dari segmen data yang diminta. Keempat, apabila validasi berhasil, \textit{server} PRE menjalankan proses \textit{re-encryption} sehingga data terenkripsi dapat dibuka oleh penerima akses yang sah.
+
+Jika salah satu pemeriksaan gagal, permintaan akses ditolak dan proses \textit{re-encryption} tidak dilakukan. Dengan demikian, PRE tidak hanya berperan sebagai komponen kriptografis, tetapi juga sebagai titik penegakan kebijakan akses granular. Urutan operasional akses data dijelaskan pada Lampiran \ref{lampiran:mekanisme-akses-data}.
+
+\subsection{Rancangan Delegasi Berantai dengan Atenuasi \textit{Offline}}
+\label{subsec:rancangan-delegasi-offline}
+
+Fitur \textit{offline attenuation} dirancang untuk menjawab kebutuhan delegasi antar tenaga medis tanpa mengharuskan pasien menerbitkan ulang token setiap kali terjadi perpindahan tugas. Dalam skenario rawat jalan, pasien dapat memberikan token awal kepada dokter penanggung jawab pasien. Ketika dokter membutuhkan pemeriksaan laboratorium, dokter dapat menurunkan token tersebut kepada petugas laboratorium dengan menambahkan \textit{caveats} baru secara lokal.
+
+Penambahan \textit{caveats} menghasilkan Macaroon turunan dengan tanda tangan baru yang dihitung melalui mekanisme \textit{chained-HMAC}. Karena Macaroons hanya memungkinkan penambahan batasan, token turunan tidak dapat memiliki cakupan akses yang lebih luas daripada token induknya. Sebagai contoh, jika token dokter hanya berlaku untuk data rawat jalan pasien tertentu dalam rentang waktu tertentu, maka token laboratorium yang diturunkan dari token tersebut tidak dapat memperpanjang masa berlaku, membuka kategori data lain, atau menambah hak akses di luar token dokter.
+
+Alur delegasi berantai dirancang sebagai berikut.
+
+\begin{enumerate}[leftmargin=*]
+	\item Pasien menerbitkan token awal kepada dokter dengan cakupan akses klinis yang relevan dan batasan masa berlaku.
+	\item Dokter menambahkan \textit{caveats} baru untuk petugas laboratorium, misalnya membatasi \texttt{dataset\_category} menjadi \texttt{LABORATORIUM}, membatasi \texttt{access\_rights} menjadi baca permintaan dan tulis hasil, serta mengurangi \texttt{delegation\_depth}.
+	\item Petugas laboratorium menggunakan token turunan untuk meminta akses kepada \textit{server} PRE.
+	\item \textit{Server} PRE memvalidasi seluruh rantai \textit{caveats}. Apabila token turunan masih berada dalam cakupan token induk dan sesuai dengan metadata segmen data, akses diberikan melalui proses \textit{re-encryption}.
+\end{enumerate}
+
+Rancangan ini mempertahankan kendali awal pasien, tetapi mengurangi hambatan operasional pada pelayanan klinis. Pasien tidak perlu hadir untuk setiap delegasi teknis, sementara dokter tetap tidak dapat memberikan hak akses melebihi kewenangan yang diterimanya. Dengan demikian, mekanisme ini mendukung kolaborasi layanan kesehatan yang dinamis sekaligus menjaga pembatasan akses berdasarkan prinsip \textit{least privilege}.
+
+\subsection{Pemetaan Kebutuhan terhadap Rancangan}
+\label{subsec:pemetaan-kebutuhan-rancangan}
+
+Keterkaitan antara masalah yang telah diidentifikasi dan komponen rancangan solusi dirangkum pada Tabel \ref{tab:pemetaan-kebutuhan-rancangan}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Pemetaan Kebutuhan Sistem terhadap Rancangan Solusi}
+	\label{tab:pemetaan-kebutuhan-rancangan}
+	\small
+	\begin{tabular}{|p{0.28\textwidth}|p{0.3\textwidth}|p{0.32\textwidth}|}
+		\hline
+		\textbf{Kebutuhan Sistem} & \textbf{Komponen Rancangan} & \textbf{Hasil yang Diharapkan} \\ \hline
+		Kontrol akses granular & Token Macaroons dengan \textit{caveats} & Akses dapat dibatasi berdasarkan aktor, kategori data, hak akses, dan waktu. \\ \hline
+		Segmentasi data \textit{off-chain} & Pemisahan data IPFS berdasarkan \texttt{dataset\_category} dan metadata IOTA & Token hanya dapat membuka segmen data yang relevan dengan kebutuhan aktor. \\ \hline
+		Delegasi berantai & Atenuasi \textit{offline} melalui penambahan \textit{caveats} & Dokter dapat mendelegasikan akses terbatas kepada unit lain tanpa penerbitan ulang token oleh pasien. \\ \hline
+		Penegakan akses terhadap data terenkripsi & Validasi Macaroon pada \textit{server} PRE sebelum \textit{re-encryption} & Data tetap terenkripsi dan hanya dapat dibuka setelah token tervalidasi. \\ \hline
+	\end{tabular}
+\end{table}
+
+Pemetaan tersebut menunjukkan bahwa rancangan solusi tidak hanya menambahkan mekanisme token baru, tetapi juga menghubungkan token, segmentasi data, dan PRE sebagai satu alur penegakan akses. Dengan rancangan ini, DecMed dapat mendukung kebutuhan akses yang lebih granular dan delegasi akses yang lebih sesuai dengan alur pelayanan kesehatan kolaboratif.

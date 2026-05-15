@@ -1,0 +1,6 @@
+\subsection{Analisis Penggunaan Macaroons}
+\label{subsec:analisis-penggunaan-macaroons}
+
+Macaroons dipilih karena memiliki karakteristik yang sesuai dengan kebutuhan kontrol akses granular pada DecMed. Melalui \textit{caveats}, token dapat membawa batasan akses seperti kategori data, aksi yang diperbolehkan, masa berlaku, dan identitas pemegang token. Hal ini lebih sesuai dibandingkan token DecMed awal yang hanya menyatakan \textit{role} dan \textit{purpose}, karena kebutuhan akses pada layanan kesehatan tidak selalu dapat direpresentasikan dengan peran yang tetap.
+
+Fitur atenuasi pada Macaroons juga menjawab masalah delegasi akses. Pemegang token dapat menambahkan \textit{caveats} baru untuk mempersempit hak akses sebelum token diberikan kepada pihak lain. Karena mekanisme \textit{chained-HMAC} mengikat setiap penambahan \textit{caveat} ke tanda tangan token, pihak penerima tidak dapat menghapus atau memodifikasi batasan tersebut tanpa membuat token menjadi tidak valid. Dengan demikian, Macaroons mendukung delegasi berantai yang tetap mengikuti prinsip \textit{least privilege}.

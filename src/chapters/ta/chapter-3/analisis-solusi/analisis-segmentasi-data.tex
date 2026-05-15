@@ -1,0 +1,6 @@
+\subsection{Analisis Segmentasi Data}
+\label{subsec:analisis-segmentasi-data}
+
+Masalah granularitas tidak hanya berada pada token, tetapi juga pada struktur data yang dilindungi. Jika data RME disimpan sebagai satu \textit{encrypted blob}, maka pemberian akses terhadap blob tersebut akan membuka seluruh isi data meskipun aktor hanya membutuhkan sebagian kecil informasi. Kondisi ini tidak sesuai dengan skenario layanan klinis yang melibatkan kebutuhan akses berbeda antara petugas administrasi, dokter, dan petugas laboratorium.
+
+Oleh karena itu, data \textit{off-chain} perlu dianalisis sebagai kumpulan segmen yang dapat dipisahkan berdasarkan kategori dan kebutuhan akses. Pembagian data data klinis rawat jalan sesuai dengan kategori diagnosa penyakit yang ditangani oleh fasyankes memberikan akses hanya pada bagian yang relevan. Segmentasi ini juga membuat \textit{caveats} pada Macaroons memiliki objek penegakan yang jelas, karena batasan seperti \texttt{dataset\_category} dapat dicocokkan dengan metadata segmen data.

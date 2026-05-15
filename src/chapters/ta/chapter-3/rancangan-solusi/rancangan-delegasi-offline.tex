@@ -1,0 +1,17 @@
+\subsection{Rancangan Delegasi Berantai dengan Atenuasi \textit{Offline}}
+\label{subsec:rancangan-delegasi-offline}
+
+Fitur \textit{offline attenuation} dirancang untuk menjawab kebutuhan delegasi antar tenaga medis tanpa mengharuskan pasien menerbitkan ulang token setiap kali terjadi perpindahan tugas. Dalam skenario rawat jalan, pasien dapat memberikan token awal kepada dokter penanggung jawab pasien. Ketika dokter membutuhkan pemeriksaan laboratorium, dokter dapat menurunkan token tersebut kepada petugas laboratorium dengan menambahkan \textit{caveats} baru secara lokal.
+
+Penambahan \textit{caveats} menghasilkan Macaroon turunan dengan tanda tangan baru yang dihitung melalui mekanisme \textit{chained-HMAC}. Karena Macaroons hanya memungkinkan penambahan batasan, token turunan tidak dapat memiliki cakupan akses yang lebih luas daripada token induknya. Sebagai contoh, jika token dokter hanya berlaku untuk data rawat jalan pasien tertentu dalam rentang waktu tertentu, maka token laboratorium yang diturunkan dari token tersebut tidak dapat memperpanjang masa berlaku, membuka kategori data lain, atau menambah hak akses di luar token dokter.
+
+Alur delegasi berantai dirancang sebagai berikut.
+
+\begin{enumerate}[leftmargin=*]
+	\item Pasien menerbitkan token awal kepada dokter dengan cakupan akses klinis yang relevan dan batasan masa berlaku.
+	\item Dokter menambahkan \textit{caveats} baru untuk petugas laboratorium, misalnya membatasi \texttt{dataset\_category} menjadi \texttt{LABORATORIUM}, membatasi \texttt{access\_rights} menjadi baca permintaan dan tulis hasil, serta mengurangi \texttt{delegation\_depth}.
+	\item Petugas laboratorium menggunakan token turunan untuk meminta akses kepada \textit{server} PRE.
+	\item \textit{Server} PRE memvalidasi seluruh rantai \textit{caveats}. Apabila token turunan masih berada dalam cakupan token induk dan sesuai dengan metadata segmen data, akses diberikan melalui proses \textit{re-encryption}.
+\end{enumerate}
+
+Rancangan ini mempertahankan kendali awal pasien, tetapi mengurangi hambatan operasional pada pelayanan klinis. Pasien tidak perlu hadir untuk setiap delegasi teknis, sementara dokter tetap tidak dapat memberikan hak akses melebihi kewenangan yang diterimanya. Dengan demikian, mekanisme ini mendukung kolaborasi layanan kesehatan yang dinamis sekaligus menjaga pembatasan akses berdasarkan prinsip \textit{least privilege}.

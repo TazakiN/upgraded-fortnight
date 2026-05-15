@@ -1,0 +1,26 @@
+\subsection{Rancangan Token Otorisasi Berbasis Macaroons}
+\label{subsec:rancangan-token-macaroons}
+
+Macaroons digunakan sebagai pengganti token kapabilitas DecMed yang sebelumnya bersifat \textit{coarse-grained}. Token Macaroon tetap mengikuti model CapBAC karena token berperan sebagai bukti kapabilitas yang dibawa oleh pemegang akses. Perbedaannya, Macaroon dapat menyimpan batasan kontekstual dalam bentuk \textit{caveats} dan dapat diatenuasi secara lokal oleh pemegang token.
+
+Token awal diterbitkan oleh pasien melalui \textit{Patient Client}. Pada rancangan ini, \texttt{RootKey} Macaroon diturunkan dari tanda tangan digital pasien terhadap \texttt{token\_id}. Pendekatan ini mempertahankan sifat \textit{patient-centric} karena akar kewenangan token tetap berasal dari \textit{wallet} pasien. Token awal kemudian memuat \textit{caveats} dasar yang menyatakan cakupan akses, misalnya alamat pemegang token, kategori data, hak akses, masa berlaku, dan batasan delegasi.
+
+Rancangan \textit{caveats} minimal yang digunakan pada token ditunjukkan pada Tabel \ref{tab:rancangan-caveats-utama}. Detail skema \textit{caveats} pendukung dijelaskan lebih lanjut pada Lampiran \ref{lampiran:skema-caveats}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Rancangan \textit{Caveats} Utama pada Token Macaroons}
+	\label{tab:rancangan-caveats-utama}
+	\small
+	\begin{tabular}{|p{0.24\textwidth}|p{0.26\textwidth}|p{0.4\textwidth}|}
+		\hline
+		\textbf{\textit{Caveat}}   & \textbf{Contoh Nilai}                                                 & \textbf{Fungsi}                                                \\ \hline
+		\texttt{holder\_address}   & Alamat \textit{wallet} dokter atau petugas                            & Mengikat token kepada pemegang akses yang sah.                 \\ \hline
+		\texttt{dataset\_category} & \texttt{ADMINISTRATIVE}, \texttt{RAWAT\_JALAN}, \texttt{LABORATORIUM} & Membatasi kategori data yang dapat diakses.                    \\ \hline
+		\texttt{access\_rights}    & \texttt{READ}, \texttt{WRITE}, \texttt{CORRECTION}                    & Membatasi aksi yang dapat dilakukan terhadap data.             \\ \hline
+		\texttt{expiration\_time}  & Waktu kedaluwarsa token                                               & Membatasi masa berlaku akses.                                  \\ \hline
+		\texttt{delegation\_depth} & \texttt{0}, \texttt{1}, atau nilai terbatas lain                      & Membatasi jumlah penurunan hak akses yang masih diperbolehkan. \\ \hline
+	\end{tabular}
+\end{table}
+
+Dengan struktur tersebut, token untuk petugas administrasi dapat dibatasi hanya pada \texttt{dataset\_category = ADMINISTRATIVE} dengan hak baca dan tulis terbatas. Token untuk dokter dapat mencakup data klinis rawat jalan dengan hak baca dan tulis klinis. Token turunan untuk petugas laboratorium dapat dibatasi pada kategori \texttt{LABORATORIUM}, hak baca permintaan pemeriksaan, dan hak tulis hasil pemeriksaan.

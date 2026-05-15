@@ -1,0 +1,21 @@
+\subsection{Pemetaan Kebutuhan terhadap Solusi}
+\label{subsec:pemetaan-kebutuhan-solusi}
+
+Hasil analisis solusi dirangkum pada Tabel \ref{tab:pemetaan-kebutuhan-solusi}. Pemetaan ini menunjukkan hubungan antara kebutuhan sistem yang ditemukan pada analisis masalah dengan komponen solusi yang akan dirancang pada bagian berikutnya.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Pemetaan Kebutuhan Sistem terhadap Analisis Solusi}
+	\label{tab:pemetaan-kebutuhan-solusi}
+	\small
+	\begin{tabular}{|p{0.28\textwidth}|p{0.3\textwidth}|p{0.32\textwidth}|}
+		\hline
+		\textbf{Kebutuhan Sistem}                 & \textbf{Komponen Solusi}                      & \textbf{Implikasi terhadap Rancangan}                                       \\ \hline
+		Kontrol akses granular                    & Macaroons dengan \textit{caveats}             & Token perlu memuat batasan aktor, kategori data, hak akses, dan waktu.      \\ \hline
+		Segmentasi data \textit{off-chain}        & Pemisahan data IPFS berdasarkan kategori data & Metadata segmen data perlu dapat dicocokkan dengan \textit{caveats} token.  \\ \hline
+		Delegasi berantai                         & Atenuasi \textit{offline} pada Macaroons      & Pemegang token dapat menurunkan hak akses dengan cakupan yang lebih sempit. \\ \hline
+		Penegakan akses terhadap data terenkripsi & Validasi token pada \textit{server} PRE       & PRE perlu memvalidasi token sebelum menjalankan \textit{re-encryption}.     \\ \hline
+	\end{tabular}
+\end{table}
+
+Dengan hasil analisis tersebut, solusi yang dirancang pada bagian berikutnya difokuskan pada empat aspek: arsitektur integrasi Macaroons ke DecMed, struktur token dan \textit{caveats}, segmentasi data \textit{off-chain}, serta alur akses dan delegasi.

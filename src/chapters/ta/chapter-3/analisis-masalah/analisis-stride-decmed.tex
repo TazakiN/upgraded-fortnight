@@ -1,0 +1,23 @@
+\subsubsection{Analisis STRIDE pada Sistem DecMed}
+\label{subsec:analisis-stride-decmed}
+
+Setelah kelemahan fungsional pada arsitektur DecMed diidentifikasi pada Subbab \ref{subsec:analisis-sistem-decmed}, analisis STRIDE pada subbab ini digunakan sebagai pelengkap untuk memetakan implikasi keamanannya secara lebih sistematis. Dengan kata lain, STRIDE tidak digunakan untuk merumuskan masalah Tugas Akhir yang baru, melainkan untuk menunjukkan bahwa keterbatasan pada kontrol akses dan mekanisme delegasi berpotensi menimbulkan ancaman keamanan yang nyata ketika sistem diterapkan.
+
+Berdasarkan pembahasan pada Subbab \ref{sec:stride}, tahapan awal dalam melakukan pemodelan ancaman menggunakan STRIDE adalah mengidentifikasi komponen sistem yang menjadi target ancaman. Hal ini dilakukan dengan menggambarkan DFD yang menunjukkan aliran data dan komunikasi antar komponen sistem. Hasil pemodelan DFD level 0 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-0}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{resources/chapter-3/analisis/DFD-DecMed-Level-0.png}
+    \caption{DFD DecMed Level 0 (Dokumentasi Penulis)}
+    \label{fig:dfd-decmed-level-0}
+\end{figure}
+
+Berdasarkan arsitektur DecMed pada Gambar \ref{fig:decmed-archi} dan DFD pada Gambar \ref{fig:dfd-decmed-level-0}, \textit{attack surface} utama sistem mencakup \textit{Patient Client}, \textit{Hospital Client}, \textit{Ministry Client}, data pada lapisan \textit{on-chain}, data terenkripsi pada lapisan \textit{off-chain}, \textit{instance} PRE, serta token kapabilitas yang mengatur otorisasi akses.
+
+Tabel \ref{tab:stride-decmed} menunjukkan hasil identifikasi ancaman berdasarkan metode STRIDE terhadap komponen utama pada sistem DecMed.
+
+\input{resources/chapter-3/analisis/stride-decmed.tex}
+
+Berdasarkan hasil analisis STRIDE pada Tabel \ref{tab:stride-decmed}, ancaman yang paling relevan terhadap fokus Tugas Akhir ini adalah \textit{information disclosure} (T05 dan T06), \textit{tampering} (T02 dan T03), dan \textit{elevation of privilege} (T08). Ketiga ancaman tersebut secara langsung berkaitan dengan kebutuhan akan kontrol akses yang lebih granular, segmentasi data \textit{off-chain}, serta mekanisme delegasi yang mampu membatasi hak akses secara bertahap.
+
+Dengan demikian, hasil analisis STRIDE memperkuat bahwa keterbatasan pada model kontrol akses dan delegasi DecMed tidak hanya merupakan persoalan fungsional, tetapi juga memiliki implikasi keamanan yang nyata. Oleh karena itu, diperlukan mekanisme otorisasi yang mampu mendukung pembatasan akses yang lebih rinci dan aman pada sistem rekam medis elektronik terdesentralisasi.

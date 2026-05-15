@@ -1,0 +1,8 @@
+\subsection{Analisis Integrasi dengan PRE}
+\label{subsec:analisis-integrasi-pre}
+
+PRE tetap menjadi titik penting dalam rancangan karena data RME berada dalam bentuk terenkripsi. Pada DecMed, PRE digunakan untuk mengubah akses dekripsi dari pemilik data ke penerima akses tanpa membuka \textit{plaintext}. Dalam solusi yang diusulkan pada Tugas Akhir ini, PRE tidak hanya menjalankan proses \textit{re-encryption}, tetapi juga memiliki fungsi baru sebagai titik penegakan kebijakan akses.
+
+Sebelum melakukan \textit{re-encryption}, \textit{server} PRE perlu memvalidasi token Macaroon dan mengevaluasi seluruh \textit{caveats}. Jika permintaan akses tidak sesuai dengan batasan token, proses \textit{re-encryption} tidak dilakukan. Dengan cara ini, token Macaroon, metadata IOTA, dan segmen data IPFS bekerja sebagai satu mekanisme kontrol akses yang saling melengkapi.
+
+% ?Kenapa ga bikin instance baru aja? perlu dijelaskan

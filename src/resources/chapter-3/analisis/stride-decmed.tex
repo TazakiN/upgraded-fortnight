@@ -6,63 +6,63 @@
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{|p{0.65cm}|p{2.2cm}|p{1.9cm}|p{3.6cm}|p{3.4cm}|}
         \hline
-        \textbf{ID}                                                                                        & \textbf{Komponen} & \textbf{Kategori STRIDE} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+        \textbf{ID}                                                                                                                                             & \textbf{Komponen} & \textbf{Kategori STRIDE} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
         \hline
 
-        T01                                                                                                &
-        Capability Token                                                                                   &
-        \textit{Spoofing}                                                                                  &
-        Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk memperoleh akses terhadap RME. &
-        Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                               \\
+        T01                                                                                                                                                     &
+        Capability Token                                                                                                                                        &
+        \textit{Spoofing}                                                                                                                                       &
+        Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk memperoleh akses terhadap RME.                                                      &
+        Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                    \\
         \hline
 
-        T02                                                                                                &
-        Metadata \textit{On-chain}                                                                         &
-        \textit{Tampering}                                                                                 &
-        Metadata akses atau referensi data dimodifikasi secara tidak sah oleh pihak tertentu.              &
-        Integritas data dan ketepatan pemberian akses menjadi terganggu.                                                                                                                                \\
+        T02                                                                                                                                                     &
+        Metadata \textit{On-chain}                                                                                                                              &
+        \textit{Tampering}                                                                                                                                      &
+        Pengguna yang tidak berwenang memanggil \textit{smart contract} pembaruan metadata yang tidak valid melalui transaksi yang tidak dibatasi dengan tepat. &
+        Integritas data dan ketepatan pemberian akses menjadi terganggu.                                                                                                                                                                                     \\
         \hline
 
-        T03                                                                                                &
-        Data \textit{Off-chain}                                                                            &
-        \textit{Tampering}                                                                                 &
-        Objek data terenkripsi pada penyimpanan \textit{off-chain} diganti atau dimodifikasi.              &
-        Data rekam medis menjadi tidak valid atau tidak konsisten.                                                                                                                                      \\
+        T03                                                                                                                                                     &
+        Data \textit{Off-chain}                                                                                                                                 &
+        \textit{Tampering}                                                                                                                                      &
+        Objek data terenkripsi pada penyimpanan \textit{off-chain} diganti atau dimodifikasi.                                                                   &
+        Data rekam medis menjadi tidak valid atau tidak konsisten.                                                                                                                                                                                           \\
         \hline
 
-        T04                                                                                                &
-        Delegation Mechanism                                                                               &
-        \textit{Repudiation}                                                                               &
-        Pihak tertentu menyangkal pernah memberikan atau menggunakan delegasi akses.                       &
-        Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                     \\
+        T04                                                                                                                                                     &
+        Delegation Mechanism                                                                                                                                    &
+        \textit{Repudiation}                                                                                                                                    &
+        Pihak tertentu menyangkal pernah memberikan atau menggunakan delegasi akses.                                                                            &
+        Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                                                                          \\
         \hline
 
-        T05                                                                                                &
-        Data \textit{Off-chain}                                                                            &
-        \textit{Information Disclosure}                                                                    &
-        Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan klinis.                  &
-        Kebocoran data kesehatan sensitif pasien.                                                                                                                                                       \\
+        T05                                                                                                                                                     &
+        Data \textit{Off-chain}                                                                                                                                 &
+        \textit{Information Disclosure}                                                                                                                         &
+        Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan klinis.                                                                       &
+        Kebocoran data kesehatan sensitif pasien.                                                                                                                                                                                                            \\
         \hline
 
-        T06                                                                                                &
-        Metadata \textit{On-chain}                                                                         &
-        \textit{Information Disclosure}                                                                    &
-        Metadata transaksi mengungkap relasi pasien, fasilitas kesehatan, atau jenis layanan medis.        &
-        Privasi pasien dan informasi layanan kesehatan dapat terekspos.                                                                                                                                 \\
+        T06                                                                                                                                                     &
+        Metadata \textit{On-chain}                                                                                                                              &
+        \textit{Information Disclosure}                                                                                                                         &
+        Metadata transaksi mengungkap relasi pasien, fasilitas kesehatan, atau jenis layanan medis.                                                             &
+        Privasi pasien dan informasi layanan kesehatan dapat terekspos.                                                                                                                                                                                      \\
         \hline
 
-        T07                                                                                                &
-        PRE Instance dan IPFS                                                                              &
-        \textit{Denial of Service}                                                                         &
-        Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.       &
-        Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                    \\
+        T07                                                                                                                                                     &
+        PRE Instance dan IPFS                                                                                                                                   &
+        \textit{Denial of Service}                                                                                                                              &
+        Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.                                                            &
+        Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                                                                         \\
         \hline
 
-        T08                                                                                                &
-        Delegation Mechanism                                                                               &
-        \textit{Elevation of Privilege}                                                                    &
-        Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi secara granular.   &
-        Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                   \\
+        T08                                                                                                                                                     &
+        Delegation Mechanism                                                                                                                                    &
+        \textit{Elevation of Privilege}                                                                                                                         &
+        Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi secara granular.                                                        &
+        Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                        \\
         \hline
     \end{tabular}
 \end{table}

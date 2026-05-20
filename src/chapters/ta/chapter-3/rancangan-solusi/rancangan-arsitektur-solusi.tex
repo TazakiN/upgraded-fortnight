@@ -1,17 +1,12 @@
-\subsection{Gambaran Umum Arsitektur Solusi}
-\label{subsec:gambaran-umum-arsitektur-solusi}
+\subsection{Rancangan Arsitektur Solusi}
+\label{subsec:rancangan-arsitektur-solusi}
 
 Arsitektur solusi mempertahankan tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client}. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas administrasi, dokter, dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
 
 Perubahan utama berada pada \textit{server} PRE dan struktur token akses. Pada DecMed awal, token akses masih membawa informasi yang relatif terbatas, seperti \textit{address}, \textit{role}, dan \textit{purpose}. Pada rancangan ini, token tersebut diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil.
 
-Secara konseptual, arsitektur solusi terdiri dari empat komponen kerja berikut.
-
-\begin{enumerate}[leftmargin=*]
-	\item Lapisan \textit{client}, yaitu aplikasi pasien dan fasyankes yang menerbitkan, membawa, dan mengatenuasi Macaroon.
-	\item Lapisan otorisasi berbasis Macaroons, yaitu struktur token dan mekanisme evaluasi \textit{caveats} untuk menyatakan batasan akses.
-	\item Lapisan PRE, yaitu komponen yang menjadi titik penegakan kebijakan sebelum kunci atau data terenkripsi dire-enkripsi untuk penerima akses.
-	\item Lapisan penyimpanan, yaitu IOTA untuk metadata, CID, dan \textit{audit trail}, serta IPFS untuk data RME terenkripsi yang telah disegmentasi.
-\end{enumerate}
-
-Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada Lampiran \ref{lampiran:arsitektur-sistem}, sedangkan rancangan penyimpanan \textit{on-chain} dan \textit{off-chain} dijelaskan pada Lampiran \ref{lampiran:skema-penyimpanan}.
+Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada gambar X
+% TODO: Gambar arsitektur solusi
+, sedangkan rancangan penyimpanan \textit{on-chain} dan \textit{off-chain} dijelaskan pada Tabel X
+dan Tabel Y
+% TODO: Tabel skema penyimpanan on-chain dan off-chain

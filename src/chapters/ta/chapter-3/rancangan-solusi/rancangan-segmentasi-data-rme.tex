@@ -1,0 +1,269 @@
+\subsection{Rancangan Segmentasi Data RME}
+\label{subsec:rancangan-segmentasi-data-rme}
+
+Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, rancangan ini memecah data RME menjadi beberapa unit data terenkripsi berdasarkan kategori fungsi klinis sesuai dengan dokumen KMK \autocite{kemenkes1423-2022}. Agar segmentasi data dapat digunakan dalam mekanisme kontrol akses granular, setiap unit data perlu memiliki identitas kategori yang dapat dikenali secara konsisten oleh sistem. Identitas kategori tersebut digunakan pada proses validasi \textit{caveat}, pemfilteran data saat diambil dari penyimpanan \textit{on-chain}, serta pembatasan hak baca dan tulis berdasarkan konteks layanan kesehatan. Oleh karena itu, setiap data fungsi klinis direpresentasikan dalam bentuk \textit{category} yang digunakan secara konsisten pada metadata dan implementasi sistem.
+
+Segmentasi diawali dengan mengikuti klasifikasi isi RME yang telah dibahas pada Subbab \ref{subsec:isi-rme}, yaitu dokumentasi administratif dan dokumentasi klinis. Isi RME kemudian dibagi berdasarkan \textit{dataset} seperti yang sudah dibahas pada Subbab \ref{subsec:analisis-segmentasi-data}. Terdapat empat \textit{dataset} klinis yang akan diimplementasikan pada rancangan ini. Masing-masing \textit{dataset} tersebut dipetakan menjadi satu \textit{dataset category} dan menjadi nilai pada \textit{enum} di implementasi.
+
+Pada rancangan ini, istilah \textit{dataset category} digunakan untuk merepresentasikan kelompok dataset seperti rawat jalan atau laboratorium, sedangkan \textit{function category} merepresentasikan jenis fungsi klinis atau administratif di dalam masing-masing \textit{dataset}. Kombinasi kedua kategori tersebut membentuk unit segmentasi terkecil yang digunakan dalam proses kontrol akses.
+
+Dokumentasi administratif tidak termasuk ke dalam \textit{dataset} klinis berdasarkan kategori fungsi klinis KMK. Namun, dokumentasi administratif tetap direpresentasikan sebagai \textit{dataset category} tersendiri agar kebutuhan akses administratif pada sistem tetap dapat dikelola secara konsisten. Hal ini berkaitan dengan kebutuhan fungsionalitas DecMed, khususnya kebutuhan fungsional dengan ID F01, F06, F07, F14, dan F21 pada Tabel di Lampiran \ref{tab:kebutuhan-fungsional-decmed} terpenuhi. Tabel pemetaan \textit{dataset category} dapat dilihat pada Tabel \ref{tab:mapping-dataset-category}
+
+\begin{table}[!ht]
+    \centering
+    \caption{Tabel Pemetaan \textit{Dataset Category}}
+    \label{tab:mapping-dataset-category}
+    \small
+    \begin{tabular}{|p{0.23\textwidth}|p{0.27\textwidth}|}
+        \hline
+        \textbf{\textit{Dataset Category}} & \textbf{\textit{Enum Value}} \\ \hline
+        Administratif                      & \texttt{ADMINISTRATIVE}      \\ \hline
+        Rawat Jalan                        & \texttt{RAWAT\_JALAN}        \\ \hline
+        Rawat Inap                         & \texttt{RAWAT\_INAP}         \\ \hline
+        Laboratorium                       & \texttt{LABORATORIUM}        \\ \hline
+        Apotek                             & \texttt{APOTEK}              \\ \hline
+    \end{tabular}
+\end{table}
+
+Setiap \textit{dataset category} kemudian dibagi berdasarkan kategori fungsi. Masing-masing kategori fungsi inilah yang kemudian dijadikan sebagai segmen terkecil dalam rancangan solusi segmentasi data. Kategori fungsi klinis tersebut dapat dilihat pada Lampiran \ref{lampiran:metadata-rme} untuk \textit{dataset} Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. Tabel \ref{tab:mapping-function-category} adalah pemetaan kategori fungsi klinis dan administratif yang akan digunakan pada implementasi.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Tabel Pemetaan \textit{Function Category}}
+    \label{tab:mapping-function-category}
+    \small
+    \begin{tabular}{|p{0.35\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{\textit{Function Category}} & \textbf{\textit{Enum Value}}                \\ \hline
+
+        Anamnesis
+                                            & \texttt{ANAMNESIS}
+        \\ \hline
+
+        Pemeriksaan Fisik
+                                            & \texttt{PEMERIKSAAN\_FISIK}
+        \\ \hline
+
+        Pemeriksaan Psikologis, Sosial Ekonomi, Spiritual
+                                            & \texttt{PEMERIKSAAN\_PSIKOLOGIS}
+        \\ \hline
+
+        Riwayat Penggunaan Obat
+                                            & \texttt{RIWAYAT\_PENGGUNAAN\_OBAT}
+        \\ \hline
+
+        Rencana Rawat
+                                            & \texttt{RENCANA\_RAWAT}
+        \\ \hline
+
+        Perencanaan Pemulangan Pasien
+                                            & \texttt{PERENCANAAN\_PEMULANGAN}
+        \\ \hline
+
+        Instruksi Medik dan Keperawatan
+                                            & \texttt{INSTRUKSI\_MEDIK\_DAN\_KEPERAWATAN}
+        \\ \hline
+
+        Pemeriksaan Penunjang
+                                            & \texttt{PEMERIKSAAN\_PENUNJANG}
+        \\ \hline
+
+        Diagnosis
+                                            & \texttt{DIAGNOSIS}
+        \\ \hline
+
+        \textit{Informed Consent}
+                                            & \texttt{INFORMED\_CONSENT}
+        \\ \hline
+
+        Terapi
+                                            & \texttt{TERAPI}
+        \\ \hline
+
+        Permintaan Pemeriksaan
+                                            & \texttt{PERMINTAAN\_PEMERIKSAAN}
+        \\ \hline
+
+        Spesimen Klinis
+                                            & \texttt{SPESIMEN\_KLINIS}
+        \\ \hline
+
+        Fiksasi dan Pengolahan Spesimen
+                                            & \texttt{PENGOLAHAN\_SPESIMEN}
+        \\ \hline
+
+        Hasil Pemeriksaan
+                                            & \texttt{HASIL\_PEMERIKSAAN}
+        \\ \hline
+
+        Interpretasi dan Validasi Hasil
+                                            & \texttt{VALIDASI\_HASIL}
+        \\ \hline
+
+        Distribusi Hasil Pemeriksaan
+                                            & \texttt{DISTRIBUSI\_HASIL}
+        \\ \hline
+
+        Data Resep dan Obat
+                                            & \texttt{DATA\_RESEP\_DAN\_OBAT}
+        \\ \hline
+
+        Riwayat Alergi
+                                            & \texttt{RIWAYAT\_ALERGI}
+        \\ \hline
+
+        Asal Resep
+                                            & \texttt{ASAL\_RESEP}
+        \\ \hline
+
+        Dokter Penulis Resep
+                                            & \texttt{DOKTER\_PENULIS\_RESEP}
+        \\ \hline
+
+        Status dan Pengkajian Resep
+                                            & \texttt{STATUS\_DAN\_PENGKAJIAN\_RESEP}
+        \\ \hline
+
+        Status Resep
+                                            & \texttt{STATUS\_RESEP}
+        \\ \hline
+
+        Waktu Penyiapan Obat
+                                            & \texttt{WAKTU\_PENYIAPAN\_OBAT}
+        \\ \hline
+
+        Waktu Penyerahan Obat
+                                            & \texttt{WAKTU\_PENYERAHAN\_OBAT}
+        \\ \hline
+
+        Nama Petugas yang Melakukan Dispensing
+                                            & \texttt{PETUGAS\_DISPENSING}
+        \\ \hline
+
+        Etiket
+                                            & \texttt{ETIKET}
+        \\ \hline
+    \end{tabular}
+\end{table}
+
+Setiap segmen data di IPFS memiliki CID dan metadata sendiri di IOTA. Metadata tersebut memuat informasi seperti \texttt{dataset\_category}, \texttt{ipfs\_cid}, \texttt{integrity\_hash}, serta kapsul kunci yang diperlukan oleh PRE. Dengan demikian, ketika seorang aktor meminta akses terhadap suatu segmen, \textit{server} PRE dapat mencocokkan \textit{caveats} pada token dengan metadata segmen data yang diminta. Apabila token hanya mengizinkan akses terhadap data laboratorium, maka token tersebut tidak dapat digunakan untuk meminta segmen riwayat klinis rawat jalan yang tidak relevan.
+
+Pada skenario layanan kesehatan kolaboratif, segmentasi data ini menghasilkan pemisahan akses sebagai berikut.
+
+\begin{enumerate}[leftmargin=*]
+    \item Petugas administrasi mengakses segmen dokumentasi administratif saja.
+    \item Dokter penanggung jawab pasien mengakses segmen dokumentasi klinis yang relevan, seperti rawat jalan.
+    \item Petugas laboratorium mengakses segmen pemeriksaan penunjang dan menulis segmen hasil pemeriksaan saja tanpa membuka keseluruhan riwayat klinis pasien.
+    \item Petugas apotek mengakses segmen data resep dan obat saja tanpa membuka keseluruhan riwayat klinis pasien.
+    \item Perawat mengakses segmen anamnesis, pemeriksaan fisik, pemeriksaan psikologis dan instruksi medik dan keperawatan saja tanpa membuka keseluruhan riwayat klinis pasien.
+\end{enumerate}
+
+Rancangan ini menjadikan segmentasi penyimpanan sebagai prasyarat teknis bagi penegakan prinsip \textit{need-to-know}. Penyimpanan data pada sistem yang diusulkan dibagi menjadi dua lapisan. Lapisan \textit{on-chain} pada IOTA menyimpan metadata segmen yang diperlukan untuk penemuan data, validasi kategori akses, verifikasi integritas, dan pengelolaan kapsul kunci. Lapisan \textit{off-chain} pada IPFS menyimpan isi RME dalam bentuk segmen data terenkripsi. Pemisahan ini memungkinkan \textit{server} PRE mencocokkan \textit{caveats} pada Macaroon dengan metadata segmen sebelum mengambil dan melakukan \textit{re-encryption} terhadap data di IPFS.
+
+\subsubsection{Skema Penyimpanan \textit{On-Chain} (IOTA)}
+\label{subsubsec:skema-penyimpanan-onchain}
+
+Penyimpanan \textit{on-chain} tidak menyimpan isi rekam medis. Data yang dicatat pada IOTA adalah metadata setiap segmen RME yang sudah terenkripsi di IPFS. Metadata ini menjadi dasar bagi proses pemfilteran berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}, serta menjadi sumber verifikasi bahwa segmen yang diminta sesuai dengan batasan akses pada token Macaroon.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
+    \caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                              \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    \multirow{4}{2.8cm}{\textbf{Identitas Segmen}}
+                      & \texttt{segment\_id}
+                      & UUID unik untuk satu segmen data RME.                                                                                     \\ \cline{2-3}
+                      & \texttt{related\_rme\_id}
+                      & ID RME atau episode pelayanan yasng menjadi induk segmen.                                                                 \\ \cline{2-3}
+                      & \texttt{patient\_address}
+                      & Alamat \textit{wallet} pasien pemilik RME.                                                                                \\ \cline{2-3}
+                      & \texttt{fasyankes\_id}
+                      & ID fasilitas pelayanan kesehatan yang menyimpan segmen.                                                                   \\ \hline
+
+    \multirow{2}{2.8cm}{\textbf{Kategori Akses}}
+                      & \texttt{dataset\_category}
+                      & Kategori dataset. Sesuai dengan tabel \ref{tab:mapping-dataset-category}.                                                 \\ \cline{2-3}
+                      & \texttt{function\_category}
+                      & Kategori fungsi klinis atau administratif. Sesuai dengan tabel \ref{tab:mapping-function-category}.                       \\ \hline
+
+    \multirow{3}{2.8cm}{\textbf{Pointer dan Integritas}}
+                      & \texttt{ipfs\_cid}
+                      & CID IPFS dari segmen data terenkripsi.                                                                                    \\ \cline{2-3}
+                      & \texttt{integrity\_hash}
+                      & Hash SHA-256 dari segmen terenkripsi.                                                                                     \\ \hline
+
+    \multirow{3}{2.8cm}{\textbf{Kapsul Kunci}}
+                      & \texttt{capsule}
+                      & Kapsul PRE yang diperlukan untuk proses \textit{re-encryption}.                                                           \\ \cline{2-3}
+                      & \texttt{enc\_key\_and\_nonce}
+                      & Kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data.                                       \\ \cline{2-3}
+                      & \texttt{encryption\_algo}
+                      & Algoritma enkripsi konten, misalnya \texttt{AES-256-GCM}.                                                                 \\ \hline
+
+    \multirow{3}{2.8cm}{\textbf{Audit Metadata}}
+                      & \texttt{created\_at}
+                      & Waktu pembuatan metadata segmen.                                                                                          \\ \cline{2-3}
+                      & \texttt{author\_address}
+                      & Alamat \textit{wallet} aktor yang membuat atau memperbarui segmen.                                                        \\ \cline{2-3}
+                      & \texttt{updated\_at}
+                      & Waktu pembaruan terakhir apabila segmen diganti dengan CID baru.                                                          \\ \hline
+\end{longtable}
+
+\subsubsection{Skema Penyimpanan \textit{Off-Chain} (IPFS)}
+\label{subsubsec:skema-penyimpanan-offchain}
+
+Data \textit{off-chain} disimpan sebagai objek JSON per segmen sebelum dienkripsi dan diunggah ke IPFS. Setiap segmen merepresentasikan satu kombinasi \texttt{dataset\_category} dan \texttt{function\_category}. Dengan demikian, akses terhadap data dapat diberikan hanya pada segmen yang sesuai dengan kebutuhan aktor, misalnya petugas laboratorium hanya memperoleh segmen \texttt{LABORATORIUM} yang relevan tanpa membuka seluruh riwayat klinis pasien.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
+    \caption{Skema Segmen Data RME \textit{Off-Chain}} \label{tab:offchain-schema}                                                                                                                                                  \\
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                                                                                                                                     & \textbf{Keterangan} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Komponen} & \textbf{Key JSON}                                                                                                                                                                     & \textbf{Keterangan} \\
+    \hline
+    \endhead
+
+    \multirow{5}{2.8cm}{\textbf{Header Segmen}}
+                      & \texttt{segment\_id}
+                      & UUID yang sama dengan \texttt{segment\_id} pada metadata \textit{on-chain}.                                                                                                                                 \\ \cline{2-3}
+                      & \texttt{related\_rme\_id}
+                      & ID RME atau episode pelayanan yang menjadi induk segmen.                                                                                                                                                    \\ \cline{2-3}
+                      & \texttt{dataset\_category}
+                      & Kategori dataset sesuai Tabel \ref{tab:mapping-dataset-category}.                                                                                                                                           \\ \cline{2-3}
+                      & \texttt{function\_category}
+                      & Kategori fungsi sesuai dengan Tabel \ref{tab:mapping-function-category}. Untuk dokumentasi administratif yang tidak dirinci, nilai ini dapat menggunakan kategori administratif umum.                       \\ \hline
+
+    \multirow{4}{2.8cm}{\textbf{Konteks Medis}}
+                      & \texttt{patient\_ref}
+                      & Identitas internal pasien yang diperlukan di dalam data terenkripsi.                                                                                                                                        \\ \cline{2-3}
+                      & \texttt{encounter\_id}
+                      & ID kunjungan atau episode pelayanan.                                                                                                                                                                        \\ \cline{2-3}
+                      & \texttt{service\_date}
+                      & Tanggal layanan, pemeriksaan, atau pembuatan segmen.                                                                                                                                                        \\ \cline{2-3}
+                      & \texttt{author\_address}
+                      & Alamat \textit{wallet} aktor yang menulis isi segmen.                                                                                                                                                       \\ \hline
+
+    \multirow{2}{2.8cm}{\textbf{Isi Segmen}}
+                      & \texttt{payload}
+                      & Objek data RME sesuai kategori fungsi. Contoh isi dapat berupa data anamnesis, diagnosis, permintaan pemeriksaan, hasil laboratorium, atau data resep.                                                      \\ \cline{2-3}
+                      & \texttt{payload\_hash}
+                      & Hash isi \texttt{payload}.                                                                                                                                                                                  \\ \hline
+
+    \multirow{3}{2.8cm}{\textbf{Lampiran Opsional}}
+                      & \texttt{attachments[].cid}
+                      & CID IPFS untuk lampiran terenkripsi yang terkait dengan segmen.                                                                                                                                             \\ \cline{2-3}
+                      & \texttt{attachments[].\newline file\_name}
+                      & Nama berkas lampiran.                                                                                                                                                                                       \\ \cline{2-3}
+                      & \texttt{attachments[].\newline mime\_type}
+                      & Jenis media lampiran, misalnya \texttt{application/pdf} atau \texttt{image/png}.                                                                                                                            \\ \hline
+\end{longtable}
+
+Secara konseptual, satu entri metadata \textit{on-chain} selalu menunjuk pada satu segmen terenkripsi \textit{off-chain}. Karena relasi ini dibuat per segmen, penegakan akses tidak lagi dilakukan terhadap satu \textit{encrypted blob} besar, melainkan terhadap unit data yang lebih kecil dan sesuai dengan kategori yang dinyatakan pada token Macaroon.

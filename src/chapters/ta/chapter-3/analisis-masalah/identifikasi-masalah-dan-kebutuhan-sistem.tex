@@ -8,18 +8,20 @@ Berdasarkan celah fungsional pada arsitektur DecMed yang telah diuraikan pada Su
 	\item Pendelegasian hak akses pada DecMed masih bergantung pada keterlibatan langsung pasien sebagai penerbit akses baru. Ketergantungan ini kurang sesuai dengan alur pelayanan kesehatan yang kolaboratif dan dinamis, karena delegasi antar tenaga medis seharusnya dapat berlangsung secara berantai dengan pembatasan yang makin ketat tanpa memerlukan intervensi ulang dari pasien.
 \end{enumerate}
 
-Ketiga masalah tersebut berkorespondensi langsung dengan rumusan masalah pada Bab \ref{chap:pendahuluan}, yaitu kebutuhan untuk merancang mekanisme kontrol akses granular berbasis Macaroons dan mendukung fitur atenuasi luring untuk delegasi akses berantai. Untuk mengatasi masalah tersebut, kebutuhan fungsional pada \ref{tab:kebutuhan-fungsional-decmed} perlu diperbaharui agar sesuai dengan kebutuhan sistem. Kebutuhan tersebut dirangkum dalam Tabel \ref{tab:kebutuhan-fungsional-tambahan}.
+Ketiga masalah tersebut berkorespondensi langsung dengan rumusan masalah pada Bab \ref{chap:pendahuluan}, yaitu kebutuhan untuk merancang mekanisme kontrol akses granular dan mendukung fitur atenuasi \textit{offline} untuk delegasi akses berantai.
 
-\begin{table}[!ht]
-	\centering
-	\caption{Pemetaan Masalah dengan Kebutuhan Fungsi Tambahan}
-	\label{tab:kebutuhan-fungsional-tambahan}
-	\small
-	\begin{tabular}{|c|p{0.18\textwidth}|p{0.2\textwidth}|p{0.38\textwidth}|}
-		\hline
-		\textbf{Masalah} & \textbf{Fungsionalitas}                            & \textbf{Aktor dan Kebutuhan Akses}                                                                                                                                                        & \textbf{Deskripsi Kebutuhan}                                                                                                                                         \\ \hline
-		1                & Kontrol Akses Granular Berbasis Macaroons          & Petugas administrasi hanya memerlukan akses administratif; dokter memerlukan akses baca/tulis klinis; petugas laboratorium hanya memerlukan akses terbatas sesuai permintaan pemeriksaan. & Sistem harus mampu menerbitkan token otorisasi yang membawa batasan rinci berdasarkan aktor, jenis data, aksi, masa berlaku, dan konteks penggunaan akses.           \\ \hline
-		2                & Segmentasi Data \textit{Off-Chain} Terenkripsi     & Data administratif, riwayat klinis, dan hasil laboratorium perlu dapat diakses secara selektif oleh aktor yang berbeda.                                                                   & Sistem harus memecah data RME ke dalam unit penyimpanan \textit{off-chain} yang tersegmentasi agar setiap aktor hanya dapat mengakses himpunan data yang relevan.    \\ \hline
-		3                & Delegasi Berantai dengan atenuasi \textit{offline} & Dokter perlu dapat mendelegasikan sebagian hak akses kepada petugas laboratorium tanpa meminta pasien menerbitkan ulang token.                                                            & Sistem harus memungkinkan tenaga medis mendelegasikan sebagian hak akses secara lokal dengan batasan yang makin ketat tanpa memerlukan intervensi ulang dari pasien. \\ \hline
-	\end{tabular}
-\end{table}
+% Untuk mengatasi masalah tersebut, kebutuhan fungsional pada \ref{tab:kebutuhan-fungsional-decmed} perlu diperbaharui agar sesuai dengan kebutuhan sistem. Kebutuhan tersebut dirangkum dalam Tabel \ref{tab:kebutuhan-fungsional-tambahan}.
+
+% \begin{table}[!ht]
+% 	\centering
+% 	\caption{Pemetaan Masalah dengan Kebutuhan Fungsi Tambahan}
+% 	\label{tab:kebutuhan-fungsional-tambahan}
+% 	\small
+% 	\begin{tabular}{|c|p{0.18\textwidth}|p{0.2\textwidth}|p{0.38\textwidth}|}
+% 		\hline
+% 		\textbf{Masalah} & \textbf{Fungsionalitas}                            & \textbf{Aktor dan Kebutuhan Akses}                                                                                                                                                        & \textbf{Deskripsi Kebutuhan}                                                                                                                                         \\ \hline
+% 		1                & Kontrol Akses Granular                             & Petugas administrasi hanya memerlukan akses administratif; dokter memerlukan akses baca/tulis klinis; petugas laboratorium hanya memerlukan akses terbatas sesuai permintaan pemeriksaan. & Sistem harus mampu menerbitkan token otorisasi yang membawa batasan rinci berdasarkan aktor, jenis data, aksi, masa berlaku, dan konteks penggunaan akses.           \\ \hline
+% 		2                & Segmentasi Data \textit{Off-Chain} Terenkripsi     & Data administratif, riwayat klinis, dan hasil laboratorium perlu dapat diakses secara selektif oleh aktor yang berbeda.                                                                   & Sistem harus memecah data RME ke dalam unit penyimpanan \textit{off-chain} yang tersegmentasi agar setiap aktor hanya dapat mengakses himpunan data yang relevan.    \\ \hline
+% 		3                & Delegasi Berantai dengan atenuasi \textit{offline} & Dokter perlu dapat mendelegasikan sebagian hak akses kepada petugas laboratorium tanpa meminta pasien menerbitkan ulang token.                                                            & Sistem harus memungkinkan tenaga medis mendelegasikan sebagian hak akses secara lokal dengan batasan yang makin ketat tanpa memerlukan intervensi ulang dari pasien. \\ \hline
+% 	\end{tabular}
+% \end{table}

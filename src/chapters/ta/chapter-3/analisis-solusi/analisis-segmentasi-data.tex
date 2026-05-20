@@ -1,6 +1,49 @@
 \subsection{Analisis Segmentasi Data}
 \label{subsec:analisis-segmentasi-data}
 
-Masalah granularitas tidak hanya berada pada token, tetapi juga pada struktur data yang dilindungi. Jika data RME disimpan sebagai satu \textit{encrypted blob}, maka pemberian akses terhadap blob tersebut akan membuka seluruh isi data meskipun aktor hanya membutuhkan sebagian kecil informasi. Kondisi ini tidak sesuai dengan skenario layanan klinis yang melibatkan kebutuhan akses berbeda antara petugas administrasi, dokter, dan petugas laboratorium.
+Masalah granularitas tidak hanya berada pada token, tetapi juga pada struktur data yang dilindungi. Jika data RME disimpan sebagai satu \textit{encrypted blob}, maka pemberian akses terhadap blob tersebut akan membuka seluruh isi data meskipun aktor hanya membutuhkan sebagian kecil informasi. Oleh karena itu, implementasi pemrosesan data pada DecMed perlu disesuaikan untuk memenuhi kebutuhan akses granular sebagaimana dijelaskan pada Subbab \ref{subsec:identifikasi-masalah}.
 
-Oleh karena itu, data \textit{off-chain} perlu dianalisis sebagai kumpulan segmen yang dapat dipisahkan berdasarkan kategori dan kebutuhan akses. Pembagian data data klinis rawat jalan sesuai dengan kategori diagnosa penyakit yang ditangani oleh fasyankes memberikan akses hanya pada bagian yang relevan. Segmentasi ini juga membuat \textit{caveats} pada Macaroons memiliki objek penegakan yang jelas, karena batasan seperti \texttt{dataset\_category} dapat dicocokkan dengan metadata segmen data.
+Alternatif yang dianalisis adalah melakukan segmentasi data sejak proses penyimpanan \textit{off-chain}. Pada pendekatan ini, data klinis dipisahkan menjadi beberapa objek berdasarkan kategori tertentu sebelum disimpan pada IPFS. Dengan pendekatan tersebut, setiap kategori data dapat diambil secara independen sehingga akses terhadap data menjadi lebih granular.
+
+Namun, pendekatan tersebut memiliki keterbatasan implementasi. IPFS sebagai media penyimpanan \textit{off-chain} tidak menyediakan mekanisme pencarian atau pemfilteran data secara \textit{native}. Pemisahan data menjadi banyak objek akan membutuhkan sistem indeks tambahan untuk melakukan pencarian dan pengelolaan relasi antar segmen data. Kompleksitas tersebut meningkatkan kebutuhan sinkronisasi metadata dan berada di luar ruang lingkup implementasi penelitian ini.
+
+Berdasarkan analisis tersebut, pendekatan yang dipilih adalah melakukan segmentasi data klinis berdasarkan fungsi klinis dengan memanfaatkan metadata yang disimpan pada \textit{on-chain}. Pada pendekatan ini, data klinis dipisahkan menjadi beberapa segmen sebelum disimpan pada penyimpanan \textit{off-chain}. Setiap segmen kemudian direpresentasikan melalui metadata pada \textit{smart contract} sehingga proses pemilahan data dapat dilakukan sebelum sistem mengambil data dari IPFS.
+
+Pendekatan ini lebih memungkinkan untuk diimplementasikan karena \textit{smart contract} dapat digunakan untuk melakukan pemetaan dan pemfilteran berdasarkan kategori data tanpa memerlukan mekanisme pencarian langsung pada IPFS. Selain itu, proses pengambilan data menjadi lebih terarah karena sistem hanya mengambil segmen data yang sesuai dengan kategori yang diminta.
+
+Penentuan kategori data tidak dilakukan secara arbitrer, melainkan mengacu pada struktur data rekam medis elektronik yang ditetapkan dalam Keputusan Menteri Kesehatan Republik Indonesia Nomor HK.01.07/MENKES/1423/2022 tentang Pedoman Variabel dan Metadata pada Penyelenggaraan Rekam Medis Elektronik \autocite{kemenkes1423-2022}. Pada pedoman tersebut, data rekam medis dibagi menjadi beberapa \textit{dataset} pelayanan, yaitu
+
+\begin{itemize}[]
+    \item Instalasi Gawat Darurat (IGD)
+    \item Rawat Jalan
+    \item Rawat Inap
+    \item Laboratorium
+    \item Apotek
+\end{itemize}
+sebagaimana dijelaskan pada Subbab \ref{subsec:isi-rme}.
+
+Pembagian berdasarkan \textit{dataset} pelayanan dipilih karena setiap layanan memiliki alur kerja, jenis data, dan kebutuhan akses yang berbeda. Sebagai contoh, petugas laboratorium hanya memerlukan akses terhadap data pemeriksaan laboratorium, sedangkan tenaga farmasi lebih berfokus pada data terapi dan obat pasien. Dengan demikian, pemisahan berdasarkan \textit{dataset} memberikan batas akses yang lebih sesuai dengan konteks pelayanan medis.
+
+Selain pembagian berdasarkan \textit{dataset}, data klinis juga dianalisis berdasarkan kategori fungsi klinis. Pada \textit{dataset} Rawat Jalan, data administratif seperti Lembar Identitas, Cara Pembayaran, dan \textit{General Consent} tidak diperinci lebih lanjut pada Tugas Akhir ini karena lebih berfokus pada kebutuhan administratif dan tidak berkaitan langsung dengan mekanisme kontrol akses granular terhadap data klinis.
+
+Tugas Akhir ini difokuskan pada kategori fungsi klinis yang memiliki kebutuhan akses berbeda antar tenaga kesehatan. Pada Formulir Umum / Asesmen Awal Rawat Jalan, kategori fungsi klinis yang digunakan meliputi:
+
+\begin{itemize}
+    \item Anamnesis
+    \item Pemeriksaan Fisik
+    \item Pemeriksaan Psikologi
+\end{itemize}
+
+Sedangkan pada Pemeriksaan Spesialistik, kategori fungsi klinis yang digunakan meliputi:
+
+\begin{itemize}
+    \item Riwayat Penggunaan Obat
+    \item Rencana Rawat
+    \item Instruksi Medik dan Keperawatan
+    \item Pemeriksaan Penunjang
+    \item Diagnosis
+    \item Persetujuan Tindakan / Penolakan Tindakan (\textit{Informed Consent})
+    \item Terapi
+\end{itemize}
+
+Melalui pendekatan ini, data \textit{off-chain} tidak lagi diperlakukan sebagai satu objek data besar, melainkan sebagai kumpulan segmen data klinis yang memiliki kategori yang terdefinisi. Segmentasi tersebut memungkinkan penerapan kontrol akses granular karena kebijakan akses dapat dicocokkan dengan metadata kategori yang tersimpan pada \textit{on-chain}. Selain itu, pendekatan ini juga memberikan objek penegakan yang lebih jelas bagi \textit{caveats} pada Macaroons, karena batasan seperti \texttt{dataset\_category} dapat dipetakan secara langsung terhadap kategori data klinis yang diakses.

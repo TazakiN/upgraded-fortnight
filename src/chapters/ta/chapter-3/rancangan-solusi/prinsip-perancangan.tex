@@ -1,11 +1,16 @@
 \subsection{Prinsip Perancangan}
 \label{subsec:prinsip-perancangan}
 
-Rancangan solusi ini dibangun di atas beberapa prinsip yang konsisten dengan kebutuhan RME dan karakteristik DecMed.
+Rancangan solusi dibangun berdasarkan beberapa prinsip utama yang disesuaikan dengan kebutuhan sistem RME dan karakteristik DecMed.
 
 \begin{enumerate}[leftmargin=*]
-	\item \textit{Patient-centric access control}. Pasien tetap menjadi pihak awal yang memberi kewenangan akses terhadap RME miliknya. Pasien menerbitkan token awal kepada tenaga medis atau pihak fasyankes yang terlibat dalam pelayanan.
-	\item \textit{Least privilege} dan \textit{need-to-know}. Setiap token hanya boleh membuka data dan aksi yang diperlukan oleh aktor pada tahap layanan tertentu. Petugas administrasi, dokter, dan petugas laboratorium tidak menerima cakupan akses yang sama.
-	\item Pemisahan penyimpanan dan otorisasi. IPFS tetap digunakan untuk menyimpan data RME terenkripsi, sedangkan IOTA menyimpan metadata, CID, dan jejak akses. Keputusan otorisasi ditentukan oleh keberadaan Macaroon yang divalidasi oleh \textit{server} PRE dan CID yang valid.
-	\item Atenuasi hak akses. Hak akses yang sudah diberikan dapat dipersempit oleh pemegang token tanpa mengetahui \texttt{RootKey} token awal. Hak akses turunan tidak boleh lebih luas daripada hak akses induknya.
+	\item \textit{Patient-centric access control}. Pasien tetap menjadi sumber awal kewenangan akses terhadap RME miliknya. Token akses awal diterbitkan oleh pasien kepada tenaga medis atau pihak fasilitas kesehatan yang terlibat dalam pelayanan.
+
+	\item \textit{Least privilege} dan \textit{need-to-know}. Setiap token hanya memberikan akses terhadap data dan aksi yang diperlukan oleh aktor pada tahap pelayanan tertentu. Dengan demikian, setiap aktor hanya memperoleh cakupan akses minimum yang relevan dengan tugasnya.
+
+	\item Segmentasi data sebagai unit otorisasi. Data RME tidak diperlakukan sebagai satu \textit{encrypted blob}, melainkan dipisahkan ke dalam beberapa segmen data berdasarkan konteks layanan dan kategori informasi medis. Setiap segmen memiliki metadata dan kebijakan akses tersendiri sehingga evaluasi otorisasi dapat dilakukan secara granular.
+
+	\item Pemisahan penyimpanan dan otorisasi. IPFS tetap digunakan untuk menyimpan data terenkripsi, sedangkan IOTA digunakan untuk menyimpan metadata, CID, dan jejak akses. Keputusan otorisasi ditentukan melalui evaluasi Macaroon dan metadata segmen data sebelum proses PRE dijalankan.
+
+	\item Atenuasi hak akses. Hak akses yang telah diberikan dapat dipersempit oleh pemegang token tanpa mengetahui \texttt{RootKey} token awal. Hak akses turunan tidak dapat melebihi cakupan hak akses induknya.
 \end{enumerate}

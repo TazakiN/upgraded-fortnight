@@ -5,42 +5,34 @@ Sebagaimana dijelaskan pada Bab \ref{sec:decmed}, DecMed adalah kerangka kerja m
 
 \begin{enumerate}
     \item Pasien
-    \item Tenaga kesehatan, yang mencakup dokter, petugas administrasi, dan administrator fasilitas pelayanan kesehatan
-    \item Pemerintah
+    \item Tenaga kesehatan, yang mencakup dokter, petugas administrasi, dan admin fasyankes
+    \item Pemerintah, yaitu Kementerian Kesehatan
 \end{enumerate}
 
-Pada DecMed, masing-masing aktor memiliki kepentingan dan aplikasi \textit{client} yang berbeda. \textit{Patient Client} digunakan oleh pasien, \textit{Hospital Client} digunakan oleh tenaga kesehatan di sebuah fasyankes, dan \textit{Ministry Client} digunakan oleh pemerintah. Detail kebutuhan fungsional dari masing-masing aktor dapat dilihat pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}.
+Pada DecMed, masing-masing aktor memiliki kepentingan dan aplikasi \textit{client} yang berbeda. \textit{Patient Client} digunakan oleh pasien, \textit{Hospital Client} digunakan oleh tenaga kesehatan di sebuah fasyankes, dan \textit{Ministry Client} digunakan oleh pemerintah. Detail kebutuhan fungsional DecMed untuk memenuhi kebutuhan masing-masing aktor dapat dilihat pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}.
 
-% ===============================================
-% = Masalah Token Kapabilitas
-% ===============================================
+\subsubsection{Keterbatasan Token Kapabilitas DecMed}
 
-Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMed memanfaatkan token otorisasi berupa JWT sebagai pembawa bukti otorisasi akses. Ketika pasien ingin mendelegasikan akses ke beberapa tenaga medis, pasien melakukan penerbitan ulang token kepada setiap tenaga medis yang terlibat. Token yang diterbitkan oleh pasien membawa tiga informasi utama, yaitu:
+Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMed memanfaatkan token otorisasi berupa JSON Web Token (JWT) sebagai token otorisasi yang merepresentasikan kapabilitas akses. Pada kerangka kerja DecMed, ketika pasien memberikan akses terhadap RME mereka kepada seorang tenaga medis, maka PRE akan menerbitkan token JWT sesuai dengan \textit{request} dari pasien. Token yang diterbitkan oleh pasien membawa klaim seperti pada Listing \ref{lst:decmed-jwt-claims}.
 
-\begin{enumerate}
-    \item \textit{Address} IOTA pemegang token
-    \item \textit{Role} (bernilai \texttt{AdministrativePersonnel} atau \texttt{MedicalPersonnel})
-    \item \textit{Purpose} (bernilai \texttt{Read} atau \texttt{Update})
-\end{enumerate}
+\begin{lstlisting}[language=Rust, caption={Struktur klaim JWT pada DecMed}, label={lst:decmed-jwt-claims}]
+#[derive(Debug, Deserialize, Serialize)]
+pub struct JwtClaims {
+    pub address: String, // address IOTA pemegang token
+    pub role: AuthRole, // bernilai AdministrativePersonnel atau MedicalPersonnel
+    pub purpose: ReencryptionPurposeType, // bernilai Read atau Update
+}
+\end{lstlisting}
 
-Pendekatan ini menimbulkan keterbatasan karena token JWT pada DecMed masih bersifat \textit{coarse-grained}. Penentuan hak akses pengguna dilakukan hanya berdasarkan \textit{role} dan \textit{purpose} yang ada pada token yang disertakan saat melakukan \textit{request} ke PRE. Token tersebut belum dirancang untuk membawa batasan kontekstual, misalnya jenis data yang boleh diakses, aksi yang diizinkan, atau batasan delegasi akses. Padahal, pada praktik pelayanan kesehatan, setiap tenaga medis tidak selalu membutuhkan keseluruhan isi RME pasien sesuai dengan prinsip \textit{need-to-know}.
-Kondisi ini menunjukkan bahwa mekanisme kontrol akses pada DecMed belum cukup untuk menjawab kebutuhan kontrol akses granular.
+Rancangan \textit{claim} pada JWT ini menimbulkan keterbatasan karena token JWT pada DecMed masih bersifat \textit{coarse-grained}. Penentuan hak akses pengguna dilakukan hanya berdasarkan \textit{role} dan \textit{purpose} yang ada pada token yang disertakan saat melakukan \textit{request} ke PRE. Token tersebut belum dirancang untuk membawa batasan kontekstual, misalnya jenis data yang boleh diakses. Padahal, pada praktik pelayanan kesehatan, setiap tenaga medis tidak selalu membutuhkan keseluruhan isi RME pasien sesuai dengan prinsip \textit{need-to-know}. Kondisi ini menunjukkan bahwa desain \textit{claims} token otorisasi pada DecMed belum cukup untuk menjawab kebutuhan kontrol akses granular.
 
-% ===============================================
-% = Masalah Delegasi Akses
-% ===============================================
+\subsubsection{Keterbatasan Segmentasi Data pada DecMed}
 
-Selain kontrol akses granular, alur layanan kesehatan kolaboratif juga menimbulkan kebutuhan delegasi akses yang fleksibel antartenaga medis. Kebutuhan ini dibahas lebih lanjut melalui skenario layanan kesehatan kolaboratif pada Subbab \ref{subsubsec:analisis-skenario-layanan-klinis}.
+Pada kerangka kerja DecMed, data RME pasien disimpan dalam dua sistem penyimpanan yang berbeda, yaitu penyimpanan \textit{on-chain} (IOTA) dan \textit{off-chain} (IPFS). Penyimpanan \textit{on-chain} digunakan untuk menyimpan metadata dan CID dari data yang disimpan di \textit{off-chain}. Penyimpanan \textit{off-chain} digunakan untuk menyimpan data administratif dan klinis yang terenkripsi. Pemisahan ini sesuai dengan kebutuhan yang dibahas pada \ref{subsec:isi-rme} terkait dokumentasi administratif dan klinis.
 
-% ===============================================
-% = Masalah Segmentasi Data Klinis
-% ===============================================
+Pada penyimpanan \textit{on-chain}, data RME pasien direpresentasikan sebagai metadata dalam sebuah \textit{struct} \texttt{MedicalMetadata} untuk data klinis. Metadata tersebut menyimpan CID serta informasi kunci yang dibutuhkan pasien untuk mendekripsi data medis terkait. Struktur penyimpanannya terikat dengan \textit{struct} \texttt{PatientAccount} dan \texttt{PatientMedicalMetadata} pada Listing \ref{lst:decmed-patient-medical-metadata}:
 
-Data klinis pada DecMed disimpan dalam dua sistem penyimpanan yang berbeda, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{on-chain} digunakan untuk menyimpan metadata klinis dan CID dari data klinis yang disimpan di \textit{off-chain}. Penyimpanan \textit{off-chain} digunakan untuk menyimpan data administratif dan klinis yang sudah terenkripsi. Pemisahan ini sesuai dengan kebutuhan yang dibahas pada \ref{subsec:isi-rme} terkait bagian administratif dan klinis.
-
-Pada penyimpanan \textit{on-chain}, data klinis pasien direpresentasikan sebagai metadata. Metadata tersebut menyimpan CID serta informasi kunci yang dibutuhkan pasien untuk mendekripsi data medis terkait. Struktur penyimpanannya terikat dengan \textit{struct} \texttt{PatientAccount} dan \texttt{PatientMedicalMetadata} berikut:
-
-\begin{lstlisting}[language=Move]
+\begin{lstlisting}[language=Move, caption={Struktur metadata medis pasien pada DecMed}, label={lst:decmed-patient-medical-metadata}]
 public struct PatientAccount has store {
     ...
     medical_metadata: TableVec<PatientMedicalMetadata>,
@@ -51,9 +43,10 @@ public struct PatientMedicalMetadata has copy, drop, store {
 }
 \end{lstlisting}
 
-Variabel \texttt{metadata} pada \textit{struct} \texttt{PatientMedicalMetadata} merupakan serialisasi dari \textit{struct} berikut:
+Karena \textit{field} \texttt{medical\_metadata} pada \textit{struct} \texttt{PatientAccount} merupakan \textit{table vector}, maka dengan mengetahui \texttt{PatientAccount} akan memberikan akses ke data klinis pasien. Setiap \textit{struct} \texttt{PatientMedicalMetadata} merepresentasikan sebuah metadata klinis pasien.
+Variabel \texttt{metadata} pada \textit{struct} \texttt{PatientMedicalMetadata} merupakan serialisasi dari \textit{struct} berikut pada Listing \ref{lst:decmed-medical-metadata}:
 
-\begin{lstlisting}[language=Rust]
+\begin{lstlisting}[language=Rust, caption={Struktur serialisasi metadata medis DecMed}, label={lst:decmed-medical-metadata}]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct MedicalMetadata {
     pub capsule: String, // capsule untuk PRE re-encryption
@@ -63,9 +56,9 @@ pub struct MedicalMetadata {
 }
 \end{lstlisting}
 
-\texttt{cid} pada \textit{struct} \texttt{MedicalMetadata} merupakan \textit{pointer} ke data klinis yang sudah terenkripsi disimpan di penyimpanan \textit{off-chain} sebagai sebuah \textit{Encrypted Blob}. Potongan field relevan pada \textit{struct} \texttt{MedicalData} dapat dilihat berikut:
+\texttt{cid} pada \textit{struct} \texttt{MedicalMetadata} merupakan \textit{pointer} ke data klinis yang sudah terenkripsi disimpan di penyimpanan \textit{off-chain} sebagai sebuah \textit{Encrypted Blob}. Potongan field relevan pada \textit{struct} \texttt{MedicalData} dapat dilihat pada Listing \ref{lst:decmed-medical-data}.
 
-\begin{lstlisting}[language=Rust]
+\begin{lstlisting}[language=Rust, caption={Potongan struktur data medis \textit{off-chain} pada DecMed}, label={lst:decmed-medical-data}]
 pub struct MedicalData {
     pub anamnesis: String,
     pub physical_check: String,
@@ -75,7 +68,7 @@ pub struct MedicalData {
 }
 \end{lstlisting}
 
-Penyimpanan data klinis pada DecMed hanya berfokus pada dataset rawat jalan, sesuai dengan ketentuan pada KMK No. HK.01.07/Menkes/1423/2022 \autocite{kemenkes1423-2022} tentang Pedoman Variabel dan Metadata Rekam Medis terkait data klinis rawat jalan. Pada \textit{struct} \texttt{MedicalData}, data klinis masih disimpan dengan format yang sederhana, tanpa kategorisasi yang jelas. Hal ini berkaitan dengan organisasi data pada lapisan \textit{off-chain}. DecMed memang telah memisahkan penyimpanan \textit{on-chain} dan \textit{off-chain}, tetapi pendekatan tersebut belum secara eksplisit menunjukkan segmentasi data klinis yang cukup rinci untuk menegakkan kebijakan akses granular. Jika data klinis masih dikelola sebagai objek terenkripsi yang terlalu besar, pemberian akses kepada tenaga medis berisiko membuka data di luar kebutuhan klinisnya.
+Penyimpanan data klinis pada DecMed hanya berfokus pada dataset rawat jalan. Pada \textit{struct} \texttt{MedicalData}, data klinis masih disimpan dengan format yang sederhana, tanpa kategorisasi yang jelas. DecMed memang telah memisahkan penyimpanan \textit{on-chain} dan \textit{off-chain}, tetapi pendekatan tersebut belum secara eksplisit menunjukkan segmentasi data klinis yang cukup rinci untuk menegakkan kebijakan akses granular. Jika data klinis masih dikelola sebagai objek terenkripsi yang terlalu besar, pemberian akses kepada tenaga medis berisiko membuka data di luar kebutuhan klinisnya. Sebagai contoh, seorang perawat tidak membutuhkan akses tulis ke data \texttt{therapy} pada \textit{struct} \texttt{MedicalData} karena yang berhak menentukan terapi adalah dokter.
 
-\input{chapters/ta/chapter-3/analisis-masalah/analisis-stride-decmed.tex}
 \input{chapters/ta/chapter-3/analisis-masalah/analisis-skenario-layanan-klinis.tex}
+\input{chapters/ta/chapter-3/analisis-masalah/analisis-stride-decmed.tex}

@@ -1,5 +1,6 @@
 THESIS_INPUT = thesis.tex
 THESIS_OUTPUT = thesis.pdf
+THESIS_FLATTEN_OUTPUT = thesis.flattened.tex
 YUDISIUM_INPUT = yudisium.tex
 YUDISIUM_OUTPUT = yudisium.pdf
 PAPER_INPUT = paper.tex
@@ -10,7 +11,7 @@ TEXFILES := $(shell find . -iname "*.tex")
 STYFILES := $(shell find . -iname "*.sty")
 BIBFILES := $(shell find . -iname "*.bib")
 
-.PHONY: all format thesis yudisium paper clean
+.PHONY: all format thesis yudisium paper flatten flatten-thesis clean
 
 all: format thesis yudisium paper
 
@@ -31,6 +32,13 @@ paper:
 	@mkdir -p build
 	@latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf -bibtex -outdir=../build -cd src/$(PAPER_INPUT)
 	@cp build/$(PAPER_OUTPUT) output
+
+flatten: flatten-thesis
+
+flatten-thesis:
+	@mkdir -p output
+	@cd src && latexpand $(THESIS_INPUT) > ../output/$(THESIS_FLATTEN_OUTPUT)
+	@echo "Created output/$(THESIS_FLATTEN_OUTPUT)"
 
 format:
 	@latexindent -l -s -sl -w $(TEXFILES) $(STYFILES) $(BIBFILES)

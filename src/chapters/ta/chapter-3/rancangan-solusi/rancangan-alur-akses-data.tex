@@ -1,8 +1,0 @@
-\subsection{Rancangan Alur Akses Data}
-\label{subsec:rancangan-alur-akses-data}
-
-Alur akses normal dimulai ketika pasien menerbitkan Macaroon kepada aktor yang berwenang. Token tersebut dibawa oleh pengguna melalui \textit{Hospital Client} saat melakukan permintaan akses data. Permintaan akses berisi token, identitas segmen data yang diminta, dan aksi yang ingin dilakukan.
-
-\textit{Server} PRE menjalankan proses validasi dalam beberapa tahap. Pertama, \textit{server} memverifikasi akar token berdasarkan tanda tangan digital pasien dan identitas pasien yang tersimpan pada jaringan IOTA. Kedua, \textit{server} mengevaluasi seluruh \textit{caveats}, termasuk pemegang token, masa berlaku, kategori data, dan hak akses. Ketiga, \textit{server} mencocokkan kategori data pada token dengan metadata \textit{on-chain} dari segmen data yang diminta. Keempat, apabila validasi berhasil, \textit{server} PRE menjalankan proses \textit{re-encryption} sehingga data terenkripsi dapat dibuka oleh penerima akses yang sah.
-
-Jika salah satu pemeriksaan gagal, permintaan akses ditolak dan proses \textit{re-encryption} tidak dilakukan. Dengan demikian, PRE tidak hanya berperan sebagai komponen kriptografis, tetapi juga sebagai titik penegakan kebijakan akses granular. Urutan operasional akses data dijelaskan pada Lampiran \ref{lampiran:mekanisme-akses-data}.

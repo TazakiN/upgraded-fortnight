@@ -1,0 +1,33 @@
+\subsection{Implementasi Penegakan Otoritas pada Server PRE}
+\label{subsec:implementasi-penegakan-otoritas-pre}
+
+Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi wajib sebelum proses pengambilan data IPFS dan \textit{re-encryption}. Implementasi ini mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon, identitas RME, identitas segmen yang diminta, aksi akses, waktu permintaan, dan tanda tangan \textit{wallet} dari aktor aktif.
+
+Tahap validasi dimulai pada middleware yang membaca \textit{Authorization Bearer Macaroon}. Middleware memverifikasi keaslian Macaroon melalui mekanisme chained-HMAC menggunakan \texttt{MACAROON\_ROOT\_KEY}. Setelah token dinyatakan autentik, \textit{Server} PRE mengevaluasi \textit{caveats} yang mengikat pasien dan RME, yaitu \texttt{patient\_address} dan \texttt{related\_rme\_id}. Token ditolak apabila nilai tersebut tidak sesuai dengan metadata RME yang diminta.
+
+Tahap berikutnya adalah perhitungan \texttt{EffectiveCapability} dan \texttt{DelegationChain}. \texttt{EffectiveCapability} dihitung dari irisan seluruh \textit{caveats} dataset, fungsi, aksi, dan masa berlaku pada token. \texttt{DelegationChain} digunakan untuk menentukan aktor aktif dari nilai \texttt{root\_subject} dan \texttt{delegated\_to}. Jika token belum didelegasikan, aktor aktif adalah \texttt{root\_subject}; jika token sudah didelegasikan, aktor aktif adalah \texttt{delegated\_to} terakhir.
+
+Setelah aktor aktif ditentukan, \textit{Server} PRE memverifikasi bukti kepemilikan \textit{wallet} yang dikirimkan \textit{client}. Pemeriksaan ini mencegah token digunakan oleh pihak yang hanya memiliki salinan token, tetapi tidak memiliki kunci privat dari alamat penerima akses yang sah. \textit{Server} PRE juga memeriksa status pencabutan akses melalui Redis dan membaca informasi peran dari Move untuk memastikan konteks aktor masih sesuai dengan akses yang digunakan.
+
+Validasi berikutnya dilakukan pada handler baca dan tulis segmen. Handler membaca metadata segmen dari IOTA, mendekode metadata JSON base64, lalu mencocokkan \texttt{dataset\_category}, \texttt{function\_category}, \texttt{related\_rme\_id}, dan aksi baca atau tulis terhadap cakupan efektif token. Untuk operasi tulis, handler juga memastikan segmen yang dibuat berada dalam cakupan \texttt{write\_dataset\_in} dan \texttt{write\_function\_in}. Untuk operasi baca, handler memastikan segmen berada dalam cakupan \texttt{read\_dataset\_in} dan \texttt{read\_function\_in}. Jika validasi berhasil, \textit{Server} PRE mengambil data dari IPFS dan melakukan \textit{re-encryption} dengan Umbral PRE.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Status Implementasi Penegakan Otoritas pada Server PRE}
+	\label{tab:status-implementasi-pre}
+	\small
+	\begin{tabular}{|p{0.62\textwidth}|p{0.28\textwidth}|}
+		\hline
+		\textbf{Bagian} & \textbf{Status} \\ \hline
+		Validasi \textit{Bearer Macaroon} & Terimplementasi. \\ \hline
+		Validasi chained-HMAC & Terimplementasi. \\ \hline
+		Cakupan efektif dataset dan fungsi & Terimplementasi. \\ \hline
+		\textit{Wallet signature} untuk baca dan tulis segmen & Terimplementasi. \\ \hline
+		Pencabutan akses melalui Redis & Terimplementasi sebagian. \\ \hline
+		Header \texttt{delegation\_signature} & Belum terlihat diverifikasi. \\ \hline
+		Endpoint legacy \texttt{PUT /medical-record} dan \texttt{GET /medical-record-update} & Masih menggunakan jalur legacy. \\ \hline
+		Validasi \textit{freshness timestamp} pada bukti \textit{wallet} & Belum terlihat jelas. \\ \hline
+	\end{tabular}
+\end{table}
+
+Hanya permintaan yang lolos seluruh pemeriksaan yang dilanjutkan ke proses PRE. Dengan demikian, PRE tidak hanya berperan sebagai mekanisme kriptografis distribusi kunci, tetapi juga sebagai titik penegakan kebijakan akses yang menghubungkan token, metadata segmen, dan data terenkripsi. Status parsial pada Tabel \ref{tab:status-implementasi-pre} dicatat sebagai bagian dari batasan implementasi agar evaluasi tidak mengklaim kesiapan produksi secara berlebihan.

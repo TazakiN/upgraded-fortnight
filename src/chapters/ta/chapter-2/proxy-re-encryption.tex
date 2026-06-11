@@ -7,7 +7,26 @@ Gambaran simulasi dari PRE dapat dilihat pada Gambar \ref{fig:basic-reencryption
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.8\textwidth]{chapter-2/basic-reencryption-scheme.png}
-	\caption{Gambaran simulasi dari PRE \autocite{sumathi2013scehss}}
+	\includegraphics[width=0.8\textwidth]{chapter-2/PRE Scheme.png}
+	\caption{Gambaran simulasi dari PRE \autocite{ nunez2017umbral}}
 	\label{fig:basic-reencryption-scheme}
 \end{figure}
+
+\subsection{Umbral PRE}
+\label{subsec:umbral-pre}
+
+Umbral adalah skema \textit{threshold proxy re-encryption} (TPRE) yang memungkinkan pemilik data mendelegasikan hak dekripsi kepada penerima akses melalui sekumpulan proxy \textit{semi-trusted} \autocite{nunez2017umbral}. Berbeda dengan ilustrasi PRE sederhana pada Gambar \ref{fig:basic-reencryption-scheme} yang menampilkan satu \textit{re-encryption key} $rk_{A \rightarrow B}$, pada Umbral kunci re-enkripsi tersebut tidak harus diberikan sebagai satu kesatuan kepada satu proxy. Umbral membagi kemampuan re-enkripsi tersebut ke dalam beberapa fragmen kunci yang disebut \textit{key fragments} atau \texttt{kfrag}. Dengan pendekatan ini, proses re-enkripsi dapat dibuat berbasis ambang batas, misalnya hanya dapat berhasil apabila minimal $t$ dari total $n$ proxy ikut melakukan re-enkripsi.
+
+Secara umum, alur kerja Umbral melibatkan tiga pihak utama, yaitu \textit{delegator}, \textit{delegatee}, dan proxy. \textit{Delegator} adalah pemilik data yang memberikan hak dekripsi, misalnya Alice pada Gambar \ref{fig:basic-reencryption-scheme}. \textit{Delegatee} adalah pihak penerima hak akses, misalnya Bob. Sementara itu, proxy adalah pihak perantara yang menjalankan proses re-enkripsi tanpa mengetahui isi data yang dienkripsi. Proxy hanya menerima fragmen kunci re-enkripsi dan melakukan transformasi kriptografis terhadap komponen tertentu dari ciphertext.
+
+Pada tahap awal, data dienkripsi menggunakan kunci publik milik \textit{delegator}. Dalam Umbral, hasil enkripsi tidak hanya berupa \textit{ciphertext}, tetapi juga menghasilkan \textit{capsule}. \textit{Ciphertext} berisi data yang telah dienkripsi, sedangkan \textit{capsule} berisi informasi kriptografis yang diperlukan untuk membuka kunci enkripsi data. Selama belum ada proses re-enkripsi, \textit{capsule} tersebut hanya dapat dibuka menggunakan kunci privat milik \textit{delegator}. Dengan demikian, pihak lain yang hanya memiliki \textit{ciphertext} dan \textit{capsule} belum dapat membaca data tersebut.
+
+Ketika \textit{delegator} ingin memberikan akses kepada \textit{delegatee}, \textit{delegator} membuat sejumlah \texttt{kfrag} berdasarkan kunci privat miliknya, kunci publik milik \textit{delegatee}, dan parameter ambang batas yang ditentukan. Parameter ini biasanya dinyatakan sebagai skema $t$ dari $n$, yaitu dari total $n$ fragmen yang dibuat, penerima akses hanya membutuhkan minimal $t$ hasil re-enkripsi agar dapat membuka data. Setiap \texttt{kfrag} kemudian diberikan kepada proxy yang berbeda. Dalam konteks Gambar \ref{fig:basic-reencryption-scheme}, kunci $rk_{A \rightarrow B}$ dapat dipahami sebagai kemampuan re-enkripsi dari Alice ke Bob, sedangkan pada Umbral kemampuan tersebut direpresentasikan dalam bentuk fragmen-fragmen \texttt{kfrag}.
+
+Setelah \textit{delegatee} ingin mengakses data, \textit{delegatee} mengambil \textit{ciphertext} dan \textit{capsule}, kemudian meminta proxy melakukan re-enkripsi terhadap \textit{capsule}. Proxy menggunakan \texttt{kfrag} yang dimilikinya untuk menghasilkan \textit{capsule fragment} atau \texttt{cfrag}. Pada tahap ini, proxy tidak mendekripsi \textit{ciphertext}, tidak mengetahui \textit{plaintext}, dan tidak membutuhkan kunci privat milik \textit{delegator} maupun \textit{delegatee}. Proxy hanya mengubah kemampuan pembukaan \textit{capsule} dari yang semula ditujukan untuk \textit{delegator} menjadi dapat digunakan oleh \textit{delegatee}.
+
+\textit{Delegatee} kemudian mengumpulkan sejumlah \texttt{cfrag} dari proxy. Jika jumlah \texttt{cfrag} yang valid telah mencapai ambang batas $t$, \textit{delegatee} dapat menggabungkan fragmen-fragmen tersebut untuk membuka \textit{capsule} menggunakan kunci privat miliknya. Setelah \textit{capsule} berhasil dibuka, \textit{delegatee} memperoleh kunci simetris yang digunakan untuk mendekripsi \textit{ciphertext}. Dengan demikian, data dapat dibaca oleh \textit{delegatee} tanpa \textit{delegator} harus membagikan kunci privatnya dan tanpa proxy mengetahui isi data.
+
+Sifat \textit{threshold} pada Umbral memberikan keuntungan keamanan tambahan dibandingkan PRE sederhana. Jika hanya satu proxy yang menyimpan seluruh \textit{re-encryption key}, maka kompromi terhadap proxy tersebut dapat berdampak besar terhadap keamanan delegasi. Pada Umbral, kemampuan re-enkripsi dapat didistribusikan kepada beberapa proxy sehingga satu fragmen saja tidak cukup untuk membuka akses. Selain itu, penggunaan \texttt{kfrag} dan \texttt{cfrag} memungkinkan proses delegasi dilakukan secara lebih terkontrol karena penerima akses hanya dapat melakukan dekripsi apabila memperoleh jumlah fragmen re-enkripsi yang memenuhi ambang batas.
+
+% Dalam konteks sistem DecMed, Umbral dapat diposisikan sebagai mekanisme kriptografis untuk mendukung pembagian akses terhadap data RME terenkripsi. Data RME tetap disimpan dalam bentuk terenkripsi, sedangkan proses pemberian akses dilakukan dengan membagikan kemampuan re-enkripsi kepada komponen proxy. Dengan mekanisme ini, tenaga medis yang diberi akses tidak perlu menerima kunci privat pasien atau pemilik data. Sebaliknya, ia cukup memperoleh hasil re-enkripsi yang valid sehingga dapat membuka data sesuai hak akses yang telah diberikan.

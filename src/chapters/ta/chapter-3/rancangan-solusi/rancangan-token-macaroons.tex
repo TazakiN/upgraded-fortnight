@@ -109,6 +109,7 @@ read_function_in = [
   PERMINTAAN_PEMERIKSAAN,
   HASIL_PEMERIKSAAN,
   DATA_RESEP_DAN_OBAT
+  ...
 ]
 
 write_function_in = [
@@ -117,47 +118,17 @@ write_function_in = [
   DIAGNOSIS,
   TERAPI,
   PERMINTAAN_PEMERIKSAAN
+  ...
 ]
 
 expires_before = 2026-05-16T18:00:00
 max_delegation_depth = 1
-proof_required = wallet_signature
 \end{lstlisting}
 
-Apabila dokter perlu melibatkan petugas laboratorium, aplikasi \textit{client} dokter dapat membuat token turunan secara lokal dengan menambahkan \textit{caveat} baru yang lebih sempit. Contoh \textit{caveat} tambahan pada token turunan ditunjukkan pada Listing \ref{lst:contoh-token-turunan-lab}.
+Nilai \texttt{0xPASIEN}, \texttt{RME-001}, \texttt{0xDOKTER}, dan \texttt{0xLAB} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang di-\textit{generate}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.
 
-\begin{lstlisting}[caption={Contoh Caveat Tambahan Token Turunan untuk Petugas Laboratorium}, label={lst:contoh-token-turunan-lab}]
-delegated_by = 0xDOKTER
-delegated_to = 0xLAB
-
-read_dataset_in = [LABORATORIUM]
-write_dataset_in = [LABORATORIUM]
-
-read_function_in = [PERMINTAAN_PEMERIKSAAN]
-write_function_in = [HASIL_PEMERIKSAAN]
-
-expires_before = 2026-05-16T14:00:00
-max_delegation_depth = 0
-proof_required = wallet_signature
-\end{lstlisting}
-
-Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Cakupan akses efektif dihitung sebagai irisan dari seluruh batasan yang muncul pada token. Sebagai contoh, apabila token awal dokter mengizinkan akses baca pada \texttt{[RAWAT\_JALAN, RAWAT\_INAP, LABORATORIUM, APOTEK]} dan token turunan menambahkan batasan \texttt{read\_dataset\_in = [LABORATORIUM]}, maka cakupan baca efektif token menjadi \texttt{[LABORATORIUM]}. Dengan demikian, token turunan hanya dapat digunakan untuk mengakses segmen data laboratorium.
-
-Mekanisme verifikasi token pada \textit{Server} PRE dilakukan dengan langkah-langkah sebagai berikut.
-
-\begin{enumerate}[leftmargin=*]
-	\item Memverifikasi tanda tangan Macaroon menggunakan \texttt{RootKey} yang dimiliki oleh \textit{Server} PRE.
-	\item Memverifikasi bahwa \texttt{patient\_address} pada token sesuai dengan pemilik data RME yang diminta.
-	\item Memverifikasi bahwa \texttt{related\_rme\_id} pada token sesuai dengan episode pelayanan atau data RME yang diminta.
-	\item Menghitung aktor aktif berdasarkan \texttt{root\_subject} dan rantai \texttt{delegated\_by} serta \texttt{delegated\_to}.
-	\item Memverifikasi tanda tangan \textit{wallet} dari aktor aktif.
-	\item Memverifikasi bahwa waktu akses masih berada sebelum seluruh nilai \texttt{expires\_before} pada token.
-	\item Memverifikasi bahwa jumlah delegasi pada token tidak melebihi batas \texttt{max\_delegation\_depth}.
-	\item Menghitung cakupan akses efektif berdasarkan irisan seluruh\newline \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \newline \texttt{write\_function\_in}.
-	\item Mencocokkan cakupan akses efektif dengan metadata segmen RME, khususnya \texttt{dataset\_category} dan \texttt{function\_category}.
-	\item Melanjutkan proses pengambilan data dari IPFS dan \textit{re-encryption} hanya apabila seluruh pemeriksaan berhasil.
-\end{enumerate}
+Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}.
 
 Dengan rancangan tersebut, Macaroon tetap digunakan sesuai karakteristik utamanya, yaitu memungkinkan atenuasi token secara lokal. \textit{Server} PRE tidak perlu menerbitkan ulang token turunan, melainkan hanya memverifikasi token ketika digunakan. Token turunan juga tidak dapat memperluas hak akses karena seluruh \textit{caveat} pada token induk tetap ikut terbawa. Oleh karena itu, setiap delegasi hanya dapat menghasilkan hak akses yang sama atau lebih sempit dibandingkan token induknya.
 
-Rancangan ini juga mendukung prinsip \textit{least privilege}. Dokter dapat memiliki cakupan akses yang relatif luas untuk menjalankan tugas klinisnya, tetapi token turunan yang diberikan kepada petugas laboratorium atau petugas apotek dapat dibatasi hanya pada segmen yang relevan. Sebagai contoh, petugas laboratorium hanya dapat membaca segmen \texttt{PERMINTAAN\_PEMERIKSAAN} dan menulis segmen \texttt{HASIL\_PEMERIKSAAN} pada \textit{dataset} \texttt{LABORATORIUM}. Petugas tersebut tidak dapat membaca diagnosis, anamnesis, resep, atau segmen klinis lain yang tidak termasuk dalam \textit{caveat} token turunannya.
+Rancangan ini juga mendukung prinsip \textit{least privilege}. Dokter dapat memiliki cakupan akses yang relatif luas untuk menjalankan tugas klinisnya, tetapi token turunan yang diberikan kepada petugas laboratorium atau petugas apotek dapat dibatasi hanya pada segmen yang relevan. Sebagai contoh, petugas laboratorium hanya dapat membaca segmen \texttt{PEMERIKSAAN\_PENUNJANG} pada \textit{dataset} \texttt{RAWAT\_JALAN} dan menulis segmen \texttt{LABORATORIUM} pada \textit{dataset} \texttt{LABORATORIUM}. Petugas tersebut tidak dapat membaca diagnosis, anamnesis, resep, atau segmen klinis lain yang tidak termasuk dalam \textit{caveat} token turunannya.

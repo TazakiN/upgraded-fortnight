@@ -10,40 +10,59 @@ Hasil analisis solusi dirangkum pada Tabel \ref{tab:pemetaan-kebutuhan-solusi}. 
 	\small
 	\begin{tabular}{|p{0.28\textwidth}|p{0.3\textwidth}|p{0.32\textwidth}|}
 		\hline
-		\textbf{Kebutuhan Sistem}          & \textbf{Komponen Solusi}                                                                                      & \textbf{Implikasi terhadap Rancangan}                                       \\ \hline
-		Kontrol akses granular             & Macaroons dengan \textit{caveats}                                                                             & Token perlu memuat batasan aktor, kategori data, hak akses, dan waktu.      \\ \hline
-		Segmentasi data \textit{off-chain} & Pemisahan data berdasarkan kategori fungsi pada penyimpanan \textit{off-chain} dan metadata \textit{on-chain} & Metadata segmen data perlu dapat dicocokkan dengan \textit{caveats} token.  \\ \hline
-		Delegasi berantai                  & Atenuasi \textit{offline} pada Macaroons                                                                      & Pemegang token dapat menurunkan hak akses dengan cakupan yang lebih sempit. \\ \hline
+		\textbf{Kebutuhan Sistem} & \textbf{Komponen Solusi}                                                                                      & \textbf{Implikasi terhadap Rancangan}                                       \\ \hline
+		Kontrol akses granular    & Macaroons dengan \textit{caveats}                                                                             & Token perlu memuat batasan aktor, kategori data, hak akses, dan waktu.      \\ \hline
+		Segmentasi data           & Pemisahan data berdasarkan kategori fungsi pada penyimpanan \textit{off-chain} dan metadata \textit{on-chain} & Metadata segmen data perlu dapat dicocokkan dengan \textit{caveats} token.  \\ \hline
+		Delegasi berantai         & Atenuasi \textit{offline} pada Macaroons                                                                      & Pemegang token dapat menurunkan hak akses dengan cakupan yang lebih sempit. \\ \hline
 	\end{tabular}
 \end{table}
 
-Penelitian sebelumnya mengenai DecMed telah mendefinisikan kebutuhan fungsional dasar sistem, seperti pengelolaan akun, pemberian akses data RME, serta pengelolaan entri rekam medis. Kebutuhan Fungsional tersebut dapat dilihat pada lampiran \ref{lampiran:kebutuhan-fungsional-decmed}. Pada Tugas Akhir ini, kebutuhan fungsional tersebut diperluas untuk mendukung mekanisme kontrol akses granular berbasis Macaroons dan segmentasi data klinis.
-
-Berbeda dengan kebutuhan fungsional pada penelitian DecMed sebelumnya yang berfokus pada interaksi aktor dengan sistem, kebutuhan fungsional tambahan pada penelitian ini difokuskan pada kemampuan sistem dalam mendukung mekanisme kontrol akses granular dan segmentasi data klinis.
+Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Kebutuhan Fungsional Tambahan pada Tugas Akhir}
-	\label{tab:kebutuhan-fungsional-tambahan}
+	\caption{Perbandingan DecMed Awal dan Pengembangan pada Tugas Akhir}
+	\label{tab:perbandingan-decmed-ta}
 	\small
-	\begin{tabular}{|>{\centering\arraybackslash}m{0.12\textwidth}|p{0.78\textwidth}|}
+	\begin{tabular}{|p{0.2\textwidth}|p{0.36\textwidth}|p{0.36\textwidth}|}
 		\hline
-		\textbf{ID}    & \textbf{Deskripsi}                                                                                                                         \\ \hline
-
-		\centering F30 & Sistem dapat menghasilkan token otorisasi berbasis Macaroons untuk akses data klinis.                                                      \\ \hline
-
-		\centering F31 & Sistem dapat menambahkan \textit{caveats} pada token untuk membatasi akses berdasarkan kategori fungsi klinis, hak akses, dan waktu akses. \\ \hline
-
-		\centering F32 & Sistem dapat melakukan validasi \textit{caveats} sebelum data klinis diakses.                                                              \\ \hline
-
-		\centering F33 & Sistem dapat melakukan delegasi token dengan hak akses yang lebih terbatas melalui mekanisme atenuasi \textit{offline}.                    \\ \hline
-
-		\centering F34 & Sistem dapat menyimpan data klinis \textit{off-chain} berdasarkan kategori fungsi klinis.                                                  \\ \hline
-
-		\centering F35 & Sistem dapat menyimpan metadata kategori segmen data klinis pada \textit{smart contract}.                                                  \\ \hline
-
-		\centering F36 & Sistem dapat melakukan pengambilan segmen data klinis berdasarkan metadata kategori yang tersimpan pada \textit{on-chain}.                 \\ \hline
+		\textbf{Aspek}    & \textbf{DecMed awal}                                    & \textbf{Pengembangan pada TA ini}                                                               \\ \hline
+		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}         & Macaroons dengan \textit{caveats}                                                               \\ \hline
+		Delegasi akses    & Pasien perlu menerbitkan akses baru                     & Pemegang token dapat melakukan atenuasi terbatas pada token baru, kemudian mendelegasikan token \\ \hline
+		Granularitas data & Data klinis masih berupa \textit{blob} besar            & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}         \\ \hline
+		Penegakan akses   & Berdasarkan klaim pada token                            & Berdasarkan \textit{caveat} dan metadata segmen                                                 \\ \hline
+		Fokus penyimpanan & IOTA untuk metadata, IPFS untuk \textit{encrypted data} & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                 \\ \hline
+		PRE               & Membantu distribusi akses terenkripsi                   & Tetap menjadi titik verifikasi dan \textit{re-encryption}                                       \\ \hline
 	\end{tabular}
 \end{table}
 
-Dengan hasil analisis tersebut, solusi yang dirancang pada bagian berikutnya difokuskan pada tiga aspek utama, yaitu arsitektur integrasi Macaroons ke DecMed, struktur token dan \textit{caveats}, serta mekanisme segmentasi data klinis pada penyimpanan \textit{off-chain}.
+% Penelitian sebelumnya mengenai DecMed telah mendefinisikan kebutuhan fungsional dasar sistem, seperti pengelolaan akun, pemberian akses data RME, serta pengelolaan entri rekam medis. Kebutuhan Fungsional tersebut dapat dilihat pada lampiran \ref{lampiran:kebutuhan-fungsional-decmed}. Pada Tugas Akhir ini, kebutuhan fungsional tersebut diperluas untuk mendukung mekanisme kontrol akses granular berbasis Macaroons dan segmentasi data klinis.
+
+% Berbeda dengan kebutuhan fungsional pada penelitian DecMed sebelumnya yang berfokus pada interaksi aktor dengan sistem, kebutuhan fungsional tambahan pada penelitian ini difokuskan pada kemampuan sistem dalam mendukung mekanisme kontrol akses granular dan segmentasi data klinis.
+
+% \begin{table}[!ht]
+% 	\centering
+% 	\caption{Kebutuhan Fungsional Tambahan pada Tugas Akhir}
+% 	\label{tab:kebutuhan-fungsional-tambahan}
+% 	\small
+% 	\begin{tabular}{|>{\centering\arraybackslash}m{0.12\textwidth}|p{0.78\textwidth}|}
+% 		\hline
+% 		\textbf{ID}    & \textbf{Deskripsi}                                                                                                                         \\ \hline
+
+% 		\centering F30 & Sistem dapat menghasilkan token otorisasi berbasis Macaroons untuk akses data klinis.                                                      \\ \hline
+
+% 		\centering F31 & Sistem dapat menambahkan \textit{caveats} pada token untuk membatasi akses berdasarkan kategori fungsi klinis, hak akses, dan waktu akses. \\ \hline
+
+% 		\centering F32 & Sistem dapat melakukan validasi \textit{caveats} sebelum data klinis diakses.                                                              \\ \hline
+
+% 		\centering F33 & Sistem dapat melakukan delegasi token dengan hak akses yang lebih terbatas melalui mekanisme atenuasi \textit{offline}.                    \\ \hline
+
+% 		\centering F34 & Sistem dapat menyimpan data klinis \textit{off-chain} berdasarkan kategori fungsi klinis.                                                  \\ \hline
+
+% 		\centering F35 & Sistem dapat menyimpan metadata kategori segmen data klinis pada \textit{smart contract}.                                                  \\ \hline
+
+% 		\centering F36 & Sistem dapat melakukan pengambilan segmen data klinis berdasarkan metadata kategori yang tersimpan pada \textit{on-chain}.                 \\ \hline
+% 	\end{tabular}
+% \end{table}
+
+% Dengan hasil analisis tersebut, solusi yang dirancang pada bagian berikutnya difokuskan pada tiga aspek utama, yaitu arsitektur integrasi Macaroons ke DecMed, struktur token dan \textit{caveats}, serta mekanisme segmentasi data klinis pada penyimpanan \textit{off-chain}.

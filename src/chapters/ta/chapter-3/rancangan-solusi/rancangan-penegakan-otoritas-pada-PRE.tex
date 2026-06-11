@@ -1,4 +1,27 @@
 \subsection{Rancangan Penegakan Otoritas pada PRE}
 \label{subsec:rancangan-penegakan-otoritas-pada-PRE}
 
+\subsubsection{Verifikasi \textit{Caveats} pada Macaroons}
+\label{subsubsec:verifikasi-caveats-pada-macaroons}
 
+Ketika aktor penerima delegasi menggunakan token macaroons, \textit{Server} PRE bertindak sebagai titik penegakan kebijakan akses. \textit{Server} PRE tidak menerbitkan ulang token, tetapi memverifikasi token macaroons dan seluruh bukti yang menyertainya.
+
+Sebagai ilustrasi, langkah verifikasi token macaroons untuk permintaan akses baca data RME adalah sebagai berikut:
+
+\begin{enumerate}[leftmargin=*]
+	\item \textit{Server} PRE memverifikasi validitas Macaroons melalui mekanisme \textit{Chained-HMAC} menggunakan \texttt{RootKey}.
+	\item \textit{Server} PRE memverifikasi bahwa \texttt{patient\_address} dan \texttt{related\_rme\_id} pada token sesuai dengan data RME yang diminta.
+	\item \textit{Server} PRE menghitung aktor aktif. Jika tidak terdapat \texttt{delegated\_to}, maka aktor aktif adalah \texttt{root\_subject}. Jika terdapat satu atau lebih \texttt{delegated\_to}, maka aktor aktif adalah nilai \texttt{delegated\_to} terakhir.
+	\item \textit{Server} PRE memverifikasi tanda tangan \textit{wallet} dari aktor aktif pada permintaan akses.
+	\item \textit{Server} PRE menghitung kedalaman delegasi berdasarkan jumlah \texttt{delegated\_to} pada token dan memastikan nilainya tidak melebihi \texttt{max\_delegation\_depth}.
+	\item \textit{Server} PRE memvalidasi seluruh batas waktu pada \texttt{expires\_before} dan menggunakan batas waktu yang paling awal sebagai masa berlaku efektif token.
+	\item \textit{Server} PRE menghitung cakupan akses efektif berdasarkan irisan seluruh \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}.
+	\item \textit{Server} PRE mengambil metadata segmen dari IOTA dan mencocokkan \texttt{dataset\_category} serta \texttt{function\_category} segmen dengan cakupan akses efektif token.
+	\item Jika seluruh verifikasi berhasil, \textit{Server} PRE melanjutkan proses pengambilan data terenkripsi dari IPFS dan melakukan \textit{re-encryption}. Jika salah satu pemeriksaan gagal, permintaan akses ditolak.
+\end{enumerate}
+
+Nilai \texttt{max\_delegation\_depth} diperlakukan sebagai batas maksimum panjang rantai delegasi, bukan sebagai nilai yang ditimpa secara bebas. \textit{Server} PRE menghitung jumlah \textit{caveat} \texttt{delegated\_to} pada token untuk menentukan kedalaman delegasi aktual. Apabila token awal memiliki \texttt{max\_delegation\_depth = 2}, maka token tersebut dapat diturunkan dari petugas rekam medis kepada dokter, lalu dari dokter kepada laboratorium atau apoteker. Jika penerima terakhir mencoba menurunkan token kembali kepada pihak lain, jumlah delegasi akan melebihi batas dan token ditolak oleh \textit{Server} PRE.
+
+Dengan mekanisme tersebut, token turunan tidak dapat memperluas hak akses token induk. Misalnya, apabila token dokter tidak memiliki akses terhadap \texttt{APOTEK}, maka dokter tidak dapat membuat token turunan yang valid untuk apoteker. Meskipun dokter menambahkan \textit{caveat} \texttt{read\_dataset\_in = [APOTEK]}, cakupan efektif token akan menjadi kosong karena batasan tersebut tidak termasuk dalam cakupan token induk. Demikian pula, apabila token induk hanya berlaku hingga pukul 18.00, token turunan yang mencoba menggunakan \texttt{expires\_before} setelah pukul 18.00 tetap tidak akan memperpanjang masa berlaku efektif token.
+
+Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses.

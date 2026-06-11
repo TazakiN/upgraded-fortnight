@@ -1,0 +1,27 @@
+\subsection{Implementasi Smart Contract IOTA Move}
+\label{subsec:implementasi-smart-contract-iota-move}
+
+\textit{Smart contract} IOTA Move diimplementasikan untuk menyimpan metadata yang diperlukan oleh mekanisme segmentasi dan kontrol akses. Data RME tetap disimpan secara \textit{off-chain} pada IPFS, sedangkan IOTA menyimpan informasi yang dibutuhkan untuk menemukan, memverifikasi, dan menghubungkan segmen data dengan pemiliknya.
+
+Pada implementasi final, struktur penyimpanan metadata klinis di Move masih bersifat flat melalui \texttt{medical\_metadata: TableVec<PatientMedicalMetadata>}. Struktur \texttt{PatientMedicalMetadata} menyimpan \texttt{index} dan \texttt{metadata}. Informasi segmentasi seperti \texttt{dataset\_category}, \texttt{function\_category}, \texttt{related\_rme\_id}, CID IPFS, \textit{integrity hash}, dan kapsul kunci tidak dijadikan field Move native, tetapi disimpan di dalam \texttt{metadata} sebagai JSON base64. Dengan cara ini, \textit{Server} PRE dapat mengambil metadata segmen dari IOTA sebelum memutuskan apakah token Macaroon berhak mengakses segmen tersebut.
+
+\begin{table}[!ht]
+	\centering
+	\caption{File Move yang Relevan pada Implementasi}
+	\label{tab:implementasi-move}
+	\small
+	\begin{tabular}{|p{0.37\textwidth}|p{0.53\textwidth}|}
+		\hline
+		\textbf{File Move} & \textbf{Peran} \\ \hline
+		\texttt{patient\_account.move} & Menyimpan \texttt{PatientAccount}, \texttt{access\_log}, \texttt{delegation\_audit\_log}, dan \texttt{medical\_metadata}. \\ \hline
+		\texttt{patient\_medical\_}\newline\texttt{metadata.move} & Menyimpan struktur \texttt{PatientMedicalMetadata} dengan field \texttt{index} dan \texttt{metadata}. \\ \hline
+		\texttt{hospital\_personnel\_}\newline\texttt{access\_data.move} & Menyimpan metadata akses personel, \texttt{delegated\_by}, dan \texttt{delegation\_depth}. \\ \hline
+		\texttt{patient\_delegation\_}\newline\texttt{audit\_entry.move} & Menyimpan audit delegasi, hash token, hash token induk, dan \texttt{related\_rme\_id}. \\ \hline
+		\texttt{proxy.move} & Menyediakan capability PRE serta fungsi pembuatan, pembacaan, dan pembaruan metadata. \\ \hline
+		\texttt{hospital\_personnel.move} & Mengelola akses terdelegasi dan pencabutan akses personel rumah sakit. \\ \hline
+	\end{tabular}
+\end{table}
+
+Fungsi pada \textit{smart contract} disusun untuk mendukung pembuatan metadata RME, penambahan segmen baru, pembaruan referensi segmen, pembacaan metadata, penyimpanan metadata akses personel, serta pencatatan audit delegasi. Operasi yang mengubah metadata hanya dapat dilakukan oleh aktor yang memiliki konteks akses tulis yang sah pada lapisan aplikasi. Pemeriksaan detail terhadap \textit{caveats} tetap dilakukan pada \textit{Server} PRE karena token Macaroon tidak disimpan sebagai sumber otoritas permanen pada IOTA.
+
+Pemisahan tersebut membuat \textit{smart contract} tetap berperan sebagai pencatat metadata dan status data, sedangkan keputusan otorisasi kontekstual dijalankan oleh \textit{Server} PRE. Dengan demikian, implementasi tidak perlu menyimpan seluruh aturan akses granular di \textit{on-chain}, tetapi tetap dapat memanfaatkan metadata \textit{on-chain} untuk memverifikasi kategori segmen yang diminta. Karena \texttt{related\_rme\_id} berada di dalam JSON metadata, relasi episode pada implementasi belum berbentuk struktur hierarkis native di Move.

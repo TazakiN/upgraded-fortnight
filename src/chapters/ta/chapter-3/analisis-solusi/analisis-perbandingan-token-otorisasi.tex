@@ -1,0 +1,69 @@
+\subsection{Analisis Perbandingan Token Otorisasi}
+\label{subsec:analisis-perbandingan-token-otorisasi}
+
+Berdasarkan masalah yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah}, mekanisme otorisasi pada DecMed perlu mendukung kontrol akses granular, pembatasan cakupan akses, delegasi hak akses yang dapat dipersempit, verifikasi token secara mandiri, serta kesesuaian dengan arsitektur terdistribusi yang melibatkan IOTA, IPFS, dan PRE. Oleh karena itu, diperlukan analisis perbandingan terhadap beberapa pendekatan token otorisasi untuk menentukan mekanisme yang paling sesuai dengan kebutuhan sistem.
+
+Alternatif token otorisasi yang dibandingkan pada analisis ini adalah JWT, PASETO, Macaroons, dan Biscuit. JWT dipilih sebagai pembanding karena merupakan bentuk token yang digunakan pada rancangan DecMed awal dan umum digunakan untuk merepresentasikan klaim otorisasi. PASETO dipilih karena memiliki tujuan penggunaan yang serupa dengan JWT sebagai token \textit{stateless}, tetapi dengan desain kriptografi yang lebih terarah dan lebih membatasi pilihan algoritma untuk mengurangi risiko kesalahan konfigurasi. Macaroons dianalisis sebagai kandidat utama karena menyediakan mekanisme \textit{caveat} dan atenuasi hak akses secara lokal, sehingga mendukung delegasi terbatas tanpa mengharuskan penerbit token membuat token baru. Biscuit dianalisis sebagai pembanding karena juga mendukung verifikasi terdesentralisasi dan atenuasi \textit{offline}, tetapi menggunakan pendekatan yang lebih ekspresif melalui aturan berbasis \textit{logic language}.
+
+Kriteria evaluasi pada Tabel \ref{tab:perbandingan-token-otorisasi} diturunkan dari kebutuhan otorisasi DecMed. Kemampuan membawa klaim atau batasan akses granular digunakan untuk menilai sejauh mana token dapat merepresentasikan informasi otorisasi, seperti identitas subjek, pasien terkait, jenis data, fungsi klinis, aksi yang diperbolehkan, dan masa berlaku akses. Delegasi hak akses yang dipersempit dan kemampuan atenuasi \textit{offline} digunakan untuk menilai apakah pemegang token dapat menurunkan sebagian hak akses kepada aktor lain tanpa memperluas cakupan akses awal dan tanpa selalu meminta penerbit token membuat token baru. Ekspresivitas pembatasan akses digunakan untuk menilai kemampuan token dalam menyatakan aturan atau kondisi akses yang lebih spesifik. Verifikasi mandiri oleh komponen penerima diperlukan agar token dapat divalidasi oleh komponen seperti \textit{Server} PRE tanpa selalu bergantung pada server otorisasi pusat. Selain itu, kesesuaian dengan kebutuhan delegasi DecMed dan kompleksitas integrasi juga dipertimbangkan karena mekanisme token yang dipilih harus dapat diterapkan dalam arsitektur DecMed yang melibatkan IOTA, IPFS, PRE, dan aplikasi \textit{client}, tanpa menambah kompleksitas implementasi di luar ruang lingkup penelitian.
+
+
+\begin{table}[!ht]
+	\centering
+	\caption{Perbandingan Pendekatan Token Otorisasi}
+	\label{tab:perbandingan-token-otorisasi}
+	\scriptsize
+	\begin{tabular}{|p{0.24\textwidth}|p{0.14\textwidth}|p{0.14\textwidth}|p{0.14\textwidth}|p{0.14\textwidth}|}
+		\hline
+		\textbf{Kriteria} & \textbf{JWT}                                     & \textbf{PASETO} & \textbf{Macaroons} & \textbf{Biscuit} \\ \hline
+
+		Kemampuan membawa batasan akses
+		                  & Melalui klaim
+		                  & Melalui klaim
+		                  & Melalui \textit{caveats}
+		                  & Melalui \textit{fact} dan \textit{rule}                                                                    \\ \hline
+
+		Delegasi hak akses
+		                  & Membutuhkan mekanisme tambahan
+		                  & Membutuhkan mekanisme tambahan
+		                  & Didukung melalui penambahan \textit{caveats}
+		                  & Didukung melalui penambahan \textit{rule}                                                                  \\ \hline
+
+		Kemampuan atenuasi \textit{offline}
+		                  & Tidak
+		                  & Tidak
+		                  & Ya
+		                  & Ya                                                                                                         \\ \hline
+
+		Ekspresivitas pembatasan akses
+		                  & Sedang
+		                  & Sedang
+		                  & Sedang--tinggi
+		                  & Tinggi                                                                                                     \\ \hline
+
+		Verifikasi mandiri oleh komponen penerima
+		                  & Ya, dengan kunci verifikasi yang sesuai
+		                  & Ya, dengan kunci verifikasi yang sesuai
+		                  & Ya, dengan kunci dan pemeriksaan \textit{caveat}
+		                  & Ya, dengan kunci publik dan pemeriksaan aturan                                                             \\ \hline
+
+		Kesesuaian dengan kebutuhan delegasi pada DecMed
+		                  & Rendah--sedang
+		                  & Rendah--sedang
+		                  & Tinggi
+		                  & Tinggi                                                                                                     \\ \hline
+
+		Kompleksitas integrasi
+		                  & Rendah
+		                  & Rendah--sedang
+		                  & Sedang
+		                  & Tinggi                                                                                                     \\ \hline
+	\end{tabular}
+\end{table}
+
+
+JWT dan PASETO memiliki kemiripan dari sisi penggunaan sebagai token \textit{stateless} yang membawa klaim. Keduanya dapat digunakan untuk menyatakan informasi otorisasi seperti identitas subjek, cakupan akses, dan waktu kedaluwarsa. Namun, pembatasan tersebut umumnya ditentukan pada saat token diterbitkan. Dengan demikian, apabila penerima token ingin mendelegasikan sebagian hak akses kepada pihak lain, sistem tetap memerlukan penerbitan token baru atau mekanisme kontrol tambahan di sisi \textit{server}. Karakteristik ini kurang sesuai dengan kebutuhan DecMed yang memerlukan delegasi antar aktor layanan kesehatan tanpa selalu melibatkan pasien atau \textit{server} otorisasi sebagai penerbit token baru.
+
+Biscuit menyediakan kemampuan yang lebih dekat dengan kebutuhan DecMed karena mendukung atenuasi \textit{offline} dan aturan otorisasi yang ekspresif. Namun, ekspresivitas Biscuit juga membawa kompleksitas tambahan karena pemeriksaan otorisasi dilakukan menggunakan pendekatan berbasis fakta dan aturan. Dalam konteks penelitian ini, kebutuhan pembatasan akses DecMed masih dapat direpresentasikan melalui batasan yang relatif langsung, seperti identitas pasien, identitas aktor, dataset, fungsi klinis, aksi, masa berlaku, dan batas delegasi. Oleh karena itu, penggunaan Biscuit dinilai lebih kompleks dibandingkan kebutuhan implementasi yang ingin dicapai.
+
+Berdasarkan perbandingan tersebut, Macaroons dipilih sebagai mekanisme token otorisasi pada DecMed karena memberikan keseimbangan antara kemampuan kontrol akses granular, dukungan delegasi terbatas, atenuasi hak akses secara lokal, dan kompleksitas implementasi yang masih sesuai dengan ruang lingkup penelitian. Melalui mekanisme \textit{caveats}, token dapat membawa pembatasan akses seperti identitas pasien, identitas aktor, jenis data, aksi yang diperbolehkan, masa berlaku, serta batasan delegasi. \textit{Caveats} tersebut juga dapat ditambahkan secara lokal oleh pemegang token untuk mempersempit hak akses sebelum token didelegasikan kepada pihak lain, tanpa mengharuskan penerbit token membuat token baru. Karakteristik ini sesuai dengan kebutuhan DecMed untuk mendukung delegasi terbatas dalam alur pelayanan kesehatan, misalnya dari petugas administrasi kepada dokter, atau dari dokter kepada petugas laboratorium, tanpa memperluas cakupan akses yang diberikan oleh pasien. Dibandingkan JWT dan PASETO, Macaroons lebih sesuai karena mendukung penambahan pembatasan akses oleh pemegang token. Dibandingkan Biscuit, Macaroons memiliki ekspresivitas yang lebih sederhana, tetapi sudah mencukupi untuk merepresentasikan kebutuhan pembatasan akses DecMed melalui \textit{caveats}. Dengan demikian, Macaroons dipilih bukan sebagai token yang paling unggul untuk seluruh skenario otorisasi, melainkan sebagai mekanisme yang paling selaras dengan kebutuhan khusus DecMed.

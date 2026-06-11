@@ -1,19 +1,58 @@
 \subsection{Analisis Kebutuhan Sistem}
 \label{subsec:analisis-kebutuhan-sistem}
-Untuk mengatasi masalah pada subbab \ref{subsec:identifikasi-masalah}, sistem memerlukan serangkaian kebutuhan fungsional yang selaras dengan rumusan masalah, tujuan penelitian, dan skenario layanan kesehatan kolaboratif pada Subsubbab \ref{subsubsec:analisis-skenario-layanan-klinis}. Secara khusus, kebutuhan sistem harus mampu mengakomodasi perbedaan peran antara petugas administrasi, dokter penanggung jawab pasien, dan petugas laboratorium, yang masing-masing membutuhkan ruang lingkup akses berbeda terhadap data RME. Kebutuhan tersebut dirangkum dalam Tabel \ref{tab:kebutuhan-fungsional-tambahan}.
 
-\begin{table}[!ht]
-	\centering
-	\caption{Pemetaan Masalah dengan Kebutuhan Fungsi Tambahan}
-	\label{tab:kebutuhan-fungsional-tambahan}
-	\small
-	\begin{tabular}{|c|p{0.18\textwidth}|p{0.2\textwidth}|p{0.38\textwidth}|}
-		\hline
-		\textbf{Masalah} & \textbf{Fungsionalitas}                            & \textbf{Aktor dan Kebutuhan Akses}                                                                                                                                                        & \textbf{Deskripsi Kebutuhan}                                                                                                                                         \\ \hline
-		1                & Kontrol Akses Granular Berbasis Macaroons          & Petugas administrasi hanya memerlukan akses administratif; dokter memerlukan akses baca/tulis klinis; petugas laboratorium hanya memerlukan akses terbatas sesuai permintaan pemeriksaan. & Sistem harus mampu menerbitkan token otorisasi yang membawa batasan rinci berdasarkan aktor, jenis data, aksi, masa berlaku, dan konteks penggunaan akses.           \\ \hline
-		2                & Segmentasi Data \textit{Off-Chain} Terenkripsi     & Data administratif, riwayat klinis, permintaan pemeriksaan, dan hasil laboratorium perlu dapat diakses secara selektif oleh aktor yang berbeda.                                           & Sistem harus memecah data RME ke dalam unit penyimpanan \textit{off-chain} yang tersegmentasi agar setiap aktor hanya dapat mengakses himpunan data yang relevan.    \\ \hline
-		3                & Delegasi Berantai dengan atenuasi \textit{offline} & Dokter perlu dapat mendelegasikan sebagian hak akses kepada petugas laboratorium tanpa meminta pasien menerbitkan ulang token.                                                            & Sistem harus memungkinkan tenaga medis mendelegasikan sebagian hak akses secara lokal dengan batasan yang makin ketat tanpa memerlukan intervensi ulang dari pasien. \\ \hline
-	\end{tabular}
-\end{table}
+Berdasarkan permasalahan yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah}, sistem memerlukan kebutuhan fungsional tambahan yang berfokus pada peningkatan granularitas kontrol akses dan dukungan delegasi antaraktor. Kebutuhan ini dirumuskan untuk melengkapi kebutuhan fungsional DecMed sebelumnya, khususnya pada aspek pemberian akses, pembacaan RME, penulisan RME, pencabutan akses, dan pencatatan audit.
 
-Dengan demikian, keluaran tahap analisis pada bab ini menjadi dasar langsung bagi tahap perancangan solusi, yaitu integrasi Macaroons sebagai mekanisme kontrol akses yang dapat membedakan kebutuhan akses setiap aktor, penyusunan skema penyimpanan \textit{off-chain} yang tersegmentasi sesuai unit data klinis, dan perancangan alur delegasi berantai yang mendukung perpindahan hak akses secara efisien dalam layanan kesehatan kolaboratif.
+Kebutuhan fungsional tambahan pada penelitian ini tidak dimaksudkan untuk menggantikan kebutuhan fungsional DecMed yang telah dirancang sebelumnya. Sebaliknya, kebutuhan tersebut berperan sebagai perluasan agar sistem dapat mendukung skenario layanan kesehatan kolaboratif sebagaimana dijelaskan pada Subsubbab \ref{subsubsec:analisis-skenario-layanan-klinis}. Dalam skenario tersebut, akses awal terhadap RME hanya diberikan langsung oleh pasien kepada petugas rekam medis, kemudian hak akses tersebut dapat didelegasikan secara terbatas kepada aktor tenaga medis yang terlibat dalam proses pelayanan. Aktor tenaga medis dalam Tugas Akhir ini mencakup dokter, perawat, petugas laboratorium, dan apoteker.
+
+Kebutuhan fungsional tambahan dirumuskan dari sudut pandang aktor, sama seperti pola pada kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}. Perumusan berbasis aktor digunakan untuk memperjelas pihak yang dapat menerima akses, jenis data yang dapat diakses, operasi yang dapat dilakukan, serta batasan akses yang harus ditegakkan. Batasan tersebut mencakup pasien, episode RME, dataset, fungsi klinis, aksi akses, waktu berlaku, penerima delegasi, dan kedalaman delegasi. Rangkuman kebutuhan fungsional tambahan DecMed ditunjukkan pada Tabel \ref{tab:kebutuhan-fungsional-tambahan-decmed}.
+
+\begin{longtable}{|p{1.5cm}|p{11.5cm}|}
+	\caption{Kebutuhan Fungsional Tambahan DecMed}
+	\label{tab:kebutuhan-fungsional-tambahan-decmed}                                                                                                            \\
+	\hline
+	\textbf{ID} & \textbf{Deskripsi}                                                                                                                            \\
+	\hline
+	\endfirsthead
+
+	\multicolumn{2}{c}{\tablename\ \thetable{} -- Lanjutan}                                                                                                     \\
+	\hline
+	\textbf{ID} & \textbf{Deskripsi}                                                                                                                            \\
+	\hline
+	\endhead
+
+	\hline
+	\endfoot
+	% (Penyesuaian dari F06 dan F07)
+	F31
+	            & Pasien dapat memberikan akses awal kepada petugas rekam medis dengan batasan cakupan data, aksi akses, waktu berlaku, dan kedalaman delegasi. \\ \hline
+
+	% (Penyesuaian dari F09)
+	F32
+	            & Pasien dapat mencabut akses awal dan akses turunannya yang telah diberikan.                                                                   \\ \hline
+
+	F33
+	            & Pasien dapat melihat riwayat akses dan delegasi terhadap RME miliknya.                                                                        \\ \hline
+
+	F34
+	            & Petugas rekam medis dapat mendelegasikan akses terbatas kepada perawat dan dokter sesuai cakupan akses.                                       \\ \hline
+
+	F35
+	            & Dokter dapat membaca dan menulis segmen klinis sesuai cakupan akses .                                                                         \\ \hline
+
+	F36
+	            & Dokter dapat mendelegasikan akses terbatas kepada tenaga laboratorium dan apoteker sesuai cakupan akses.                                      \\ \hline
+
+	F37
+	            & Perawat dapat membaca dan menulis segmen klinis sesuai cakupan akses.                                                                         \\ \hline
+
+	F38
+	            & Petugas laboratorium dapat membaca dan menulis segmen klinis sesuai cakupan akses terkait pemeriksaan laboratorium.                           \\ \hline
+
+	F39
+	            & Apoteker dapat membaca dan menulis segmen klinis sesuai cakupan akses terkait pelayanan obat.                                                 \\ \hline
+\end{longtable}
+
+Terdapat penyesuaian pada F06 dan F07 karena dalam skenario layanan kesehatan kolaboratif, akses awal terhadap RME hanya diberikan langsung oleh pasien kepada petugas rekam medis, kemudian hak akses tersebut dapat didelegasikan secara terbatas kepada aktor tenaga medis yang terlibat dalam proses pelayanan, seperti dokter, perawat, petugas laboratorium, dan apoteker. Penyesuaian ini juga berlaku pada F09 karena dalam skenario tersebut, pasien memerlukan kemampuan untuk mencabut akses awal dan akses turunannya yang telah didelegasikan.
+
+Kebutuhan fungsional tambahan tersebut menjadi dasar bagi perancangan solusi pada tahap berikutnya. Secara khusus, kebutuhan ini digunakan untuk merancang integrasi Macaroons sebagai mekanisme token otorisasi, menentukan struktur pembatasan akses melalui \textit{caveats}, menyusun skema segmentasi data RME berbasis unit data klinis, serta merancang alur delegasi berantai antaraktor. Dengan demikian, rancangan sistem tidak hanya mempertahankan fungsi dasar DecMed, tetapi juga menambahkan mekanisme kontrol akses yang lebih granular, terbatas, dan sesuai dengan kebutuhan layanan kesehatan kolaboratif.

@@ -1,0 +1,29 @@
+\subsection{Evaluasi terhadap Kebutuhan Sistem}
+\label{subsec:evaluasi-kebutuhan-sistem}
+
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:identifikasi-masalah}, implementasi dievaluasi terhadap kebutuhan utama yang menjadi dasar pengembangan dari DecMed awal, yaitu kontrol akses granular, segmentasi data RME, delegasi berantai dengan atenuasi \textit{offline}, penegakan akses pada PRE, pencabutan akses, serta audit.
+
+Kebutuhan kontrol akses granular dipenuhi melalui penggunaan Macaroons dengan \textit{caveats}. Token tidak hanya menyatakan aktor penerima akses, tetapi juga membatasi pasien, RME, kategori dataset, kategori fungsi, hak baca atau tulis, masa berlaku, dan kedalaman delegasi. Evaluasi pengujian menunjukkan bahwa keputusan akses dapat dibuat berdasarkan kombinasi batasan tersebut, bukan hanya berdasarkan peran aktor secara umum.
+
+Kebutuhan segmentasi data RME dipenuhi dengan memecah data \textit{off-chain} menjadi segmen berdasarkan \textit{dataset category} dan \textit{function category}. Setiap segmen memiliki metadata sendiri pada IOTA dan data terenkripsi sendiri pada IPFS. Dengan demikian, \textit{Server} PRE dapat mencocokkan token dengan segmen yang diminta sebelum melakukan \textit{re-encryption}.
+
+Kebutuhan delegasi berantai dipenuhi melalui atenuasi token pada sisi \textit{client}. Aktor yang menerima token dapat membuat token turunan dengan cakupan lebih sempit tanpa meminta penerbitan ulang dari pasien atau \textit{Server} PRE. Karena token turunan tetap membawa seluruh \textit{caveats} token induk, implementasi menjaga agar delegasi tidak memperluas hak akses.
+
+Ringkasan evaluasi kebutuhan sistem ditunjukkan pada Tabel \ref{tab:evaluasi-kebutuhan-sistem}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Evaluasi terhadap Kebutuhan Sistem}
+	\label{tab:evaluasi-kebutuhan-sistem}
+	\small
+	\begin{tabular}{|p{0.19\textwidth}|p{0.30\textwidth}|p{0.24\textwidth}|p{0.17\textwidth}|}
+		\hline
+		\textbf{Kebutuhan Sistem} & \textbf{Implementasi} & \textbf{Bukti Pengujian} & \textbf{Status} \\ \hline
+		Kontrol akses granular & Macaroons dengan \textit{caveats} \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}. & Test cakupan dataset/fungsi dan skenario akses di luar \textit{caveat}. & Terpenuhi. \\ \hline
+		Segmentasi data RME & \texttt{DatasetCategory}, \texttt{FunctionCategory}, \texttt{RmeSegmentMetadata}, \textit{ciphertext} IPFS, dan metadata Move. & Pengujian tulis dan baca segmen RME. & Terpenuhi. \\ \hline
+		Delegasi \textit{offline} & Atenuasi lokal di \textit{Hospital Client} tanpa kunci akar. & Skenario admin atau dokter membuat token turunan. & Terpenuhi. \\ \hline
+		Enforcement PRE & Middleware dan handler validasi Macaroon, aktor aktif, \textit{wallet proof}, serta \textit{re-encryption}. & Test proxy dan skenario manual. & Terpenuhi sebagian. \\ \hline
+		Revocation & Redis \textit{revocation key} dan pencabutan akses \textit{on-chain}. & Test kunci revocation tersedia dan endpoint revocation delegasi parsial. & Terpenuhi sebagian. \\ \hline
+		Audit dan uji keamanan formal & Audit sebagian tersedia, tetapi uji formal end-to-end belum dilakukan. & Belum ada test formal. & Belum penuh. \\ \hline
+	\end{tabular}
+\end{table}

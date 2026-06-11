@@ -1,0 +1,10 @@
+\subsection{Strategi Pengujian}
+\label{subsec:strategi-pengujian}
+
+Strategi pengujian disusun berdasarkan kebutuhan sistem pada Subbab \ref{subsec:identifikasi-masalah} dan rancangan skenario pada Subbab \ref{subsec:rancangan-skenario-pengujian}. Pengujian dibagi menjadi dua kelompok, yaitu pengujian otomatis dan pengujian skenario manual. Pengujian otomatis digunakan untuk memeriksa fungsi teknis setiap komponen, sedangkan pengujian skenario manual digunakan untuk memeriksa perilaku sistem dari sudut pandang aktor layanan kesehatan.
+
+Pengujian otomatis mencakup \texttt{cargo check}, \texttt{cargo test}, dan \texttt{iota move test} pada komponen yang relevan. Pengujian ini memverifikasi fungsi yang memiliki aturan deterministik, seperti pembentukan \textit{caveats}, atenuasi token, perhitungan cakupan akses efektif, pemeriksaan masa berlaku, pencocokan kategori segmen, serta fungsi PRE. Pengujian integrasi digunakan untuk memverifikasi interaksi antara \textit{client}, \textit{Server} PRE, IPFS, dan IOTA Testnet.
+
+Skenario pengujian disusun dengan pendekatan positif dan negatif. Skenario positif memastikan akses yang sah dapat diproses hingga data berhasil diperoleh atau diperbarui. Skenario negatif memastikan akses yang tidak sah ditolak, misalnya karena kategori data tidak sesuai, token kedaluwarsa, aktor aktif tidak sesuai dengan tanda tangan \textit{wallet}, atau kedalaman delegasi melebihi batas.
+
+Kriteria keberhasilan pengujian ditentukan berdasarkan tiga prinsip utama. Pertama, aktor hanya dapat mengakses segmen yang sesuai dengan \textit{caveats} token. Kedua, token turunan tidak dapat memperluas hak akses token induk. Ketiga, \textit{Server} PRE menolak permintaan sebelum proses \textit{re-encryption} apabila validasi otorisasi gagal.

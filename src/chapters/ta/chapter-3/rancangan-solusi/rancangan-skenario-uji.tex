@@ -1,0 +1,30 @@
+% \subsection{Rancangan Skenario Pengujian}
+% \label{subsec:rancangan-skenario-pengujian}
+
+% Rancangan skenario pengujian diturunkan dari kebutuhan fungsional berbasis aktor pada Tabel \ref{tab:kebutuhan-fungsional-aktor} dan kebutuhan teknis pada Tabel \ref{tab:kebutuhan-fungsional-teknis}. Fokus pengujian adalah membuktikan bahwa setiap aktor hanya memperoleh hak minimum yang diperlukan untuk menjalankan tugasnya, serta bahwa token turunan tidak dapat memperluas cakupan token induk.
+
+% Skenario uji dirancang dalam bentuk alur positif dan negatif. Alur positif memastikan aktor dapat menjalankan operasi yang memang termasuk dalam cakupan token. Alur negatif memastikan \textit{Server} PRE menolak permintaan ketika aktor mencoba membaca, menulis, atau mendelegasikan data di luar \textit{caveats} yang diberikan.
+
+% \begin{table}[!ht]
+% 	\centering
+% 	\caption{Rancangan Skenario Uji Berbasis Aktor}
+% 	\label{tab:rancangan-skenario-uji-aktor}
+% 	\small
+% 	\begin{tabular}{|p{0.08\textwidth}|p{0.17\textwidth}|p{0.15\textwidth}|p{0.31\textwidth}|p{0.19\textwidth}|}
+% 		\hline
+% 		\textbf{ID} & \textbf{Aktor}       & \textbf{Kebutuhan} & \textbf{Skenario}                                                                                                     & \textbf{Ekspektasi}                                                                                                   \\ \hline
+% 		U01         & Pasien               & FA01               & Pasien memberikan token akses awal untuk satu episode RME kepada petugas rekam medis atau dokter.                     & Token awal berhasil diterbitkan dan terikat pada pasien, episode RME, penerima, serta masa berlaku.                   \\ \hline
+% 		U02         & Petugas Rekam Medis  & FA02, FT05         & Petugas rekam medis mendelegasikan akses terbatas kepada perawat untuk pemeriksaan awal.                              & Token turunan berhasil dibuat dengan cakupan fungsi pemeriksaan awal tanpa melebihi token induk.                      \\ \hline
+% 		U03         & Perawat              & FA03, FT01         & Perawat menulis segmen anamnesis pada episode RME yang didelegasikan.                                                 & Segmen berhasil disimpan sesuai \texttt{dataset\_category} dan \texttt{function\_category} yang diizinkan.            \\ \hline
+% 		U04         & Perawat              & FA08, FT02         & Perawat mencoba menulis segmen terapi.                                                                                & Permintaan ditolak karena fungsi terapi tidak termasuk cakupan token perawat.                                         \\ \hline
+% 		U05         & Dokter               & FA04, FT01         & Dokter membaca dan menulis diagnosis serta terapi pada episode RME yang didelegasikan.                                & Operasi diterima karena dataset, fungsi klinis, aksi, dan episode RME sesuai dengan token.                            \\ \hline
+% 		U06         & Dokter               & FA05, FT05         & Dokter mendelegasikan akses terbatas kepada petugas laboratorium.                                                     & Token turunan laboratorium berhasil dibuat dengan cakupan permintaan dan hasil pemeriksaan.                           \\ \hline
+% 		U07         & Petugas Laboratorium & FA06, FT01         & Petugas laboratorium membaca permintaan pemeriksaan dan menulis hasil laboratorium.                                   & Operasi diterima dan segmen laboratorium tersimpan sebagai bagian dari episode RME.                                   \\ \hline
+% 		U08         & Petugas Laboratorium & FA08, FT02         & Petugas laboratorium mencoba membaca diagnosis pasien.                                                                & Permintaan ditolak atau segmen tidak ditampilkan karena diagnosis tidak termasuk \textit{caveats} token laboratorium. \\ \hline
+% 		U09         & Apoteker             & FA07, FT01         & Apoteker membaca resep dan menulis status \textit{dispensing}.                                                        & Operasi diterima selama berada pada dataset dan fungsi apotek yang didelegasikan.                                     \\ \hline
+% 		U10         & Apoteker             & FA08, FT02         & Apoteker mencoba membaca anamnesis atau hasil laboratorium.                                                           & Permintaan ditolak atau data tidak ditampilkan karena berada di luar cakupan token apoteker.                          \\ \hline
+% 		U11         & Aktor Penerima Akses & FA08, FT02         & Aktor menggunakan token kedaluwarsa, token milik \textit{wallet} lain, atau token dengan kedalaman delegasi berlebih. & \textit{Server} PRE menolak permintaan sebelum data terenkripsi diambil dan sebelum \textit{re-encryption} dilakukan. \\ \hline
+% 	\end{tabular}
+% \end{table}
+
+% Rancangan tersebut menjadi acuan bagi pengujian implementasi pada Bab \ref{bab:implementasi-dan-evaluasi}. Skenario dengan ekspektasi diterima digunakan untuk memverifikasi kelengkapan alur layanan, sedangkan skenario dengan ekspektasi ditolak digunakan untuk memverifikasi prinsip \textit{least privilege}.

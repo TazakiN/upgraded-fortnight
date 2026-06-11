@@ -108,6 +108,8 @@
   "editor.formatOnSave": true,
   "files.exclude": {
     "**/*.bak*": true,
+    "build/**": true,
+    "build/thesis.pdf": false
   },
   "editor.wordWrap": "on",
   "[latex]": {

@@ -1,0 +1,17 @@
+\subsection{Implementasi Arsitektur Sistem}
+\label{subsec:implementasi-arsitektur-sistem}
+
+Implementasi arsitektur sistem mengikuti rancangan pada Subbab \ref{subsec:rancangan-arsitektur-solusi}. Komponen dasar DecMed dipertahankan, yaitu IOTA untuk metadata \textit{on-chain}, IPFS untuk penyimpanan \textit{ciphertext} \textit{off-chain}, dan \textit{Server} PRE untuk distribusi akses terhadap data terenkripsi. Perubahan utama pada implementasi ini berada pada lapisan otorisasi dan struktur data, yaitu data RME dibuat tersegmentasi, token akses diganti dengan Macaroons, dan \textit{Hospital Client} mendukung pembuatan token turunan melalui atenuasi lokal.
+
+\textit{Patient Client} digunakan untuk memberikan akses awal, \textit{Hospital Client} digunakan untuk membaca atau menulis segmen RME serta membuat token turunan, sedangkan \textit{Ministry Client} tetap digunakan untuk kebutuhan registrasi rumah sakit. Seluruh permintaan akses terhadap RME melewati \textit{Server} PRE sebagai titik penegakan kebijakan akses.
+
+Alur implementasi akses data diawali dari \textit{client} yang mengirimkan permintaan akses beserta token Macaroon dan bukti kepemilikan \textit{wallet}. \textit{Server} PRE kemudian membaca metadata segmen RME dari IOTA untuk memperoleh informasi kategori data, lokasi CID pada IPFS, dan data kriptografis yang diperlukan. Apabila seluruh pemeriksaan otorisasi berhasil, \textit{Server} PRE mengambil segmen terenkripsi dari IPFS, menjalankan proses \textit{re-encryption}, lalu mengembalikan hasil yang dapat dibuka oleh pemohon akses.
+
+Dengan penempatan tersebut, \textit{Server} PRE berperan sebagai titik penegakan akses yang menghubungkan tiga hal, yaitu token Macaroon sebagai bukti kapabilitas, metadata IOTA sebagai sumber kebenaran kategori segmen, dan IPFS sebagai penyimpanan isi RME terenkripsi. Redis digunakan sebagai komponen pendukung untuk \textit{nonce}, kunci akses PRE, dan pencabutan akses. Arsitektur ini memungkinkan kontrol akses granular diterapkan tanpa mengubah prinsip dasar DecMed yang memisahkan metadata \textit{on-chain} dan data terenkripsi \textit{off-chain}.
+
+% \begin{figure}[!ht]
+% 	\centering
+% 	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-4/implementasi/flowdiagram-arsitektur-implementasi-final.png}
+% 	\caption{Arsitektur implementasi final}
+% 	\label{fig:arsitektur-implementasi-final}
+% \end{figure}

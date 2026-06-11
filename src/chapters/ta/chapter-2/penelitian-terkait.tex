@@ -19,10 +19,10 @@ Liu dan Chen meneliti model kontrol akses untuk RME berbasis Blockchain dengan m
 
 Untuk menjawab permasalahan tersebut, penelitian ini mengusulkan model otorisasi empat lapis yang terdiri dari:
 \begin{enumerate}
-    \item \textit{Role Check} menggunakan RBAC,
-    \item \textit{Identity Verification} menggunakan \textit{Identity-Based Encryption} (IBE),
-    \item \textit{Policy Execution} menggunakan \textit{smart contract}, dan
-    \item \textit{Data Volume Check} menggunakan pendekatan \textit{entropy}.
+	\item \textit{Role Check} menggunakan RBAC,
+	\item \textit{Identity Verification} menggunakan \textit{Identity-Based Encryption} (IBE),
+	\item \textit{Policy Execution} menggunakan \textit{smart contract}, dan
+	\item \textit{Data Volume Check} menggunakan pendekatan \textit{entropy}.
 \end{enumerate}
 
 % Model ini menunjukkan bahwa kontrol akses pada RME tidak cukup hanya memeriksa identitas atau peran, tetapi juga perlu mempertimbangkan mekanisme verifikasi identitas yang kuat, eksekusi kebijakan yang dapat diaudit, serta karakteristik volume data yang diakses \autocite{liu2025accesscontrol}. Kontribusi utama penelitian ini bagi Tugas Akhir adalah argumen bahwa DLT pantas digunakan untuk menggantikan atau melengkapi sistem terpusat karena dapat menjawab tiga masalah mendasar pada pengelolaan data medis.
@@ -36,11 +36,11 @@ Amaracitra mengusulkan model \textit{Decentralized Medical Record} (DMR) yang me
 
 Dalam model tersebut, struktur data DMR disusun secara hierarkis ke dalam beberapa token, yaitu:
 \begin{enumerate}
-    \item \textit{DMR Token} sebagai token induk (\textit{root}/\textit{parent}),
-    \item \textit{Medical Record Token},
-    \item \textit{Doctor Diagnoses Token},
-    \item \textit{Laboratory Test Token}, dan
-    \item \textit{Pharmacy Data Token}.
+	\item \textit{DMR Token} sebagai token induk (\textit{root}/\textit{parent}),
+	\item \textit{Medical Record Token},
+	\item \textit{Doctor Diagnoses Token},
+	\item \textit{Laboratory Test Token}, dan
+	\item \textit{Pharmacy Data Token}.
 \end{enumerate}
 
 Pemisahan ini penting karena menunjukkan bahwa granularitas akses tidak hanya bergantung pada mekanisme otorisasi, tetapi juga pada cara data medis dimodelkan sejak awal \autocite{amaracitra2025composable}. Dengan struktur seperti ini, akses dapat diberikan hanya pada bagian data yang relevan dengan kebutuhan tenaga kesehatan tertentu. Misalnya, tenaga laboratorium dapat berinteraksi dengan data pemeriksaan laboratorium tanpa harus memperoleh akses ke keseluruhan rekam medis pasien.

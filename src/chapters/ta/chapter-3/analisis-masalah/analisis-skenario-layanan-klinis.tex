@@ -2,10 +2,10 @@
 \label{subsubsec:analisis-skenario-layanan-klinis}
 Kebutuhan akan kontrol akses granular dan delegasi berantai menjadi lebih jelas ketika arsitektur DecMed ditempatkan pada skenario layanan kesehatan yang nyata. Dalam alur pelayanan rumah sakit, pasien tidak hanya berinteraksi dengan satu pihak, tetapi dengan beberapa aktor yang memiliki kebutuhan akses berbeda pada tahap yang berbeda pula. Oleh karena itu, subbab ini memodelkan satu skenario layanan kesehatan kolaboratif untuk menunjukkan secara konkret mengapa mekanisme akses pada DecMed saat ini belum memadai.
 
-Skenario yang dianalisis adalah pelayanan pasien rawat jalan yang melibatkan petugas administrasi, perawat, dokter penanggung jawab pasien, unit laboratorium, dan unit apotek. Alur tersebut dipilih karena mewakili pola kolaborasi yang umum terjadi di fasilitas pelayanan kesehatan, sekaligus cukup untuk memperlihatkan kebutuhan akses baca, tulis, dan delegasi terbatas. Kebutuhan delegasi ini berkaitan dengan kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}, khususnya ID F06 dan F07.
+Skenario yang dianalisis adalah pelayanan pasien rawat jalan yang melibatkan petugas rekam medis, perawat, dokter penanggung jawab pasien, unit laboratorium, dan unit apotek. Alur tersebut dipilih karena mewakili pola kolaborasi yang umum terjadi di fasilitas pelayanan kesehatan, sekaligus cukup untuk memperlihatkan kebutuhan akses baca, tulis, dan delegasi terbatas. Kebutuhan delegasi ini berkaitan dengan kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}, khususnya ID F06 dan F07.
 
 \begin{enumerate}[]
-	\item \textbf{Tahap pendaftaran pasien.} Saat pasien datang ke rumah sakit, petugas administrasi hanya membutuhkan akses terhadap data administratif pasien.
+	\item \textbf{Tahap pendaftaran pasien.} Saat pasien datang ke rumah sakit, petugas rekam medis hanya membutuhkan akses terhadap data administratif pasien.
 	\item \textbf{Tahap pemeriksaan awal oleh perawat.} Setelah proses pendaftaran selesai, perawat memerlukan hak untuk menulis data klinis untuk anamnesis awal, pemeriksaan fisik, dan pemeriksaan psikologis.
 	\item \textbf{Tahap pemeriksaan oleh dokter.} Pada tahap ini, dokter penanggung jawab pasien memerlukan hak baca terhadap keseluruhan data RME pasien dan hak tulis untuk pelayanan saat ini.
 	\item \textbf{Tahap rujukan internal ke laboratorium.} Apabila dokter membutuhkan pemeriksaan laboratorium, maka pasien perlu diarahkan ke unit laboratorium. Dalam tahap ini, petugas laboratorium hanya membutuhkan akses terhadap data administratif pasien dan permintaan pemeriksaan laboratorium.
@@ -22,12 +22,12 @@ Berdasarkan skenario tersebut, kebutuhan akses setiap aktor dapat diringkas pada
 	\small
 	\begin{tabular}{|p{0.2\textwidth}|p{0.23\textwidth}|p{0.45\textwidth}|}
 		\hline
-		\textbf{Aktor}                 & \textbf{Jenis Akses}                                & \textbf{Cakupan Data yang Dibutuhkan}                                                \\ \hline
-		Petugas administrasi           & Baca dan tulis data administratif                   & Data administratif pasien.                                                           \\ \hline
-		Perawat                        & Baca dan tulis data klinis (hanya pemeriksaan awal) & Administratif pasien, anamnesis awal, pemeriksaan fisik, dan pemeriksaan psikologis. \\ \hline
-		Dokter penanggung jawab pasien & Baca dan tulis data klinis                          & Keseluruhan RME pasien.                                                              \\ \hline
-		Petugas laboratorium           & Baca dan tulis terbatas (hanya data lab saja)       & Administratif pasien, permintaan pemeriksaan, serta mengunggah hasil laboratorium.   \\ \hline
-		Apoteker                       & Baca dan tulis terbatas (hanya data terkait apotek) & Administratif pasien, data resep, dan informasi obat yang relevan.                   \\ \hline
+		\textbf{Aktor}       & \textbf{Jenis Akses}                                & \textbf{Cakupan Data yang Dibutuhkan}                                                \\ \hline
+		Petugas Rekam Medis  & Baca dan tulis data administratif                   & Data administratif pasien.                                                           \\ \hline
+		Perawat              & Baca dan tulis data klinis (hanya pemeriksaan awal) & Administratif pasien, anamnesis awal, pemeriksaan fisik, dan pemeriksaan psikologis. \\ \hline
+		Dokter               & Baca dan tulis data klinis                          & Keseluruhan RME pasien.                                                              \\ \hline
+		Petugas Laboratorium & Baca dan tulis terbatas (hanya data laboratorium)   & Administratif pasien, permintaan pemeriksaan, serta mengunggah hasil laboratorium.   \\ \hline
+		Apoteker             & Baca dan tulis terbatas (hanya data apotek)         & Administratif pasien, data resep, dan informasi obat yang relevan.                   \\ \hline
 	\end{tabular}
 \end{table}
 

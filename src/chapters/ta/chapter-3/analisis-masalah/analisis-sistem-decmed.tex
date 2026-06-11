@@ -5,7 +5,7 @@ Sebagaimana dijelaskan pada Bab \ref{sec:decmed}, DecMed adalah kerangka kerja m
 
 \begin{enumerate}
     \item Pasien
-    \item Tenaga kesehatan, yang mencakup dokter, petugas administrasi, dan admin fasyankes
+    \item Staff Fasyankes, terdiri dari tenaga kesehatan (dokter), petugas rekam medis, dan admin fasyankes
     \item Pemerintah, yaitu Kementerian Kesehatan
 \end{enumerate}
 
@@ -13,7 +13,7 @@ Pada DecMed, masing-masing aktor memiliki kepentingan dan aplikasi \textit{clien
 
 \subsubsection{Keterbatasan Token Kapabilitas DecMed}
 
-Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMed memanfaatkan token otorisasi berupa JSON Web Token (JWT) sebagai token otorisasi yang merepresentasikan kapabilitas akses. Pada kerangka kerja DecMed, ketika pasien memberikan akses terhadap RME mereka kepada seorang tenaga medis, maka PRE akan menerbitkan token JWT sesuai dengan \textit{request} dari pasien. Token yang diterbitkan oleh pasien membawa klaim seperti pada Listing \ref{lst:decmed-jwt-claims}.
+Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMed memanfaatkan token otorisasi berupa JWT sebagai token otorisasi yang merepresentasikan kapabilitas akses. Pada kerangka kerja DecMed, ketika pasien memberikan akses terhadap RME mereka kepada seorang tenaga medis, maka PRE akan menerbitkan token JWT sesuai dengan \textit{request} dari pasien. Token yang diterbitkan oleh pasien membawa klaim seperti pada Listing \ref{lst:decmed-jwt-claims}.
 
 \begin{lstlisting}[language=Rust, caption={Struktur klaim JWT pada DecMed}, label={lst:decmed-jwt-claims}]
 #[derive(Debug, Deserialize, Serialize)]

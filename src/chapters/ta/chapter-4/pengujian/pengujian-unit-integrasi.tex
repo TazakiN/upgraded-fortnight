@@ -1,0 +1,29 @@
+\subsection{Pengujian Unit dan Integrasi}
+\label{subsec:pengujian-unit-integrasi}
+
+Pengujian unit dan integrasi dilakukan terhadap komponen yang menangani token, segmentasi data, validasi akses, PRE, \textit{client}, dan \textit{smart contract}. Komponen token diuji dengan membentuk Macaroon awal, menambahkan \textit{caveats} baru, serta memverifikasi bahwa token yang dimodifikasi tanpa prosedur Macaroon yang sah ditolak. Komponen segmentasi diuji dengan memastikan setiap data RME menghasilkan metadata \texttt{dataset\_category} dan \texttt{function\_category} yang sesuai.
+
+Komponen validasi pada \textit{Server} PRE diuji dengan beberapa variasi permintaan. Variasi tersebut meliputi token valid, token dengan kategori data yang tidak sesuai, token dengan masa berlaku yang sudah habis, token dengan tanda tangan \textit{wallet} yang tidak sesuai, dan token dengan kedalaman delegasi yang melebihi batas. Hasil yang diharapkan adalah hanya token valid yang dapat melanjutkan proses hingga tahap \textit{re-encryption}.
+
+Pengujian integrasi dilakukan dengan menjalankan alur lengkap dari \textit{client} sampai penyimpanan data. Pada alur simpan data, \textit{client} membentuk segmen RME, mengenkripsi segmen, mengunggahnya ke IPFS, lalu mencatat metadata pada IOTA. Pada alur baca data, \textit{client} mengirimkan permintaan akses ke \textit{Server} PRE, \textit{server} mengambil metadata dari IOTA, memvalidasi token, mengambil data dari IPFS, dan mengembalikan hasil \textit{re-encryption}.
+
+Ringkasan hasil pengujian otomatis dapat dilihat pada Tabel \ref{tab:pengujian-unit-integrasi}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Ringkasan Pengujian Otomatis}
+	\label{tab:pengujian-unit-integrasi}
+	\small
+	\begin{tabular}{|p{0.29\textwidth}|p{0.25\textwidth}|p{0.36\textwidth}|}
+		\hline
+		\textbf{Komponen}              & \textbf{Perintah}                                                                     & \textbf{Hasil}                    \\ \hline
+		\texttt{decmed-rme-segment}    & \texttt{cargo test}                                                                   & Lulus.                            \\ \hline
+		\texttt{decmed-macaroon-auth}  & \texttt{cargo test}                                                                   & 40 test lulus.                    \\ \hline
+		\texttt{proxy-reencryption}    & \texttt{cargo test}                                                                   & 14 test lulus.                    \\ \hline
+		\textit{Hospital Client} Tauri & \texttt{cargo test}                                                                   & 12 test lulus.                    \\ \hline
+		\textit{Patient Client} Tauri  & \texttt{cargo test}                                                                   & 4 test lulus.                     \\ \hline
+		IOTA Move                      & \texttt{iota move test}\newline\texttt{--skip-fetch-}\newline\texttt{latest-git-deps} & Build berhasil, 0 unit test Move. \\ \hline
+	\end{tabular}
+\end{table}
+
+Hasil tersebut menunjukkan bahwa sebagian besar komponen utama berhasil melewati pengujian otomatis. Namun, pengujian pada crate \texttt{decmed-rme-segment} masih memiliki kendala pada bagian test akibat import \texttt{serde\_json::json} yang belum tersedia, meskipun proses \texttt{cargo check} pada library berhasil.

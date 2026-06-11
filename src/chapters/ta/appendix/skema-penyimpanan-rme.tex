@@ -1,0 +1,96 @@
+\chapter{Skema Penyimpanan Data RME}
+\label{lampiran:skema-penyimpanan-rme}
+
+Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada rancangan segmentasi data. Skema penyimpanan dibagi menjadi metadata segmen yang disimpan pada penyimpanan \textit{on-chain} dan isi segmen terenkripsi yang disimpan pada penyimpanan \textit{off-chain}.
+
+\section{Skema Penyimpanan \textit{On-Chain} (IOTA)}
+\label{subsubsec:skema-penyimpanan-onchain}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
+	\caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                              \\
+	\hline
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
+	\hline
+	\endhead
+
+	\multirow{4}{2.8cm}{\textbf{Identitas Segmen}}
+	                  & \texttt{segment\_id}
+	                  & UUID unik untuk satu segmen data RME.                                                                                     \\ \cline{2-3}
+	                  & \texttt{related\_rme\_id}
+	                  & ID RME atau episode pelayanan yang menjadi induk segmen.                                                                  \\ \cline{2-3}
+	                  & \texttt{patient\_address}
+	                  & Alamat \textit{wallet} pasien pemilik RME.                                                                                \\ \cline{2-3}
+	                  & \texttt{fasyankes\_id}
+	                  & ID fasilitas pelayanan kesehatan yang menyimpan segmen.                                                                   \\ \hline
+
+	\multirow{2}{2.8cm}{\textbf{Kategori Data}}
+	                  & \texttt{dataset\_category}
+	                  & Kategori dataset. Sesuai dengan tabel \ref{tab:mapping-dataset-category}.                                                 \\ \cline{2-3}
+	                  & \texttt{function\_category}
+	                  & Kategori fungsi klinis atau administratif. Sesuai dengan tabel \ref{tab:mapping-function-category}.                       \\ \hline
+
+	\multirow{2}{2.8cm}{\textbf{Pointer dan Integritas}}
+	                  & \texttt{ipfs\_cid}
+	                  & CID IPFS dari segmen data terenkripsi.                                                                                    \\ \cline{2-3}
+	                  & \texttt{integrity\_hash}
+	                  & Hash SHA-256 dari segmen terenkripsi.                                                                                     \\ \hline
+
+	\multirow{2}{2.8cm}{\textbf{Kapsul Kunci}}
+	                  & \texttt{capsule}
+	                  & Kapsul PRE yang diperlukan untuk proses \textit{re-encryption}.                                                           \\ \cline{2-3}
+	                  & \texttt{enc\_key\_and\_nonce}
+	                  & Kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data.                                       \\ \hline
+
+	\multirow{3}{2.8cm}{\textbf{Audit Metadata}}
+	                  & \texttt{created\_at}
+	                  & Waktu pembuatan metadata segmen.                                                                                          \\ \cline{2-3}
+	                  & \texttt{author\_address}
+	                  & Alamat \textit{wallet} aktor yang membuat atau memperbarui segmen.                                                        \\ \cline{2-3}
+	                  & \texttt{updated\_at}
+	                  & Waktu pembaruan terakhir apabila segmen diganti dengan CID baru.                                                          \\ \hline
+\end{longtable}
+
+\section{Skema Penyimpanan \textit{Off-Chain} (IPFS)}
+\label{subsubsec:skema-penyimpanan-offchain}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
+	\caption{Skema Segmen Data RME \textit{Off-Chain}} \label{tab:offchain-schema}                                                                                                                                                  \\
+	\hline
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                                                                                                     & \textbf{Keterangan} \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                                                                                                     & \textbf{Keterangan} \\
+	\hline
+	\endhead
+
+	\multirow{5}{2.8cm}{\textbf{Header Segmen}}
+	                  & \texttt{segment\_id}
+	                  & UUID yang sama dengan \texttt{segment\_id} pada metadata \textit{on-chain}.                                                                                                                                 \\ \cline{2-3}
+	                  & \texttt{related\_rme\_id}
+	                  & ID RME atau episode pelayanan yang menjadi induk segmen.                                                                                                                                                    \\ \cline{2-3}
+	                  & \texttt{dataset\_category}
+	                  & Kategori dataset sesuai Tabel \ref{tab:mapping-dataset-category}.                                                                                                                                           \\ \cline{2-3}
+	                  & \texttt{function\_category}
+	                  & Kategori fungsi sesuai dengan Tabel \ref{tab:mapping-function-category}. Untuk dokumentasi administratif yang tidak dirinci, nilai ini dapat menggunakan kategori administratif umum.                       \\ \hline
+
+	\multirow{4}{2.8cm}{\textbf{Konteks Medis}}
+	                  & \texttt{patient\_ref}
+	                  & Identitas internal pasien yang diperlukan di dalam data terenkripsi.                                                                                                                                        \\ \cline{2-3}
+	                  & \texttt{encounter\_id}
+	                  & ID kunjungan atau episode pelayanan.                                                                                                                                                                        \\ \cline{2-3}
+	                  & \texttt{service\_date}
+	                  & Tanggal layanan, pemeriksaan, atau pembuatan segmen.                                                                                                                                                        \\ \cline{2-3}
+	                  & \texttt{author\_address}
+	                  & Alamat \textit{wallet} aktor yang menulis isi segmen.                                                                                                                                                       \\ \hline
+
+	\multirow{2}{2.8cm}{\textbf{Isi Segmen}}
+	                  & \texttt{payload}
+	                  & Objek data RME sesuai kategori fungsi. Contoh isi dapat berupa data anamnesis, diagnosis, laboratorium, atau data resep.                                                                                    \\ \cline{2-3}
+	                  & \texttt{payload\_hash}
+	                  & Hash isi \texttt{payload}.                                                                                                                                                                                  \\ \hline
+\end{longtable}

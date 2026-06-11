@@ -1,0 +1,27 @@
+\section{Lingkungan Implementasi}
+\label{sec:lingkungan-implementasi}
+
+Implementasi sistem dilakukan pada lingkungan prototipe yang merepresentasikan komponen utama DecMed, yaitu \textit{client} pasien, \textit{client} rumah sakit, \textit{client} kementerian, \textit{Server} PRE, penyimpanan \textit{off-chain} IPFS, Redis, IOTA \textit{Gas Station}, dan \textit{smart contract} IOTA Move pada jaringan IOTA Testnet. Lingkungan ini dipilih agar rancangan pada Bab \ref{chap:analisis-dan-rancangan} dapat diuji tanpa bergantung pada integrasi langsung dengan sistem informasi rumah sakit yang sesungguhnya.
+
+Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, serta pengamatan respons sistem ketika token Macaroon diterbitkan, diatenuasi, dan diverifikasi. Komponen pendukung yang membutuhkan ketersediaan jaringan, seperti kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada \textit{Virtual Private Server} (VPS). Sementara itu, \textit{smart contract} IOTA Move diunggah pada jaringan IOTA Testnet. Pembagian komponen implementasi tersebut dirangkum pada Tabel \ref{tab:lingkungan-implementasi}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Komponen dan Lingkungan Implementasi Sistem}
+	\label{tab:lingkungan-implementasi}
+	\small
+	\begin{tabular}{|p{0.23\textwidth}|p{0.24\textwidth}|p{0.43\textwidth}|}
+		\hline
+		\textbf{Komponen}         & \textbf{Teknologi}           & \textbf{Peran}                                                                                                  \\ \hline
+		\textit{Patient Client}   & Tauri/Svelte                 & Registrasi pasien, pemindaian QR rumah sakit, pemberian akses awal, pembacaan RME, audit, dan pencabutan akses. \\ \hline
+		\textit{Hospital Client}  & Tauri/Svelte                 & Pembacaan dan penulisan segmen RME, pembuatan bukti \textit{wallet}, delegasi akses, dan atenuasi Macaroon.     \\ \hline
+		\textit{Ministry Client}  & Tauri/Svelte                 & Registrasi rumah sakit dan pengelolaan \textit{activation key}.                                                 \\ \hline
+		\textit{Server} PRE       & Rust Axum                    & Verifikasi token, penegakan \textit{caveats}, integrasi IPFS, Redis, IOTA Move, dan Umbral PRE.                 \\ \hline
+		IOTA Move                 & Move \textit{smart contract} & Penyimpanan metadata \textit{on-chain}, metadata akses, dan audit.                                              \\ \hline
+		IPFS                      & Kubo/IPFS \textit{gateway}   & Penyimpanan \textit{ciphertext} segmen RME secara \textit{off-chain}.                                           \\ \hline
+		Redis                     & Redis Docker                 & Penyimpanan \textit{nonce}, kunci akses PRE, dan kunci pencabutan akses.                                        \\ \hline
+		IOTA \textit{Gas Station} & IOTA \textit{Gas Station}    & Sponsor transaksi Move pada jaringan IOTA Testnet.                                                              \\ \hline
+	\end{tabular}
+\end{table}
+
+Lingkungan tersebut belum ditujukan untuk penggunaan produksi. Seluruh alamat \textit{wallet}, data pasien, data RME, dan relasi antaraktor yang digunakan merupakan data uji untuk mengevaluasi rancangan kontrol akses granular, segmentasi data RME, dan delegasi akses berbasis Macaroons.

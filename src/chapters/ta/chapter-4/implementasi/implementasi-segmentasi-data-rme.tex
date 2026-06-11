@@ -1,0 +1,29 @@
+\subsection{Implementasi Segmentasi Data RME}
+\label{subsec:implementasi-segmentasi-data-rme}
+
+Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Dengan pendekatan ini, satu episode pelayanan tidak lagi direpresentasikan sebagai satu \textit{blob} besar, tetapi sebagai kumpulan segmen yang dapat diberi izin akses secara terpisah.
+
+Implementasi kategori dan metadata segmentasi ditempatkan pada crate \texttt{decmed-rme-segment}. Crate ini mendefinisikan \texttt{DatasetCategory}, \texttt{FunctionCategory}, dan \texttt{RmeSegmentMetadata}. Struktur \texttt{RmeSegmentMetadata} memuat \texttt{segment\_id}, \texttt{related\_rme\_id}, \texttt{dataset\_category}, \texttt{function\_category}, \texttt{ipfs\_cid}, \texttt{capsule}, \texttt{enc\_key\_and\_nonce}, hash integritas, dan informasi penyusun segmen. \texttt{related\_rme\_id} digunakan sebagai identitas episode atau kelompok RME yang menghubungkan beberapa segmen dalam satu konteks layanan.
+
+Pada saat data RME disimpan, \textit{Hospital Client} membentuk objek segmen untuk setiap kategori fungsi yang relevan. Setiap segmen berisi data klinis atau administratif sesuai kategorinya, kemudian dienkripsi sebelum diunggah ke IPFS. Hasil unggahan IPFS berupa CID disimpan bersama metadata segmen pada IOTA. Metadata tersebut tidak disimpan sebagai enum native pada Move, melainkan diserialisasi sebagai JSON dan dikodekan dalam base64 pada field \texttt{metadata} milik \texttt{PatientMedicalMetadata}. Keputusan ini menjaga kompatibilitas dengan struktur penyimpanan DecMed yang masih berbentuk daftar metadata flat, tetapi tetap memungkinkan \textit{Server} PRE membaca kategori segmentasi dari isi metadata.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Implementasi Segmentasi Data RME}
+	\label{tab:implementasi-segmentasi-rme}
+	\small
+	\begin{tabular}{|p{0.30\textwidth}|p{0.60\textwidth}|}
+		\hline
+		\textbf{Elemen} & \textbf{Implementasi} \\ \hline
+		Unit segmentasi & Kombinasi \texttt{dataset\_category} dan \texttt{function\_category}. \\ \hline
+		Identitas episode & \texttt{related\_rme\_id}. \\ \hline
+		Isi data & \textit{Ciphertext} segmen di IPFS. \\ \hline
+		Metadata & JSON base64 di field \texttt{metadata} pada IOTA Move. \\ \hline
+		Penyusun segmen & \textit{Hospital Client}. \\ \hline
+		Penyimpan metadata & \textit{Server} PRE melalui pemanggilan fungsi Move. \\ \hline
+	\end{tabular}
+\end{table}
+
+Implementasi ini membuat proses otorisasi dapat dilakukan pada tingkat segmen. Sebagai contoh, token yang hanya memuat izin baca untuk \texttt{LABORATORIUM} dan fungsi \texttt{HASIL\_PEMERIKSAAN} hanya dapat digunakan untuk meminta segmen yang sesuai dengan dua kategori tersebut. Permintaan terhadap segmen diagnosis, terapi, atau resep akan ditolak karena metadata segmennya tidak termasuk dalam cakupan efektif token.
+
+Segmentasi juga digunakan pada proses pembaruan data. Ketika aktor menulis data baru, \textit{Hospital Client} hanya membuat atau memperbarui segmen yang berada dalam cakupan izin tulis aktor tersebut. Dengan demikian, petugas laboratorium dapat menambahkan hasil pemeriksaan tanpa memperoleh akses tulis terhadap segmen diagnosis atau terapi.

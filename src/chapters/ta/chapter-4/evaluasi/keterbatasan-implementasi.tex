@@ -11,13 +11,7 @@ Implementasi pada Tugas Akhir ini memiliki beberapa keterbatasan sebagai berikut
 		      \item \textit{Smart contract} yang digunakan diunggah ke jaringan IOTA Testnet.
 	      \end{itemize}
 	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
-	      % \item Tidak seluruh kemungkinan penyalahgunaan dan serangan keamanan diuji secara komprehensif. Pengujian difokuskan pada skenario akses dan delegasi yang menjadi ruang lingkup Tugas Akhir.
-	\item Header \texttt{delegation\_signature} sudah muncul pada alur client, tetapi belum terlihat diverifikasi secara eksplisit oleh \textit{Server} PRE. Enforcement utama yang berjalan adalah validasi Macaroon, cakupan efektif, aktor aktif, \textit{wallet signature}, dan pencabutan akses.
-	\item Endpoint legacy untuk penulisan dan pembacaan pembaruan RME masih menggunakan jalur role/purpose lama, sehingga belum seluruh endpoint memiliki granularitas segmentasi yang sama.
-	\item Validasi kesegaran waktu atau \textit{timestamp freshness} pada bukti \textit{wallet} belum terlihat jelas. Hal ini perlu diperkuat agar bukti tanda tangan tidak dapat digunakan ulang di luar jendela waktu yang wajar.
-	\item Pengujian pada crate \texttt{decmed-rme-segment} masih memiliki kendala kompilasi test akibat import \texttt{serde\_json::json} yang belum tersedia, meskipun \texttt{cargo check} pada library berhasil.
-	\item Implementasi hanya mendukung beberapa kategori aktor utama, yaitu petugas rekam medis, dokter, laboratorium, dan apoteker sesuai alur sistem rujukan sederhana. Aktor eksternal atau lintas institusi untuk studi kasus yang lebih kompleks belum dicakup.
-	\item Integrasi dengan IPFS, IOTA, dan \textit{wallet} kriptografi dibatasi pada pustaka dan modul pengujian yang tersedia secara \textit{open source}.
+	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat fungsi. Kemudian data per \textit{function category} RME disimpan sebagai \textit{freetext}.
 \end{enumerate}
 
 Keterbatasan tersebut menunjukkan bahwa implementasi masih berada pada tingkat pembuktian konsep. Pengembangan berikutnya perlu memperluas cakupan pengujian keamanan, memperjelas mekanisme pencabutan akses, memperkuat verifikasi bukti delegasi dan \textit{wallet proof}, serta menguji sistem pada lingkungan yang lebih dekat dengan operasional layanan kesehatan.

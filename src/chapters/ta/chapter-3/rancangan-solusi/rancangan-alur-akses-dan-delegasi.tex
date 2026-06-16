@@ -3,7 +3,7 @@
 
 Fitur atenuasi \textit{offline} dirancang untuk menjawab kebutuhan delegasi akses antar aktor layanan kesehatan tanpa mengharuskan pasien menerbitkan ulang token setiap kali terjadi perpindahan tugas dalam proses pelayanan. Pada rancangan ini, istilah \textit{offline} tidak berarti bahwa seluruh proses akses data dilakukan tanpa koneksi ke \textit{Server} PRE atau internet. Istilah tersebut merujuk pada kemampuan pemegang token untuk menerbitkan token turunan dengan cara mengatenuasi token secara lokal pada aplikasi \textit{client}, tanpa melibatkan pasien dan \textit{server} PRE untuk menerbitkan token baru.
 
-Alur akses dan delegasi pada rancangan ini mengikuti alur pelayanan kesehatan yang umum terjadi pada proses rawat jalan dan rawat inap. Pasien terlebih dahulu diterima oleh petugas rekam medis. Setelah itu, petugas rekam medis memberikan akses kepada perawat untuk melakukan anamnesis dan pemeriksaan awal. Petugas rekam medis juga memberikan akses kepada dokter terkait agar dokter dapat memeriksa pasien dan menentukan tindakan medis berikutnya. Apabila dokter membutuhkan pemeriksaan penunjang, dokter dapat mendelegasikan akses terbatas kepada unit laboratorium. Setelah hasil pemeriksaan tersedia dan dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses terbatas kepada apoteker untuk memproses resep dan penyerahan obat. Rancangan alur tersebut ditunjukkan pada Gambar \ref{fig:alur-akses-delegasi}.
+Alur akses dan delegasi pada rancangan ini mengikuti alur pelayanan kesehatan yang umum terjadi pada proses rawat jalan dan rawat inap. Pasien terlebih dahulu diterima oleh petugas rekam medis. Setelah itu, petugas rekam medis memberikan akses kepada perawat untuk melakukan anamnesis dan pemeriksaan awal. Petugas rekam medis juga memberikan akses kepada dokter terkait agar dokter dapat memeriksa pasien dan menentukan tindakan medis berikutnya. Apabila dokter membutuhkan pemeriksaan penunjang, dokter dapat mendelegasikan akses terbatas kepada petugas laboratorium. Setelah hasil pemeriksaan tersedia dan dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses terbatas kepada apoteker untuk memproses resep dan penyerahan obat. Rancangan alur tersebut ditunjukkan pada Gambar \ref{fig:alur-akses-delegasi}.
 
 \begin{figure}[!ht]
   \centering
@@ -22,25 +22,16 @@ Penerbitan token awal merupakan proses pemberian otorisasi pertama pada saat pas
 
 Pada rancangan ini, token awal diberikan kepada petugas rekam medis. Petugas rekam medis berperan sebagai aktor awal yang menerima pasien dan menginisiasi proses pelayanan. Token ini tidak dimaksudkan agar petugas rekam medis dapat mengakses seluruh data klinis pasien secara bebas, melainkan sebagai token induk yang dapat digunakan untuk menurunkan akses kepada aktor layanan kesehatan yang relevan, yaitu perawat dan dokter. \textit{Sequence Diagram} yang menggambarkan alur penerbitan token akses awal dari Pasien ke Petugas Rekam Medis dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-awal-pasien-rm}.
 
-Alur penerbitan token awal kepada petugas rekam medis diawali dengan pasien bertemu dengan
-
-\begin{enumerate}[leftmargin=*]
-  \item Pasien datang bertemu dengan petugas rekam medis.
-  \item Petugas rekam medis menerima pasien dan memperlihatkan QR yang memuat alamat IOTA petugas, kunci publik petugas, ID rumah sakit, serta kunci publik rumah sakit yang dibutuhkan dalam proses pemberian akses.
-  \item Pasien memberikan persetujuan akses awal melalui \textit{Patient Client}.
-  \item \textit{Patient Client} mengirimkan permintaan penerbitan token kepada \textit{Server} PRE.
-  \item \textit{Server} PRE memvalidasi identitas pasien, identitas petugas rekam medis, serta konteks layanan yang diminta.
-  \item \textit{Server} PRE menerbitkan Macaroon awal dengan \textit{caveats} yang mengikat token pada pasien, ID RME terkait, petugas rekam medis sebagai penerima awal, cakupan akses, masa berlaku, serta batas delegasi.
-  \item \textit{Server} PRE mencatat penerbitan token awal ke dalam penyimpanan \textit{on-chain}.
-  \item Token didistribusikan kepada petugas rekam medis melalui mekanisme yang dijelaskan pada Subbab \ref{subsubsec:proses-pemberian-macaroon-delegasi}.
-\end{enumerate}
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\textwidth,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-delegasi awal pasien -> RM.png}
-  \caption{\textit{Sequence Diagram} Alur Penerbitan Token Awal dari Pasien ke Petugas Rekam Medis (Dokumentasi Penulis)}
+  \caption{\textit{Sequence Diagram} Rancangan Alur Penerbitan Token Awal dari Pasien ke Petugas Rekam Medis}
   \label{fig:seqdiag-delegasi-awal-pasien-rm}
 \end{figure}
+
+Alur penerbitan token awal kepada petugas rekam medis diawali dengan pasien bertemu dengan petugas rekam medis yang menerima permintaan pelayanan serta memperlihatkan QR untuk discan oleh pasien. Pasien memberikan persetujuan akses awal melalui \textit{Patient Client} setelah memilih konteks pelayanan (rawat jalan atau rawat inap). \textit{Patient Client} mengirimkan permintaan penerbitan token kepada \textit{Server} PRE. \textit{Server} PRE memverifikasi identitas pasien, identitas petugas rekam medis, serta konteks layanan yang diminta. Jika lolos proses verifikasi, \textit{Server} PRE menerbitkan Macaroon awal dengan \textit{caveats} yang mengikat token pada pasien, ID RME terkait, petugas rekam medis sebagai penerima awal, cakupan akses, masa berlaku, serta batas delegasi. \textit{Server} PRE mencatat penerbitan token awal ke dalam penyimpanan \textit{on-chain}. Token awal didistribusikan kepada petugas rekam medis melalui mekanisme yang dijelaskan pada Subbab \ref{subsubsec:proses-pemberian-dan-penggunaan-macaroon-delegasi} dengan memanfaatkan penyimpanan \textit{on-chain}.
+
+Pada alur pasien ke petugas rekam medis, metadata akses yang disimpan dalam bentuk terenkripsi setidaknya memuat waktu delegasi dilakukan, jenis aksi yang diberikan seperti \textit{read} atau \textit{write}, \textit{address} pasien sebagai pihak yang memberikan akses, serta \textit{address} \textit{personnel} petugas rekam medis sebagai pihak yang menerima akses. Informasi ini digunakan sebagai konteks audit dan sebagai dasar bagi \textit{client} penerima untuk memahami cakupan akses yang diterima setelah metadata berhasil didekripsi.
 
 \subsubsection{Delegasi dari Petugas Rekam Medis kepada Perawat dan Dokter}
 \label{subsec:delegasi-dari-petugas-rekam-medis-kepada-perawat-dan-dokter}
@@ -49,7 +40,7 @@ Setelah menerima token awal, petugas rekam medis dapat menurunkan token kepada p
 
 Delegasi kepada perawat diberikan agar perawat dapat menulis segmen anamnesis dan pemeriksaan awal. Sementara itu, delegasi kepada dokter diberikan agar dokter dapat membaca data pemeriksaan awal, melakukan pemeriksaan medis, menulis diagnosis, menentukan terapi, serta melakukan delegasi lanjutan apabila diperlukan. Contoh pemetaan delegasi dari petugas rekam medis ditunjukkan pada Tabel \ref{tab:pemetaan-delegasi-rekam-medis}.
 
-\textit{Sequence Diagram} yang menggambarkan alur delegasi dari petugas rekam medis kepada perawat dan dokter dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-rm-perawat-dokter}. Token Macaroon turunan untuk perawat dan dokter dibentuk dengan mengatenuasi token awal yang diterima petugas rekam medis dari pasien. Setelah token turunan terbentuk, token tersebut dibungkus dalam metadata delegasi terenkripsi sebelum dicatat pada penyimpanan on-chain.
+\textit{Sequence Diagram} yang menggambarkan alur delegasi dari petugas rekam medis kepada perawat dan dokter dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-rm-perawat-dokter}. Token Macaroon turunan untuk perawat dan dokter dibentuk dengan mengatenuasi token awal yang diterima petugas rekam medis dari pasien. Setelah token turunan terbentuk, token tersebut dibungkus dalam metadata delegasi terenkripsi sebelum dicatat pada penyimpanan \textit{on-chain}. Pada pencatatan delegasi antar-\textit{personnel}, data delegasi yang disimpan pada \textit{on-chain} setidaknya juga memuat informasi pihak yang mendelegasikan dan pihak yang menerima delegasi.
 
 \begin{figure}[!ht]
   \centering
@@ -66,31 +57,31 @@ Delegasi kepada perawat diberikan agar perawat dapat menulis segmen anamnesis da
   \small
   \begin{tabular}{|p{0.22\textwidth}|p{0.28\textwidth}|p{0.4\textwidth}|}
     \hline
-    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                                                               & \textbf{Cakupan Akses} \\ \hline
+    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                                                                                              & \textbf{Cakupan Akses} \\ \hline
 
     Perawat
                                & Melakukan anamnesis dan pemeriksaan awal pasien.
-                               & Menulis segmen anamnesis, pemeriksaan fisik, dan pemeriksaan psikologis pada \textit{dataset} rawat jalan.                                                                      \\ \hline
+                               & Menulis segmen anamnesis, pemeriksaan fisik, dan pemeriksaan psikologis pada \textit{dataset} rawat jalan.                                                                                                     \\ \hline
 
     Dokter
                                & Memeriksa pasien, membaca hasil pemeriksaan awal, menentukan tindakan medis, diagnosis, terapi, dan kebutuhan pemeriksaan penunjang.
-                               & Membaca dan menulis segmen klinis yang relevan pada \textit{dataset} rawat jalan, serta memiliki kemampuan delegasi lanjutan sesuai batas token induk.                          \\ \hline
+                               & Membaca dan menulis segmen klinis yang relevan pada \textit{dataset} rawat jalan atau rawat inap, serta memiliki kemampuan delegasi lanjutan untuk apoteker dan petugas laboratorium.                          \\ \hline
   \end{tabular}
 \end{table}
 
 \subsubsection{Delegasi dari Dokter kepada Laboratorium dan Apoteker}
 \label{subsec:delegasi-dari-dokter-kepada-laboratorium-dan-apoteker}
 
-Setelah dokter menerima token turunan dari petugas rekam medis, dokter dapat melakukan delegasi lanjutan apabila dibutuhkan dalam proses pelayanan. Delegasi lanjutan dilakukan kepada unit laboratorium apabila dokter membutuhkan pemeriksaan penunjang. Setelah dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses kepada apoteker untuk memproses resep dan penyerahan obat.
+Setelah dokter menerima token turunan dari petugas rekam medis, dokter dapat melakukan delegasi lanjutan apabila dibutuhkan dalam proses pelayanan. Delegasi lanjutan dilakukan kepada petugas laboratorium apabila dokter membutuhkan pemeriksaan penunjang. Setelah dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses kepada apoteker untuk memproses resep dan penyerahan obat.
 
-Delegasi lanjutan tetap dilakukan melalui mekanisme atenuasi lokal. Dokter tidak meminta \textit{Server} PRE untuk menerbitkan token baru, melainkan menambahkan \textit{caveats} baru pada token dokter. Karena \textit{caveats} bersifat \textit{append-only}, token untuk laboratorium atau apoteker tidak dapat memiliki cakupan akses yang lebih luas daripada token dokter.
+Delegasi lanjutan tetap dilakukan melalui mekanisme atenuasi lokal. Dokter tidak meminta \textit{Server} PRE untuk menerbitkan token baru, melainkan menambahkan \textit{caveats} baru pada token dokter. Karena \textit{caveats} bersifat \textit{append-only}, token untuk laboratorium atau apoteker tidak dapat memiliki cakupan akses yang lebih luas daripada token dokter. Metadata delegasi yang dicatat pada \textit{on-chain} untuk alur dokter ke petugas laboratorium atau apoteker juga setidaknya menyimpan informasi dokter sebagai pihak yang mendelegasikan dan \textit{personnel} tujuan sebagai pihak yang menerima delegasi.
 
-Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pemetaan-delegasi-dokter-lanjutan}. \textit{Sequence Diagram} yang menggambarkan alur delegasi lanjutan dari dokter kepada laboratorium dan apoteker dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-dokter-lab-apoteker}.
+Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pemetaan-delegasi-dokter-lanjutan}. \textit{Sequence Diagram} yang menggambarkan alur delegasi lanjutan dari dokter kepada petugas laboratorium dan apoteker dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-dokter-lab-apoteker}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\textwidth,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-delegasi dokter -> lab apoteker.png}
-  \caption{\textit{Sequence Diagram} Rancangan Alur Delegasi Lanjutan dari Dokter ke Unit Laboratorium dan Apoteker}
+  \caption{\textit{Sequence Diagram} Rancangan Alur Delegasi Lanjutan dari Dokter ke Petugas Laboratorium dan Apoteker}
   \label{fig:seqdiag-delegasi-dokter-lab-apoteker}
 \end{figure}
 
@@ -101,25 +92,50 @@ Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pe
   \small
   \begin{tabular}{|p{0.22\textwidth}|p{0.28\textwidth}|p{0.4\textwidth}|}
     \hline
-    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                      & \textbf{Cakupan Akses} \\ \hline
+    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                        & \textbf{Cakupan Akses} \\ \hline
 
-    Unit Laboratorium
+    Petugas Laboratorium
                                & Melakukan pemeriksaan penunjang berdasarkan permintaan dokter dan mengunggah hasil pemeriksaan.
-                               & Membaca segmen pemeriksaan penunjang dan menulis segmen laboratorium pada \textit{dataset} laboratorium.                               \\ \hline
+                               & Membaca segmen pemeriksaan penunjang dan menulis pada \textit{dataset} laboratorium.                                     \\ \hline
 
     Apoteker
                                & Memproses resep, menyiapkan obat, dan mencatat penyerahan obat kepada pasien.
-                               & Membaca segmen terapi dan menulis segmen data peresepan dan \textit{dispensing} pada \textit{dataset} apotek.                          \\ \hline
+                               & Membaca segmen terapi dan menulis pada \textit{dataset} apotek.                                                          \\ \hline
   \end{tabular}
 \end{table}
 
-\subsubsection{Proses Pemberian Macaroon Delegasi}
-\label{subsubsec:proses-pemberian-macaroon-delegasi}
 
-Pada rancangan ini, proses pemberian Macaroon delegasi dilakukan melalui kombinasi antara atenuasi token secara lokal, enkripsi metadata delegasi, dan pencatatan akses secara \textit{on-chain}. \textit{Delegator} terlebih dahulu membuat token turunan dengan menambahkan \textit{caveats} baru pada token Macaroon yang dimiliki. Setelah Macaroon turunan terbentuk, token tersebut tidak disimpan dalam bentuk \textit{plaintext} pada penyimpanan \textit{on-chain}. Aplikasi \textit{client} milik \textit{delegator} membungkus token dan metadata delegasi ke dalam objek akses, kemudian mengenkripsinya menggunakan kunci publik milik \textit{delegatee} yang tersimpan pada IOTA. Hasil dari proses ini berupa metadata akses terenkripsi yang berisi token Macaroon turunan dan informasi pendukung yang hanya dapat didekripsi oleh \textit{delegatee} menggunakan kunci privat miliknya.
+\subsubsection{Proses Pemberian dan Penggunaan Macaroon Delegasi}
+\label{subsubsec:proses-pemberian-dan-penggunaan-macaroon-delegasi}
 
-Metadata akses terenkripsi tersebut kemudian dikirimkan ke \textit{smart contract} IOTA Move melalui transaksi \textit{on-chain}. \textit{Smart contract} mencatat metadata terenkripsi tersebut pada data akses milik \textit{delegatee}, misalnya pada daftar akses baca atau tulis. Selain menyimpan metadata akses, \textit{smart contract} juga berperan dalam memvalidasi prasyarat delegasi, seperti status aktif akun, kesesuaian rumah sakit antara \textit{delegator} dan \textit{delegatee}, serta status akses \textit{delegator} terhadap pasien terkait.
+Pada rancangan ini, proses pemberian Macaroon delegasi dilakukan melalui kombinasi antara atenuasi token secara lokal, enkripsi metadata delegasi, dan pencatatan akses secara \textit{on-chain}. Mekanisme ini dirancang agar hak akses dapat dipersempit oleh pemegang token tanpa perlu meminta \textit{Server} PRE untuk menerbitkan ulang token baru. Dengan demikian, proses delegasi tidak memperluas hak akses yang dimiliki \textit{delegator}, melainkan hanya menurunkan atau membatasi hak akses tersebut sesuai kebutuhan \textit{delegatee}.
 
-Ketika \textit{delegatee} membuka aplikasi, \textit{client} mengambil metadata akses terenkripsi dari blockchain. Metadata tersebut kemudian didekripsi secara lokal menggunakan kunci privat PRE milik \textit{delegatee}. Apabila proses dekripsi berhasil, aplikasi memperoleh Macaroon turunan yang dapat digunakan sebagai token otorisasi ketika mengirim permintaan akses baca atau tulis ke \textit{Server} PRE. Pada tahap penggunaan token, \textit{Server} PRE melakukan verifikasi akses yang dilakukan oleh pengguna dengan \textit{caveats} yang terdapat pada token Macaroon.
+Secara umum, proses ini dibagi menjadi dua bagian. Bagian pertama adalah proses pembentukan dan pencatatan delegasi, yang dilakukan oleh \textit{delegator} melalui aplikasi \textit{client}. Bagian ini mencakup pembentukan Macaroon turunan, enkripsi metadata delegasi, serta pencatatan metadata akses terenkripsi pada \textit{state on-chain}. Alur proses tersebut ditunjukkan pada Gambar~\ref{fig:seq-pemberian-macaroon-delegasi}.
 
-Dengan mekanisme ini, IOTA digunakan sebagai media pencatatan dan distribusi metadata akses yang dapat diaudit, sedangkan kerahasiaan token tetap dilindungi melalui enkripsi. Oleh karena itu, node IOTA atau pihak lain yang dapat membaca \textit{state on-chain} tidak dapat langsung menggunakan token Macaroon karena token tersebut hanya tersedia dalam bentuk terenkripsi.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{resources/chapter-3/rancangan/seqdiag-delegasi-tahap1-3.png}
+  \caption{Sequence diagram pembentukan dan pencatatan Macaroon delegasi}
+  \label{fig:seq-pemberian-macaroon-delegasi}
+\end{figure}
+
+Berdasarkan Gambar~\ref{fig:seq-pemberian-macaroon-delegasi}, proses delegasi diawali ketika \textit{delegator} memilih cakupan akses yang akan diberikan kepada \textit{delegatee}. Cakupan tersebut dapat mencakup pasien terkait, RME terkait, jenis hak akses, dataset, fungsi klinis, batas waktu akses, serta identitas penerima delegasi. Setelah cakupan akses ditentukan, aplikasi \textit{client} milik \textit{delegator} mengambil Macaroon yang dimiliki oleh \textit{delegator} dan menambahkan \textit{caveats} baru untuk membentuk Macaroon turunan. Penambahan \textit{caveats} ini merupakan proses atenuasi token secara lokal, sehingga hak akses pada token turunan menjadi lebih terbatas dibandingkan token induknya.
+
+Setelah Macaroon turunan terbentuk, token tersebut tidak disimpan secara langsung dalam bentuk \textit{plaintext} pada penyimpanan \textit{on-chain}. Aplikasi \textit{client} milik \textit{delegator} terlebih dahulu mengambil kunci publik milik \textit{delegatee} dari IOTA. Kunci publik tersebut kemudian digunakan untuk mengenkripsi objek akses yang berisi Macaroon turunan dan metadata pendukung delegasi. Dengan pendekatan ini, metadata akses yang dicatat pada blockchain hanya tersedia dalam bentuk terenkripsi, sehingga node IOTA atau pihak lain yang dapat membaca \textit{state on-chain} tidak dapat langsung menggunakan token Macaroon tersebut.
+
+Metadata akses terenkripsi kemudian dikirimkan ke \textit{smart contract} IOTA Move melalui transaksi \textit{on-chain}. Pada tahap ini, \textit{smart contract} tidak hanya mencatat metadata terenkripsi pada data akses milik \textit{delegatee}, tetapi juga memvalidasi prasyarat delegasi yang dapat diperiksa dari \textit{state on-chain}. Prasyarat tersebut meliputi status aktif akun, kesesuaian rumah sakit antara \textit{delegator} dan \textit{delegatee}, serta status akses \textit{delegator} terhadap pasien terkait. Apabila prasyarat tersebut valid, metadata akses terenkripsi disimpan pada daftar akses milik \textit{delegatee}. Sebaliknya, apabila prasyarat tidak terpenuhi, transaksi delegasi ditolak.
+
+Bagian kedua dari proses ini adalah pengambilan dan penggunaan Macaroon delegasi oleh \textit{delegatee}. Bagian ini terjadi setelah metadata akses terenkripsi berhasil dicatat pada blockchain. Alur pengambilan dan penggunaan Macaroon delegasi ditunjukkan pada Gambar~\ref{fig:seq-penggunaan-macaroon-delegasi}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{resources/chapter-3/rancangan/seqdiag-delegasi-tahap4-5.png}
+  \caption{Sequence diagram pengambilan dan penggunaan Macaroon delegasi}
+  \label{fig:seq-penggunaan-macaroon-delegasi}
+\end{figure}
+
+Berdasarkan Gambar~\ref{fig:seq-penggunaan-macaroon-delegasi}, ketika \textit{delegatee} membuka aplikasi, \textit{client} mengambil metadata akses terenkripsi yang tersimpan pada blockchain. Metadata tersebut kemudian didekripsi secara lokal menggunakan kunci privat milik \textit{delegatee}. Apabila proses dekripsi berhasil, aplikasi memperoleh Macaroon turunan beserta metadata pendukungnya. Macaroon turunan tersebut kemudian dapat digunakan sebagai token otorisasi ketika \textit{delegatee} mengirim permintaan akses baca atau tulis ke \textit{Server} PRE.
+
+Pada tahap penggunaan token, \textit{Server} PRE melakukan verifikasi terhadap Macaroon yang dikirimkan oleh \textit{delegatee}. Verifikasi ini mencakup pemeriksaan validitas token melalui mekanisme \textit{chained-HMAC} serta pemeriksaan seluruh \textit{caveats} yang melekat pada token. \textit{Caveats} tersebut diverifikasi terhadap konteks permintaan akses, seperti identitas pasien, RME terkait, jenis hak akses, dataset, fungsi klinis, waktu kedaluwarsa, dan identitas \textit{delegatee}. Apabila seluruh \textit{caveats} terpenuhi, permintaan akses diterima sesuai batas delegasi yang diberikan. Sebaliknya, apabila terdapat \textit{caveats} yang tidak terpenuhi, \textit{Server} PRE menolak permintaan akses tersebut.
+
+Dengan mekanisme ini, IOTA digunakan sebagai media pencatatan dan distribusi metadata akses yang dapat diaudit, sedangkan kerahasiaan token tetap dilindungi melalui enkripsi. Token Macaroon tidak tersedia dalam bentuk terbuka pada \textit{state on-chain}, sehingga pihak selain \textit{delegatee} tidak dapat langsung memanfaatkan metadata akses yang tercatat pada blockchain. Selain itu, karena pembatasan hak akses dibawa langsung oleh \textit{caveats} pada Macaroon, \textit{Server} PRE tetap dapat menegakkan batas delegasi pada saat token digunakan.

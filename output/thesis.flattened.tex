@@ -323,7 +323,7 @@ zoo-keeper
 	Tazkia Nizami \\
 	NIM: 13522032
 }
-\newcommand\tanggalpengesahan{11 Maret 2026}
+\newcommand\tanggalpengesahan{15 Juni 2026}
 
 \pagenumbering{roman}
 \setcounter{page}{1}
@@ -340,7 +340,7 @@ zoo-keeper
 
 
 	\large Disusun sebagai syarat kelulusan mata kuliah
-	IF4091/Penyusunan Proposal
+	IF4092/Tugas Akhir
 	\vfill
 
 	\large Oleh
@@ -361,7 +361,7 @@ zoo-keeper
 		Institut Teknologi Bandung
 	}
 
-	Desember 2025
+	Juni 2026
 
 \end{center}
 
@@ -371,34 +371,33 @@ zoo-keeper
 
 \begin{center}
 	\smallskip
-
+	
 	\Large \bfseries \MakeUppercase{\thetitle}
 	\vfill
-
-
+	
 
 	\large Oleh
-
+	
 	\Large \theauthor
-
+	
 	\large Program Studi Teknik Informatika \\
-
+	
 	\normalsize \normalfont
 	Sekolah Teknik Elektro dan Informatika \\
 	Institut Teknologi Bandung \\
-
+	
 	\vfill
 	\normalsize \normalfont
 	Telah disetujui dan disahkan sebagai Tugas Akhir \\
 di Bandung, pada tanggal \tanggalpengesahan
-
+	
 	\vspace{0.5cm}
 	Pembimbing,
-
+	
 	\vfill
 	\underline{Dr. Phil. Eng. Hari Purnama, S.Si., M.Si.} \\
 	NIP. 118110072
-
+	
 \end{center}
 \clearpage
  
@@ -441,18 +440,18 @@ di Bandung, pada tanggal \tanggalpengesahan
 
 Pada era digital ini, transformasi sistem rekam medis didorong secara kuat oleh regulasi pemerintah. Peraturan Menteri Kesehatan Republik Indonesia (Permenkes) Nomor 24 Tahun 2022 mewajibkan fasilitas layanan kesehatan (fasyankes) untuk mengimplementasikan Rekam Medis Elektronik (RME) yang terintegrasi \autocite{permenkes24_2022}. Integrasi ini krusial untuk menjamin interoperabilitas data kesehatan nasional sesuai amanat Undang-Undang Nomor 29 Tahun 2004 \autocite{uu_29_2004}.
 
-Meskipun integrasi melalui Platform SATUSEHAT patut didukung, namun perkembangan dari sistem RME saat ini memiliki hambatan dalam 3 aspek \autocite{liu2025accesscontrol}: (1) Keamanan penyimpanan data, (2) mekanisme penyebaran data, dan (3) kepemilikan data. \textit{Distributed Ledger Technology} (DLT) memiliki potensi untuk mengatasi ketiga hambatan tersebut \autocite{ferreira2024enhancing}. DLT mengatasi masalah keamanan penyimpanan data pada sistem terpusat dengan menerapkan penyimpanan data yang terdesentralisasi dan terenkripsi \autocite{ferreira2024enhancing}. Prinsip desentralisasi dah mekanisme konsensus yang ada pada DLT memungkinkan untuk mencegah terjadinya pencurian data dan \textit{tampering} data \autocite{liu2025accesscontrol,ferreira2024enhancing}.
+Meskipun integrasi melalui Platform SATUSEHAT patut didukung, namun perkembangan dari sistem RME saat ini memiliki hambatan dalam 3 aspek \autocite{liu2025accesscontrol}: (1) Keamanan penyimpanan data, (2) mekanisme penyebaran data, dan (3) kepemilikan data. \textit{Distributed Ledger Technology} (DLT) memiliki potensi untuk mengatasi ketiga hambatan tersebut \autocite{ferreira2024enhancing}. DLT mengatasi masalah keamanan penyimpanan data pada sistem terpusat dengan menerapkan penyimpanan data yang terdesentralisasi dan terenkripsi \autocite{ferreira2024enhancing}. Prinsip desentralisasi dan mekanisme konsensus yang ada pada DLT memungkinkan untuk mencegah terjadinya pencurian data dan \textit{tampering} data \autocite{liu2025accesscontrol,ferreira2024enhancing}.
 
 DLT juga didesain untuk memiliki kemampuan interoperabilitas data yang tinggi \autocite{ferreira2024enhancing}. Karakteristik dari DLT memfasilitasi kebutuhan sistem RME untuk mengakses ke \textit{shared-ledger} yang sama \autocite{zheng2019accelerating}. Kemampuan ini mengatasi permasalahan penyebaran data ketika diimplementasikan bersamaan dengan sebuah standar format data seperti FHIR (yang digunakan juga pada ekosistem SATUSEHAT \autocite{heryawan2025fhir}).
 
 Kepemilikan data atau \textit{Data Ownership} merupakan elemen kritis dalam manajemen RME, yang menuntut pergeseran paradigma menjadi sistem yang \textit{patient-centric} \autocite{patil2024blockchain, peng2023patientcentric}. Dalam model ini, pasien memiliki kedaulatan untuk menentukan siapa saja yang dapat mengakses informasi kesehatan mereka \autocite{peng2023patientcentric}. Untuk mewujudkan \textit{Data Ownership} di atas infrastruktur DLT, diperlukan sebuah lapisan kontrol akses yang memberikan pasien kontrol yang presisi terhadap datanya \autocite{peng2023patientcentric,patil2024blockchain}.
 
-Dalam praktik klinis, perawatan pasien di rumah sakit bersifat kolaboratif dan melibatkan banyak tenaga kesehatan lintas unit (dokter umum, laboratorium, dokter spesialis, dan sebagainya) \autocite{ramaswamy2023multidisciplinarycare}. Model akses kontrol yang paling umum digunakan pada sistem RME adalah \textit{role‑based access control} (RBAC) \autocite{hegde2025safeguarding}. Namun, RBAC tidak memungkinkan kontrol akses yang \textit{fine-grained} dan berpotensi menimbulkan \textit{role explosion} (fenomena dimana dua akun berbeda memiliki akses yang berlebih hanya karena memiliki \textit{role} yang sama) \autocite{singh2025granular}. Pedoman nasional seperti NHS England mengakui bahwa untuk memberikan perawatan yang baik, informasi yang relevan sebaiknya dibagikan antar tenaga kesehatan yang terlibat dengan dasar \textit{implied consent}, selama menjaga prinsip \textit{need‑to‑know} \autocite{nhs_consent_2025}.
+Dalam praktik klinis, perawatan pasien di rumah sakit bersifat kolaboratif dan melibatkan banyak tenaga kesehatan lintas unit (dokter, petugas laboratorium, dan sebagainya) \autocite{ramaswamy2023multidisciplinarycare}. Model akses kontrol yang paling umum digunakan pada sistem RME adalah \textit{role‑based access control} (RBAC) \autocite{hegde2025safeguarding}. Namun, RBAC tidak memungkinkan kontrol akses yang granular dan berpotensi menimbulkan \textit{role explosion} (fenomena dimana dua akun berbeda memiliki akses yang berlebih hanya karena memiliki \textit{role} yang sama) \autocite{singh2025granular}. Pedoman nasional seperti NHS England mengakui bahwa untuk memberikan perawatan yang baik, informasi yang relevan sebaiknya dibagikan antar tenaga kesehatan yang terlibat dengan dasar \textit{implied consent}, selama menjaga prinsip \textit{need‑to‑know} \autocite{nhs_consent_2025}.
 Studi terkait melaporkan bahwa pasien mendukung berbagi data klinis mereka di dalam sistem kesehatan untuk tujuan perawatan langsung tanpa perlu persetujuan eksplisit setiap kali, asalkan mereka diberi informasi yang jelas dan dapat menolak bila tidak setuju (opsi \textit{opt-out}) \autocite{jones2022public}.
 
-Beberapa solusi sistem RME terdesentralisasi telah diusulkan, salah satunya adalah DecMed \autocite{sadewa2025decmed}. Sistem ini memanfaatkan DLT IOTA, \textit{InterPlanetary File System} (IPFS), dan \textit{Proxy Re-Encryption} (PRE) dengan menerapkan \textit{capability-based access control}. Pada DecMed, pendelegasian akses hanya bisa dilakukan oleh pasien (sebagai \textit{resource owner}) untuk membuat token baru \autocite{sadewa2025decmed}. Mekanisme tersebut mengasumsikan pasien selalu \textit{online}, hadir, dan paham siapa saja tenaga medis yang akan menangani mereka dan perlu diberikan hak akses ke RME pasien.
+Beberapa solusi sistem RME terdesentralisasi telah diusulkan, salah satunya adalah DecMed \autocite{sadewa2025decmed}. Sistem ini memanfaatkan DLT IOTA, \textit{InterPlanetary File System} (IPFS), dan \textit{Proxy Re-Encryption} (PRE) dengan menerapkan \textit{capability-based access control}. Pada DecMed, pendelegasian akses hanya bisa dilakukan oleh pasien (sebagai \textit{resource owner}) untuk membuat token hak akses baru. Mekanisme tersebut mengasumsikan pasien selalu \textit{online}, hadir, dan paham siapa saja tenaga medis yang akan menangani mereka dan perlu diberikan hak akses kepada RME pasien.
 Selain itu, pemberian kontrol akses granular juga memerlukan struktur penyimpanan data yang mendukung pemisahan informasi medis berdasarkan kebutuhan akses dan prinsip \textit{need-to-know}.
-Atenuasi \textit{offline} pada Macaroons berpotensi memecahkan \textit{bottleneck} ini: pasien cukup menerbitkan satu "Master Token" pada saat proses administrasi layanan kesehatan kepada petugas administrasi, kemudian petugas administrasi dapat menurunkan haknya secara \textit{offline} (diturunkan secara lokal, tidak perlu melibatkan pasien) kepada perawat dan dokter.
+Atenuasi \textit{offline} pada Macaroons berpotensi memecahkan \textit{bottleneck} ini: pasien cukup menerbitkan satu token awal pada saat proses administrasi layanan kesehatan kepada petugas rekam medis, kemudian petugas rekam medis dapat menurunkan haknya secara \textit{offline} (diturunkan secara lokal, tidak perlu melibatkan pasien) kepada tenaga medis terkait.
 
 Berdasarkan permasalahan tersebut, Tugas Akhir ini mengusulkan pembaruan mekanisme kontrol akses pada sistem RME DecMed dengan mengintegrasikan Macaroons. Kebaruan utama penelitian ini terletak pada pemanfaatan fitur \textit{caveats} dan \textit{attenuation} pada Macaroons \autocite{birgisson2014macaroons}. Berbeda dengan mekanisme yang diimplementasikan pada DecMed, Macaroons memungkinkan pemegang akses untuk mendelegasikan haknya secara terbatas kepada pihak lain tanpa perlu berinteraksi kembali dengan pembuat token, serta mendukung verifikasi \textit{caveats} kontekstual yang \textit{tamper-proof}. Integrasi ini difokuskan untuk mengatasi kelemahan mekanisme delegasi akses pada penelitian sebelumnya \autocite{sadewa2025decmed}, sehingga dapat memberikan kontrol akses granular yang selaras dengan segmentasi data medis dan prinsip \textit{need-to-know}. 
 \section{Rumusan Masalah}
@@ -483,7 +482,6 @@ Terdapat beberapa batasan masalah dari Tugas Akhir ini. Batasan masalah tersebut
 	\item Kerangka Kerja yang dikembangkan pada Tugas Akhir ini adalah kerangka kerja DecMed;
 	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor tertentu, tidak membahas keseluruhan kemungkinan skenario layanan klinis.
 	\item Data RME pada dataset Instalasi Gawat Darurat (IGD) tidak termasuk dalam kajian rancangan dan implementasi pada Tugas Akhir ini.
-	\item Dokumentasi administratif tidak dibahas dan diimplementasikan hingga tingkat segmentasi yang lebih rinci.
 \end{enumerate}
 
 \section{Metodologi}
@@ -504,7 +502,7 @@ Metodologi yang digunakan dalam Tugas Akhir ini terdiri dari empat tahap pelaksa
 	\item \textbf{Implementasi Prototipe}
 	      \label{subsec:implementasi-prototipe}
 
-	      Tahap ini merupakan realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan dimulai dengan konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan IPFS. Selanjutnya dilakukan pengembangan \textit{services} inti yang mencakup logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons, serta implementasi \textit{business logic} untuk menangani skenario akses (misalnya, pasien ke dokter, dokter ke perawat). Seluruh komponen kemudian diintegrasikan menjadi satu \textit{framework} prototipe yang kohesif.
+	      Tahap ini merupakan realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan dimulai dengan konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan IPFS. Selanjutnya dilakukan pengembangan \textit{services} inti yang mencakup logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons, serta implementasi \textit{business logic} untuk menangani skenario akses (misalnya, pasien ke dokter, dokter ke petugas laboratorium). Seluruh komponen kemudian diintegrasikan menjadi satu prototipe yang kohesif.
 
 	\item \textbf{Pengujian dan Evaluasi Fungsional}
 	      \label{subsec:pengujian-dan-evaluasi-fungsional}
@@ -581,16 +579,11 @@ Tenaga medis dapat melakukan beberapa aksi terhadap rekam medis pasien, yaitu:
 
 Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) menjadi landasan yuridis utama yang menetapkan standar keamanan bagi sistem yang mengelola data masyarakat Indonesia, termasuk data rekam medis. Secara spesifik, Pasal 4 ayat 2 huruf a UU PDP mengklasifikasikan data dan informasi kesehatan sebagai Data Pribadi Spesifik \autocite{uu27-2022-pdp}. Pengendali Data Pribadi diwajibkan untuk melindungi dan memastikan keamanan data yang diprosesnya (Pasal 35), serta secara eksplisit wajib melindungi data dari pemrosesan yang tidak sah (Pasal 38) dan mencegah akses yang tidak sah melalui sistem keamanan yang andal (Pasal 39) \autocite{uu27-2022-pdp}.
 
-
-
-
-
 UU PDP Pasal 32 Ayat 1 mewajibkan Pengendali Data Pribadi untuk menyediakan \textit{audit trail} pemrosesan data pribadi \autocite{uu27-2022-pdp}. Kewajiban ini menuntut adanya transparansi mengenai siapa yang mengakses data, kapan akses dilakukan, dan tindakan apa yang dilakukan terhadap data tersebut.
 
 
 
-
-
+%
  \section{IOTA}
 \label{sec:iota}
 
@@ -690,11 +683,11 @@ Pada setiap model kontrol akses, terdapat 3 tahapan dasar yang harus dilalui ole
 
 Kontrol akses granular atau \textit{fine-grained access control} adalah pendekatan kontrol akses yang memungkinkan keputusan otorisasi dilakukan pada tingkat cakupan yang lebih spesifik dibandingkan pemberian izin secara umum atau menyeluruh. Jika kontrol akses kasar (\textit{coarse-grained access control}) hanya membedakan akses berdasarkan kategori besar, seperti peran pengguna atau jenis sistem, maka kontrol akses granular mempertimbangkan detail yang lebih banyak, seperti akses berdasarkan pengguna, per baris/kolom data, bergantung konteks, dan batasan tambahan lain yang relevan dengan kebijakan sistem \autocite{hu2014abac, odugu2021finegrained}.
 
-Sebuah mekanisme kontrol akses dapat disebut granular apabila sistem mampu membedakan hak akses berdasarkan beberapa dimensi otorisasi secara lebih spesifik. Dimensi tersebut meliputi: (1) subjek yang meminta akses, misalnya identitas pengguna, peran, atau atribut; (2) objek atau sumber daya yang diakses, misalnya pasien tertentu, rekam medis tertentu, dataset tertentu, atau bagian tertentu dari data; (3) operasi yang dilakukan, misalnya membaca, menulis, memperbarui, menghapus, atau mendelegasikan akses; dan (4) kondisi atau konteks akses, misalnya waktu berlaku, tujuan akses, lokasi, atau kondisi layanan tertentu \autocite{hu2014abac}.
+Sebuah mekanisme kontrol akses dapat disebut granular apabila sistem mampu membedakan hak akses berdasarkan beberapa dimensi otorisasi secara lebih spesifik. Dimensi tersebut meliputi: (1) subjek yang meminta akses, misalnya identitas pengguna, peran, atau atribut; (2) objek atau sumber daya yang diakses, misalnya pengguna tertentu, sumber data tertentu, \textit{dataset} tertentu, atau bagian tertentu dari data; (3) operasi yang dilakukan, misalnya membaca, menulis, memperbarui, mendelegasikan, dan menghapus; dan (4) kondisi atau konteks akses, misalnya waktu berlaku, tujuan akses, lokasi, atau kondisi layanan tertentu \autocite{hu2014abac}.
 
 Granularitas dalam kontrol akses juga berkaitan erat dengan prinsip \textit{least privilege}, yaitu pemberian hak akses sebatas yang diperlukan untuk menjalankan tugas tertentu \autocite{nist80053r5}. Dengan pendekatan ini, pengguna tidak langsung memperoleh akses penuh terhadap seluruh sumber daya hanya karena memiliki peran tertentu. Sebagai contoh, tenaga medis tidak cukup hanya diberi akses berdasarkan peran umum sebagai ``dokter'', melainkan aksesnya dapat dibatasi hanya pada pasien tertentu, episode layanan tertentu, data tertentu, serta operasi tertentu yang sesuai dengan kebutuhan tugasnya. Dengan demikian, kontrol akses granular dapat mengurangi risiko akses berlebihan dan membatasi dampak apabila kredensial atau token akses disalahgunakan.
 
-Pada penelitian ini, kontrol akses granular dimaknai sebagai kemampuan sistem untuk membatasi hak akses berdasarkan kombinasi antara subjek, data yang diakses, jenis operasi, waktu berlaku, serta batasan delegasi. Dengan demikian, granularitas yang digunakan berada pada tingkat yang sesuai dengan kebutuhan sistem.
+Pada Tugas Akhir ini, kontrol akses granular dimaknai sebagai kemampuan sistem untuk membatasi hak akses berdasarkan kombinasi antara subjek, data yang diakses, jenis operasi, waktu berlaku, serta batasan delegasi.
 
 \subsection{Model CapBAC}
 \label{subsec:model-capbac}
@@ -770,7 +763,7 @@ $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal.
 	\centering
 	\includegraphics
 	[width=0.8\textwidth]{resources/chapter-2/macaroons.png}
-	\caption{Contoh delegasi dan atenuasi kewenangan pada Macaroon. Klien C memegang Macaroon yang diturunkan dari \textit{service} FS untuk mengakses data pada \textit{service} TS dengan batasan waktu, lokasi IP, dan target data yang spesifik. \autocite{birgisson2014macaroons}}
+	\caption{Contoh delegasi dan atenuasi kewenangan pada Macaroon. C memegang Macaroon yang diturunkan dari \textit{service} FS untuk mengakses data pada \textit{service} TS dengan batasan waktu, lokasi IP, dan target data yang spesifik. \autocite{birgisson2014macaroons}}
 	\label{fig:delegasi-macaroon}
 \end{figure}
 
@@ -1048,13 +1041,13 @@ Penyimpanan data klinis pada DecMed hanya berfokus pada dataset rawat jalan. Pad
 \label{subsubsec:analisis-skenario-layanan-klinis}
 Kebutuhan akan kontrol akses granular dan delegasi berantai menjadi lebih jelas ketika arsitektur DecMed ditempatkan pada skenario layanan kesehatan yang nyata. Dalam alur pelayanan rumah sakit, pasien tidak hanya berinteraksi dengan satu pihak, tetapi dengan beberapa aktor yang memiliki kebutuhan akses berbeda pada tahap yang berbeda pula. Oleh karena itu, subbab ini memodelkan satu skenario layanan kesehatan kolaboratif untuk menunjukkan secara konkret mengapa mekanisme akses pada DecMed saat ini belum memadai.
 
-Skenario yang dianalisis adalah pelayanan pasien rawat jalan yang melibatkan petugas rekam medis, perawat, dokter penanggung jawab pasien, unit laboratorium, dan unit apotek. Alur tersebut dipilih karena mewakili pola kolaborasi yang umum terjadi di fasilitas pelayanan kesehatan, sekaligus cukup untuk memperlihatkan kebutuhan akses baca, tulis, dan delegasi terbatas. Kebutuhan delegasi ini berkaitan dengan kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}, khususnya ID F06 dan F07.
+Skenario yang dianalisis adalah pelayanan pasien rawat jalan yang melibatkan petugas rekam medis, perawat, dokter penanggung jawab pasien, petugas laboratorium, dan apoteker. Alur tersebut dipilih karena mewakili pola kolaborasi yang umum terjadi di fasilitas pelayanan kesehatan, sekaligus cukup untuk memperlihatkan kebutuhan akses baca, tulis, dan delegasi terbatas. Kebutuhan delegasi ini berkaitan dengan kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}, khususnya ID F06 dan F07.
 
 \begin{enumerate}[]
 	\item \textbf{Tahap pendaftaran pasien.} Saat pasien datang ke rumah sakit, petugas rekam medis hanya membutuhkan akses terhadap data administratif pasien.
 	\item \textbf{Tahap pemeriksaan awal oleh perawat.} Setelah proses pendaftaran selesai, perawat memerlukan hak untuk menulis data klinis untuk anamnesis awal, pemeriksaan fisik, dan pemeriksaan psikologis.
 	\item \textbf{Tahap pemeriksaan oleh dokter.} Pada tahap ini, dokter penanggung jawab pasien memerlukan hak baca terhadap keseluruhan data RME pasien dan hak tulis untuk pelayanan saat ini.
-	\item \textbf{Tahap rujukan internal ke laboratorium.} Apabila dokter membutuhkan pemeriksaan laboratorium, maka pasien perlu diarahkan ke unit laboratorium. Dalam tahap ini, petugas laboratorium hanya membutuhkan akses terhadap data administratif pasien dan permintaan pemeriksaan laboratorium.
+	\item \textbf{Tahap rujukan internal ke laboratorium.} Apabila dokter membutuhkan pemeriksaan laboratorium, maka pasien perlu diarahkan ke petugas laboratorium. Dalam tahap ini, petugas laboratorium hanya membutuhkan akses terhadap data administratif pasien dan permintaan pemeriksaan laboratorium.
 	\item \textbf{Tahap tindak lanjut hasil pemeriksaan.} Setelah hasil laboratorium tersedia, dokter kembali menggunakan data tersebut sebagai bahan pengambilan keputusan klinis.
 	\item \textbf{Tahap pemberian resep oleh apotek.} Setelah dokter memberikan resep, apotek memerlukan hak untuk membaca data resep dan mengunggah data obat yang diresepkan.
 \end{enumerate}
@@ -1069,23 +1062,23 @@ Berdasarkan skenario tersebut, kebutuhan akses setiap aktor dapat diringkas pada
 	\begin{tabular}{|p{0.2\textwidth}|p{0.23\textwidth}|p{0.45\textwidth}|}
 		\hline
 		\textbf{Aktor}       & \textbf{Jenis Akses}                                & \textbf{Cakupan Data yang Dibutuhkan}                                                \\ \hline
-		Petugas rekam medis  & Baca dan tulis data administratif                   & Data administratif pasien.                                                           \\ \hline
+		Petugas Rekam Medis  & Baca dan tulis data administratif                   & Data administratif pasien.                                                           \\ \hline
 		Perawat              & Baca dan tulis data klinis (hanya pemeriksaan awal) & Administratif pasien, anamnesis awal, pemeriksaan fisik, dan pemeriksaan psikologis. \\ \hline
 		Dokter               & Baca dan tulis data klinis                          & Keseluruhan RME pasien.                                                              \\ \hline
-		Petugas laboratorium & Baca dan tulis terbatas (hanya data lab saja)       & Administratif pasien, permintaan pemeriksaan, serta mengunggah hasil laboratorium.   \\ \hline
-		Apoteker             & Baca dan tulis terbatas (hanya data terkait apotek) & Administratif pasien, data resep, dan informasi obat yang relevan.                   \\ \hline
+		Petugas Laboratorium & Baca dan tulis terbatas (hanya data laboratorium)   & Administratif pasien, permintaan pemeriksaan, serta mengunggah hasil laboratorium.   \\ \hline
+		Apoteker             & Baca dan tulis terbatas (hanya data apotek)         & Administratif pasien, data resep, dan informasi obat yang relevan.                   \\ \hline
 	\end{tabular}
 \end{table}
 
 Alur pemberian akses terhadap data RME pasien oleh pasien kepada tenaga medis pada DecMed sesuai dengan implementasi saat ini dapat dilihat pada Lampiran \ref{lampiran:alur-pemberian-akses-medis}. Pada alur tersebut, pasien harus memilih satu tenaga medis lalu menerbitkan token akses untuk tenaga medis tersebut. Apabila akses perlu diberikan kepada lebih dari satu tenaga medis, proses yang sama perlu diulang dari awal untuk masing-masing penerima akses.
 
-Dalam skenario tersebut, keterbatasan DecMed tampak secara operasional. Model token kapabilitas yang statis menyulitkan proses pembatasan akses secara bertahap sesuai perpindahan peran di lapangan. Selain itu, pemberian akses hanya dapat dilakukan secara individual dari pasien kepada satu tenaga medis pada satu waktu, sehingga proses otorisasi menjadi tidak efektif ketika layanan melibatkan beberapa tenaga medis sekaligus. Pasien perlu memberikan akses kepada dokter utama dan petugas laboratorium secara terpisah, padahal proses tersebut dapat dibuat lebih efisien apabila dokter utama dapat mendelegasikan sebagian hak aksesnya kepada petugas laboratorium tanpa perlu intervensi langsung dari pasien. Dokter perlu dapat mendelegasikan sebagian hak akses saja, misalnya akses terhadap permintaan pemeriksaan dan hak tulis hasil laboratorium tanpa ikut membuka seluruh riwayat klinis pasien. Jika data klinis masih tersimpan dalam unit \textit{off-chain} yang terlalu besar, maka pemberian akses kepada unit laboratorium juga berisiko membuka data yang tidak relevan. Dengan demikian, skenario layanan kesehatan kolaboratif ini memperlihatkan bahwa tiga persoalan penelitian saling berkaitan: sistem memerlukan kontrol akses yang granular agar setiap aktor hanya memperoleh data yang relevan, segmentasi data \textit{off-chain} agar pembatasan akses dapat ditegakkan secara teknis, dan delegasi berantai dengan atenuasi \textit{offline} agar perpindahan hak akses dapat berlangsung efisien tanpa intervensi ulang dari pasien.
+Dalam skenario tersebut, keterbatasan DecMed tampak secara operasional. Model token kapabilitas yang statis menyulitkan proses pembatasan akses secara bertahap sesuai perpindahan peran di lapangan. Selain itu, pemberian akses hanya dapat dilakukan secara individual dari pasien kepada satu tenaga medis pada satu waktu, sehingga proses otorisasi menjadi tidak efektif ketika layanan melibatkan beberapa tenaga medis sekaligus. Pasien perlu memberikan akses kepada dokter utama dan petugas laboratorium secara terpisah, padahal proses tersebut dapat dibuat lebih efisien apabila dokter utama dapat mendelegasikan sebagian hak aksesnya kepada petugas laboratorium tanpa perlu intervensi langsung dari pasien. Dokter perlu dapat mendelegasikan sebagian hak akses saja, misalnya akses terhadap permintaan pemeriksaan dan hak tulis hasil laboratorium tanpa ikut membuka seluruh riwayat klinis pasien. Jika data klinis masih tersimpan dalam \textit{off-chain} yang terlalu besar, maka pemberian akses kepada petugas laboratorium juga berisiko membuka data yang tidak relevan. Dengan demikian, skenario layanan kesehatan kolaboratif ini memperlihatkan bahwa tiga persoalan penelitian saling berkaitan: sistem memerlukan kontrol akses yang granular agar setiap aktor hanya memperoleh data yang relevan, segmentasi data \textit{off-chain} agar pembatasan akses dapat ditegakkan secara teknis, dan delegasi berantai dengan atenuasi \textit{offline} agar perpindahan hak akses dapat berlangsung efisien tanpa intervensi ulang dari pasien.
  \subsubsection{Analisis STRIDE pada Sistem DecMed}
 \label{subsec:analisis-stride-decmed}
 
-Setelah keterbatasan fungsional pada token kapabilitas, segmentasi data, dan alur layanan kolaboratif diidentifikasi, analisis STRIDE pada subbab ini digunakan sebagai pelengkap untuk memetakan implikasi keamanannya secara lebih sistematis. Dengan kata lain, STRIDE tidak digunakan untuk merumuskan masalah Tugas Akhir yang baru, melainkan untuk menunjukkan bahwa keterbatasan pada kontrol akses dan mekanisme delegasi berpotensi menimbulkan ancaman keamanan yang nyata ketika sistem diterapkan.
+Setelah keterbatasan fungsional pada token kapabilitas, segmentasi data, dan alur layanan kolaboratif diidentifikasi, analisis STRIDE pada subbab ini digunakan sebagai pelengkap untuk memetakan implikasi keamanannya secara lebih sistematis. Dengan kata lain, STRIDE tidak digunakan untuk merumuskan masalah yang baru, melainkan untuk menunjukkan bahwa keterbatasan pada kontrol akses dan mekanisme delegasi berpotensi menimbulkan ancaman keamanan yang nyata ketika sistem diterapkan.
 
-Berdasarkan pembahasan pada Subbab \ref{sec:stride}, tahapan awal dalam melakukan pemodelan ancaman menggunakan STRIDE adalah mengidentifikasi komponen dan alur kerja sistem yang menjadi target ancaman. Hal ini dapat dilakukan dengan menggambarkan DFD yang menunjukkan aliran data dan komunikasi antar komponen sistem. Pada analisis ini, dilakukan pemodelan DFD Level 0 dan Level 1. Pemodelan ke level lebih lanjut tidak dilakukan karena pemodelan hingga level 1 sudah cukup untuk mengidentifikasi ancaman yang relevan. Hasil pemodelan DFD level 0 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-0} dan hasil pemodelan DFD level 1 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-1}. Legenda pemodelan DFD dapat dilihat pada Lampiran \ref{lampiran:legenda-dfd}.
+Berdasarkan pembahasan pada Subbab \ref{sec:stride}, tahapan awal dalam melakukan pemodelan ancaman menggunakan STRIDE adalah mengidentifikasi komponen dan alur kerja sistem yang menjadi target ancaman. Hal ini dapat dilakukan dengan menggambarkan DFD yang menunjukkan aliran data dan komunikasi antar komponen sistem. Pada analisis ini, dilakukan pemodelan DFD Level 0 dan Level 1. Pemodelan ke level lebih lanjut tidak dilakukan karena pemodelan hingga level 1 sudah cukup untuk mengidentifikasi komponen dari DecMed dan alur data antar komponen. Hasil pemodelan DFD level 0 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-0} dan hasil pemodelan DFD level 1 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-1}. Legenda pemodelan DFD dapat dilihat pada Lampiran \ref{lampiran:legenda-dfd}.
 
 \begin{figure}[ht]
 	\centering
@@ -1101,7 +1094,7 @@ Berdasarkan pembahasan pada Subbab \ref{sec:stride}, tahapan awal dalam melakuka
 	\label{fig:dfd-decmed-level-1}
 \end{figure}
 
-Berdasarkan arsitektur DecMed pada Gambar \ref{fig:decmed-archi} dan DFD pada Gambar \ref{fig:dfd-decmed-level-0}, \textit{attack surface} utama sistem mencakup \textit{Patient Client}, \textit{Hospital Client}, \textit{Ministry Client}, data pada lapisan \textit{on-chain}, data terenkripsi pada lapisan \textit{off-chain}, \textit{instance} PRE, serta token kapabilitas yang mengatur otorisasi akses.
+Berdasarkan arsitektur DecMed pada Gambar \ref{fig:decmed-archi} dan DFD pada Gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-decmed-level-1}, \textit{attack surface} utama sistem mencakup \textit{Patient Client}, \textit{Hospital Client}, \textit{Ministry Client}, data pada lapisan \textit{on-chain}, data terenkripsi pada lapisan \textit{off-chain}, \textit{instance} PRE, Redis PRE, jaringan IOTA, IOTA \textit{Gas Station}, serta token kapabilitas yang mengatur otorisasi akses.
 
 Tabel \ref{tab:stride-decmed} menunjukkan hasil identifikasi ancaman berdasarkan metode STRIDE terhadap komponen utama pada sistem DecMed.
 
@@ -1113,68 +1106,68 @@ Tabel \ref{tab:stride-decmed} menunjukkan hasil identifikasi ancaman berdasarkan
 	\renewcommand{\arraystretch}{1.3}
 	\begin{tabular}{|p{0.65cm}|p{2.2cm}|p{1.9cm}|p{3.6cm}|p{3.4cm}|}
 		\hline
-		\textbf{ID}                                                                                                                                             & \textbf{Komponen} & \textbf{Kategori STRIDE} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+		\textbf{ID}                                                                                                                                                                                       & \textbf{Komponen} & \textbf{Kategori STRIDE} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
 		\hline
 
-		T01                                                                                                                                                     &
-		Capability Token                                                                                                                                        &
-		\textit{Spoofing}                                                                                                                                       &
-		Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk memperoleh akses terhadap RME.                                                      &
-		Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                    \\
+		T01                                                                                                                                                                                               &
+		Token Kapabilitas                                                                                                                                                                                 &
+		\textit{Spoofing}                                                                                                                                                                                 &
+		Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk memperoleh akses terhadap RME.                                                                                                &
+		Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                                                              \\
 		\hline
 
-		T02                                                                                                                                                     &
-		Metadata \textit{On-chain}                                                                                                                              &
-		\textit{Tampering}                                                                                                                                      &
-		Pengguna yang tidak berwenang memanggil \textit{smart contract} pembaruan metadata yang tidak valid melalui transaksi yang tidak dibatasi dengan tepat. &
-		Integritas data dan ketepatan pemberian akses menjadi terganggu.                                                                                                                                                                                     \\
+		T02                                                                                                                                                                                               &
+		Metadata \textit{On-chain}                                                                                                                                                                        &
+		\textit{Tampering}                                                                                                                                                                                &
+		Pengguna mengirim transaksi pembaruan atau pemberian akses yang valid secara kriptografis, tetapi cakupan pembaruannya tidak dibatasi secara tepat oleh logika otorisasi \textit{smart contract}. &
+		Metadata akses atau metadata RME dapat menunjuk pada cakupan data yang tidak semestinya, sehingga integritas kontrol akses terganggu.                                                                                                                                                          \\
 		\hline
 
-		T03                                                                                                                                                     &
-		Data \textit{Off-chain}                                                                                                                                 &
-		\textit{Tampering}                                                                                                                                      &
-		Objek data terenkripsi pada penyimpanan \textit{off-chain} diganti atau dimodifikasi.                                                                   &
-		Data rekam medis menjadi tidak valid atau tidak konsisten.                                                                                                                                                                                           \\
+		T03                                                                                                                                                                                               &
+		Data \textit{Off-chain}                                                                                                                                                                           &
+		\textit{Tampering}                                                                                                                                                                                &
+		Referensi CID atau metadata yang mengarah ke objek \textit{off-chain} dimanipulasi sehingga sistem mengambil \textit{blob} terenkripsi yang tidak sesuai.                                         &
+		Data RME yang diambil menjadi tidak valid, tidak konsisten, atau gagal diverifikasi/dekripsi.                                                                                                                                                                                                  \\
 		\hline
 
-		T04                                                                                                                                                     &
-		Delegation Mechanism                                                                                                                                    &
-		\textit{Repudiation}                                                                                                                                    &
-		Pihak tertentu menyangkal pernah memberikan atau menggunakan delegasi akses.                                                                            &
-		Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                                                                          \\
+		T04                                                                                                                                                                                               &
+		Mekanisme Delegasi                                                                                                                                                                                &
+		\textit{Repudiation}                                                                                                                                                                              &
+		Pihak tertentu menyangkal pernah memberikan atau menggunakan delegasi akses.                                                                                                                      &
+		Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                                                                                                                    \\
 		\hline
 
-		T05                                                                                                                                                     &
-		Data \textit{Off-chain}                                                                                                                                 &
-		\textit{Information Disclosure}                                                                                                                         &
-		Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan klinis.                                                                       &
-		Kebocoran data kesehatan sensitif pasien.                                                                                                                                                                                                            \\
+		T05                                                                                                                                                                                               &
+		Mekanisme Delegasi                                                                                                                                                                                &
+		\textit{Information Disclosure}                                                                                                                                                                   &
+		Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan klinis.                                                                                                                 &
+		Kebocoran data kesehatan sensitif pasien.                                                                                                                                                                                                                                                      \\
 		\hline
 
-		T06                                                                                                                                                     &
-		Metadata \textit{On-chain}                                                                                                                              &
-		\textit{Information Disclosure}                                                                                                                         &
-		Metadata transaksi mengungkap relasi pasien, fasilitas kesehatan, atau jenis layanan medis.                                                             &
-		Privasi pasien dan informasi layanan kesehatan dapat terekspos.                                                                                                                                                                                      \\
+		T06                                                                                                                                                                                               &
+		Metadata \textit{On-chain}                                                                                                                                                                        &
+		\textit{Information Disclosure}                                                                                                                                                                   &
+		Metadata transaksi mengungkap relasi pasien, fasilitas kesehatan, atau jenis layanan medis.                                                                                                       &
+		Privasi pasien dan informasi layanan kesehatan dapat terekspos.                                                                                                                                                                                                                                \\
 		\hline
 
-		T07                                                                                                                                                     &
-		PRE Instance dan IPFS                                                                                                                                   &
-		\textit{Denial of Service}                                                                                                                              &
-		Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.                                                            &
-		Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                                                                         \\
+		T07                                                                                                                                                                                               &
+		\textit{Instance} PRE dan IPFS                                                                                                                                                                    &
+		\textit{Denial of Service}                                                                                                                                                                        &
+		Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.                                                                                                      &
+		Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                                                                                                                   \\
 		\hline
 
-		T08                                                                                                                                                     &
-		Delegation Mechanism                                                                                                                                    &
-		\textit{Elevation of Privilege}                                                                                                                         &
-		Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi secara granular.                                                        &
-		Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                        \\
+		T08                                                                                                                                                                                               &
+		Mekanisme Delegasi                                                                                                                                                                                &
+		\textit{Elevation of Privilege}                                                                                                                                                                   &
+		Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi secara granular.                                                                                                  &
+		Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                                                                  \\
 		\hline
 	\end{tabular}
 \end{table}
  
-Berdasarkan hasil analisis STRIDE pada Tabel \ref{tab:stride-decmed}, ancaman yang paling relevan terhadap fokus Tugas Akhir ini adalah \textit{spoofing} (T01),\textit{tampering} (T02 dan T03), \textit{information disclosure} (T05 dan T06), dan \textit{elevation of privilege} (T08). Ketiga ancaman tersebut secara langsung berkaitan dengan kebutuhan akan kontrol akses yang lebih granular, segmentasi data \textit{off-chain}, serta mekanisme delegasi yang mampu membatasi hak akses secara bertahap.
+Berdasarkan hasil analisis STRIDE pada Tabel \ref{tab:stride-decmed}, ancaman yang paling relevan terhadap fokus Tugas Akhir ini adalah \textit{spoofing} (T01), \textit{tampering} (T02 dan T03), \textit{information disclosure} (T05 dan T06), dan \textit{elevation of privilege} (T08). Ancaman-ancaman tersebut secara langsung berkaitan dengan kebutuhan akan kontrol akses yang lebih granular, segmentasi data \textit{off-chain}, serta mekanisme delegasi yang mampu membatasi hak akses secara bertahap. Ancaman \textit{repudiation} (T04) tetap relevan terhadap kebutuhan audit delegasi, tetapi pada penelitian ini diposisikan sebagai implikasi pendukung karena fokus utama berada pada pembatasan cakupan akses dan delegasi.
 
 Dengan demikian, hasil analisis STRIDE memperkuat bahwa keterbatasan pada model kontrol akses dan delegasi DecMed tidak hanya merupakan persoalan fungsional, tetapi juga memiliki implikasi keamanan yang nyata. Oleh karena itu, diperlukan mekanisme otorisasi yang mampu mendukung pembatasan akses yang lebih rinci dan aman pada sistem rekam medis elektronik terdesentralisasi.
   \subsection{Identifikasi Masalah dan Kebutuhan Sistem}
@@ -1191,6 +1184,62 @@ Ketiga masalah tersebut berkorespondensi langsung dengan rumusan masalah pada su
 
 
 
+ \subsection{Analisis Kebutuhan Sistem}
+\label{subsec:analisis-kebutuhan-sistem}
+
+Berdasarkan permasalahan yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah}, sistem memerlukan kebutuhan fungsional tambahan yang berfokus pada peningkatan granularitas kontrol akses dan dukungan delegasi antaraktor. Kebutuhan ini dirumuskan untuk melengkapi kebutuhan fungsional DecMed sebelumnya, khususnya pada aspek pemberian akses, pembacaan RME, penulisan RME, pencabutan akses, dan pencatatan audit.
+
+Kebutuhan fungsional tambahan pada penelitian ini tidak dimaksudkan untuk menggantikan kebutuhan fungsional DecMed yang telah dirancang sebelumnya. Sebaliknya, kebutuhan tersebut berperan sebagai perluasan agar sistem dapat mendukung skenario layanan kesehatan kolaboratif sebagaimana dijelaskan pada Subsubbab \ref{subsubsec:analisis-skenario-layanan-klinis}. Dalam skenario tersebut, akses awal terhadap RME hanya diberikan langsung oleh pasien kepada petugas rekam medis, kemudian hak akses tersebut dapat didelegasikan secara terbatas kepada aktor tenaga medis yang terlibat dalam proses pelayanan. Aktor tenaga medis dalam Tugas Akhir ini mencakup dokter, perawat, petugas laboratorium, dan apoteker.
+
+Kebutuhan fungsional tambahan dirumuskan dari sudut pandang aktor, sama seperti pola pada kebutuhan fungsional DecMed pada Lampiran \ref{lampiran:kebutuhan-fungsional-decmed}. Perumusan berbasis aktor digunakan untuk memperjelas pihak yang dapat menerima akses, jenis data yang dapat diakses, operasi yang dapat dilakukan, serta batasan akses yang harus ditegakkan. Batasan tersebut mencakup pasien, episode RME, dataset, fungsi klinis, aksi akses, waktu berlaku, penerima delegasi, dan kedalaman delegasi. Rangkuman kebutuhan fungsional tambahan DecMed ditunjukkan pada Tabel \ref{tab:kebutuhan-fungsional-tambahan-decmed}.
+
+\begin{longtable}{|p{2cm}|p{10.5cm}|}
+	\caption{Kebutuhan Fungsional Tambahan DecMed}
+	\label{tab:kebutuhan-fungsional-tambahan-decmed}                                                                                                            \\
+	\hline
+	\textbf{ID} & \textbf{Deskripsi}                                                                                                                            \\
+	\hline
+	\endfirsthead
+
+	\multicolumn{2}{c}{\tablename\ \thetable{} -- Lanjutan}                                                                                                     \\
+	\hline
+	\textbf{ID} & \textbf{Deskripsi}                                                                                                                            \\
+	\hline
+	\endhead
+
+	\hline
+	\endfoot
+KF-TA-01
+	            & Pasien dapat memberikan akses awal kepada petugas rekam medis dengan batasan cakupan data, aksi akses, waktu berlaku, dan kedalaman delegasi. \\ \hline
+
+KF-TA-02
+	            & Pasien dapat mencabut akses awal dan akses turunannya yang telah diberikan.                                                                   \\ \hline
+
+	KF-TA-03
+	            & Pasien dapat melihat riwayat akses dan delegasi terhadap RME miliknya.                                                                        \\ \hline
+
+	KF-TA-04
+	            & Petugas rekam medis dapat mendelegasikan akses terbatas kepada perawat dan dokter sesuai cakupan akses.                                       \\ \hline
+
+	KF-TA-05
+	            & Dokter dapat membaca dan menulis segmen klinis sesuai cakupan akses .                                                                         \\ \hline
+
+	KF-TA-06
+	            & Dokter dapat mendelegasikan akses terbatas kepada tenaga laboratorium dan apoteker sesuai cakupan akses.                                      \\ \hline
+
+	KF-TA-07
+	            & Perawat dapat membaca dan menulis segmen klinis sesuai cakupan akses.                                                                         \\ \hline
+
+	KF-TA-08
+	            & Petugas laboratorium dapat membaca dan menulis segmen klinis sesuai cakupan akses terkait pemeriksaan laboratorium.                           \\ \hline
+
+	KF-TA-09
+	            & Apoteker dapat membaca dan menulis segmen klinis sesuai cakupan akses terkait pelayanan obat.                                                 \\ \hline
+\end{longtable}
+
+Terdapat penyesuaian pada F06 dan F07 karena dalam skenario layanan kesehatan kolaboratif, akses awal terhadap RME hanya diberikan langsung oleh pasien kepada petugas rekam medis, kemudian hak akses tersebut dapat didelegasikan secara terbatas kepada aktor tenaga medis yang terlibat dalam proses pelayanan, seperti dokter, perawat, petugas laboratorium, dan apoteker. Penyesuaian ini juga berlaku pada F09 karena dalam skenario tersebut, pasien memerlukan kemampuan untuk mencabut akses awal dan akses turunannya yang telah didelegasikan.
+
+Kebutuhan fungsional tambahan tersebut menjadi dasar bagi perancangan solusi pada tahap berikutnya. Secara khusus, kebutuhan ini digunakan untuk merancang integrasi Macaroons sebagai mekanisme token otorisasi, menentukan struktur pembatasan akses melalui \textit{caveats}, menyusun skema segmentasi data RME berbasis unit data klinis, serta merancang alur delegasi berantai antaraktor. Dengan demikian, rancangan sistem tidak hanya mempertahankan fungsi dasar DecMed, tetapi juga menambahkan mekanisme kontrol akses yang lebih granular, terbatas, dan sesuai dengan kebutuhan layanan kesehatan kolaboratif.
  
  
 \section{Analisis Solusi}
@@ -1219,15 +1268,15 @@ Kriteria evaluasi pada Tabel \ref{tab:perbandingan-token-otorisasi} diturunkan d
 		\hline
 		\textbf{Kriteria} & \textbf{JWT}                                     & \textbf{PASETO} & \textbf{Macaroons} & \textbf{Biscuit} \\ \hline
 
-		Kemampuan membawa klaim atau batasan akses granular
+		Kemampuan membawa batasan akses
 		                  & Melalui klaim
 		                  & Melalui klaim
 		                  & Melalui \textit{caveats}
 		                  & Melalui \textit{fact} dan \textit{rule}                                                                    \\ \hline
 
-		Delegasi hak akses yang dipersempit
-		                  & Tidak didukung secara \textit{native}
-		                  & Tidak didukung secara \textit{native}
+		Delegasi hak akses
+		                  & Membutuhkan mekanisme tambahan
+		                  & Membutuhkan mekanisme tambahan
 		                  & Didukung melalui penambahan \textit{caveats}
 		                  & Didukung melalui penambahan \textit{rule}                                                                  \\ \hline
 
@@ -1292,11 +1341,9 @@ Penentuan kategori data tidak dilakukan secara arbitrer, melainkan mengacu pada 
 \end{itemize}
 sebagaimana dijelaskan pada Subbab \ref{subsec:isi-rme}.
 
-Pembagian berdasarkan \textit{dataset} pelayanan dipilih karena setiap layanan memiliki alur kerja, jenis data, dan kebutuhan akses yang berbeda. Sebagai contoh, petugas laboratorium hanya memerlukan akses tulis terhadap data pemeriksaan laboratorium, sedangkan apoteker lebih berfokus pada data obat pasien. \textit{Dataset} telah memisahkan data berdasarkan jenis pelayanan, seperti Rawat Jalan atau Rawat Inap. Dengan demikian, pemisahan berdasarkan \textit{dataset} memberikan batas akses yang lebih sesuai dengan konteks pelayanan medis.
+Pembagian berdasarkan \textit{dataset} pelayanan dipilih karena setiap layanan memiliki jenis data dan kebutuhan akses yang berbeda. Sebagai contoh, petugas laboratorium hanya memerlukan akses tulis terhadap \textit{dataset} laboratorium, sedangkan apoteker hanya membutuhkan akses tulis terhadap \textit{dataset} apotek. \textit{Dataset} telah memisahkan data berdasarkan jenis pelayanan, seperti Rawat Jalan atau Rawat Inap. Dengan demikian, pemisahan berdasarkan \textit{dataset} memberikan batas akses yang lebih sesuai dengan konteks pelayanan medis.
 
-Selain pembagian berdasarkan \textit{dataset}, data klinis kemudian disegmentasi berdasarkan kategori fungsi klinis. Segmentasi ini digunakan untuk mengelompokkan data berdasarkan perannya dalam proses pelayanan medis, misalnya data diagnosis, terapi, atau anamnesis. Metadata fungsi klinis kemudian dapat digunakan sebagai dasar untuk menentukan relevansi akses, yaitu apakah suatu tenaga medis memerlukan segmen data tertentu untuk menjalankan tindakan medis sesuai perannya.
-
-
+Selain pembagian berdasarkan \textit{dataset}, data klinis dapat disegmentasi berdasarkan kategori fungsi klinis. Segmentasi ini digunakan untuk mengelompokkan data berdasarkan perannya dalam proses pelayanan medis, misalnya data diagnosis, terapi, atau anamnesis. Metadata fungsi klinis kemudian dapat digunakan sebagai dasar untuk menentukan relevansi akses, yaitu apakah suatu tenaga medis memerlukan segmen data tertentu untuk menjalankan tindakan medis sesuai peran dan fungsi datanya.
 
 Segmentasi data tidak diperinci lebih lanjut hingga tingkat \textit{field} atau variabel individual. Pemecahan hingga tingkat tersebut akan membuat mekanisme kontrol akses bergantung pada setiap elemen data yang tersimpan di dalam segmen. Pendekatan tersebut tidak dipilih karena kebutuhan akses tenaga medis pada rancangan ini dinilai berdasarkan fungsi klinis dari data, bukan berdasarkan setiap \textit{field} secara terpisah. Dengan demikian, kategori fungsi klinis dianggap sudah cukup untuk menentukan apakah suatu segmen data relevan dan perlu diakses oleh tenaga medis dalam konteks pelayanan tertentu.
 
@@ -1346,15 +1393,15 @@ Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada 
 	\caption{Perbandingan DecMed Awal dan Pengembangan pada Tugas Akhir}
 	\label{tab:perbandingan-decmed-ta}
 	\small
-	\begin{tabular}{|p{0.2\textwidth}|p{0.36\textwidth}|p{0.36\textwidth}|}
+	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
 		\hline
-		\textbf{Aspek}    & \textbf{DecMed awal}                                    & \textbf{Pengembangan pada TA ini}                                                               \\ \hline
-		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}         & Macaroons dengan \textit{caveats}                                                               \\ \hline
-		Delegasi akses    & Pasien perlu menerbitkan akses baru                     & Pemegang token dapat melakukan atenuasi terbatas pada token baru, kemudian mendelegasikan token \\ \hline
-		Granularitas data & Data klinis masih berupa \textit{blob} besar            & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}         \\ \hline
-		Penegakan akses   & Berdasarkan klaim pada token                            & Berdasarkan \textit{caveat} dan metadata segmen                                                 \\ \hline
-		Fokus penyimpanan & IOTA untuk metadata, IPFS untuk \textit{encrypted data} & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                 \\ \hline
-		PRE               & Membantu distribusi akses terenkripsi                   & Tetap menjadi titik verifikasi dan \textit{re-encryption}                                       \\ \hline
+		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                             \\ \hline
+		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                             \\ \hline
+		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan \\ \hline
+		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}       \\ \hline
+		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                               \\ \hline
+		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                               \\ \hline
+		PRE               & Membantu distribusi akses terenkripsi                    & Tetap menjadi titik verifikasi dan \textit{re-encryption}                                     \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -1390,17 +1437,23 @@ Berdasarkan hasil analisis solusi pada Subbab \ref{sec:analisis-solusi}, rancang
 
 Arsitektur solusi mempertahankan keseluruhan arsitektur kerangka kerja DecMed. Tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client} tetap berada pada ruang lingkup sebagaimana rancangan DecMed awal. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas rekam medis, dokter, perawat, apoteker dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
 
-Perubahan utama berada pada \textit{server} PRE dan struktur token akses. Pada rancangan ini, token akses diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil.
+Perubahan utama berada pada \textit{server} PRE, token otorisasi berbasis Macaroons, dan implementasi Move \textit{smart contract}. Pada rancangan ini, token akses diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil. Implementasi Move \textit{smart contract} disesuaikan untuk menyimpan metadata yang diperlukan oleh mekanisme segmentasi dan kontrol akses.
 
 Skema penyimpanan \textit{on-chain} dan \textit{off-chain} disesuaikan agar dapat mendukung kontrol akses granular dan prinsip \textit{need-to-know}. Penyimpanan data pada sistem yang diusulkan dibagi menjadi dua lapisan. Penyimpanan pada lapisan \textit{on-chain} disesuaikan dengan mengubah implementasi dari \textit{smart contract} yang digunakan pada DecMed awal. Sedangkan penyimpanan pada lapisan \textit{off-chain} disesuaikan dengan mengubah mekanisme penyimpanan data yang diproses pada \textit{client}.
 
-Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada gambar X
-Warna merah digunakan untuk merepresentasikan komponen yang diubah dari rancangan DecMed awal. \subsection{Rancangan Segmentasi Data RME}
+Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada gambar \ref{fig:arsitektur-solusi}. Warna merah digunakan untuk merepresentasikan komponen yang diubah dari rancangan DecMed awal. Legenda dari diagram arsitektur ini dapat dilihat pada lampiran \ref{lampiran:legenda-diagram-arsitektur-solusi}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=1\textwidth]{resources/chapter-3/rancangan/decmed_archi_changed.png}
+    \caption{Arsitektur Solusi (Dokumentasi Penulis)}
+    \label{fig:arsitektur-solusi}
+\end{figure} \subsection{Rancangan Segmentasi Data RME}
 \label{subsec:rancangan-segmentasi-data-rme}
 
 Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, rancangan ini memecah data RME menjadi beberapa unit data terenkripsi berdasarkan kategori fungsi klinis yang diimpretasikan dari dokumen KMK yang dibahas pada \ref{subsec:isi-rme}. Setiap unit data perlu memiliki identitas kategori yang dapat dikenali secara konsisten oleh sistem agar segmentasi data dapat digunakan dalam mekanisme kontrol akses granular. Identitas kategori tersebut digunakan pada proses validasi \textit{caveat} dan pemfilteran data saat diambil dari penyimpanan \textit{on-chain}. Oleh karena itu, setiap data fungsi klinis direpresentasikan dalam bentuk \textit{category} yang digunakan secara konsisten pada metadata dan implementasi sistem.
 
-Segmentasi diawali dengan membagi data berdasarkan dataset yang dibahas pada Subbab \ref{subsec:isi-rme}. Pemisahan ini memungkinkan agar data yang dapat diakses oleh tenaga medis sesuai dengan konteks pelayanan yang sedang diberikan kepada pasien. Data di dalam dataset kemudian dikategorikan berdasarkan jenis dokumentasinya, yaitu dokumentasi administratif dan dokumentasi klinis. Dokumentasi administratif terdapat pada setiap dataset, sesuai dengan dokumen KMK yang disebut pada \ref{subsec:isi-rme}. Terakhir, Data RME dibagi berdasarkan fungsi klinis seperti yang sudah dibahas pada Subbab \ref{subsec:analisis-segmentasi-data}. Penyimpanan data di dalam penyimpanan \textit{off-chain} dilakukan berdasarkan kombinasi kategori dataset dan fungsi klinis.
+Segmentasi diawali dengan membagi data berdasarkan \textit{dataset} yang dibahas pada Subbab \ref{subsec:isi-rme}. Pemisahan ini memungkinkan agar data yang dapat diakses oleh tenaga medis sesuai dengan konteks pelayanan yang sedang diberikan kepada pasien. Data di dalam \textit{dataset} kemudian dikategorikan berdasarkan jenis dokumentasinya, yaitu dokumentasi administratif dan dokumentasi klinis. Dokumentasi administratif terdapat pada setiap \textit{dataset}, sesuai dengan dokumen KMK yang disebut pada \ref{subsec:isi-rme}. Terakhir, Data RME dibagi berdasarkan fungsi klinis seperti yang sudah dibahas pada Subbab \ref{subsec:analisis-segmentasi-data}. Penyimpanan data di dalam penyimpanan \textit{off-chain} dilakukan berdasarkan kombinasi kategori \textit{dataset} dan fungsi klinis.
 
 Pada rancangan ini, istilah \textit{dataset category} digunakan untuk merepresentasikan kelompok dataset seperti rawat jalan atau laboratorium, sedangkan \textit{function category} merepresentasikan jenis fungsi klinis atau administratif di dalam masing-masing \textit{dataset}. Kombinasi kedua kategori tersebut membentuk unit segmentasi terkecil yang digunakan dalam proses kontrol akses.
 
@@ -1524,7 +1577,7 @@ Pembatasan waktu akses dilakukan dengan \textit{caveat} \texttt{expires\_before}
 
 Pembatasan jumlah delegasi dilakukan dengan \textit{caveat} \texttt{max\_delegation\_depth}. Nilai ini menyatakan jumlah maksimum delegasi yang masih diperbolehkan dari token terkait. Token awal dapat memiliki nilai \texttt{max\_delegation\_depth = 1} apabila penerima token diperbolehkan membuat satu token turunan. Token turunan kemudian dapat menambahkan \textit{caveat} \texttt{max\_delegation\_depth = 0} agar token tersebut tidak dapat didelegasikan lebih lanjut.
 
-Agar token tidak dapat digunakan oleh pihak yang hanya memperoleh salinan token tanpa memiliki identitas kriptografis yang sesuai, setiap permintaan akses harus disertai bukti kepemilikan alamat \textit{wallet}. Bukti tersebut direpresentasikan dengan \textit{caveat} \texttt{proof\_required = wallet\_signature}. Pada saat token digunakan, pemohon akses harus menandatangani konteks permintaan menggunakan kunci privat dari alamat yang menjadi subjek aktif pada rantai delegasi. \textit{Server} PRE kemudian memverifikasi tanda tangan tersebut sebelum memproses permintaan akses.
+Agar token tidak dapat digunakan oleh pihak yang hanya memperoleh salinan token tanpa memiliki identitas kriptografis yang sesuai, setiap permintaan akses harus disertai bukti kepemilikan alamat \textit{wallet}. Pada saat token digunakan, pemohon akses harus menandatangani konteks permintaan menggunakan kunci privat dari alamat yang menjadi subjek aktif pada rantai delegasi. \textit{Server} PRE kemudian memverifikasi tanda tangan tersebut sebelum memproses permintaan akses.
 
 Rancangan \textit{caveats} utama yang digunakan pada token Macaroon ditunjukkan pada Tabel \ref{tab:rancangan-caveats-macaroons-baru}.
 
@@ -1628,17 +1681,17 @@ expires_before = 2026-05-16T18:00:00
 max_delegation_depth = 1
 \end{lstlisting}
 
-Nilai \texttt{0xPASIEN}, \texttt{RME-001}, \texttt{0xDOKTER}, dan \texttt{0xLAB} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang dihasilkan oleh \textit{Hospital Client}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.
+Nilai \texttt{0xPASIEN}, \texttt{RME-001}, \texttt{0xDOKTER}, dan \texttt{0xLAB} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang di-\textit{generate}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.
 
-Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}.
+Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre}.
 
 Dengan rancangan tersebut, Macaroon tetap digunakan sesuai karakteristik utamanya, yaitu memungkinkan atenuasi token secara lokal. \textit{Server} PRE tidak perlu menerbitkan ulang token turunan, melainkan hanya memverifikasi token ketika digunakan. Token turunan juga tidak dapat memperluas hak akses karena seluruh \textit{caveat} pada token induk tetap ikut terbawa. Oleh karena itu, setiap delegasi hanya dapat menghasilkan hak akses yang sama atau lebih sempit dibandingkan token induknya.
 
-Rancangan ini juga mendukung prinsip \textit{least privilege}. Dokter dapat memiliki cakupan akses yang relatif luas untuk menjalankan tugas klinisnya, tetapi token turunan yang diberikan kepada petugas laboratorium atau petugas apotek dapat dibatasi hanya pada segmen yang relevan. Sebagai contoh, petugas laboratorium hanya dapat membaca segmen \texttt{PERMINTAAN\_PEMERIKSAAN} dan menulis segmen \texttt{HASIL\_PEMERIKSAAN} pada \textit{dataset} \texttt{LABORATORIUM}. Petugas tersebut tidak dapat membaca diagnosis, anamnesis, resep, atau segmen klinis lain yang tidak termasuk dalam \textit{caveat} token turunannya. \subsection{Rancangan Penegakan Otoritas pada PRE}
-\label{subsec:rancangan-penegakan-otoritas-pada-PRE}
+Rancangan ini juga mendukung prinsip \textit{least privilege}. Dokter dapat memiliki cakupan akses yang relatif luas untuk menjalankan tugas klinisnya, tetapi token turunan yang diberikan kepada petugas laboratorium atau petugas apotek dapat dibatasi hanya pada segmen yang relevan. Sebagai contoh, petugas laboratorium hanya dapat membaca segmen \texttt{PEMERIKSAAN\_PENUNJANG} pada \textit{dataset} \texttt{RAWAT\_JALAN} dan menulis segmen \texttt{LABORATORIUM} pada \textit{dataset} \texttt{LABORATORIUM}. Petugas tersebut tidak dapat membaca diagnosis, anamnesis, resep, atau segmen klinis lain yang tidak termasuk dalam \textit{caveat} token turunannya. \subsection{Rancangan Penegakan Otoritas}
+\label{subsec:rancangan-penegakan-otoritas}
 
-\subsubsection{Verifikasi \textit{Caveats} pada Macaroons}
-\label{subsubsec:verifikasi-caveats-pada-macaroons}
+\subsubsection{Verifikasi \textit{Caveats} Macaroons di PRE}
+\label{subsubsec:verifikasi-caveats-macaroons-di-pre}
 
 Ketika aktor penerima delegasi menggunakan token macaroons, \textit{Server} PRE bertindak sebagai titik penegakan kebijakan akses. \textit{Server} PRE tidak menerbitkan ulang token, tetapi memverifikasi token macaroons dan seluruh bukti yang menyertainya.
 
@@ -1660,17 +1713,21 @@ Nilai \texttt{max\_delegation\_depth} diperlakukan sebagai batas maksimum panjan
 
 Dengan mekanisme tersebut, token turunan tidak dapat memperluas hak akses token induk. Misalnya, apabila token dokter tidak memiliki akses terhadap \texttt{APOTEK}, maka dokter tidak dapat membuat token turunan yang valid untuk apoteker. Meskipun dokter menambahkan \textit{caveat} \texttt{read\_dataset\_in = [APOTEK]}, cakupan efektif token akan menjadi kosong karena batasan tersebut tidak termasuk dalam cakupan token induk. Demikian pula, apabila token induk hanya berlaku hingga pukul 18.00, token turunan yang mencoba menggunakan \texttt{expires\_before} setelah pukul 18.00 tetap tidak akan memperpanjang masa berlaku efektif token.
 
-Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses. \subsection{Rancangan Alur Akses dan Delegasi Macaroon}
+Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses.
+
+\subsubsection{Pencabutan Hak Akses Macaroon Delegasi}
+\label{subsubsec:pencabutan-hak-akses-macaroon-delegasi}
+ \subsection{Rancangan Alur Akses dan Delegasi Macaroon}
 \label{subsec:rancangan-alur-akses-dan-delegasi-macaroon}
 
 Fitur atenuasi \textit{offline} dirancang untuk menjawab kebutuhan delegasi akses antar aktor layanan kesehatan tanpa mengharuskan pasien menerbitkan ulang token setiap kali terjadi perpindahan tugas dalam proses pelayanan. Pada rancangan ini, istilah \textit{offline} tidak berarti bahwa seluruh proses akses data dilakukan tanpa koneksi ke \textit{Server} PRE atau internet. Istilah tersebut merujuk pada kemampuan pemegang token untuk menerbitkan token turunan dengan cara mengatenuasi token secara lokal pada aplikasi \textit{client}, tanpa melibatkan pasien dan \textit{server} PRE untuk menerbitkan token baru.
 
-Alur akses dan delegasi pada rancangan ini mengikuti alur pelayanan kesehatan yang umum terjadi pada proses rawat jalan dan rawat inap. Pasien terlebih dahulu diterima oleh petugas rekam medis. Setelah itu, petugas rekam medis memberikan akses kepada perawat untuk melakukan anamnesis dan pemeriksaan awal. Petugas rekam medis juga memberikan akses kepada dokter terkait agar dokter dapat memeriksa pasien dan menentukan tindakan medis berikutnya. Apabila dokter membutuhkan pemeriksaan penunjang, dokter dapat mendelegasikan akses terbatas kepada unit laboratorium. Setelah hasil pemeriksaan tersedia dan dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses terbatas kepada apoteker untuk memproses resep dan penyerahan obat. Rancangan alur tersebut ditunjukkan pada Gambar \ref{fig:alur-akses-delegasi}.
+Alur akses dan delegasi pada rancangan ini mengikuti alur pelayanan kesehatan yang umum terjadi pada proses rawat jalan dan rawat inap. Pasien terlebih dahulu diterima oleh petugas rekam medis. Setelah itu, petugas rekam medis memberikan akses kepada perawat untuk melakukan anamnesis dan pemeriksaan awal. Petugas rekam medis juga memberikan akses kepada dokter terkait agar dokter dapat memeriksa pasien dan menentukan tindakan medis berikutnya. Apabila dokter membutuhkan pemeriksaan penunjang, dokter dapat mendelegasikan akses terbatas kepada petugas laboratorium. Setelah hasil pemeriksaan tersedia dan dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses terbatas kepada apoteker untuk memproses resep dan penyerahan obat. Rancangan alur tersebut ditunjukkan pada Gambar \ref{fig:alur-akses-delegasi}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/analisis/flowdiagram-alur-akses.png}
-  \caption{\textit{Flow Diagram} Alur akses dan delegasi pada proses pelayanan pasien (Dokumentasi Penulis)}
+  \caption{\textit{Flow Diagram} Alur Akses dan Delegasi pada Proses Pelayanan Pasien (Dokumentasi Penulis)}
   \label{fig:alur-akses-delegasi}
 \end{figure}
 
@@ -1682,25 +1739,16 @@ Delegasi akses pada rancangan ini terdiri atas tiga tahap utama. Tahap pertama a
 
 Penerbitan token awal merupakan proses pemberian otorisasi pertama pada saat pasien memulai layanan kesehatan. Pada tahap ini, pasien tetap menjadi pihak yang mengendalikan pemberian akses awal terhadap data RME miliknya. Namun, karena \texttt{RootKey} Macaroon hanya dimiliki oleh \textit{Server} PRE, pasien tidak membuat token Macaroon secara langsung. Pasien memberikan persetujuan akses melalui \textit{Patient Client}, kemudian \textit{Server} PRE menerbitkan token awal berdasarkan persetujuan tersebut.
 
-Pada rancangan ini, token awal diberikan kepada petugas rekam medis. Petugas rekam medis berperan sebagai aktor awal yang menerima pasien dan menginisiasi proses pelayanan. Token ini tidak dimaksudkan agar petugas rekam medis dapat mengakses seluruh data klinis pasien secara bebas, melainkan sebagai token induk yang dapat digunakan untuk menurunkan akses kepada aktor layanan kesehatan yang relevan, yaitu perawat dan dokter. \textit{Sequence Diagram} yang menggambarkan alur penerbitan token akses awal dari Pasien ke Petugas Rekam Medis dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-awal-pasien-rm}. Alur penerbitan token awal kepada petugas rekam medis adalah sebagai berikut.
-
-\begin{enumerate}[leftmargin=*]
-  \item Pasien datang bertemu dengan petugas rekam medis.
-  \item Petugas rekam medis menerima pasien dan memperlihatkan QR yang memuat alamat IOTA petugas, kunci publik petugas, ID rumah sakit, serta kunci publik rumah sakit yang dibutuhkan dalam proses pemberian akses.
-  \item Pasien memberikan persetujuan akses awal melalui \textit{Patient Client}.
-  \item \textit{Patient Client} mengirimkan permintaan penerbitan token kepada \textit{Server} PRE.
-  \item \textit{Server} PRE memvalidasi identitas pasien, identitas petugas rekam medis, serta konteks layanan yang diminta.
-  \item \textit{Server} PRE menerbitkan Macaroon awal dengan \textit{caveats} yang mengikat token pada pasien, ID RME terkait, petugas rekam medis sebagai penerima awal, cakupan akses, masa berlaku, serta batas delegasi.
-  \item \textit{Server} PRE mencatat penerbitan token awal ke dalam penyimpanan \textit{on-chain}.
-  \item Token didistribusikan kepada petugas rekam medis melalui mekanisme yang dijelaskan pada Subbab \ref{subsec:proses-pemberian-macaroon-delegasi}.
-\end{enumerate}
+Pada rancangan ini, token awal diberikan kepada petugas rekam medis. Petugas rekam medis berperan sebagai aktor awal yang menerima pasien dan menginisiasi proses pelayanan. Token ini tidak dimaksudkan agar petugas rekam medis dapat mengakses seluruh data klinis pasien secara bebas, melainkan sebagai token induk yang dapat digunakan untuk menurunkan akses kepada aktor layanan kesehatan yang relevan, yaitu perawat dan dokter. \textit{Sequence Diagram} yang menggambarkan alur penerbitan token akses awal dari Pasien ke Petugas Rekam Medis dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-awal-pasien-rm}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\textwidth,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-delegasi awal pasien -> RM.png}
-  \caption{\textit{Sequence Diagram} Alur Penerbitan Token Awal dari Pasien ke Petugas Rekam Medis (Dokumentasi Penulis)}
+  \caption{\textit{Sequence Diagram} Rancangan Alur Penerbitan Token Awal dari Pasien ke Petugas Rekam Medis}
   \label{fig:seqdiag-delegasi-awal-pasien-rm}
 \end{figure}
+
+Alur penerbitan token awal kepada petugas rekam medis diawali dengan pasien bertemu dengan petugas rekam medis yang menerima permintaan pelayanan serta memperlihatkan QR untuk discan oleh pasien. Pasien memberikan persetujuan akses awal melalui \textit{Patient Client} setelah memilih konteks pelayanan (rawat jalan atau rawat inap). \textit{Patient Client} mengirimkan permintaan penerbitan token kepada \textit{Server} PRE. \textit{Server} PRE memverifikasi identitas pasien, identitas petugas rekam medis, serta konteks layanan yang diminta. Jika lolos proses verifikasi, \textit{Server} PRE menerbitkan Macaroon awal dengan \textit{caveats} yang mengikat token pada pasien, ID RME terkait, petugas rekam medis sebagai penerima awal, cakupan akses, masa berlaku, serta batas delegasi. \textit{Server} PRE mencatat penerbitan token awal ke dalam penyimpanan \textit{on-chain}. Token awal didistribusikan kepada petugas rekam medis melalui mekanisme yang dijelaskan pada Subbab \ref{subsubsec:proses-pemberian-dan-penggunaan-macaroon-delegasi} dengan memanfaatkan penyimpanan \textit{on-chain}.
 
 \subsubsection{Delegasi dari Petugas Rekam Medis kepada Perawat dan Dokter}
 \label{subsec:delegasi-dari-petugas-rekam-medis-kepada-perawat-dan-dokter}
@@ -1726,31 +1774,31 @@ Delegasi kepada perawat diberikan agar perawat dapat menulis segmen anamnesis da
   \small
   \begin{tabular}{|p{0.22\textwidth}|p{0.28\textwidth}|p{0.4\textwidth}|}
     \hline
-    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                                                               & \textbf{Cakupan Akses} \\ \hline
+    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                                                                                              & \textbf{Cakupan Akses} \\ \hline
 
     Perawat
                                & Melakukan anamnesis dan pemeriksaan awal pasien.
-                               & Menulis segmen anamnesis, pemeriksaan fisik, dan pemeriksaan psikologis pada \textit{dataset} rawat jalan.                                                                      \\ \hline
+                               & Menulis segmen anamnesis, pemeriksaan fisik, dan pemeriksaan psikologis pada \textit{dataset} rawat jalan.                                                                                                     \\ \hline
 
     Dokter
                                & Memeriksa pasien, membaca hasil pemeriksaan awal, menentukan tindakan medis, diagnosis, terapi, dan kebutuhan pemeriksaan penunjang.
-                               & Membaca dan menulis segmen klinis yang relevan pada \textit{dataset} rawat jalan, serta memiliki kemampuan delegasi lanjutan sesuai batas token induk.                          \\ \hline
+                               & Membaca dan menulis segmen klinis yang relevan pada \textit{dataset} rawat jalan atau rawat inap, serta memiliki kemampuan delegasi lanjutan untuk apoteker dan petugas laboratorium.                          \\ \hline
   \end{tabular}
 \end{table}
 
 \subsubsection{Delegasi dari Dokter kepada Laboratorium dan Apoteker}
 \label{subsec:delegasi-dari-dokter-kepada-laboratorium-dan-apoteker}
 
-Setelah dokter menerima token turunan dari petugas rekam medis, dokter dapat melakukan delegasi lanjutan apabila dibutuhkan dalam proses pelayanan. Delegasi lanjutan dilakukan kepada unit laboratorium apabila dokter membutuhkan pemeriksaan penunjang. Setelah dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses kepada apoteker untuk memproses resep dan penyerahan obat.
+Setelah dokter menerima token turunan dari petugas rekam medis, dokter dapat melakukan delegasi lanjutan apabila dibutuhkan dalam proses pelayanan. Delegasi lanjutan dilakukan kepada petugas laboratorium apabila dokter membutuhkan pemeriksaan penunjang. Setelah dokter menentukan terapi atau pengobatan, dokter juga dapat mendelegasikan akses kepada apoteker untuk memproses resep dan penyerahan obat.
 
 Delegasi lanjutan tetap dilakukan melalui mekanisme atenuasi lokal. Dokter tidak meminta \textit{Server} PRE untuk menerbitkan token baru, melainkan menambahkan \textit{caveats} baru pada token dokter. Karena \textit{caveats} bersifat \textit{append-only}, token untuk laboratorium atau apoteker tidak dapat memiliki cakupan akses yang lebih luas daripada token dokter.
 
-Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pemetaan-delegasi-dokter-lanjutan}. \textit{Sequence Diagram} yang menggambarkan alur delegasi lanjutan dari dokter kepada laboratorium dan apoteker dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-dokter-lab-apoteker}.
+Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pemetaan-delegasi-dokter-lanjutan}. \textit{Sequence Diagram} yang menggambarkan alur delegasi lanjutan dari dokter kepada petugas laboratorium dan apoteker dapat dilihat pada gambar \ref{fig:seqdiag-delegasi-dokter-lab-apoteker}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\textwidth,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-delegasi dokter -> lab apoteker.png}
-  \caption{\textit{Sequence Diagram} Rancangan Alur Delegasi Lanjutan dari Dokter ke Unit Laboratorium dan Apoteker}
+  \caption{\textit{Sequence Diagram} Rancangan Alur Delegasi Lanjutan dari Dokter ke Petugas Laboratorium dan Apoteker}
   \label{fig:seqdiag-delegasi-dokter-lab-apoteker}
 \end{figure}
 
@@ -1761,61 +1809,102 @@ Contoh pemetaan delegasi lanjutan dari dokter ditunjukkan pada Tabel \ref{tab:pe
   \small
   \begin{tabular}{|p{0.22\textwidth}|p{0.28\textwidth}|p{0.4\textwidth}|}
     \hline
-    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                                                                               & \textbf{Cakupan Akses} \\ \hline
+    \textbf{Penerima Delegasi} & \textbf{Tujuan Delegasi}                                                                        & \textbf{Cakupan Akses} \\ \hline
 
-    Unit Laboratorium
+    Petugas Laboratorium
                                & Melakukan pemeriksaan penunjang berdasarkan permintaan dokter dan mengunggah hasil pemeriksaan.
-                               & Membaca segmen permintaan pemeriksaan dan menulis segmen hasil pemeriksaan pada \textit{dataset} laboratorium.                                                                  \\ \hline
+                               & Membaca segmen pemeriksaan penunjang dan menulis pada \textit{dataset} laboratorium.                                     \\ \hline
 
     Apoteker
                                & Memproses resep, menyiapkan obat, dan mencatat penyerahan obat kepada pasien.
-                               & Membaca segmen resep dan data obat yang relevan, serta menulis status pengkajian resep, status resep, waktu penyiapan obat, dan waktu penyerahan obat.                          \\ \hline
+                               & Membaca segmen terapi dan menulis pada \textit{dataset} apotek.                                                          \\ \hline
   \end{tabular}
 \end{table}
 
-\subsubsection{Proses Pemberian Macaroon Delegasi}
-\label{subsec:proses-pemberian-macaroon-delegasi}
 
-Pada rancangan ini, proses pemberian Macaroon delegasi dilakukan melalui kombinasi antara atenuasi token secara lokal, enkripsi metadata delegasi, dan pencatatan akses secara \textit{on-chain}. Pemegang token, misalnya dokter, terlebih dahulu membuat token turunan dengan menambahkan \textit{caveats} baru pada Macaroon induk. Setelah Macaroon turunan terbentuk, token tersebut tidak disimpan dalam bentuk \textit{plaintext} pada penyimpanan \textit{on-chain}. Aplikasi \textit{client} milik \textit{delegator} membungkus token dan metadata delegasi ke dalam objek akses, kemudian mengenkripsinya menggunakan kunci publik milik \textit{delegatee} yang tersimpan pada IOTA. Hasil dari proses ini berupa metadata akses terenkripsi yang berisi token Macaroon turunan dan informasi pendukung yang hanya dapat didekripsi oleh \textit{delegatee} menggunakan kunci privat miliknya.
+\subsubsection{Proses Pemberian dan Penggunaan Macaroon Delegasi}
+\label{subsubsec:proses-pemberian-dan-penggunaan-macaroon-delegasi}
 
-Metadata akses terenkripsi tersebut kemudian dikirimkan ke \textit{smart contract} IOTA Move melalui transaksi \textit{on-chain}. \textit{Smart contract} mencatat metadata terenkripsi tersebut pada data akses milik \textit{delegatee}, misalnya pada daftar akses baca atau tulis. Selain menyimpan metadata akses, \textit{smart contract} juga berperan dalam memvalidasi prasyarat delegasi, seperti status aktif akun, kesesuaian rumah sakit antara \textit{delegator} dan \textit{delegatee}, serta status akses \textit{delegatee} terhadap pasien terkait.
+Pada rancangan ini, proses pemberian Macaroon delegasi dilakukan melalui kombinasi antara atenuasi token secara lokal, enkripsi metadata delegasi, dan pencatatan akses secara \textit{on-chain}. Mekanisme ini dirancang agar hak akses dapat dipersempit oleh pemegang token tanpa perlu meminta \textit{Server} PRE untuk menerbitkan ulang token baru. Dengan demikian, proses delegasi tidak memperluas hak akses yang dimiliki \textit{delegator}, melainkan hanya menurunkan atau membatasi hak akses tersebut sesuai kebutuhan \textit{delegatee}.
 
-Ketika \textit{delegatee} membuka aplikasi, \textit{client} mengambil metadata akses terenkripsi dari blockchain. Metadata tersebut kemudian didekripsi secara lokal menggunakan kunci privat PRE milik \textit{delegatee}. Apabila proses dekripsi berhasil, aplikasi memperoleh Macaroon turunan yang dapat digunakan sebagai token otorisasi ketika mengirim permintaan akses baca atau tulis ke \textit{Server} PRE. Pada tahap penggunaan token, \textit{Server} PRE melakukan verifikasi akses yang dilakukan oleh pengguna dengan \textit{caveats} yang terdapat pada token Macaroon.
+Secara umum, proses ini dibagi menjadi dua bagian. Bagian pertama adalah proses pembentukan dan pencatatan delegasi, yang dilakukan oleh \textit{delegator} melalui aplikasi \textit{client}. Bagian ini mencakup pembentukan Macaroon turunan, enkripsi metadata delegasi, serta pencatatan metadata akses terenkripsi pada \textit{state on-chain}. Alur proses tersebut ditunjukkan pada Gambar~\ref{fig:seq-pemberian-macaroon-delegasi}.
 
-Dengan mekanisme ini, IOTA digunakan sebagai media pencatatan dan distribusi metadata akses yang dapat diaudit, sedangkan kerahasiaan token tetap dilindungi melalui enkripsi. Oleh karena itu, node IOTA atau pihak lain yang dapat membaca \textit{state on-chain} tidak dapat langsung menggunakan token Macaroon karena token tersebut hanya tersedia dalam bentuk terenkripsi.
- \subsection{Rancangan Skenario Pengujian}
-\label{subsec:rancangan-skenario-pengujian}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{resources/chapter-3/rancangan/seqdiag-delegasi-tahap1-3.png}
+  \caption{Sequence diagram pembentukan dan pencatatan Macaroon delegasi}
+  \label{fig:seq-pemberian-macaroon-delegasi}
+\end{figure}
 
-ya tinggal uji   \chapter{Implementasi dan Evaluasi}
+Berdasarkan Gambar~\ref{fig:seq-pemberian-macaroon-delegasi}, proses delegasi diawali ketika \textit{delegator} memilih cakupan akses yang akan diberikan kepada \textit{delegatee}. Cakupan tersebut dapat mencakup pasien terkait, RME terkait, jenis hak akses, dataset, fungsi klinis, batas waktu akses, serta identitas penerima delegasi. Setelah cakupan akses ditentukan, aplikasi \textit{client} milik \textit{delegator} mengambil Macaroon yang dimiliki oleh \textit{delegator} dan menambahkan \textit{caveats} baru untuk membentuk Macaroon turunan. Penambahan \textit{caveats} ini merupakan proses atenuasi token secara lokal, sehingga hak akses pada token turunan menjadi lebih terbatas dibandingkan token induknya.
+
+Setelah Macaroon turunan terbentuk, token tersebut tidak disimpan secara langsung dalam bentuk \textit{plaintext} pada penyimpanan \textit{on-chain}. Aplikasi \textit{client} milik \textit{delegator} terlebih dahulu mengambil kunci publik milik \textit{delegatee} dari IOTA. Kunci publik tersebut kemudian digunakan untuk mengenkripsi objek akses yang berisi Macaroon turunan dan metadata pendukung delegasi. Dengan pendekatan ini, metadata akses yang dicatat pada blockchain hanya tersedia dalam bentuk terenkripsi, sehingga node IOTA atau pihak lain yang dapat membaca \textit{state on-chain} tidak dapat langsung menggunakan token Macaroon tersebut.
+
+Metadata akses terenkripsi kemudian dikirimkan ke \textit{smart contract} IOTA Move melalui transaksi \textit{on-chain}. Pada tahap ini, \textit{smart contract} tidak hanya mencatat metadata terenkripsi pada data akses milik \textit{delegatee}, tetapi juga memvalidasi prasyarat delegasi yang dapat diperiksa dari \textit{state on-chain}. Prasyarat tersebut meliputi status aktif akun, kesesuaian rumah sakit antara \textit{delegator} dan \textit{delegatee}, serta status akses \textit{delegator} terhadap pasien terkait. Apabila prasyarat tersebut valid, metadata akses terenkripsi disimpan pada daftar akses milik \textit{delegatee}. Sebaliknya, apabila prasyarat tidak terpenuhi, transaksi delegasi ditolak.
+
+Bagian kedua dari proses ini adalah pengambilan dan penggunaan Macaroon delegasi oleh \textit{delegatee}. Bagian ini terjadi setelah metadata akses terenkripsi berhasil dicatat pada blockchain. Alur pengambilan dan penggunaan Macaroon delegasi ditunjukkan pada Gambar~\ref{fig:seq-penggunaan-macaroon-delegasi}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{resources/chapter-3/rancangan/seqdiag-delegasi-tahap4-5.png}
+  \caption{Sequence diagram pengambilan dan penggunaan Macaroon delegasi}
+  \label{fig:seq-penggunaan-macaroon-delegasi}
+\end{figure}
+
+Berdasarkan Gambar~\ref{fig:seq-penggunaan-macaroon-delegasi}, ketika \textit{delegatee} membuka aplikasi, \textit{client} mengambil metadata akses terenkripsi yang tersimpan pada blockchain. Metadata tersebut kemudian didekripsi secara lokal menggunakan kunci privat milik \textit{delegatee}. Apabila proses dekripsi berhasil, aplikasi memperoleh Macaroon turunan beserta metadata pendukungnya. Macaroon turunan tersebut kemudian dapat digunakan sebagai token otorisasi ketika \textit{delegatee} mengirim permintaan akses baca atau tulis ke \textit{Server} PRE.
+
+Pada tahap penggunaan token, \textit{Server} PRE melakukan verifikasi terhadap Macaroon yang dikirimkan oleh \textit{delegatee}. Verifikasi ini mencakup pemeriksaan validitas token melalui mekanisme \textit{chained-HMAC} serta pemeriksaan seluruh \textit{caveats} yang melekat pada token. \textit{Caveats} tersebut diverifikasi terhadap konteks permintaan akses, seperti identitas pasien, RME terkait, jenis hak akses, dataset, fungsi klinis, waktu kedaluwarsa, dan identitas \textit{delegatee}. Apabila seluruh \textit{caveats} terpenuhi, permintaan akses diterima sesuai batas delegasi yang diberikan. Sebaliknya, apabila terdapat \textit{caveats} yang tidak terpenuhi, \textit{Server} PRE menolak permintaan akses tersebut.
+
+Dengan mekanisme ini, IOTA digunakan sebagai media pencatatan dan distribusi metadata akses yang dapat diaudit, sedangkan kerahasiaan token tetap dilindungi melalui enkripsi. Token Macaroon tidak tersedia dalam bentuk terbuka pada \textit{state on-chain}, sehingga pihak selain \textit{delegatee} tidak dapat langsung memanfaatkan metadata akses yang tercatat pada blockchain. Selain itu, karena pembatasan hak akses dibawa langsung oleh \textit{caveats} pada Macaroon, \textit{Server} PRE tetap dapat menegakkan batas delegasi pada saat token digunakan. 
+
+
+
+
+
+
+
+%
+   \chapter{Implementasi dan Evaluasi}
 \label{bab:implementasi-dan-evaluasi}
 
 \section{Lingkungan Implementasi}
 \label{sec:lingkungan-implementasi}
 
-Implementasi sistem dilakukan pada lingkungan prototipe yang merepresentasikan komponen utama DecMed, yaitu \textit{client} pasien, \textit{client} rumah sakit, \textit{client} kementerian, \textit{Server} PRE, penyimpanan \textit{off-chain} IPFS, Redis, IOTA \textit{Gas Station}, dan \textit{smart contract} IOTA Move pada jaringan IOTA Testnet. Lingkungan ini dipilih agar rancangan pada Bab \ref{chap:analisis-dan-rancangan} dapat diuji tanpa bergantung pada integrasi langsung dengan sistem informasi rumah sakit yang sesungguhnya.
+Implementasi sistem dilakukan pada lingkungan prototipe yang merepresentasikan komponen utama DecMed, yaitu \textit{patient client}, \textit{hospital client}, \textit{ministry client}, \textit{Server} PRE, penyimpanan \textit{off-chain} IPFS, Redis, IOTA \textit{Gas Station}, dan \textit{smart contract} IOTA Move pada jaringan IOTA Testnet. Lingkungan ini dipilih agar rancangan pada Bab \ref{chap:analisis-dan-rancangan} dapat diuji tanpa bergantung pada integrasi langsung dengan sistem informasi rumah sakit yang sesungguhnya.
 
-Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, serta pengamatan respons sistem ketika token Macaroon diterbitkan, diatenuasi, dan diverifikasi. Komponen pendukung yang membutuhkan ketersediaan jaringan, seperti kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada \textit{Virtual Private Server} (VPS). Sementara itu, \textit{smart contract} IOTA Move diunggah pada jaringan IOTA Testnet. Pembagian komponen implementasi tersebut dirangkum pada Tabel \ref{tab:lingkungan-implementasi}.
+Pada implementasi DecMed sebelumnya, semua komponen dijalankan pada lingkungan lokal. Semua \textit{client}, \textit{Server} PRE, Redis PRE, kluster IPFS, IOTA \textit{Gas Station}, dan jaringan IOTA jenis Localnet dijalankan langsung di komputer lokal. Perangkat lokal yang digunakan tidak cukup kuat untuk menjalankan semua komponen secara bersamaan. Oleh karena itu, dilakukan pembagian komponen implementasi tersebut ke dalam lingkungan lokal, VPS, dan jaringan IOTA Testnet.
 
-\begin{table}[!ht]
-	\centering
-	\caption{Komponen dan Lingkungan Implementasi Sistem}
-	\label{tab:lingkungan-implementasi}
-	\small
-	\begin{tabular}{|p{0.23\textwidth}|p{0.24\textwidth}|p{0.43\textwidth}|}
-		\hline
-		\textbf{Komponen}         & \textbf{Teknologi}           & \textbf{Peran}                                                                                                  \\ \hline
-		\textit{Patient Client}   & Tauri/Svelte                 & Registrasi pasien, pemindaian QR rumah sakit, pemberian akses awal, pembacaan RME, audit, dan pencabutan akses. \\ \hline
-		\textit{Hospital Client}  & Tauri/Svelte                 & Pembacaan dan penulisan segmen RME, pembuatan bukti \textit{wallet}, delegasi akses, dan atenuasi Macaroon.     \\ \hline
-		\textit{Ministry Client}  & Tauri/Svelte                 & Registrasi rumah sakit dan pengelolaan \textit{activation key}.                                                 \\ \hline
-		\textit{Server} PRE       & Rust Axum                    & Verifikasi token, penegakan \textit{caveats}, integrasi IPFS, Redis, IOTA Move, dan Umbral PRE.                 \\ \hline
-		IOTA Move                 & Move \textit{smart contract} & Penyimpanan metadata \textit{on-chain}, metadata akses, dan audit.                                              \\ \hline
-		IPFS                      & Kubo/IPFS \textit{gateway}   & Penyimpanan \textit{ciphertext} segmen RME secara \textit{off-chain}.                                           \\ \hline
-		Redis                     & Redis Docker                 & Penyimpanan \textit{nonce}, kunci akses PRE, dan kunci pencabutan akses.                                        \\ \hline
-		IOTA \textit{Gas Station} & IOTA \textit{Gas Station}    & Sponsor transaksi Move pada jaringan IOTA Testnet.                                                              \\ \hline
-	\end{tabular}
-\end{table}
+Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, serta pengamatan respons sistem ketika token Macaroon diterbitkan, diatenuasi, dan diverifikasi. Komponen pendukung yang membutuhkan ketersediaan jaringan, seperti kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada \textit{Virtual Private Server} (VPS). VPS digunakan untuk menjalankan komponen pendukung karena komponen tersebut tidak membutuhkan perubahan pada masa implementasi, namun dibutuhkan pada masa pengembangan. Pemanfaatan VPS juga meringankan beban perangkat lokal karena tidak perlu menjalankan komponen pendukung. Sementara itu, \textit{smart contract} IOTA Move diunggah pada jaringan IOTA Testnet. IOTA Testnet cukup dimanfaatkan karena sudah cukup untuk menyimulasikan jaringan IOTA sesungguhnya.
 
-Lingkungan tersebut belum ditujukan untuk penggunaan produksi. Seluruh alamat \textit{wallet}, data pasien, data RME, dan relasi antaraktor yang digunakan merupakan data uji untuk mengevaluasi rancangan kontrol akses granular, segmentasi data RME, dan delegasi akses berbasis Macaroons.
+Berikut adalah spesifikasi dari perangkat lokal yang digunakan untuk implementasi:
+\begin{itemize}
+	\item Sistem Operasi: Ubuntu 24.04.4, berjalan di lingkungan WSL2
+	\item CPU: Intel Core i5-11400H (6 core fisik, 12 logical thread), dengan 3 core fisik dan 6 logical thread dialokasikan untuk WSL2
+	\item Memori RAM: 16 GB (8 GB teralokasi untuk WSL2)
+	\item \textit{Tools}:
+	      \begin{itemize}
+		      \item Rust (\texttt{rustc 1.93.0}, \texttt{cargo 1.93.0})
+		      \item Node.js \texttt{v24.13.0}
+		      \item Docker \texttt{29.5.3}
+	      \end{itemize}
+\end{itemize}
+
+
+Sementara itu, spesifikasi VPS yang digunakan adalah sebagai berikut:
+\begin{itemize}
+	\item Sistem Operasi: Ubuntu 24.04.4 LTS
+	\item Jumlah vCPU: 8 vCPU
+	\item Memori RAM: 8 GB
+	\item \textit{Tools}:
+	      \begin{itemize}
+		      \item Docker: Docker \texttt{29.4.2}
+	      \end{itemize}
+\end{itemize}
+
+
+
+
+
  \section{Implementasi Sistem}
 \label{sec:implementasi-sistem}
 
@@ -1824,77 +1913,154 @@ Bagian ini menjelaskan implementasi dari rancangan solusi yang telah dijabarkan 
 \subsection{Implementasi Arsitektur Sistem}
 \label{subsec:implementasi-arsitektur-sistem}
 
-Implementasi arsitektur sistem mengikuti rancangan pada Subbab \ref{subsec:rancangan-arsitektur-solusi}. Komponen dasar DecMed dipertahankan, yaitu IOTA untuk metadata \textit{on-chain}, IPFS untuk penyimpanan \textit{ciphertext} \textit{off-chain}, dan \textit{Server} PRE untuk distribusi akses terhadap data terenkripsi. Perubahan utama pada implementasi ini berada pada lapisan otorisasi dan struktur data, yaitu data RME dibuat tersegmentasi, token akses diganti dengan Macaroons, dan \textit{Hospital Client} mendukung pembuatan token turunan melalui atenuasi lokal.
+Implementasi arsitektur sistem mengikuti rancangan pada Subbab \ref{subsec:rancangan-arsitektur-solusi}. Komponen dasar DecMed dipertahankan, yaitu IOTA untuk metadata \textit{on-chain}, IPFS untuk penyimpanan segmen data yang terenkripsi, dan \textit{Server} PRE sebagai penegak otoritas dan distribusi akses terhadap data terenkripsi. Perubahan utama pada implementasi ini berada pada lapisan otorisasi dan struktur data, yaitu data RME dibuat tersegmentasi, token akses diganti dengan Macaroons, dan \textit{Hospital Client} mendukung pembuatan token turunan melalui atenuasi lokal.
 
-Gambar \ref{fig:arsitektur-implementasi-final} menunjukkan arsitektur implementasi final. \textit{Patient Client} digunakan untuk memberikan akses awal, \textit{Hospital Client} digunakan untuk membaca atau menulis segmen RME serta membuat token turunan, sedangkan \textit{Ministry Client} tetap digunakan untuk kebutuhan registrasi rumah sakit. Seluruh permintaan akses terhadap RME melewati \textit{Server} PRE sebagai titik penegakan kebijakan akses.
+
+
+
+
+
+
+Selain perubahan pada alur otorisasi, implementasi juga memperbaiki pola pengorganisasian kode. Pada DecMed awal, beberapa bagian yang memiliki fungsi serupa ditulis berulang pada beberapa komponen. Pola tersebut membuat perubahan kode menjadi lebih sulit di-\textit{maintain} karena perubahan pada satu bagian perlu direplikasi pada komponen lain. Pada implementasi ini, bagian yang digunakan bersama dipisahkan menjadi \textit{crate} Rust agar dapat digunakan ulang oleh beberapa komponen.
+
+Dua \textit{crate} utama yang dibuat adalah \texttt{decmed-rme-segment} dan \texttt{decmed-macaroon-auth}.
+\texttt{decmed-rme-segment} berisi definisi kategori segmen RME, kategori fungsi klinis, serta struktur data metadata segmen RME. Sementara itu, \texttt{decmed-macaroon-auth} berisi implementasi token otorisasi berbasis Macaroons, termasuk pembuatan token, penambahan \textit{caveat}, atenuasi token, dan proses verifikasi. \textit{crate} ini memiliki dependensi utama yaitu \textit{crate} \texttt{macaroon-decmed} yang merupakan \textit{crate open source} dari implementasi \texttt{macaroons} pada Rust yang diperbaharui \textit{dependencynya}. \texttt{decmed-rme-segment} digunakan oleh \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Server} PRE, sedangkan \texttt{decmed-macaroon-auth} digunakan oleh \textit{Hospital Client} dan \textit{Server} PRE. \textit{Ministry Client} tidak memiliki dependensi langsung terhadap kedua \textit{crate} tersebut karena perannya tetap terbatas pada kebutuhan registrasi dan aktivasi rumah sakit. Hubungan antar komponen implementasi dan dependensi \textit{crate} bersama ditunjukkan pada \textit{package diagram} pada Gambar \ref{fig:package-diagram-implementasi} dengan legenda dari \textit{package diagram} tersebut dapat dilihat pada Lampiran \ref{lampiran:legenda-package-diagram}.
 
 \begin{figure}[!ht]
-	\centering
-	\fbox{
-		\begin{minipage}{0.88\textwidth}
-			\small
-			\centering
-			\begin{tabular}{c}
-				\textit{Patient Client} \\
-				\(\downarrow\) \\
-				\textit{scan QR}, permintaan akses awal \\
-				\(\downarrow\) \\
-				\textit{Server} PRE \(\longleftrightarrow\) Redis \\
-				\(\downarrow\) \hspace{1.2cm} \(\downarrow\) \\
-				IPFS \hspace{1.2cm} \textit{nonce}, kunci PRE, pencabutan akses \\
-				\(\downarrow\) \\
-				IOTA Move / IOTA \textit{Gas Station} \\
-				\(\uparrow\) \\
-				Macaroon token + \textit{wallet signature} \\
-				\(\uparrow\) \\
-				\textit{Hospital Client}: atenuasi lokal, baca/tulis segmen
-			\end{tabular}
-		\end{minipage}
-	}
-	\caption{Arsitektur implementasi final}
-	\label{fig:arsitektur-implementasi-final}
+    \centering
+    \includegraphics[width=0.8\textwidth]{resources/chapter-4/Package Diagram.png}
+    \caption{Package Diagram Implementasi}
+    \label{fig:package-diagram-implementasi}
 \end{figure}
 
-Alur implementasi akses data diawali dari \textit{client} yang mengirimkan permintaan akses beserta token Macaroon dan bukti kepemilikan \textit{wallet}. \textit{Server} PRE kemudian membaca metadata segmen RME dari IOTA untuk memperoleh informasi kategori data, lokasi CID pada IPFS, dan data kriptografis yang diperlukan. Apabila seluruh pemeriksaan otorisasi berhasil, \textit{Server} PRE mengambil segmen terenkripsi dari IPFS, menjalankan proses \textit{re-encryption}, lalu mengembalikan hasil yang dapat dibuka oleh pemohon akses.
-
-Dengan penempatan tersebut, \textit{Server} PRE berperan sebagai titik penegakan akses yang menghubungkan tiga hal, yaitu token Macaroon sebagai bukti kapabilitas, metadata IOTA sebagai sumber kebenaran kategori segmen, dan IPFS sebagai penyimpanan isi RME terenkripsi. Redis digunakan sebagai komponen pendukung untuk \textit{nonce}, kunci akses PRE, dan pencabutan akses. Arsitektur ini memungkinkan kontrol akses granular diterapkan tanpa mengubah prinsip dasar DecMed yang memisahkan metadata \textit{on-chain} dan data terenkripsi \textit{off-chain}.
+Dengan pemisahan tersebut, implementasi segmentasi data dan otorisasi tidak tersebar sebagai kode duplikatif pada setiap komponen. \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Server} PRE menggunakan \texttt{decmed-rme-segment} untuk menjaga konsistensi representasi kategori dataset, kategori fungsi, dan metadata segmen RME. Sementara itu, \textit{Hospital Client} dan \textit{Server} PRE menggunakan \texttt{decmed-macaroon-auth} untuk kebutuhan otorisasi berbasis Macaroons. Pada \textit{Hospital Client}, \textit{crate} tersebut digunakan untuk membaca kapabilitas token dan membuat token turunan melalui atenuasi lokal. Pada \textit{Server} PRE, \textit{crate} tersebut digunakan untuk menerbitkan token awal, memverifikasi \textit{caveat}, memeriksa cakupan akses terhadap segmen RME, dan mendukung mekanisme pencabutan akses.
  \subsection{Implementasi Segmentasi Data RME}
 \label{subsec:implementasi-segmentasi-data-rme}
 
-Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Dengan pendekatan ini, satu episode pelayanan tidak lagi direpresentasikan sebagai satu \textit{blob} besar, tetapi sebagai kumpulan segmen yang dapat diberi izin akses secara terpisah.
+Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Dengan pendekatan ini, satu episode pelayanan tidak lagi direpresentasikan sebagai satu \textit{blob} besar, tetapi sebagai kumpulan segmen yang dapat diberi izin akses secara terpisah. Setiap segmen data RME disimpan sebagai satu entri metadata pada penyimpanan \textit{on-chain} dan satu objek data pada penyimpanan \textit{off-chain}.
 
-Implementasi kategori dan metadata segmentasi ditempatkan pada crate \texttt{decmed-rme-segment}. Crate ini mendefinisikan \texttt{DatasetCategory}, \texttt{FunctionCategory}, dan \texttt{RmeSegmentMetadata}. Struktur \texttt{RmeSegmentMetadata} memuat \texttt{segment\_id}, \texttt{related\_rme\_id}, \texttt{dataset\_category}, \texttt{function\_category}, \texttt{ipfs\_cid}, \texttt{capsule}, \texttt{enc\_key\_and\_nonce}, hash integritas, dan informasi penyusun segmen. \texttt{related\_rme\_id} digunakan sebagai identitas episode atau kelompok RME yang menghubungkan beberapa segmen dalam satu konteks layanan.
+Sebagian besar logika segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan untuk kontrol akses granular data RME yang diakses. Implementasi \texttt{DatasetCategory} ditunjukkan pada Listing \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Listing \ref{lst:implementasi-function-category-segmentasi-rme}.
 
-Pada saat data RME disimpan, \textit{Hospital Client} membentuk objek segmen untuk setiap kategori fungsi yang relevan. Setiap segmen berisi data klinis atau administratif sesuai kategorinya, kemudian dienkripsi sebelum diunggah ke IPFS. Hasil unggahan IPFS berupa CID disimpan bersama metadata segmen pada IOTA. Metadata tersebut tidak disimpan sebagai enum native pada Move, melainkan diserialisasi sebagai JSON dan dikodekan dalam base64 pada field \texttt{metadata} milik \texttt{PatientMedicalMetadata}. Keputusan ini menjaga kompatibilitas dengan struktur penyimpanan DecMed yang masih berbentuk daftar metadata flat, tetapi tetap memungkinkan \textit{Server} PRE membaca kategori segmentasi dari isi metadata.
+\begin{lstlisting}[language=Rust, caption=Implementasi DatasetCategory pada \textit{crate} decmed-rme-segment, label={lst:implementasi-dataset-category-segmentasi-rme}]
+	pub enum DatasetCategory {
+		RAWAT_JALAN,
+		RAWAT_INAP,
+		LABORATORIUM,
+		APOTEK,
+	}
+\end{lstlisting}
 
-\begin{table}[!ht]
-	\centering
-	\caption{Implementasi Segmentasi Data RME}
-	\label{tab:implementasi-segmentasi-rme}
-	\small
-	\begin{tabular}{|p{0.30\textwidth}|p{0.60\textwidth}|}
-		\hline
-		\textbf{Elemen} & \textbf{Implementasi} \\ \hline
-		Unit segmentasi & Kombinasi \texttt{dataset\_category} dan \texttt{function\_category}. \\ \hline
-		Identitas episode & \texttt{related\_rme\_id}. \\ \hline
-		Isi data & \textit{Ciphertext} segmen di IPFS. \\ \hline
-		Metadata & JSON base64 di field \texttt{metadata} pada IOTA Move. \\ \hline
-		Penyusun segmen & \textit{Hospital Client}. \\ \hline
-		Penyimpan metadata & \textit{Server} PRE melalui pemanggilan fungsi Move. \\ \hline
-	\end{tabular}
-\end{table}
+\begin{lstlisting}[language=Rust, caption=Implementasi FunctionCategory pada \textit{crate} decmed-rme-segment, label={lst:implementasi-function-category-segmentasi-rme}]
+	pub enum FunctionCategory {
+		// ADMINISTRATIVE
+		ADMINISTRATIVE_GENERAL,
+	
+		// RAWAT_JALAN & RAWAT_INAP
+		ANAMNESIS,
+		PEMERIKSAAN_FISIK,
+		PEMERIKSAAN_PSIKOLOGIS,
+		RIWAYAT_PENGGUNAAN_OBAT,
+		RENCANA_RAWAT,
+		INSTRUKSI_MEDIK_DAN_KEPERAWATAN,
+		PEMERIKSAAN_PENUNJANG,
+		DIAGNOSIS,
+		INFORMED_CONSENT,
+		TERAPI,
+	
+		// RAWAT_INAP
+		PERENCANAAN_PEMULANGAN,
+	
+		// LABORATORIUM
+		LABORATORIUM,
+	
+		// APOTEK
+		PERESEPAN,
+		DISPENSING,
+	}
+\end{lstlisting}
 
-Implementasi ini membuat proses otorisasi dapat dilakukan pada tingkat segmen. Sebagai contoh, token yang hanya memuat izin baca untuk \texttt{LABORATORIUM} dan fungsi \texttt{HASIL\_PEMERIKSAAN} hanya dapat digunakan untuk meminta segmen yang sesuai dengan dua kategori tersebut. Permintaan terhadap segmen diagnosis, terapi, atau resep akan ditolak karena metadata segmennya tidak termasuk dalam cakupan efektif token.
 
-Segmentasi juga digunakan pada proses pembaruan data. Ketika aktor menulis data baru, \textit{Hospital Client} hanya membuat atau memperbarui segmen yang berada dalam cakupan izin tulis aktor tersebut. Dengan demikian, petugas laboratorium dapat menambahkan hasil pemeriksaan tanpa memperoleh akses tulis terhadap segmen diagnosis atau terapi.
- \subsection{Implementasi Token Otorisasi Berbasis Macaroons}
+Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat pada \textit{function category} \texttt{PERENCANAAN\_PEMULANGAN}. Segmen data ini hanya ada pada \textit{dataset category} \texttt{RAWAT\_INAP}, sedangkan pada \textit{dataset category} \texttt{RAWAT\_JALAN} tidak ada. Selain segmen tersebut, tidak ada perbedaan antara \textit{dataset category} rawat jalan dan rawat inap, sehingga bisa dimanfaatkan untuk implementasi kategori fungsi yang sama pada kedua \textit{dataset category} tersebut. Selain itu, \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL} ada pada setiap \textit{dataset category}.
+
+\subsubsection{Implementasi Segmentasi Metadata RME pada Penyimpanan \textit{On-Chain}}
+\label{subsec:implementasi-segmentasi-metadata-rme-onchain}
+
+Definisi struktur metadata segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentMetadata} yang merupakan representasi metadata segmen pada sisi Rust sebelum diserialisasi menjadi JSON base64 dan disimpan pada textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} yang sudah dijelaskan pada Listing \ref{lst:decmed-patient-medical-metadata}. Implementasi struktur \texttt{RmeSegmentMetadata} terdapat pada Listing \ref{lst:implementasi-segmentasi-metadata-rme}.
+Struktur tersebut sesuai dengan rancangan skema metadata segmen RME pada Lampiran Tabel \ref{tab:onchain-schema}.
+
+Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebih dahulu. Validasi tersebut mencakup pemeriksaan \textit{field} wajib, validitas kombinasi \texttt{dataset\_category} dan \texttt{function\_category}, format \texttt{segment\_id}, serta kesesuaian \texttt{integrity\_hash} terhadap data terenkripsi. Selain itu, metadata on-chain juga divalidasi agar tidak memuat isi medis dalam bentuk plaintext, karena IOTA hanya digunakan untuk menyimpan referensi dan metadata otorisasi, bukan konten klinis utama.
+
+\begin{lstlisting}[language=Rust, caption=Implementasi struktur RmeSegmentMetadata pada crate decmed-rme-segment, label={lst:implementasi-segmentasi-metadata-rme}]
+	pub struct RmeSegmentMetadata {
+		pub segment_id: String,
+		pub related_rme_id: String,
+		pub patient_address: String,
+		pub author_address: String,
+		pub hospital_cid: String,
+		pub dataset_category: DatasetCategory,
+		pub function_category: FunctionCategory,
+		pub ipfs_cid: String,
+		pub integrity_hash: String,
+		pub capsule: String,
+		pub enc_key_and_nonce: String,
+		pub created_at: String,
+		pub updated_at: Option<String>,
+	}
+\end{lstlisting}
+
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen dan diimplementasikan juga dengan memanfaatkan \textit{crate} \texttt{uuid}. Namun untuk \texttt{related\_rme\_id}, format dari ID tersebut ditambahkan tahun, sehingga format lengkapnya adalah \texttt{RME-YYYY-<UUID>}.
+
+\texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. Atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{hospital\_cid} merupakan \textit{identifier} fasyankes, menunjukkan bahwa segmen data tersebut dihasilkan oleh tenaga medis dari fasyankes tersebut.
+
+\texttt{ipfs\_cid} merupakan \textit{pointer} ke data segmen terenkripsi yang disimpan pada penyimpanan \textit{off-chain}. \texttt{integrity\_hash} merupakan hash SHA-256 dari data segmen terenkripsi yang digunakan untuk memverifikasi integritas data. \texttt{capsule} merupakan kapsul PRE yang diperlukan untuk proses \textit{re-encryption}. \texttt{enc\_key\_and\_nonce} merupakan kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data. \texttt{created\_at} dan \texttt{updated\_at} memuat informasi tanggal dan waktu ketika segmen tercatat dan diubah dengan CID baru dengan format \texttt{YYYY-MM-DD HH:MM:SS} serta informasi \textit{timezone}.
+
+\subsubsection{Implementasi Segmentasi Data RME pada Penyimpanan \textit{Off-Chain}}
+\label{subsec:implementasi-segmentasi-data-rme-offchain}
+
+Definisi struktur data segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentData} yang memuat struktur data segmen RME yang disimpan pada penyimpanan \textit{off-chain}. Implementasi struktur \texttt{RmeSegmentData} terdapat pada Listing \ref{lst:implementasi-segmentasi-data-rme}. Struktur tersebut sesuai dengan rancangan skema data segmen RME pada Lampiran Tabel \ref{tab:offchain-schema}.
+
+\begin{lstlisting}[language=Rust, caption=Implementasi struktur RmeSegmentData pada crate decmed-rme-segment, label={lst:implementasi-segmentasi-data-rme}]
+pub struct RmeSegmentData {
+    pub segment_id: String,
+    pub related_rme_id: String,
+    pub dataset_category: DatasetCategory,
+    pub function_category: FunctionCategory,
+    pub patient_address: String,
+    pub service_date: String,
+    pub author_address: String,
+    pub payload: Value,
+    pub payload_hash: String,
+}
+\end{lstlisting}
+
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen dan diimplementasikan juga dengan memanfaatkan \textit{crate} \texttt{uuid}. Namun untuk \texttt{related\_rme\_id}, format dari ID tersebut ditambahkan tahun, sehingga format lengkapnya adalah \texttt{RME-YYYY-<UUID>}.
+
+\texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen.
+
+\texttt{service\_date} merupakan tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} beserta informasi \textit{timezone}. \texttt{payload} berisi konten utama segmen dengan tipe data \texttt{Value} Rust, yang berarti bisa berisi format data apapun. Pada implementasi ini, \texttt{payload} berisi data dalam bentuk \texttt{freetext}. \texttt{payload\_hash} merupakan hash integritas dari konten \texttt{payload}.
+
+\texttt{payload\_hash} dihitung dari isi \texttt{payload} sebelum enkripsi, sedangkan \texttt{integrity\_hash} dihitung dari data segmen terenkripsi yang disimpan di IPFS. Dengan demikian, \texttt{payload\_hash} digunakan untuk integritas isi segmen sebelum enkripsi, sedangkan \texttt{integrity\_hash} digunakan untuk memverifikasi kesesuaian ciphertext IPFS dengan metadata pada IOTA.
+
+Pada saat data RME disimpan, \textit{Hospital Client} membentuk objek segmen untuk setiap kategori fungsi yang relevan. Setiap segmen berisi data klinis atau administratif sesuai kategorinya, kemudian dienkripsi sebelum diunggah ke IPFS. Hasil unggahan IPFS berupa CID disimpan bersama metadata segmen pada IOTA sebagai \texttt{ipfs\_cid}. Metadata tersebut disimpan dalam bentuk serialisasi JSON dan dikodekan dalam base64 pada field \texttt{metadata} milik \texttt{PatientMedicalMetadata}. Keputusan ini menjaga kompatibilitas dengan struktur penyimpanan DecMed yang masih berbentuk daftar metadata \textit{flat}, tetapi tetap memungkinkan \textit{Server} PRE membaca kategori segmentasi dari isi metadata. Pengkodean base64 tidak dimaksudkan sebagai mekanisme kerahasiaan, melainkan sebagai format serialisasi agar metadata JSON dapat disimpan sebagai \texttt{string} pada struktur Move.
+
+Pada implementasi ini, \texttt{RmeSegmentData} digunakan sebagai representasi segmen sebelum enkripsi pada sisi \textit{client}. Setelah \texttt{payload} dienkripsi, segmen direpresentasikan sebagai \texttt{ClientEncryptedRmeSegment} yang masih memuat \textit{ciphertext}. Struktur tersebut kemudian dikonversi menjadi \texttt{RmeSegmentMetadata} dengan menghilangkan isi \textit{ciphertext} dan mempertahankan metadata yang diperlukan untuk pencarian, validasi integritas, dan proses PRE. Metadata ini kemudian diserialisasi sebagai JSON base64 sebelum disimpan pada field \texttt{metadata} di IOTA.
+
+
+
+Implementasi ini membuat proses otorisasi dapat dilakukan pada tingkat segmen. Sebagai contoh, Macaroons yang hanya memuat izin baca untuk \texttt{RAWAT\_JALAN}, fungsi \texttt{PEMERIKSAAN\_PENUNJANG}, dan \texttt{related\_rme\_id} tertentu hanya dapat digunakan untuk meminta segmen yang berada pada episode dan kategori tersebut. Segmen lainnya seperti \texttt{DIAGNOSIS}, \texttt{TERAPI}, atau \texttt{PERESEPAN} tidak akan dikirimkan ke \textit{client} oleh \textit{Server} PRE karena metadata segmennya tidak termasuk dalam cakupan efektif Macaroon.
+
+Dengan pendekatan ini, IOTA berperan sebagai penyimpanan metadata dan sumber rujukan status segmen, sedangkan penegakan aturan akses berdasarkan kategori dilakukan oleh \textit{Server} PRE pada saat permintaan baca atau tulis diproses.
+
+Segmentasi juga digunakan pada proses pembaruan data. Ketika aktor menulis data baru, \textit{Hospital Client} hanya membuat atau memperbarui segmen yang berada dalam cakupan izin tulis aktor tersebut. Dengan demikian, petugas laboratorium dapat menambahkan hasil pemeriksaan ke segmen data laboratorium tanpa memperoleh akses tulis terhadap segmen diagnosis atau terapi. Pembaruan segmen direpresentasikan dengan perubahan metadata, misalnya perubahan \texttt{ipfs\_cid} dan pengisian \texttt{updated\_at}, tanpa memberikan hak tulis terhadap segmen lain di luar cakupan token. \subsection{Implementasi Token Otorisasi Berbasis Macaroons}
 \label{subsec:implementasi-token-macaroons}
 
-Token otorisasi diimplementasikan menggunakan Macaroons sebagaimana dirancang pada Subbab \ref{subsec:rancangan-token-macaroons}. Implementasi menggunakan crate lokal \texttt{macaroon-decmed} sebagai pembentuk dan pemverifikasi Macaroon, serta wrapper \texttt{decmed-macaroon-auth} untuk kebutuhan otorisasi DecMed, seperti parsing \textit{caveats}, perhitungan cakupan efektif, dan pembentukan konteks delegasi. Token awal diterbitkan oleh \textit{Server} PRE setelah pasien memberikan persetujuan akses kepada aktor penerima awal.
+Token otorisasi diimplementasikan menggunakan Macaroons sebagaimana dirancang pada Subbab \ref{subsec:rancangan-token-macaroons}. Implementasi menggunakan \textit{crate} Rust \texttt{macaroon-decmed} sebagai pembentuk dan pemverifikasi Macaroon, serta wrapper \texttt{decmed-macaroon-auth} untuk kebutuhan otorisasi DecMed, seperti parsing \textit{caveats}, perhitungan cakupan efektif, dan pembentukan konteks delegasi. Token awal diterbitkan oleh \textit{Server} PRE setelah pasien memberikan persetujuan akses kepada aktor penerima awal.
 
 Pada proses penerbitan token awal, \textit{Server} PRE membentuk Macaroon dengan kunci akar yang berasal dari \textit{environment variable} \texttt{MACAROON\_ROOT\_KEY}. Kunci ini hanya disimpan pada sisi \textit{server} dan tidak dikirimkan kepada \textit{client}, sehingga \textit{client} tidak dapat membuat token awal secara mandiri. Token turunan dibuat dengan menambahkan \textit{caveat} baru pada token yang sudah ada, bukan dengan membuat Macaroon baru dari kunci akar.
 
-Macaroon yang diterbitkan memuat \textit{caveats} utama yang mengikat akses terhadap pasien, RME, aktor awal, kategori data, hak baca atau tulis, masa berlaku, batas delegasi, bukti kepemilikan \textit{wallet}, dan rumah sakit. \textit{Caveats} tersebut direpresentasikan dalam bentuk pasangan kunci dan nilai agar dapat dievaluasi secara deterministik oleh \textit{Server} PRE. Daftar \textit{caveats} yang digunakan pada implementasi ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}.
+Terdapat 2 Macaroon yang diterbitkan dan digunakan sepanjang pelayanan pasien, yaitu token untuk aksi baca dan tulis. Token untuk aksi baca memuat \textit{caveat} \texttt{read\_dataset\_in} dan \texttt{read\_function\_in}, sedangkan token untuk aksi tulis memuat \textit{caveat} \texttt{write\_dataset\_in} dan \texttt{write\_function\_in}. Implementasi 2 jenis token ini diterapkan agar sesuai dengan implementasi DecMed sebelumnya yang memanfaatkan 2 jenis token sesuai jenis hak akses, sehingga proses integrasi dengan sistem DecMed sebelumnya dapat dilakukan dengan perubahan yang minimal.
+
+Macaroon yang diterbitkan memuat caveats utama yang mengikat akses terhadap pasien, RME, aktor awal, kategori data, hak baca atau tulis, masa berlaku, batas delegasi, dan \textit{identifier} rumah sakit. Adapun bukti kepemilikan wallet tidak disimpan sebagai caveat, tetapi dikirimkan sebagai bukti tanda tangan pada setiap permintaan akses. \textit{Caveats} tersebut direpresentasikan dalam bentuk pasangan kunci dan nilai agar dapat dievaluasi secara deterministik oleh \textit{Server} PRE. Daftar \textit{caveats} yang digunakan pada implementasi ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}.
 
 \begin{table}[!ht]
 	\centering
@@ -1903,29 +2069,35 @@ Macaroon yang diterbitkan memuat \textit{caveats} utama yang mengikat akses terh
 	\small
 	\begin{tabular}{|p{0.34\textwidth}|p{0.56\textwidth}|}
 		\hline
-		\textbf{\textit{Caveat}} & \textbf{Fungsi} \\ \hline
-		\texttt{patient\_address} & Mengikat token ke pasien tertentu. \\ \hline
-		\texttt{related\_rme\_id} & Membatasi token ke episode RME tertentu. \\ \hline
-		\texttt{root\_subject} & Menyatakan aktor penerima token awal. \\ \hline
-		\texttt{delegated\_by} & Menyatakan aktor pemberi delegasi. \\ \hline
-		\texttt{delegated\_to} & Menyatakan aktor penerima delegasi. \\ \hline
-		\texttt{read\_dataset\_in} & Membatasi dataset yang boleh dibaca. \\ \hline
-		\texttt{write\_dataset\_in} & Membatasi dataset yang boleh ditulis. \\ \hline
-		\texttt{read\_function\_in} & Membatasi fungsi klinis yang boleh dibaca. \\ \hline
-		\texttt{write\_function\_in} & Membatasi fungsi klinis yang boleh ditulis. \\ \hline
-		\texttt{expires\_before} & Menentukan batas waktu penggunaan token. \\ \hline
-		\texttt{max\_delegation\_depth} & Membatasi kedalaman delegasi. \\ \hline
-		\texttt{proof\_required} & Menentukan kebutuhan bukti \textit{wallet signature}. \\ \hline
-		\texttt{hospital\_id} & Mengikat token dengan rumah sakit tertentu. \\ \hline
+		\textbf{\textit{Caveat}}        & \textbf{Fungsi}                                          \\ \hline
+		\texttt{patient\_address}       & Mengikat token ke pasien tertentu.                       \\ \hline
+		\texttt{related\_rme\_id}       & Membatasi token ke episode RME tertentu.                 \\ \hline
+		\texttt{root\_subject}          & Menyatakan aktor penerima token awal.                    \\ \hline
+		\texttt{delegated\_by}          & Menyatakan aktor pemberi delegasi.                       \\ \hline
+		\texttt{delegated\_to}          & Menyatakan aktor penerima delegasi.                      \\ \hline
+		\texttt{read\_dataset\_in}      & Membatasi \textit{dataset category} yang boleh dibaca.   \\ \hline
+		\texttt{write\_dataset\_in}     & Membatasi \textit{dataset category} yang boleh ditulis.  \\ \hline
+		\texttt{read\_function\_in}     & Membatasi \textit{function category} yang boleh dibaca.  \\ \hline
+		\texttt{write\_function\_in}    & Membatasi \textit{function category} yang boleh ditulis. \\ \hline
+		\texttt{expires\_before}        & Menentukan batas waktu penggunaan token.                 \\ \hline
+		\texttt{max\_delegation\_depth} & Membatasi kedalaman delegasi.                            \\ \hline
+		\texttt{hospital\_id}           & Mengikat token dengan rumah sakit tertentu.              \\ \hline
 	\end{tabular}
 \end{table}
 
-Contoh token awal dapat memuat batasan pasien, RME, subjek awal, daftar dataset dan fungsi yang boleh dibaca atau ditulis, masa berlaku, batas kedalaman delegasi, kebutuhan \textit{wallet signature}, dan identitas rumah sakit. Pada token turunan, \textit{client} menambahkan \texttt{delegated\_by}, \texttt{delegated\_to}, serta \textit{caveat} dataset, fungsi, aksi, dan waktu yang lebih sempit.
+Contoh token awal dapat memuat batasan pasien, RME, subjek awal, daftar dataset dan fungsi yang boleh dibaca atau ditulis, masa berlaku, batas kedalaman delegasi, dan identitas rumah sakit. Pada token turunan, \textit{client} menambahkan \texttt{delegated\_by}, \texttt{delegated\_to}, serta \textit{caveat} \textit{dataset}, fungsi, jenis aksi, dan waktu yang lebih sempit.
 
 Pada setiap permintaan akses, \textit{client} mengirimkan token Macaroon bersama konteks permintaan. Konteks tersebut meliputi identitas RME yang diminta, aksi yang dilakukan, kategori segmen, waktu permintaan, dan bukti tanda tangan \textit{wallet}. \textit{Server} PRE kemudian memverifikasi tanda tangan Macaroon, mengevaluasi seluruh \textit{caveats}, dan menghitung cakupan akses efektif. Cakupan efektif dihitung sebagai irisan dari seluruh batasan dataset, fungsi, aksi, waktu, dan delegasi yang terdapat pada token. Token hanya dinyatakan valid apabila seluruh batasan terpenuhi secara bersamaan.
 
+Selain memverifikasi token Macaroon, \textit{Server} PRE juga menentukan aktor efektif yang menggunakan token. Apabila token belum mengalami delegasi, aktor efektif diambil dari \textit{caveat} \texttt{root\_subject}. Namun, apabila token merupakan hasil delegasi, aktor efektif ditentukan dari \textit{caveat} \texttt{delegated\_to} terakhir pada rantai delegasi. Aktor efektif ini kemudian digunakan sebagai dasar untuk memverifikasi bukti kepemilikan \textit{wallet} pada permintaan akses.
+
+Bukti kepemilikan \textit{wallet} tidak disimpan sebagai \textit{caveat} di dalam Macaroon, melainkan dikirimkan sebagai bagian dari konteks permintaan. Pada setiap permintaan akses, \textit{client} menandatangani konteks yang memuat identitas token, alamat pasien, identitas RME terkait, operasi yang dilakukan, kategori dataset, kategori fungsi klinis, identitas segmen apabila tersedia, dan waktu permintaan. \textit{Server} PRE memverifikasi tanda tangan tersebut terhadap aktor efektif sehingga token tidak hanya valid secara kriptografis, tetapi juga digunakan oleh pemilik \textit{wallet} yang sesuai.
+
+Pengendalian akses terhadap segmen RME dilakukan dengan mencocokkan metadata segmen yang diminta terhadap cakupan efektif token. Kategori dataset dan fungsi klinis pada segmen harus berada dalam batasan \textit{dataset} dan fungsi yang diperbolehkan oleh Macaroon. Dengan demikian, walaupun token masih valid secara waktu dan delegasi, akses tetap ditolak apabila segmen yang diminta berada di luar cakupan klinis yang diperbolehkan.
+
 Karena Macaroons bersifat \textit{append-only}, implementasi tidak menyediakan mekanisme untuk menghapus atau mengganti \textit{caveat} lama pada token turunan. Setiap batasan tambahan selalu mempersempit akses. Karakteristik ini dimanfaatkan untuk memastikan token hasil delegasi tidak dapat memiliki cakupan yang lebih luas daripada token asalnya.
- \subsection{Implementasi Atenuasi Offline dan Delegasi Akses}
+
+Implementasi juga mendukung pencabutan akses terhadap token Macaroon. Setiap token turunan menyimpan keterkaitan terhadap token asal melalui nilai \textit{hash} token induk. Informasi ini digunakan untuk mendukung pencabutan berantai, sehingga pencabutan terhadap token pada tingkat tertentu dapat berdampak pada token-token turunan yang bergantung kepadanya. Pemeriksaan pencabutan dilakukan oleh \textit{Server} PRE sebelum akses terhadap data terenkripsi diberikan. \subsection{Implementasi Atenuasi Offline dan Delegasi Akses}
 \label{subsec:implementasi-atenuasi-offline-delegasi}
 
 Atenuasi \textit{offline} diimplementasikan pada sisi \textit{Hospital Client} dengan menambahkan \textit{caveat} baru pada Macaroon yang sudah dimiliki aktor. Proses ini dijalankan melalui command Tauri pada \textit{client} dan tidak membutuhkan \texttt{MACAROON\_ROOT\_KEY}, karena Macaroons mendukung penurunan token melalui penambahan batasan lokal. Dengan demikian, aktor rumah sakit yang telah memperoleh token dapat membuat token turunan untuk aktor lain tanpa meminta \textit{Server} PRE menerbitkan token baru.
@@ -1942,7 +2114,7 @@ Delegasi juga dibatasi dengan \texttt{max\_delegation\_depth}. Pada saat token d
  \subsection{Implementasi Penegakan Otoritas pada Server PRE}
 \label{subsec:implementasi-penegakan-otoritas-pre}
 
-Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi wajib sebelum proses pengambilan data IPFS dan \textit{re-encryption}. Implementasi ini mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon, identitas RME, identitas segmen yang diminta, aksi akses, waktu permintaan, dan tanda tangan \textit{wallet} dari aktor aktif.
+Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi wajib sebelum proses pengambilan data IPFS dan \textit{re-encryption}. Implementasi ini mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon, identitas RME, identitas segmen yang diminta, aksi akses, waktu permintaan, dan tanda tangan \textit{wallet} dari aktor aktif.
 
 Tahap validasi dimulai pada middleware yang membaca \textit{Authorization Bearer Macaroon}. Middleware memverifikasi keaslian Macaroon melalui mekanisme chained-HMAC menggunakan \texttt{MACAROON\_ROOT\_KEY}. Setelah token dinyatakan autentik, \textit{Server} PRE mengevaluasi \textit{caveats} yang mengikat pasien dan RME, yaitu \texttt{patient\_address} dan \texttt{related\_rme\_id}. Token ditolak apabila nilai tersebut tidak sesuai dengan metadata RME yang diminta.
 
@@ -1959,15 +2131,15 @@ Validasi berikutnya dilakukan pada handler baca dan tulis segmen. Handler membac
 	\small
 	\begin{tabular}{|p{0.62\textwidth}|p{0.28\textwidth}|}
 		\hline
-		\textbf{Bagian} & \textbf{Status} \\ \hline
-		Validasi \textit{Bearer Macaroon} & Terimplementasi. \\ \hline
-		Validasi chained-HMAC & Terimplementasi. \\ \hline
-		Cakupan efektif dataset dan fungsi & Terimplementasi. \\ \hline
-		\textit{Wallet signature} untuk baca dan tulis segmen & Terimplementasi. \\ \hline
-		Pencabutan akses melalui Redis & Terimplementasi sebagian. \\ \hline
-		Header \texttt{delegation\_signature} & Belum terlihat diverifikasi. \\ \hline
+		\textbf{Bagian}                                                                      & \textbf{Status}                 \\ \hline
+		Validasi \textit{Bearer Macaroon}                                                    & Terimplementasi.                \\ \hline
+		Validasi chained-HMAC                                                                & Terimplementasi.                \\ \hline
+		Cakupan efektif dataset dan fungsi                                                   & Terimplementasi.                \\ \hline
+		\textit{Wallet signature} untuk baca dan tulis segmen                                & Terimplementasi.                \\ \hline
+		Pencabutan akses melalui Redis                                                       & Terimplementasi sebagian.       \\ \hline
+		Header \texttt{delegation\_signature}                                                & Belum terlihat diverifikasi.    \\ \hline
 		Endpoint legacy \texttt{PUT /medical-record} dan \texttt{GET /medical-record-update} & Masih menggunakan jalur legacy. \\ \hline
-		Validasi \textit{freshness timestamp} pada bukti \textit{wallet} & Belum terlihat jelas. \\ \hline
+		Validasi \textit{freshness timestamp} pada bukti \textit{wallet}                     & Belum terlihat jelas.           \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -1999,12 +2171,18 @@ Pada implementasi final, struktur penyimpanan metadata klinis di Move masih bers
 Fungsi pada \textit{smart contract} disusun untuk mendukung pembuatan metadata RME, penambahan segmen baru, pembaruan referensi segmen, pembacaan metadata, penyimpanan metadata akses personel, serta pencatatan audit delegasi. Operasi yang mengubah metadata hanya dapat dilakukan oleh aktor yang memiliki konteks akses tulis yang sah pada lapisan aplikasi. Pemeriksaan detail terhadap \textit{caveats} tetap dilakukan pada \textit{Server} PRE karena token Macaroon tidak disimpan sebagai sumber otoritas permanen pada IOTA.
 
 Pemisahan tersebut membuat \textit{smart contract} tetap berperan sebagai pencatat metadata dan status data, sedangkan keputusan otorisasi kontekstual dijalankan oleh \textit{Server} PRE. Dengan demikian, implementasi tidak perlu menyimpan seluruh aturan akses granular di \textit{on-chain}, tetapi tetap dapat memanfaatkan metadata \textit{on-chain} untuk memverifikasi kategori segmen yang diminta. Karena \texttt{related\_rme\_id} berada di dalam JSON metadata, relasi episode pada implementasi belum berbentuk struktur hierarkis native di Move.
- \subsection{Implementasi Antarmuka Client}
-\label{subsec:implementasi-antarmuka-client}
+ \subsection{Implementasi \textit{Client}}
+\label{subsec:implementasi-client}
 
-Antarmuka \textit{client} diimplementasikan untuk mendukung skenario akses utama pada sistem, yaitu penerbitan token awal oleh pasien, penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME. Antarmuka ini tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan yang dikirimkan ke \textit{Server} PRE.
+\textit{Client} diimplementasikan untuk mendukung skenario akses utama pada sistem, yaitu penerbitan token awal oleh pasien, penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME. \textit{Client} ini tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan yang dikirimkan ke \textit{Server} PRE. Implementasi yang dilakukan adalah pada \textit{Patient Client} dan \textit{Hospital Client}. \textit{Ministry Client} tidak memiliki implementasi khusus karena perannya tetap pada kebutuhan registrasi dan aktivasi rumah sakit.
+
+\subsubsection{Implementasi \textit{Patient Client}}
+\label{subsec:implementasi-patient-client}
 
 Pada sisi pasien, \textit{Patient Client} menyediakan proses pendaftaran, pemindaian QR rumah sakit, pemilihan konteks layanan, pemberian akses awal, pembacaan RME, serta tampilan audit dan pencabutan akses. Ketika pasien memberikan akses awal, pasien memilih RME yang akan dibagikan, aktor penerima, cakupan kategori data, hak akses, dan masa berlaku. Informasi tersebut dikirimkan ke \textit{Server} PRE untuk diterbitkan sebagai token Macaroon awal.
+
+\subsubsection{Implementasi \textit{Hospital Client}}
+\label{subsec:implementasi-hospital-client}
 
 Pada sisi rumah sakit, \textit{Hospital Client} menampilkan daftar RME dan segmen yang dapat diakses berdasarkan token yang dimiliki. \textit{Client} menyediakan command Tauri untuk membaca kapabilitas akses saat ini, menulis segmen baru, membaca daftar metadata RME yang dapat diakses, dan mengambil payload segmen. Command yang digunakan mencakup \texttt{get\_current\_access\_capabilities}, \texttt{new\_medical\_record\_segment}, \texttt{get\_accessible\_medical\_record\_metadata}, dan \texttt{get\_medical\_record\_payload}. Ketika aktor membuka segmen tertentu, \textit{client} menyertakan token Macaroon, metadata permintaan, dan tanda tangan \textit{wallet}. Jika aktor memiliki hak tulis, antarmuka menyediakan formulir untuk menambahkan atau memperbarui segmen yang sesuai dengan kategori aksesnya.
 
@@ -2017,10 +2195,10 @@ Untuk delegasi, antarmuka menyediakan pilihan penerima token turunan dan batasan
 	\small
 	\begin{tabular}{|p{0.28\textwidth}|p{0.62\textwidth}|}
 		\hline
-		\textbf{Client} & \textbf{Fitur} \\ \hline
-		\textit{Patient Client} & Pemindaian QR rumah sakit, pemilihan konteks layanan, pembuatan akses awal, pembacaan RME, audit akses, dan pencabutan akses. \\ \hline
+		\textbf{Client}          & \textbf{Fitur}                                                                                                                                                                                                                                                               \\ \hline
+		\textit{Patient Client}  & Pemindaian QR rumah sakit, pemilihan konteks layanan, pembuatan akses awal, pembacaan RME, audit akses, dan pencabutan akses.                                                                                                                                                \\ \hline
 		\textit{Hospital Client} & Pembacaan kapabilitas akses, penulisan segmen RME, pembacaan daftar episode, pembacaan payload segmen, pembuatan \textit{wallet proof}, pembuatan delegated access, dan pemisahan tampilan berdasarkan subrole admin, dokter, perawat, petugas laboratorium, serta apoteker. \\ \hline
-		\textit{Ministry Client} & Registrasi rumah sakit dan pengelolaan \textit{activation key}. \\ \hline
+		\textit{Ministry Client} & Registrasi rumah sakit dan pengelolaan \textit{activation key}.                                                                                                                                                                                                              \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -2058,14 +2236,13 @@ Ringkasan hasil pengujian otomatis dapat dilihat pada Tabel \ref{tab:pengujian-u
 	\small
 	\begin{tabular}{|p{0.29\textwidth}|p{0.25\textwidth}|p{0.36\textwidth}|}
 		\hline
-		\textbf{Komponen} & \textbf{Perintah} & \textbf{Hasil} \\ \hline
-		\texttt{decmed-rme-segment} & \texttt{cargo check} & Lulus. \\ \hline
-		\texttt{decmed-rme-segment} & \texttt{cargo test} & Gagal kompilasi test karena import \texttt{serde\_json::json} belum tersedia. \\ \hline
-		\texttt{decmed-macaroon-auth} & \texttt{cargo test} & 40 test lulus. \\ \hline
-		\texttt{proxy-reencryption} & \texttt{cargo test} & 14 test lulus. \\ \hline
-		\textit{Hospital Client} Tauri & \texttt{cargo test} & 12 test lulus. \\ \hline
-		\textit{Patient Client} Tauri & \texttt{cargo test} & 4 test lulus. \\ \hline
-		IOTA Move & \texttt{iota move test}\newline\texttt{--skip-fetch-}\newline\texttt{latest-git-deps} & Build berhasil, 0 unit test Move. \\ \hline
+		\textbf{Komponen}              & \textbf{Perintah}                                                                     & \textbf{Hasil}                    \\ \hline
+		\texttt{decmed-rme-segment}    & \texttt{cargo test}                                                                   & Lulus.                            \\ \hline
+		\texttt{decmed-macaroon-auth}  & \texttt{cargo test}                                                                   & 40 test lulus.                    \\ \hline
+		\texttt{proxy-reencryption}    & \texttt{cargo test}                                                                   & 14 test lulus.                    \\ \hline
+		\textit{Hospital Client} Tauri & \texttt{cargo test}                                                                   & 12 test lulus.                    \\ \hline
+		\textit{Patient Client} Tauri  & \texttt{cargo test}                                                                   & 4 test lulus.                     \\ \hline
+		IOTA Move                      & \texttt{iota move test}\newline\texttt{--skip-fetch-}\newline\texttt{latest-git-deps} & Build berhasil, 0 unit test Move. \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -2073,33 +2250,33 @@ Hasil tersebut menunjukkan bahwa sebagian besar komponen utama berhasil melewati
  \subsection{Pengujian Skenario Akses dan Delegasi}
 \label{subsec:pengujian-skenario-akses-delegasi}
 
-Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan alur layanan klinis yang telah dianalisis. Skenario dimulai dari pasien yang memberikan akses awal kepada petugas rekam medis atau dokter, kemudian akses tersebut digunakan untuk membaca atau memperbarui segmen RME sesuai kewenangan aktor.
+Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan rancangan skenario pada Tabel \ref{tab:rancangan-skenario-uji-aktor}. Pengujian disusun per aktor agar pembuktian \textit{least privilege} terlihat dari operasi yang diterima maupun operasi yang ditolak.
 
-Skenario pertama menguji akses awal dari pasien kepada dokter. Dokter menerima token dengan cakupan data klinis yang diperlukan untuk pelayanan. Ketika dokter meminta segmen anamnesis, pemeriksaan fisik, diagnosis, atau terapi yang termasuk dalam cakupan token, \textit{Server} PRE menerima permintaan dan melanjutkan proses \textit{re-encryption}. Ketika dokter meminta segmen yang tidak tercantum pada token, permintaan ditolak.
+Skenario positif menguji bahwa aktor dapat menjalankan operasi sesuai cakupan token. Pasien dapat menerbitkan akses awal, petugas rekam medis dan dokter dapat melakukan delegasi terbatas, perawat dapat menulis segmen pemeriksaan awal, dokter dapat mengelola segmen klinis, petugas laboratorium dapat membaca permintaan dan menulis hasil pemeriksaan, serta apoteker dapat membaca resep dan menulis status \textit{dispensing}. Pada skenario tersebut, \textit{Server} PRE melanjutkan proses \textit{re-encryption} setelah Macaroon, \textit{wallet proof}, dataset, fungsi klinis, aksi, dan episode RME sesuai.
 
-Skenario kedua menguji delegasi dari dokter kepada petugas laboratorium. Dokter membuat token turunan dengan cakupan terbatas pada dataset \texttt{LABORATORIUM} dan fungsi yang berkaitan dengan pemeriksaan penunjang. Petugas laboratorium dapat membaca permintaan pemeriksaan dan menulis hasil pemeriksaan, tetapi tidak dapat membaca diagnosis, terapi, atau resep. Hasil ini menunjukkan bahwa token turunan memiliki cakupan yang lebih sempit daripada token induk.
+Skenario negatif menguji penolakan akses ketika aktor mencoba melampaui hak yang didelegasikan. Pengujian mencakup perawat yang mencoba menulis terapi, petugas laboratorium yang mencoba membaca diagnosis, apoteker yang mencoba membaca anamnesis atau hasil laboratorium, penggunaan token kedaluwarsa, penggunaan token oleh alamat \textit{wallet} yang tidak sesuai, serta delegasi melebihi \texttt{max\_delegation\_depth}. Pada seluruh skenario negatif, perilaku yang diharapkan adalah \textit{Server} PRE menolak permintaan sebelum data terenkripsi diambil dan sebelum proses \textit{re-encryption} dijalankan.
 
-Skenario ketiga menguji delegasi dari dokter kepada apoteker. Token turunan untuk apoteker dibatasi pada dataset \texttt{APOTEK} dan fungsi yang berkaitan dengan peresepan atau \textit{dispensing}. Apoteker dapat membaca informasi resep yang relevan dan memperbarui status penyerahan obat, tetapi tidak dapat membaca segmen laboratorium atau riwayat klinis lain yang tidak termasuk dalam token.
-
-Skenario negatif dilakukan dengan memanipulasi kondisi akses. Pengujian mencakup penggunaan token kedaluwarsa, penggunaan token oleh alamat \textit{wallet} yang tidak sesuai, penambahan kategori akses di luar token induk, serta delegasi melebihi \texttt{max\_delegation\_depth}. Pada seluruh skenario negatif, perilaku yang diharapkan adalah \textit{Server} PRE menolak permintaan sebelum data terenkripsi diambil dan sebelum proses \textit{re-encryption} dijalankan.
-
-Ringkasan skenario pengujian akses dan delegasi ditunjukkan pada Tabel \ref{tab:pengujian-skenario-akses-delegasi}.
+Ringkasan pengujian manual ditunjukkan pada Tabel \ref{tab:pengujian-skenario-akses-delegasi}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Ringkasan Pengujian Manual Skenario Akses dan Delegasi}
+	\caption{Ringkasan Pengujian Manual Skenario Akses dan Delegasi per Aktor}
 	\label{tab:pengujian-skenario-akses-delegasi}
 	\small
-	\begin{tabular}{|p{0.08\textwidth}|p{0.38\textwidth}|p{0.29\textwidth}|p{0.15\textwidth}|}
+	\begin{tabular}{|p{0.08\textwidth}|p{0.18\textwidth}|p{0.35\textwidth}|p{0.22\textwidth}|p{0.10\textwidth}|}
 		\hline
-		\textbf{ID} & \textbf{Skenario} & \textbf{Ekspektasi} & \textbf{Status} \\ \hline
-		S01 & Token valid digunakan untuk membaca segmen sesuai cakupan. & Permintaan diterima. & Berhasil. \\ \hline
-		S02 & Token digunakan tanpa \textit{wallet signature}. & PRE memberi challenge atau menolak permintaan. & Berhasil. \\ \hline
-		S03 & Token kedaluwarsa digunakan. & Permintaan ditolak. & Berhasil. \\ \hline
-		S04 & Laboratorium mencoba membaca dataset atau fungsi di luar \textit{caveat}. & Data difilter atau permintaan ditolak. & Berhasil. \\ \hline
-		S05 & Delegasi melebihi kedalaman yang diperbolehkan. & Token ditolak. & Berhasil. \\ \hline
-		S06 & Laboratorium atau apoteker membuka daftar RME. & Hanya segmen sesuai cakupan yang tampil. & Berhasil. \\ \hline
-		S07 & Endpoint legacy digunakan. & Endpoint masih memakai jalur role/purpose. & Parsial. \\ \hline
+		\textbf{ID} & \textbf{Aktor}       & \textbf{Skenario}                                                                       & \textbf{Ekspektasi}                                                              & \textbf{Status} \\ \hline
+		S01         & Pasien               & Pasien memberikan token akses awal untuk satu episode RME.                              & Token terbit dan terikat pada pasien, episode RME, penerima, serta masa berlaku. & Berhasil.       \\ \hline
+		S02         & Petugas Rekam Medis  & Petugas rekam medis mendelegasikan akses pemeriksaan awal kepada perawat.               & Token turunan dibuat dengan cakupan lebih sempit daripada token induk.           & Berhasil.       \\ \hline
+		S03         & Perawat              & Perawat menulis segmen anamnesis pada episode RME yang didelegasikan.                   & Segmen tersimpan sesuai dataset dan fungsi klinis yang diizinkan.                & Berhasil.       \\ \hline
+		S04         & Perawat              & Perawat mencoba menulis segmen terapi.                                                  & Permintaan ditolak karena fungsi terapi tidak termasuk cakupan token.            & Berhasil.       \\ \hline
+		S05         & Dokter               & Dokter membaca dan menulis diagnosis serta terapi.                                      & Permintaan diterima karena cakupan token sesuai.                                 & Berhasil.       \\ \hline
+		S06         & Dokter               & Dokter mendelegasikan akses terbatas kepada petugas laboratorium.                       & Token turunan laboratorium dibuat tanpa memperluas hak token induk.              & Berhasil.       \\ \hline
+		S07         & Petugas Laboratorium & Petugas laboratorium membaca permintaan dan menulis hasil pemeriksaan.                  & Operasi diterima pada segmen laboratorium yang didelegasikan.                    & Berhasil.       \\ \hline
+		S08         & Petugas Laboratorium & Petugas laboratorium mencoba membaca diagnosis pasien.                                  & Permintaan ditolak atau segmen diagnosis tidak ditampilkan.                      & Berhasil.       \\ \hline
+		S09         & Apoteker             & Apoteker membaca resep dan menulis status \textit{dispensing}.                          & Operasi diterima pada segmen apotek yang didelegasikan.                          & Berhasil.       \\ \hline
+		S10         & Apoteker             & Apoteker mencoba membaca anamnesis atau hasil laboratorium.                             & Permintaan ditolak atau data tidak ditampilkan.                                  & Berhasil.       \\ \hline
+		S11         & Aktor Penerima Akses & Token kedaluwarsa, token tanpa \textit{wallet proof}, atau delegasi berlebih digunakan. & \textit{Server} PRE menolak permintaan sebelum \textit{re-encryption}.           & Berhasil.       \\ \hline
 	\end{tabular}
 \end{table}
   \section{Evaluasi}
@@ -2151,21 +2328,17 @@ Berdasarkan evaluasi tersebut, rancangan yang diimplementasikan dapat menjawab r
  \subsection{Keterbatasan Implementasi}
 \label{subsec:keterbatasan-implementasi}
 
-Implementasi pada Tugas Akhir ini memiliki beberapa keterbatasan. Keterbatasan tersebut perlu dicatat agar hasil evaluasi tidak ditafsirkan sebagai kesiapan sistem untuk digunakan langsung pada lingkungan produksi.
+Implementasi pada Tugas Akhir ini memiliki beberapa keterbatasan sebagai berikut:
 
 \begin{enumerate}
-	\item Implementasi dilakukan dalam lingkungan komputer lokal, VPS, dan jaringan IOTA Testnet. Semua aplikasi \textit{client} dan \textit{Server} PRE dijalankan langsung di komputer lokal. VPS menjalankan kluster IPFS dan IOTA \textit{Gas Station}. \textit{Smart contract} yang digunakan diunggah ke jaringan IOTA Testnet.
+	\item Implementasi dilakukan dalam lingkungan komputer lokal, VPS, dan jaringan IOTA Testnet.
+	      \begin{itemize}
+		      \item Semua \textit{client} dan \textit{Server} PRE dijalankan langsung di komputer lokal.
+		      \item VPS menjalankan kluster IPFS dan IOTA \textit{Gas Station}.
+		      \item \textit{Smart contract} yang digunakan diunggah ke jaringan IOTA Testnet.
+	      \end{itemize}
 	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
-	\item Metadata segmentasi pada IOTA Move masih disimpan sebagai JSON base64 di dalam \texttt{PatientMedicalMetadata.metadata}. Struktur \textit{on-chain} belum menyediakan field native atau hierarki episode untuk \texttt{dataset\_category}, \texttt{function\_category}, dan \texttt{related\_rme\_id}.
-	\item Protokol komunikasi eksternal, seperti pengiriman data nyata antar rumah sakit, tidak sepenuhnya diimplementasikan. Interaksi antarmuka masih berbasis prototipe dan data uji.
-	\item Tidak seluruh kemungkinan penyalahgunaan dan serangan keamanan diuji secara komprehensif. Pengujian difokuskan pada skenario akses dan delegasi yang menjadi ruang lingkup Tugas Akhir.
-	\item Pengelolaan pencabutan akses sudah memiliki dukungan Redis \textit{revocation key} dan fungsi pencabutan, tetapi belum seluruh alur revocation teruji end-to-end secara menyeluruh.
-	\item Header \texttt{delegation\_signature} sudah muncul pada alur client, tetapi belum terlihat diverifikasi secara eksplisit oleh \textit{Server} PRE. Enforcement utama yang berjalan adalah validasi Macaroon, cakupan efektif, aktor aktif, \textit{wallet signature}, dan pencabutan akses.
-	\item Endpoint legacy untuk penulisan dan pembacaan pembaruan RME masih menggunakan jalur role/purpose lama, sehingga belum seluruh endpoint memiliki granularitas segmentasi yang sama.
-	\item Validasi kesegaran waktu atau \textit{timestamp freshness} pada bukti \textit{wallet} belum terlihat jelas. Hal ini perlu diperkuat agar bukti tanda tangan tidak dapat digunakan ulang di luar jendela waktu yang wajar.
-	\item Pengujian pada crate \texttt{decmed-rme-segment} masih memiliki kendala kompilasi test akibat import \texttt{serde\_json::json} yang belum tersedia, meskipun \texttt{cargo check} pada library berhasil.
-	\item Implementasi hanya mendukung beberapa kategori aktor utama, yaitu petugas rekam medis, dokter, laboratorium, dan apoteker sesuai alur sistem rujukan sederhana. Aktor eksternal atau lintas institusi untuk studi kasus yang lebih kompleks belum dicakup.
-	\item Integrasi dengan IPFS, IOTA, dan \textit{wallet} kriptografi dibatasi pada pustaka dan modul pengujian yang tersedia secara \textit{open source}.
+	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat fungsi. Kemudian data per \textit{function category} RME disimpan sebagai \textit{freetext}.
 \end{enumerate}
 
 Keterbatasan tersebut menunjukkan bahwa implementasi masih berada pada tingkat pembuktian konsep. Pengembangan berikutnya perlu memperluas cakupan pengujian keamanan, memperjelas mekanisme pencabutan akses, memperkuat verifikasi bukti delegasi dan \textit{wallet proof}, serta menguji sistem pada lingkungan yang lebih dekat dengan operasional layanan kesehatan.
@@ -2184,10 +2357,10 @@ Keterbatasan tersebut menunjukkan bahwa implementasi masih berada pada tingkat p
 \chapter{Metadata Rekam Medis Elektronik}
 \label{lampiran:metadata-rme}
 
-Tabel berikut menjabarkan metadata variabel Rekam Medis Elektronik yang diadopsi dari KMK No. HK.01.07/MENKES/1423/2022 untuk dataset Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek \autocite{kemenkes1423-2022}. Klasifikasi dokumentasi pada tabel berikut diperoleh melalui interpretasi terhadap definisi operasional metadata yang tercantum pada dokumen KMK tersebut. Dokumentasi administratif tidak dibagi ke dalam segmentasi yang lebih rinci karena tidak menjadi fokus utama pada rancangan segmentasi data dalam Tugas Akhir ini.
+Tabel berikut menjabarkan metadata variabel RME yang diadopsi dari KMK No. HK.01.07/MENKES/1423/2022 untuk dataset Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek \autocite{kemenkes1423-2022}. Klasifikasi dokumentasi pada tabel berikut diperoleh melalui interpretasi terhadap definisi operasional metadata yang tercantum pada dokumen KMK tersebut. Dokumentasi administratif tidak dibagi ke dalam segmentasi yang lebih rinci karena tidak menjadi fokus utama pada rancangan segmentasi data dalam Tugas Akhir ini.
 
 \begin{longtable}{|p{4cm}|p{5.2cm}|p{3.2cm}|}
-	\caption{Metadata Variabel Rekam Medis Elektronik Rawat Jalan Berdasarkan Klasifikasi Dokumentasi}
+	\caption{Metadata Variabel RME Rawat Jalan}
 	\label{tab:metadata-rme-rawat-jalan}                                                                  \\
 	\hline
 	\textbf{Kelompok Data}        &
@@ -2251,7 +2424,7 @@ Tabel berikut menjabarkan metadata variabel Rekam Medis Elektronik yang diadopsi
 \end{longtable}
 
 \begin{longtable}{|p{4cm}|p{5.2cm}|p{3.2cm}|}
-	\caption{Metadata Variabel Rekam Medis Elektronik Rawat Inap Berdasarkan Klasifikasi Dokumentasi}
+	\caption{Metadata Variabel RME Rawat Inap}
 	\label{tab:metadata-rme-rawat-inap}                                                                   \\
 	\hline
 	\textbf{Kelompok Data}        &
@@ -2318,7 +2491,7 @@ Tabel berikut menjabarkan metadata variabel Rekam Medis Elektronik yang diadopsi
 \end{longtable}
 
 \begin{longtable}{|p{4cm}|p{5.2cm}|p{3.2cm}|}
-	\caption{Metadata Variabel Rekam Medis Elektronik Laboratorium Berdasarkan Klasifikasi Dokumentasi}
+	\caption{Metadata Variabel RME Laboratorium}
 	\label{tab:metadata-rme-laboratorium}                             \\
 	\hline
 	\textbf{Kelompok Data}        &
@@ -2349,14 +2522,11 @@ Tabel berikut menjabarkan metadata variabel Rekam Medis Elektronik yang diadopsi
 	                              & Klinis                            \\ \cline{2-3}
 
 	                              & Interpretasi dan Validasi Hasil
-	                              & Klinis                            \\ \cline{2-3}
-
-	                              & Laboratorium
 	                              & Klinis                            \\ \hline
 \end{longtable}
 
 \begin{longtable}{|p{4cm}|p{5.2cm}|p{3.2cm}|}
-	\caption{Metadata Variabel Rekam Medis Elektronik Apotek Berdasarkan Klasifikasi Dokumentasi}
+	\caption{Metadata Variabel RME Apotek}
 	\label{tab:metadata-rme-apotek}                                        \\
 	\hline
 	\textbf{Kelompok Data}        &
@@ -2415,8 +2585,6 @@ Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada ranca
 \section{Skema Penyimpanan \textit{On-Chain} (IOTA)}
 \label{subsubsec:skema-penyimpanan-onchain}
 
-Penyimpanan \textit{on-chain} tidak menyimpan isi rekam medis. Data yang dicatat pada IOTA adalah metadata setiap segmen RME yang sudah terenkripsi di IPFS. Metadata ini menjadi dasar bagi proses pemfilteran berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}, serta menjadi sumber verifikasi bahwa segmen yang diminta sesuai dengan batasan akses pada token Macaroon.
-
 \begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
 	\caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                              \\
 	\hline
@@ -2435,8 +2603,8 @@ Penyimpanan \textit{on-chain} tidak menyimpan isi rekam medis. Data yang dicatat
 	                  & ID RME atau episode pelayanan yang menjadi induk segmen.                                                                  \\ \cline{2-3}
 	                  & \texttt{patient\_address}
 	                  & Alamat \textit{wallet} pasien pemilik RME.                                                                                \\ \cline{2-3}
-	                  & \texttt{fasyankes\_id}
-	                  & ID fasilitas pelayanan kesehatan yang menyimpan segmen.                                                                   \\ \hline
+	                  & \texttt{hospital\_id}
+	                  & ID fasilitas pelayanan kesehatan ketika menerima pelayanan.                                                               \\ \hline
 
 	\multirow{2}{2.8cm}{\textbf{Kategori Data}}
 	                  & \texttt{dataset\_category}
@@ -2468,8 +2636,6 @@ Penyimpanan \textit{on-chain} tidak menyimpan isi rekam medis. Data yang dicatat
 \section{Skema Penyimpanan \textit{Off-Chain} (IPFS)}
 \label{subsubsec:skema-penyimpanan-offchain}
 
-Data \textit{off-chain} disimpan sebagai objek JSON per segmen sebelum dienkripsi dan diunggah ke IPFS. Setiap segmen merepresentasikan satu kombinasi \texttt{dataset\_category} dan \texttt{function\_category}. Dengan demikian, akses terhadap data dapat diberikan hanya pada segmen yang sesuai dengan kebutuhan aktor, misalnya petugas laboratorium hanya memperoleh segmen \texttt{LABORATORIUM} yang relevan tanpa membuka seluruh riwayat klinis pasien.
-
 \begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
 	\caption{Skema Segmen Data RME \textit{Off-Chain}} \label{tab:offchain-schema}                                                                                                                                                  \\
 	\hline
@@ -2492,7 +2658,7 @@ Data \textit{off-chain} disimpan sebagai objek JSON per segmen sebelum dienkrips
 	                  & Kategori fungsi sesuai dengan Tabel \ref{tab:mapping-function-category}. Untuk dokumentasi administratif yang tidak dirinci, nilai ini dapat menggunakan kategori administratif umum.                       \\ \hline
 
 	\multirow{4}{2.8cm}{\textbf{Konteks Medis}}
-	                  & \texttt{patient\_ref}
+	                  & \texttt{patient\_address}
 	                  & Identitas internal pasien yang diperlukan di dalam data terenkripsi.                                                                                                                                        \\ \cline{2-3}
 	                  & \texttt{encounter\_id}
 	                  & ID kunjungan atau episode pelayanan.                                                                                                                                                                        \\ \cline{2-3}
@@ -2564,10 +2730,10 @@ Alur pemberian akses medis dari pasien kepada tenaga medis pada implementasi Dec
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{resources/chapter-3/analisis/patient_create_access_for_medical_personnel_svg.png}
-	\caption{\textit{Sequence diagram} alur pemberian akses medis dari pasien kepada tenaga medis \autocite{sadewa2025decmed}}
+	\caption{\textit{Sequence Diagram} Alur Pemberian Akses Medis dari Pasien kepada Tenaga Medis \autocite{sadewa2025decmed}}
 	\label{fig:patient-create-access-medical-personnel}
 \end{figure}
- \chapter{Legenda DFD}
+ \chapter{Legenda \textit{Data Flow Diagram}}
 \label{lampiran:legenda-dfd}
 
 Legenda pemodelan DFD dari gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-decmed-level-1} dapat dilihat pada Gambar \ref{fig:legenda-dfd}.
@@ -2575,7 +2741,23 @@ Legenda pemodelan DFD dari gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/appendix/legenda-dfd.png}
-	\caption{Legenda DFD (Dokumentasi Penulis)}
+	\caption{Legenda \textit{Data Flow Diagram} (Dokumentasi Penulis)}
 	\label{fig:legenda-dfd}
+\end{figure} \chapter{Legenda Diagram Arsitektur Solusi}
+\label{lampiran:legenda-diagram-arsitektur-solusi}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{resources/appendix/decmed_architecture_Legenda.png}
+    \caption{Legenda Diagram Arsitektur Solusi (Dokumentasi Penulis)}
+    \label{fig:legenda-diagram-arsitektur-solusi}
+\end{figure} \chapter{Legenda Package Diagram}
+\label{lampiran:legenda-package-diagram}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{resources/appendix/Package Diagram Legend.png}
+    \caption{Legenda Package Diagram (Dokumentasi Penulis)}
+    \label{fig:legenda-package-diagram}
 \end{figure}  
 \end{document}

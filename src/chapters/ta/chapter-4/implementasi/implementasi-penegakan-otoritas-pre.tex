@@ -1,7 +1,7 @@
 \subsection{Implementasi Penegakan Otoritas pada Server PRE}
 \label{subsec:implementasi-penegakan-otoritas-pre}
 
-Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi wajib sebelum proses pengambilan data IPFS dan \textit{re-encryption}. Implementasi ini mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon, identitas RME, identitas segmen yang diminta, aksi akses, waktu permintaan, dan tanda tangan \textit{wallet} dari aktor aktif.
+Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi wajib sebelum proses pengambilan data IPFS dan \textit{re-encryption}. Implementasi ini mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon, identitas RME, identitas segmen yang diminta, aksi akses, waktu permintaan, dan tanda tangan \textit{wallet} dari aktor aktif.
 
 Tahap validasi dimulai pada middleware yang membaca \textit{Authorization Bearer Macaroon}. Middleware memverifikasi keaslian Macaroon melalui mekanisme chained-HMAC menggunakan \texttt{MACAROON\_ROOT\_KEY}. Setelah token dinyatakan autentik, \textit{Server} PRE mengevaluasi \textit{caveats} yang mengikat pasien dan RME, yaitu \texttt{patient\_address} dan \texttt{related\_rme\_id}. Token ditolak apabila nilai tersebut tidak sesuai dengan metadata RME yang diminta.
 
@@ -18,15 +18,15 @@ Validasi berikutnya dilakukan pada handler baca dan tulis segmen. Handler membac
 	\small
 	\begin{tabular}{|p{0.62\textwidth}|p{0.28\textwidth}|}
 		\hline
-		\textbf{Bagian} & \textbf{Status} \\ \hline
-		Validasi \textit{Bearer Macaroon} & Terimplementasi. \\ \hline
-		Validasi chained-HMAC & Terimplementasi. \\ \hline
-		Cakupan efektif dataset dan fungsi & Terimplementasi. \\ \hline
-		\textit{Wallet signature} untuk baca dan tulis segmen & Terimplementasi. \\ \hline
-		Pencabutan akses melalui Redis & Terimplementasi sebagian. \\ \hline
-		Header \texttt{delegation\_signature} & Belum terlihat diverifikasi. \\ \hline
+		\textbf{Bagian}                                                                      & \textbf{Status}                 \\ \hline
+		Validasi \textit{Bearer Macaroon}                                                    & Terimplementasi.                \\ \hline
+		Validasi chained-HMAC                                                                & Terimplementasi.                \\ \hline
+		Cakupan efektif dataset dan fungsi                                                   & Terimplementasi.                \\ \hline
+		\textit{Wallet signature} untuk baca dan tulis segmen                                & Terimplementasi.                \\ \hline
+		Pencabutan akses melalui Redis                                                       & Terimplementasi sebagian.       \\ \hline
+		Header \texttt{delegation\_signature}                                                & Belum terlihat diverifikasi.    \\ \hline
 		Endpoint legacy \texttt{PUT /medical-record} dan \texttt{GET /medical-record-update} & Masih menggunakan jalur legacy. \\ \hline
-		Validasi \textit{freshness timestamp} pada bukti \textit{wallet} & Belum terlihat jelas. \\ \hline
+		Validasi \textit{freshness timestamp} pada bukti \textit{wallet}                     & Belum terlihat jelas.           \\ \hline
 	\end{tabular}
 \end{table}
 

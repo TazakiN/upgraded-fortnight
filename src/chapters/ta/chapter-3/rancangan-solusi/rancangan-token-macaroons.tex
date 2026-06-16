@@ -21,7 +21,7 @@ Pembatasan waktu akses dilakukan dengan \textit{caveat} \texttt{expires\_before}
 
 Pembatasan jumlah delegasi dilakukan dengan \textit{caveat} \texttt{max\_delegation\_depth}. Nilai ini menyatakan jumlah maksimum delegasi yang masih diperbolehkan dari token terkait. Token awal dapat memiliki nilai \texttt{max\_delegation\_depth = 1} apabila penerima token diperbolehkan membuat satu token turunan. Token turunan kemudian dapat menambahkan \textit{caveat} \texttt{max\_delegation\_depth = 0} agar token tersebut tidak dapat didelegasikan lebih lanjut.
 
-Agar token tidak dapat digunakan oleh pihak yang hanya memperoleh salinan token tanpa memiliki identitas kriptografis yang sesuai, setiap permintaan akses harus disertai bukti kepemilikan alamat \textit{wallet}. Bukti tersebut direpresentasikan dengan \textit{caveat} \texttt{proof\_required = wallet\_signature}. Pada saat token digunakan, pemohon akses harus menandatangani konteks permintaan menggunakan kunci privat dari alamat yang menjadi subjek aktif pada rantai delegasi. \textit{Server} PRE kemudian memverifikasi tanda tangan tersebut sebelum memproses permintaan akses.
+Agar token tidak dapat digunakan oleh pihak yang hanya memperoleh salinan token tanpa memiliki identitas kriptografis yang sesuai, setiap permintaan akses harus disertai bukti kepemilikan alamat \textit{wallet}. Pada saat token digunakan, pemohon akses harus menandatangani konteks permintaan menggunakan kunci privat dari alamat yang menjadi subjek aktif pada rantai delegasi. \textit{Server} PRE kemudian memverifikasi tanda tangan tersebut sebelum memproses permintaan akses.
 
 Rancangan \textit{caveats} utama yang digunakan pada token Macaroon ditunjukkan pada Tabel \ref{tab:rancangan-caveats-macaroons-baru}.
 
@@ -127,7 +127,7 @@ max_delegation_depth = 1
 
 Nilai \texttt{0xPASIEN}, \texttt{RME-001}, \texttt{0xDOKTER}, dan \texttt{0xLAB} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang di-\textit{generate}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.
 
-Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsec:rancangan-penegakan-otoritas-pada-PRE}.
+Pada saat token turunan digunakan oleh petugas laboratorium, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre}.
 
 Dengan rancangan tersebut, Macaroon tetap digunakan sesuai karakteristik utamanya, yaitu memungkinkan atenuasi token secara lokal. \textit{Server} PRE tidak perlu menerbitkan ulang token turunan, melainkan hanya memverifikasi token ketika digunakan. Token turunan juga tidak dapat memperluas hak akses karena seluruh \textit{caveat} pada token induk tetap ikut terbawa. Oleh karena itu, setiap delegasi hanya dapat menghasilkan hak akses yang sama atau lebih sempit dibandingkan token induknya.
 

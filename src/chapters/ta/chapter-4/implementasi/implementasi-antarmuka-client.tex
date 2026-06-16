@@ -1,9 +1,15 @@
-\subsection{Implementasi Antarmuka Client}
-\label{subsec:implementasi-antarmuka-client}
+\subsection{Implementasi \textit{Client}}
+\label{subsec:implementasi-client}
 
-Antarmuka \textit{client} diimplementasikan untuk mendukung skenario akses utama pada sistem, yaitu penerbitan token awal oleh pasien, penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME. Antarmuka ini tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan yang dikirimkan ke \textit{Server} PRE.
+\textit{Client} diimplementasikan untuk mendukung skenario akses utama pada sistem, yaitu penerbitan token awal oleh pasien, penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME. \textit{Client} ini tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan yang dikirimkan ke \textit{Server} PRE. Implementasi yang dilakukan adalah pada \textit{Patient Client} dan \textit{Hospital Client}. \textit{Ministry Client} tidak memiliki implementasi khusus karena perannya tetap pada kebutuhan registrasi dan aktivasi rumah sakit.
+
+\subsubsection{Implementasi \textit{Patient Client}}
+\label{subsec:implementasi-patient-client}
 
 Pada sisi pasien, \textit{Patient Client} menyediakan proses pendaftaran, pemindaian QR rumah sakit, pemilihan konteks layanan, pemberian akses awal, pembacaan RME, serta tampilan audit dan pencabutan akses. Ketika pasien memberikan akses awal, pasien memilih RME yang akan dibagikan, aktor penerima, cakupan kategori data, hak akses, dan masa berlaku. Informasi tersebut dikirimkan ke \textit{Server} PRE untuk diterbitkan sebagai token Macaroon awal.
+
+\subsubsection{Implementasi \textit{Hospital Client}}
+\label{subsec:implementasi-hospital-client}
 
 Pada sisi rumah sakit, \textit{Hospital Client} menampilkan daftar RME dan segmen yang dapat diakses berdasarkan token yang dimiliki. \textit{Client} menyediakan command Tauri untuk membaca kapabilitas akses saat ini, menulis segmen baru, membaca daftar metadata RME yang dapat diakses, dan mengambil payload segmen. Command yang digunakan mencakup \texttt{get\_current\_access\_capabilities}, \texttt{new\_medical\_record\_segment}, \texttt{get\_accessible\_medical\_record\_metadata}, dan \texttt{get\_medical\_record\_payload}. Ketika aktor membuka segmen tertentu, \textit{client} menyertakan token Macaroon, metadata permintaan, dan tanda tangan \textit{wallet}. Jika aktor memiliki hak tulis, antarmuka menyediakan formulir untuk menambahkan atau memperbarui segmen yang sesuai dengan kategori aksesnya.
 
@@ -16,10 +22,10 @@ Untuk delegasi, antarmuka menyediakan pilihan penerima token turunan dan batasan
 	\small
 	\begin{tabular}{|p{0.28\textwidth}|p{0.62\textwidth}|}
 		\hline
-		\textbf{Client} & \textbf{Fitur} \\ \hline
-		\textit{Patient Client} & Pemindaian QR rumah sakit, pemilihan konteks layanan, pembuatan akses awal, pembacaan RME, audit akses, dan pencabutan akses. \\ \hline
+		\textbf{Client}          & \textbf{Fitur}                                                                                                                                                                                                                                                               \\ \hline
+		\textit{Patient Client}  & Pemindaian QR rumah sakit, pemilihan konteks layanan, pembuatan akses awal, pembacaan RME, audit akses, dan pencabutan akses.                                                                                                                                                \\ \hline
 		\textit{Hospital Client} & Pembacaan kapabilitas akses, penulisan segmen RME, pembacaan daftar episode, pembacaan payload segmen, pembuatan \textit{wallet proof}, pembuatan delegated access, dan pemisahan tampilan berdasarkan subrole admin, dokter, perawat, petugas laboratorium, serta apoteker. \\ \hline
-		\textit{Ministry Client} & Registrasi rumah sakit dan pengelolaan \textit{activation key}. \\ \hline
+		\textit{Ministry Client} & Registrasi rumah sakit dan pengelolaan \textit{activation key}.                                                                                                                                                                                                              \\ \hline
 	\end{tabular}
 \end{table}
 

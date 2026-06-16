@@ -1,8 +1,8 @@
-\subsection{Rancangan Penegakan Otoritas pada PRE}
-\label{subsec:rancangan-penegakan-otoritas-pada-PRE}
+\subsection{Rancangan Penegakan Otoritas}
+\label{subsec:rancangan-penegakan-otoritas}
 
-\subsubsection{Verifikasi \textit{Caveats} pada Macaroons}
-\label{subsubsec:verifikasi-caveats-pada-macaroons}
+\subsubsection{Verifikasi \textit{Caveats} Macaroons di PRE}
+\label{subsubsec:verifikasi-caveats-macaroons-di-pre}
 
 Ketika aktor penerima delegasi menggunakan token macaroons, \textit{Server} PRE bertindak sebagai titik penegakan kebijakan akses. \textit{Server} PRE tidak menerbitkan ulang token, tetapi memverifikasi token macaroons dan seluruh bukti yang menyertainya.
 
@@ -25,3 +25,29 @@ Nilai \texttt{max\_delegation\_depth} diperlakukan sebagai batas maksimum panjan
 Dengan mekanisme tersebut, token turunan tidak dapat memperluas hak akses token induk. Misalnya, apabila token dokter tidak memiliki akses terhadap \texttt{APOTEK}, maka dokter tidak dapat membuat token turunan yang valid untuk apoteker. Meskipun dokter menambahkan \textit{caveat} \texttt{read\_dataset\_in = [APOTEK]}, cakupan efektif token akan menjadi kosong karena batasan tersebut tidak termasuk dalam cakupan token induk. Demikian pula, apabila token induk hanya berlaku hingga pukul 18.00, token turunan yang mencoba menggunakan \texttt{expires\_before} setelah pukul 18.00 tetap tidak akan memperpanjang masa berlaku efektif token.
 
 Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses.
+
+\subsubsection{Pencabutan Hak Akses Macaroon Delegasi}
+\label{subsubsec:pencabutan-hak-akses-macaroon-delegasi}
+
+Pada implementasi DecMed sebelumnya, pencabutan hak akses dilakukan oleh pasien dengan mencatat token otorisasi yang dicabut ke dalam penyimpanan IOTA \textit{on-chain}. Ketika seorang \textit{personnel} mengajukan permintaan akses terhadap data pasien, \textit{Server} PRE terlebih dahulu memeriksa apakah token otorisasi yang digunakan masih valid dan belum dicabut. Jika token masih valid, \textit{Server} PRE melanjutkan proses pengambilan data terenkripsi dari IPFS dan melakukan \textit{re-encryption}. Sebaliknya, jika token telah dicabut, permintaan akses ditolak.
+
+Pada implementasi Tugas Akhir ini, mekanisme pencabutan hak akses perlu disesuaikan karena token otorisasi tidak lagi hanya digunakan sebagai token tunggal, melainkan dapat diturunkan melalui proses delegasi Macaroon. Dengan adanya fitur delegasi, pencabutan terhadap akses awal tidak boleh hanya membatalkan token yang dimiliki penerima akses pertama, tetapi juga harus membatalkan seluruh Macaroon turunan yang berasal dari token tersebut. Oleh karena itu, mekanisme revokasi dirancang sebagai pencabutan berantai (\textit{cascade revocation}) yang tetap dikendalikan oleh pasien sebagai \textit{resource owner}.
+
+Revokasi akses pada implementasi ini dilakukan melalui kombinasi pencatatan status di IOTA \textit{on-chain} dan penegakan akses di \textit{Server} PRE. Lapisan \textit{on-chain} digunakan untuk mencatat perubahan status akses dan audit trail revokasi, sedangkan lapisan \textit{off-chain} pada \textit{Server} PRE digunakan untuk memastikan bahwa token yang telah dicabut tidak dapat digunakan kembali pada saat permintaan akses dilakukan.
+
+Alur pencabutan akses oleh pasien ditunjukkan pada Gambar \ref{fig:seqdiag-revoke-access}. Pada alur tersebut, pasien memilih akses yang akan dicabut melalui \textit{Patient Client}. \textit{Patient Client} kemudian mengeksekusi fungsi \texttt{revoke\_access()} pada \textit{smart contract} Move untuk menandai akses sebagai dicabut, menghapus hak akses pada penyimpanan \textit{on-chain}, melakukan pencabutan berantai terhadap penerima delegasi turunan, serta mencatat kejadian revokasi ke dalam \textit{audit log}. Setelah transaksi \textit{on-chain} berhasil, \textit{Patient Client} mengirimkan payload revokasi ke \textit{Server} PRE agar status revokasi juga ditegakkan pada saat PRE melakukan verifikasi token.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-revoke_access.png}
+	\caption{\textit{Sequence Diagram} Rancangan Alur Pencabutan Hak Akses Macaroon Delegasi}
+	\label{fig:seqdiag-revoke-access}
+\end{figure}
+
+Bagian berlatar merah pada Gambar \ref{fig:seqdiag-revoke-access} menunjukkan alur baru yang ditambahkan pada Tugas Akhir ini. Alur baru tersebut mencakup pencabutan berantai terhadap \textit{downstream delegatees}, pengiriman payload revokasi ke \textit{Server} PRE, verifikasi tanda tangan pasien, pembentukan \textit{token-level revocation key}, penyimpanan status revokasi pada Redis dengan TTL sesuai masa berlaku token, serta penghapusan kunci \textit{re-encryption}. Dengan penambahan alur ini, revokasi tidak hanya tercatat pada IOTA, tetapi juga langsung ditegakkan oleh \textit{Server} PRE ketika token Macaroon digunakan kembali.
+
+Pada saat verifikasi, \textit{Server} PRE tidak hanya memeriksa \textit{hash} token yang sedang digunakan, tetapi juga informasi relasi delegasi dan \textit{hash root-token}. Dengan demikian, apabila pasien mencabut akses pada delegator awal, maka Macaroon turunan yang dibuat dari akses tersebut juga akan dianggap tidak valid. Pemeriksaan ini dilakukan setiap kali permintaan akses dikirimkan ke \textit{Server} PRE, sehingga token yang telah dicabut tidak dapat digunakan untuk membaca ataupun menulis segmen RME.
+
+Status revokasi pada Redis diberi TTL sesuai dengan masa berlaku token. Pendekatan ini membuat data revokasi tidak perlu disimpan secara permanen pada penyimpanan \textit{off-chain}, karena setelah token melewati waktu kedaluwarsa, token tersebut tidak lagi dapat digunakan meskipun data revokasinya telah dihapus dari Redis.
+
+Dengan rancangan ini, pencabutan hak akses pada sistem DecMed tetap mempertahankan pasien sebagai pihak utama yang berwenang mencabut akses terhadap RME. Selain itu, mekanisme ini juga menyesuaikan karakteristik Macaroon yang mendukung delegasi lokal, karena pencabutan tidak hanya berlaku pada token awal, tetapi juga terhadap seluruh token turunan yang berada dalam rantai delegasi yang sama.

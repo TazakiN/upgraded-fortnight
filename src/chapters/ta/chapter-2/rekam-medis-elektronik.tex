@@ -29,10 +29,19 @@ Panduan lebih rinci terkait isi dari Rekam Medis Elektronik diatur pada Keputusa
 
 Detail metadata dataset RME untuk dataset Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek dapat dilihat pada Lampiran \ref{lampiran:metadata-rme}.
 
-\subsection{Hak Akses RME}
-\label{subsec:kepemilikan-hak-akses-rme}
+\subsection{RME dalam Alur Pelayanan Kesehatan Kolaboratif}
+\label{subsec:rme-layanan-kolaboratif}
 
-Tenaga medis dapat melakukan beberapa aksi terhadap rekam medis pasien, yaitu:
+Penyelenggaraan layanan kesehatan pada praktiknya tidak selalu dilakukan oleh satu aktor tunggal, melainkan melibatkan beberapa tenaga kesehatan dan tenaga lain yang bekerja sesuai kewenangan masing-masing \autocite{who2010_interprofessional_collaborative_practice}. Dalam konteks layanan kolaboratif, pasien dapat berinteraksi dengan petugas rekam medis pada tahap pendaftaran, perawat pada tahap pemeriksaan awal, dokter pada tahap pemeriksaan dan pengambilan keputusan klinis, petugas laboratorium pada tahap pemeriksaan penunjang, serta apoteker atau tenaga kefarmasian pada tahap pelayanan resep dan obat. Pola ini sejalan dengan konsep praktik kolaboratif antarprofesi, yaitu ketika tenaga kesehatan dari latar belakang profesi berbeda bekerja bersama pasien untuk memberikan pelayanan yang bermutu.
+
+Struktur RME di Indonesia juga menunjukkan bahwa data kesehatan pasien tidak bersifat tunggal, melainkan terdiri dari dokumentasi administratif dan dokumentasi klinis \autocite{permenkes24_2022}. Pembagian ini menunjukkan bahwa kebutuhan akses terhadap RME dapat berbeda antara aktor administratif dan aktor klinis.
+
+Pedoman variabel dan metadata RME dari Kementerian Kesehatan memperjelas bahwa dokumentasi klinis dapat dipetakan ke dalam dataset dan fungsi layanan tertentu, seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek \autocite{kemenkes1423-2022}. Pada dataset Rawat Jalan, misalnya, terdapat komponen asesmen awal yang meliputi anamnesis, pemeriksaan fisik, serta pemeriksaan psikologis, sosial ekonomi, dan spiritual. Pada dataset Laboratorium, terdapat data permintaan pemeriksaan, dokter pengirim, spesimen, hasil pemeriksaan, serta waktu hasil diterima oleh unit pengirim. Sementara itu, pada dataset Apotek terdapat data peresepan, pengkajian resep, dan dispensing. Struktur ini menunjukkan bahwa data RME secara alamiah dapat dipisahkan berdasarkan konteks pelayanan dan kebutuhan akses setiap aktor.
+
+\subsection{Hak Akses RME}
+\label{subsec:hak-akses-rme}
+
+Karena RME memuat data administratif dan klinis yang termasuk data pribadi spesifik, akses terhadap RME harus dibatasi berdasarkan kewenangan, tindakan, dan kebutuhan pelayanan. Tenaga kesehatan dapat melakukan beberapa aksi terhadap data RME pasien, yaitu \autocite{permenkes24_2022}:
 
 \begin{enumerate}
 	\item Menambahkan data baru.
@@ -40,16 +49,10 @@ Tenaga medis dapat melakukan beberapa aksi terhadap rekam medis pasien, yaitu:
 	\item Melihat atau membaca data.
 \end{enumerate}
 
-% TODO %
-% cari tahu buat apa atenuasi ini/ mmisal psikolog, dokter anak, lebih ke rujukan 
-% perlu cari case pendelegasian data untuk apa
-% miasal ketika sakit, lalu dihandle dokter umum, lalu dirujuk ke dokter jantung. ketika kontrol lagi, maka RME dibuka lagi khusus untuk dokter mata. Jadi ketika dikasih ke mata, dokter umum cuman ngasih bagian mata doang hipotesisnya dokter umum jadi tulang punggung
-
 Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) menjadi landasan yuridis utama yang menetapkan standar keamanan bagi sistem yang mengelola data masyarakat Indonesia, termasuk data rekam medis. Secara spesifik, Pasal 4 ayat 2 huruf a UU PDP mengklasifikasikan data dan informasi kesehatan sebagai Data Pribadi Spesifik \autocite{uu27-2022-pdp}. Pengendali Data Pribadi diwajibkan untuk melindungi dan memastikan keamanan data yang diprosesnya (Pasal 35), serta secara eksplisit wajib melindungi data dari pemrosesan yang tidak sah (Pasal 38) dan mencegah akses yang tidak sah melalui sistem keamanan yang andal (Pasal 39) \autocite{uu27-2022-pdp}.
 
 UU PDP Pasal 32 Ayat 1 mewajibkan Pengendali Data Pribadi untuk menyediakan \textit{audit trail} pemrosesan data pribadi \autocite{uu27-2022-pdp}. Kewajiban ini menuntut adanya transparansi mengenai siapa yang mengakses data, kapan akses dilakukan, dan tindakan apa yang dilakukan terhadap data tersebut.
 
-% \subsection{Keterkaitan RME dengan PNPK}
-% \label{subsec:keterkaitan-rme-pnpk}
+Berdasarkan Permenkes No. 73 Tahun 2016 tentang Standar Pelayanan Kefarmasian di Apotek, pelayanan farmasi klinik mencakup pengkajian resep dan dispensing \autocite{permenkes73_2016}. Hal ini menunjukkan bahwa apoteker memerlukan akses terhadap informasi yang relevan dengan resep, terapi, dan penggunaan obat pasien untuk memastikan kesesuaian, keamanan, dan ketepatan pelayanan obat.
 
-% PNPK adalah Pedoman Nasional Pelayanan Kedokteran, yaitu pedoman standar pelayanan dalam penyelenggaraan praktik kedokteran. Dalam salah satu keputusan Menteri Kesehatan, PNPK juga dijelaskan sebagai pedoman bagi dokter sebagai pembuat keputusan klinis di fasilitas pelayanan kesehatan, institusi pendidikan, dan kelompok profesi terkait.
+Kebutuhan akses pada petugas laboratorium dapat diturunkan dari struktur metadata RME pada KMK 1423/2022. Pada pedoman tersebut, data rujukan atau permintaan pemeriksaan laboratorium yang diminta oleh dokter untuk pasien dicantumkan sebagai bagian dari data pemeriksaan penunjang, bukan sebagai bagian dari data hasil pemeriksaan laboratorium \autocite{kemenkes1423-2022}. Hal ini menunjukkan bahwa dalam alur pelayanan, petugas laboratorium tidak perlu memperoleh akses terhadap seluruh data klinis pasien, tetapi cukup terhadap informasi yang relevan untuk memproses pemeriksaan penunjang terkait laboratorium.

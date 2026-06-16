@@ -28,7 +28,7 @@ Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \te
         \hline
         IPFS                      & Menyimpan \textit{encrypted blob} data RME                                                                                      \\
         \hline
-        PRE                       & Melakukan \textit{re-encryption} agar penerima akses dapat membuka data tanpa menerima kunci privat pasien                      \\
+        PRE                       & Melakukan verifikasi token akses dan \textit{re-encryption} agar penerima akses dapat membuka data tanpa kunci privat pasien    \\
         \hline
         Redis                     & Mengelola \textit{cache ephemeral}, yang terdiri dari data \texttt{Nonce}, \texttt{Re-Encryption Key}, dan \texttt{Revoked Key}
         \\

@@ -14,9 +14,10 @@ Alur akses dan delegasi pada rancangan ini mengikuti alur pelayanan kesehatan ya
 
 Delegasi akses pada rancangan ini terdiri atas tiga tahap utama. Tahap pertama adalah penerbitan token awal kepada petugas rekam medis sebagai aktor yang menerima pasien dan mengoordinasikan akses awal dalam proses pelayanan. Tahap kedua adalah delegasi lokal dari petugas rekam medis kepada perawat dan dokter. Tahap ketiga adalah delegasi lanjutan dari dokter kepada unit layanan lain, yaitu laboratorium atau apotek, sesuai kebutuhan tindakan medis.
 
-% Macaroons mendukung atenuasi \textit{offline} karena token turunan dapat dibuat dengan menambahkan \textit{caveats} baru pada token induk. Penambahan \textit{caveats} menghasilkan tanda tangan Macaroon baru melalui mekanisme \textit{chained-HMAC}. Karena \textit{caveats} pada Macaroon bersifat \textit{append-only}, token turunan tidak dapat menghapus batasan pada token induk. Dengan demikian, token turunan hanya dapat memiliki cakupan akses yang sama atau lebih sempit daripada token induknya.
+Penjelasan kemudian dilanjutkan dengan bagian berikutnya, yaitu pola teknis proses pemberian Macaroon atau proses delegasi oleh \textit{delegator} hingga akhirnya digunakan oleh \textit{delegatee} untuk mengakses data RME. Pola teknis ini dibagi menjadi dua bagian, yaitu proses pemberian Macaroon delegasi hingga tercatat pada \textit{on-chain} dan proses pengambilan dan penggunaan Macaroon delegasi.
 
 \subsubsection{Penerbitan Token Awal oleh Pasien kepada Petugas Rekam Medis}
+\label{subsubsec:penerbitan-token-awal-oleh-pasien-kepada-petugas-rekam-medis}
 
 Penerbitan token awal merupakan proses pemberian otorisasi pertama pada saat pasien memulai layanan kesehatan. Pada tahap ini, pasien tetap menjadi pihak yang mengendalikan pemberian akses awal terhadap data RME miliknya. Namun, karena \texttt{RootKey} Macaroon hanya dimiliki oleh \textit{Server} PRE, pasien tidak membuat token Macaroon secara langsung. Pasien memberikan persetujuan akses melalui \textit{Patient Client}, kemudian \textit{Server} PRE menerbitkan token awal berdasarkan persetujuan tersebut.
 

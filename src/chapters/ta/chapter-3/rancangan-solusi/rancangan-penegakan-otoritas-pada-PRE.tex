@@ -1,6 +1,10 @@
 \subsection{Rancangan Penegakan Otoritas}
 \label{subsec:rancangan-penegakan-otoritas}
 
+Penegakan otoritas pada rancangan ini merujuk pada proses memastikan bahwa setiap permintaan akses terhadap data RME hanya dilayani apabila aktor yang mengajukan permintaan memiliki kewenangan yang sah, sesuai dengan token otorisasi, konteks delegasi, jenis akses, dan segmen data yang diminta. Penegakan ini penting karena token Macaroons memungkinkan hak akses diturunkan kepada aktor lain melalui delegasi. Tanpa mekanisme verifikasi yang ketat pada \textit{Server} PRE, token turunan berpotensi digunakan di luar batas kewenangan awal, misalnya untuk mengakses dataset yang tidak termasuk cakupan token, melewati kedalaman delegasi yang diizinkan, atau tetap digunakan setelah hak akses dicabut.
+
+Bagian ini membahas tiga aspek utama penegakan otoritas pada \textit{Server} PRE. Pertama, Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre} menjelaskan verifikasi \textit{caveats} Macaroons untuk memastikan token, tanda tangan aktor, kedalaman delegasi, masa berlaku, dan cakupan akses masih valid. Kedua, Subbab \ref{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset} membahas validasi tambahan terhadap \textit{sub-role} tenaga medis agar akses tulis hanya dapat dilakukan pada dataset yang sesuai dengan kewenangannya. Ketiga, Subbab \ref{subsubsec:pencabutan-hak-akses-macaroon-delegasi} menjelaskan rancangan pencabutan hak akses Macaroon delegasi, termasuk bagaimana revokasi ditegakkan agar token awal maupun token turunannya tidak dapat digunakan kembali setelah dicabut.
+
 \subsubsection{Verifikasi \textit{Caveats} Macaroons di PRE}
 \label{subsubsec:verifikasi-caveats-macaroons-di-pre}
 
@@ -25,6 +29,43 @@ Nilai \texttt{max\_delegation\_depth} diperlakukan sebagai batas maksimum panjan
 Dengan mekanisme tersebut, token turunan tidak dapat memperluas hak akses token induk. Misalnya, apabila token dokter tidak memiliki akses terhadap \texttt{APOTEK}, maka dokter tidak dapat membuat token turunan yang valid untuk apoteker. Meskipun dokter menambahkan \textit{caveat} \texttt{read\_dataset\_in = [APOTEK]}, cakupan efektif token akan menjadi kosong karena batasan tersebut tidak termasuk dalam cakupan token induk. Demikian pula, apabila token induk hanya berlaku hingga pukul 18.00, token turunan yang mencoba menggunakan \texttt{expires\_before} setelah pukul 18.00 tetap tidak akan memperpanjang masa berlaku efektif token.
 
 Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses.
+
+\subsubsection{Verifikasi \textit{Role} Tenaga Medis untuk akses \textit{Dataset}}
+\label{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset}
+
+Pada implementasi DecMed sebelumnya, verifikasi \textit{role} tenaga medis untuk akses data sesuai dengan jenis dokumentasinya, yaitu dokumentasi administratif dan klinis. Verifikasi dilakukan dengan memeriksa \textit{role} tenaga medis yang terdapat pada token otorisasi dan memverifikasi juga akun personnel pada penyimpanan \textit{on-chain}. Terdapat 2 \textit{role} pada implementasi DecMed sebelumnya, yaitu \texttt{AdministrativePersonnel} dan \texttt{MedicalPersonnel}.
+
+Pada implementasi Tugas Akhir ini, kebutuhan melibatkan jenis aktor baru yang merupakan turunan dari \texttt{MedicalPersonnel}, yaitu dokter, perawat, petugas laboratorium, dan apoteker. Keempat aktor baru tersebut akan disebut sebagai \textit{sub-role} dari \texttt{MedicalPersonnel}. Sebagaimana dijelaskan pada Subbab \ref{subsec:analisis-segmentasi-data}, setiap aktor tersebut memiliki kebutuhan akses data yang berbeda-beda, khususnya untuk melakukan akses jenis \textit{write}. Pemetaan kebutuhan akses data untuk setiap aktor dapat dilihat pada Tabel \ref{tab:pemetaan-kebutuhan-akses-data-untuk-setiap-aktor}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Pemetaan Kebutuhan Akses Data untuk Setiap Aktor Tenaga Medis}
+	\label{tab:pemetaan-kebutuhan-akses-data-untuk-setiap-aktor}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{\textit{Sub-Role}} & \textbf{\begin{tabular}[c]{@{}c@{}}Rawat\\Jalan\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Rawat\\Inap\end{tabular}} & \textbf{Laboratorium} & \textbf{Apotek} \\
+		\hline
+		Dokter                     & \checkmark                                                    & \checkmark                                                   &                       &                 \\
+		\hline
+		Perawat                    & \checkmark                                                    & \checkmark                                                   &                       &                 \\
+		\hline
+		Petugas Laboratorium       &                                                               &                                                              & \checkmark            &                 \\
+		\hline
+		Apoteker                   &                                                               &                                                              &                       & \checkmark      \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Berdasarkan pemetaan tersebut, terdapat verifikasi tambahan untuk \textit{role} \texttt{MedicalPersonnel}, yaitu melakukan validasi apakah \textit{sub-role} pengguna yang saat ini mencoba melakukan aksi \textit{write} memang sesuai dengan jenis \textit{dataset} yang diakses. Alur tambahan tersebut ditunjukkan pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset}. Pada alur ini, \textit{Server} PRE terlebih dahulu mendapatkan informasi \textit{sub-role} tenaga medis dari penyimpanan \textit{on-chain}. Informasi tersebut kemudian digunakan untuk memvalidasi pasangan \textit{role} dan \textit{sub-role} terhadap kategori \textit{dataset} yang coba ditulis. Apabila \textit{sub-role} aktor tidak memiliki kewenangan untuk menulis pada kategori \textit{dataset} tersebut, maka permintaan ditolak sebelum proses penulisan data dilanjutkan.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-validasi-subrole X dataset.png}
+	\caption{\textit{Sequence Diagram} Rancangan Validasi \textit{Sub-Role} Tenaga Medis terhadap \textit{Dataset}}
+	\label{fig:seqdiag-validasi-subrole-dataset}
+\end{figure}
+
+Bagian berlatar merah pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset} menunjukkan alur yang berubah atau ditambahkan pada rancangan Tugas Akhir ini dibandingkan Implementasi DecMed sebelumnya. Perubahan tersebut mencakup pengambilan informasi \textit{sub-role} dari penyimpanan \textit{on-chain} serta validasi kesesuaian \textit{role}, \textit{sub-role}, dan kategori \textit{dataset} sebelum akses tulis diberikan.
 
 \subsubsection{Pencabutan Hak Akses Macaroon Delegasi}
 \label{subsubsec:pencabutan-hak-akses-macaroon-delegasi}

@@ -26,13 +26,13 @@ Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada 
 	\small
 	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
 		\hline
-		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                             \\ \hline
-		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                             \\ \hline
-		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan \\ \hline
-		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}       \\ \hline
-		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                               \\ \hline
-		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                               \\ \hline
-		PRE               & Membantu distribusi akses terenkripsi                    & Tetap menjadi titik verifikasi dan \textit{re-encryption}                                     \\ \hline
+		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                                                           \\ \hline
+		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                                                           \\ \hline
+		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan                               \\ \hline
+		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}                                     \\ \hline
+		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                                             \\ \hline
+		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                                             \\ \hline
+		PRE               & Verifikasi otoritas dan distribusi akses terenkripsi     & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}                           , namun berbasis token Macaroons \\ \hline
 	\end{tabular}
 \end{table}
 

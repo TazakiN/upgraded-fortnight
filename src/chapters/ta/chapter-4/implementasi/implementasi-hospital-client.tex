@@ -1,0 +1,37 @@
+\subsection{Implementasi \textit{Hospital Client}}
+\label{subsec:implementasi-hospital-client}
+
+\textit{Hospital Client} diimplementasikan sebagai \texttt{I-TA-06} untuk merealisasikan \texttt{R-TA-07} dan \texttt{R-TA-08}, serta bagian akses segmen dan delegasi pada \texttt{R-TA-02} dan \texttt{R-TA-04}. \textit{Client} ini mendukung skenario penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME.
+
+Pada sisi rumah sakit, \textit{Hospital Client} menampilkan daftar RME dan segmen yang dapat diakses berdasarkan token yang dimiliki. \textit{Client} menyediakan command Tauri untuk membaca kapabilitas akses saat ini, menulis segmen baru, membaca daftar metadata RME yang dapat diakses, dan mengambil payload segmen. Command yang digunakan mencakup \texttt{get\_current\_access\_capabilities}, \texttt{new\_medical\_record\_segment}, \texttt{get\_accessible\_medical\_record\_metadata}, dan \texttt{get\_medical\_record\_payload}. Ketika aktor membuka segmen tertentu, \textit{client} menyertakan token Macaroon, metadata permintaan, dan tanda tangan \textit{wallet}. Jika aktor memiliki hak tulis, antarmuka menyediakan formulir untuk menambahkan atau memperbarui segmen yang sesuai dengan kategori aksesnya.
+
+Untuk delegasi, antarmuka menyediakan pilihan penerima token turunan dan batasan akses yang lebih sempit. Aktor dapat memilih kategori dataset, kategori fungsi, hak baca atau tulis, dan masa berlaku selama nilai tersebut masih berada dalam cakupan token induk. Setelah token turunan dibuat, metadata akses penerima delegasi dienkripsi dan disimpan agar dapat digunakan oleh aktor penerima pada permintaan akses berikutnya.
+
+\textit{Hospital Client} diimplementasikan menggunakan Svelte 5, SvelteKit 2, dan Tauri v2.
+
+\subsubsection{Halaman \textit{Dashboard} (Daftar RME)}
+\label{subsubsec:halaman-dashboard-hospital-client}
+
+Halaman \textit{dashboard} menjadi halaman awal setelah aktor rumah sakit berhasil masuk ke sistem. Halaman ini menggunakan \textit{layout} untuk menyediakan navigasi ke fitur utama, seperti daftar EMR, delegasi akses, dan fitur yang tersedia sesuai peran aktor. Tampilan \textit{home} pada halaman ini bersifat \textit{role-based}, sehingga konten dan aksi yang ditampilkan dibedakan untuk peran admin, tenaga medis, dan \texttt{AdministrativePersonnel}. Tampilan untuk \textit{role} admin dan \texttt{AdministrativePersonnel} tidak ada perubahan, dan tidak menjadi fokus pada implementasi Tugas Akhir ini. Terdapat dua tampilan untuk \textit{role} \texttt{MedicalPersonnel}, yaitu untuk jenis akses baca dan tulis. Tampilan keduanya sama, hanya berbeda pada konten yang ditampilkan. Tampilan dari halaman \textit{dashboard} untuk \textit{role} \texttt{MedicalPersonnel} dapat dilihat pada Gambar \ref{fig:halaman-dashboard-medical-personanel}.
+
+\subsubsection{Halaman Delegasi Akses}
+\label{subsubsec:halaman-delegasi-akses-hospital-client}
+
+Halaman delegasi akses digunakan oleh aktor yang memiliki hak delegasi untuk membuat token turunan kepada aktor lain di rumah sakit. Antarmuka membatasi pilihan penerima, \textit{dataset category}, \textit{function category}, hak akses, dan masa berlaku berdasarkan kapabilitas token induk yang sedang digunakan. Tampilan halaman delegasi akses dapat dilihat pada Gambar \ref{fig:halaman-delegasi-akses-hospital-client-cakupan} dan Gambar \ref{fig:halaman-delegasi-akses-hospital-client-penerima}.
+
+\subsubsection{Halaman Daftar EMR Pasien}
+\label{subsubsec:halaman-daftar-emr-pasien-hospital-client}
+
+Halaman daftar EMR pasien menampilkan kumpulan RME yang terkait dengan alamat pasien tertentu. Aktor rumah sakit dapat memilih salah satu RME untuk melihat detail \textit{metadata} dan segmen yang dapat diakses sesuai hak baca atau tulis yang dimiliki. Tampilan halaman daftar EMR pasien dapat dilihat pada Gambar \ref{fig:halaman-daftar-rme-pasien-hospital-client}.
+
+\subsubsection{Halaman Detail EMR}
+\label{subsubsec:halaman-detail-emr-hospital-client}
+
+Halaman detail EMR digunakan untuk menampilkan detail RME, daftar \textit{dataset}, dan payload segmen yang dapat dibuka oleh aktor. Ketika segmen dibaca, \textit{client} menyertakan token Macaroon, \textit{metadata} permintaan, dan tanda tangan \textit{wallet} sebagai bagian dari permintaan ke \textit{Server} PRE. Tampilan halaman detail EMR dapat dilihat pada Gambar \ref{fig:halaman-detail-rme-hospital-client}.
+
+\subsubsection{Halaman Alur Akses Tulis}
+\label{subsubsec:halaman-alur-akses-tulis-hospital-client}
+
+Halaman alur akses tulis digunakan ketika aktor memiliki kapabilitas tulis terhadap \textit{dataset category} tertentu. Antarmuka menyediakan formulir penulisan segmen RME dan membatasi pilihan \textit{dataset category} berdasarkan hak akses yang dimiliki, sedangkan validasi akhir tetap dilakukan oleh \textit{Server} PRE sebelum data diproses. Tampilan halaman alur akses tulis dapat dilihat pada Gambar \ref{fig:halaman-alur-akses-tulis-hospital-client}.
+
+Pembatasan pilihan pada antarmuka bertujuan mengurangi kesalahan penggunaan, tetapi bukan menjadi satu-satunya mekanisme keamanan. Validasi otoritatif tetap dilakukan oleh \textit{Server} PRE sehingga manipulasi permintaan dari sisi \textit{client} tidak dapat memperluas hak akses yang telah ditetapkan oleh token Macaroon.

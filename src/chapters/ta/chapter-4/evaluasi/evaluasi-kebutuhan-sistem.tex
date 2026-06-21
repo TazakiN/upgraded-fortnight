@@ -18,12 +18,14 @@ Ringkasan evaluasi kebutuhan sistem ditunjukkan pada Tabel \ref{tab:evaluasi-keb
 	\small
 	\begin{tabular}{|p{0.19\textwidth}|p{0.30\textwidth}|p{0.24\textwidth}|p{0.17\textwidth}|}
 		\hline
-		\textbf{Kebutuhan Sistem} & \textbf{Implementasi} & \textbf{Bukti Pengujian} & \textbf{Status} \\ \hline
-		Kontrol akses granular & Macaroons dengan \textit{caveats} \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}. & Test cakupan dataset/fungsi dan skenario akses di luar \textit{caveat}. & Terpenuhi. \\ \hline
-		Segmentasi data RME & \texttt{DatasetCategory}, \texttt{FunctionCategory}, \texttt{RmeSegmentMetadata}, \textit{ciphertext} IPFS, dan metadata Move. & Pengujian tulis dan baca segmen RME. & Terpenuhi. \\ \hline
-		Delegasi \textit{offline} & Atenuasi lokal di \textit{Hospital Client} tanpa kunci akar. & Skenario admin atau dokter membuat token turunan. & Terpenuhi. \\ \hline
-		Enforcement PRE & Middleware dan handler validasi Macaroon, aktor aktif, \textit{wallet proof}, serta \textit{re-encryption}. & Test proxy dan skenario manual. & Terpenuhi sebagian. \\ \hline
-		Revocation & Redis \textit{revocation key} dan pencabutan akses \textit{on-chain}. & Test kunci revocation tersedia dan endpoint revocation delegasi parsial. & Terpenuhi sebagian. \\ \hline
-		Audit dan uji keamanan formal & Audit sebagian tersedia, tetapi uji formal end-to-end belum dilakukan. & Belum ada test formal. & Belum penuh. \\ \hline
+		\textbf{Kebutuhan Sistem}     & \textbf{Implementasi}                                                                                                                                     & \textbf{Bukti Pengujian}                                                & \textbf{Status}     \\ \hline
+		Kontrol akses granular        & Macaroons dengan \textit{caveats} \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}. & Test cakupan dataset/fungsi dan skenario akses di luar \textit{caveat}. & Terpenuhi.          \\ \hline
+		Segmentasi data RME           & \texttt{DatasetCategory}, \texttt{FunctionCategory}, \texttt{RmeSegmentMetadata}, \textit{ciphertext} IPFS, dan metadata Move.                            & Pengujian tulis dan baca segmen RME.                                    & Terpenuhi.          \\ \hline
+		Delegasi \textit{offline}     & Atenuasi lokal di \textit{Hospital Client} tanpa kunci akar.                                                                                              & Skenario admin atau dokter membuat token turunan.                       & Terpenuhi.          \\ \hline
+		Enforcement PRE               & Middleware dan handler validasi Macaroon, aktor aktif, \textit{wallet proof}, serta \textit{re-encryption}.                                               & Test proxy dan skenario manual.                                         & Terpenuhi sebagian. \\ \hline
+		Revocation                    & Redis \textit{revocation key} dan pencabutan akses \textit{on-chain}.                                                                                     & Test \textit{revocation} dan endpoint \textit{revocation} delegasi.     & Terpenuhi           \\ \hline
+		Audit dan uji keamanan formal & Audit sebagian tersedia, tetapi uji formal end-to-end belum dilakukan.                                                                                    & Belum ada test formal.                                                  & Belum penuh.        \\ \hline
 	\end{tabular}
 \end{table}
+
+Untuk memperlihatkan keterhubungan antarbagian secara ringkas, matriks ketertelusuran dari masalah, solusi, rancangan, implementasi, hingga bukti pengujian disajikan pada Lampiran \ref{lampiran:matriks-ketertelusuran-ta}.

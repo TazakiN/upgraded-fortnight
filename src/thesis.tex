@@ -17,6 +17,20 @@
 \input{config/hypenation-en.tex}
 
 \makeatletter
+\let\thesis@defaultfigure\figure
+\let\endthesis@defaultfigure\endfigure
+\let\thesis@defaulttable\table
+\let\endthesis@defaulttable\endtable
+\newcommand{\usemainfloatplacements}{%
+	\renewenvironment{figure}[1][!b]{\@float{figure}[!b]}{\end@float}%
+	\renewenvironment{table}[1][!t]{\@float{table}[!t]}{\end@float}%
+}
+\newcommand{\restoredefaultfloatplacements}{%
+	\let\figure\thesis@defaultfigure
+	\let\endfigure\endthesis@defaultfigure
+	\let\table\thesis@defaulttable
+	\let\endtable\endthesis@defaulttable
+}
 
 \makeatother
 
@@ -72,6 +86,7 @@
 \setcounter{page}{1}
 \renewcommand{\chaptername}{BAB}
 \renewcommand{\thechapter}{\Roman{chapter}}
+\usemainfloatplacements
 %----------------------------------------------------------------%
 
 %----------------------------------------------------------------%
@@ -97,6 +112,7 @@
 % Setting judul anak lampiran
 \titleformat*{\section}{\bfseries}
 
+\restoredefaultfloatplacements
 \input{chapters/ta/appendix/appendix}
 
 \end{document}

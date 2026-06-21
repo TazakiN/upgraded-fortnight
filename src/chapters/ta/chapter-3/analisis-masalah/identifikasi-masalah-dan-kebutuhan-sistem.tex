@@ -1,6 +1,6 @@
 \subsection{Identifikasi Masalah dan Kebutuhan Sistem}
 \label{subsec:identifikasi-masalah}
-Berdasarkan celah fungsional pada arsitektur DecMed yang telah diuraikan pada Subbab \ref{subsec:analisis-sistem-decmed} dan kebutuhan operasional yang tampak pada Subbab \ref{subsubsec:analisis-skenario-layanan-klinis}, penelitian ini mengidentifikasi tiga masalah utama yang sekaligus menjadi fokus pembahasan pada Tugas Akhir ini.
+Berdasarkan celah fungsional pada arsitektur DecMed yang telah diuraikan pada Subbab \ref{subsec:analisis-sistem-decmed} dan kebutuhan operasional yang tampak pada Subbab \ref{subsubsec:analisis-skenario-layanan-klinis}, Tugas Akhir ini mengidentifikasi tiga kelompok masalah utama yang sekaligus menjadi fokus pembahasan pada Tugas Akhir ini.
 
 \begin{enumerate}[leftmargin=*]
 	\item Mekanisme kontrol akses pada DecMed belum mendukung otorisasi yang granular. Hak akses belum dapat menyatakan batasan rinci seperti jenis data, aksi yang diperbolehkan, masa berlaku, maupun ruang lingkup delegasi. Kondisi ini belum selaras dengan kebutuhan layanan kesehatan yang menuntut penerapan prinsip \textit{need-to-know}.
@@ -8,7 +8,26 @@ Berdasarkan celah fungsional pada arsitektur DecMed yang telah diuraikan pada Su
 	\item Pendelegasian hak akses pada DecMed masih bergantung pada keterlibatan langsung pasien sebagai penerbit akses baru. Ketergantungan ini kurang sesuai dengan alur pelayanan kesehatan yang kolaboratif dan dinamis, karena delegasi antar tenaga medis seharusnya dapat berlangsung secara berantai dengan pembatasan yang makin ketat tanpa memerlukan intervensi ulang dari pasien.
 \end{enumerate}
 
-Ketiga masalah tersebut berkorespondensi langsung dengan rumusan masalah pada subbab \ref{sec:rumusan-masalah}, yaitu kebutuhan untuk merancang mekanisme kontrol akses granular, rancangan segmentasi data, dan fitur atenuasi \textit{offline} untuk delegasi akses berantai.
+Ketiga kelompok masalah tersebut berkorespondensi langsung dengan rumusan masalah pada subbab \ref{sec:rumusan-masalah}, yaitu kebutuhan untuk merancang mekanisme kontrol akses granular, rancangan segmentasi data, dan fitur atenuasi \textit{offline} untuk delegasi akses berantai. Agar keterhubungan antara analisis masalah, solusi, rancangan, implementasi, dan pengujian dapat ditelusuri, masalah tersebut dirinci menggunakan ID \texttt{M-TA} pada Tabel \ref{tab:identifikasi-masalah-decmed}.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Identifikasi Masalah DecMed}
+	\label{tab:identifikasi-masalah-decmed}
+	\small
+	\begin{tabular}{|p{0.12\textwidth}|p{0.33\textwidth}|p{0.15\textwidth}|p{0.25\textwidth}|}
+		\hline
+		\textbf{ID}      & \textbf{Masalah}                                                        & \textbf{STRIDE}                          & \textbf{Kebutuhan Terkait}                                                 \\ \hline
+		\texttt{M-TA-01} & Token otorisasi DecMed belum granular                                   & \texttt{T01}, \texttt{T05}, \texttt{T08} & \texttt{KF-TA-01}, \texttt{KF-TA-04}--\texttt{KF-TA-09}                    \\ \hline
+		\texttt{M-TA-02} & Data RME belum menjadi objek akses yang tersegmentasi                   & \texttt{T03}, \texttt{T05}, \texttt{T06} & \texttt{KF-TA-05}, \texttt{KF-TA-07}, \texttt{KF-TA-08}, \texttt{KF-TA-09} \\ \hline
+		\texttt{M-TA-03} & Alur pemberian akses belum mendukung delegasi antaraktor                & \texttt{T04}, \texttt{T08}               & \texttt{KF-TA-01}, \texttt{KF-TA-04}, \texttt{KF-TA-06}                    \\ \hline
+		\texttt{M-TA-04} & Delegasi berantai berisiko memperluas hak akses jika tidak dibatasi     & \texttt{T01}, \texttt{T05}, \texttt{T08} & \texttt{KF-TA-04}, \texttt{KF-TA-06}                                       \\ \hline
+		\texttt{M-TA-05} & Role \texttt{MedicalPersonnel} terlalu umum untuk akses tulis per aktor & \texttt{T02}, \texttt{T05}, \texttt{T08} & \texttt{KF-TA-05}, \texttt{KF-TA-07}, \texttt{KF-TA-08}, \texttt{KF-TA-09} \\ \hline
+		\texttt{M-TA-06} & Pencabutan dan audit delegasi berantai belum cukup eksplisit            & \texttt{T04}, \texttt{T08}               & \texttt{KF-TA-02}, \texttt{KF-TA-03}                                       \\ \hline
+	\end{tabular}
+\end{table}
+
+Berdasarkan Tabel \ref{tab:identifikasi-masalah-decmed}, penelitian ini tidak hanya memandang keterbatasan DecMed sebagai persoalan token otorisasi, tetapi sebagai rangkaian masalah yang saling bergantung. \texttt{M-TA-01} menunjukkan keterbatasan ekspresi token akses, \texttt{M-TA-02} menunjukkan belum tersedianya objek data yang cukup granular untuk ditegakkan, \texttt{M-TA-03} dan \texttt{M-TA-04} menunjukkan kebutuhan delegasi terbatas, \texttt{M-TA-05} menunjukkan perlunya validasi berdasarkan sub-role tenaga medis, sedangkan \texttt{M-TA-06} menunjukkan kebutuhan pencabutan dan audit pada rantai delegasi. ID masalah tersebut digunakan sebagai dasar pemetaan solusi, rancangan, implementasi, dan pengujian pada bagian selanjutnya. Ancaman \texttt{T07} tidak dipetakan lebih lanjut ke kebutuhan sistem karena \textit{availibility} PRE dan IPFS berada di luar fokus utama Tugas Akhir ini.
 
 % Untuk mengatasi masalah tersebut, kebutuhan fungsional pada \ref{tab:kebutuhan-fungsional-decmed} perlu diperbaharui agar sesuai dengan kebutuhan sistem. Kebutuhan tersebut dirangkum dalam Tabel \ref{tab:kebutuhan-fungsional-tambahan}.
 

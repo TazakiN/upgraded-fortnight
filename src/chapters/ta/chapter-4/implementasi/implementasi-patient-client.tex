@@ -1,0 +1,38 @@
+\subsection{Implementasi \textit{Patient Client}}
+\label{subsec:implementasi-patient-client}
+
+\textit{Patient Client} diimplementasikan sebagai \texttt{I-TA-05} untuk merealisasikan \texttt{R-TA-07} dan \texttt{R-TA-08}. \textit{Client} ini mendukung skenario penerbitan token awal oleh pasien, pembacaan RME, peninjauan audit akses, dan pencabutan akses. \textit{Patient Client} tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan pasien yang dikirimkan ke \textit{Server} PRE.
+
+Pada sisi pasien, \textit{Patient Client} menyediakan proses pendaftaran, pemindaian QR rumah sakit, pemilihan konteks layanan, pemberian akses awal, pembacaan RME, serta tampilan audit dan pencabutan akses. Ketika pasien memberikan akses awal, pasien memilih RME yang akan dibagikan, aktor penerima, cakupan kategori data, hak akses, dan masa berlaku. Informasi tersebut dikirimkan ke \textit{Server} PRE untuk diterbitkan sebagai token Macaroon awal.
+
+Terdapat beberapa bagian dari \textit{Patient Client} yang sudah ada dari implementasi DecMed sebelumnya, seperti halaman register, halaman login, halaman \textit{Home}, halaman Profil, Halaman log akses, halaman \textit{scan} QR, dan halaman detail RME. Bagian-bagian tersebut diadaptasi dan disesuaikan untuk mendukung implementasi Tugas Akhir ini. \textit{Patient Client} mengalami penyesuaian dan tambahan halaman baru pada implementasi Tugas Akhir ini untuk beberapa halaman berikut,
+
+\subsubsection{Halaman \textit{Home} (\textit{List} RME)}
+\label{subsubsec:halaman-home-daftar-rme}
+
+Halaman \textit{home} digunakan untuk menampilkan daftar rekam medis milik pasien. Daftar tersebut ditampilkan dalam bentuk \textit{cards list}. \textit{Cards list} tersebut berisi data dari masing-masing RME. Data tersebut meliputi tanggal dibuatnya RME dan ID dari RME tersebut. Masing-masing \textit{card} dapat diklik dan akan mengarahkan pasien menuju halaman detail RME. Tampilan dari halaman \textit{home} dapat dilihat pada Gambar \ref{fig:halaman-home-daftar-rme}.
+
+\subsubsection{Halaman \textit{Dataset List} per RME}
+\label{subsubsec:halaman-dataset-list-per-rme}
+
+Halaman \textit{Dataset List} per RME digunakan untuk menampilkan daftar dataset yang terkait dengan sebuah RME. Halaman tersebut berisi data dari dataset yang terkait dengan RME tersebut, seperti tanggal dibuatnya dataset, ID dari dataset tersebut, dan data dari segmen yang terkait. Tampilan dari halaman \textit{Dataset List} per RME dapat dilihat pada Gambar \ref{fig:halaman-dataset-list-per-rme}.
+
+\subsubsection{Halaman Detail RME}
+\label{subsubsec:halaman-detail-rme}
+
+Halaman detail RME digunakan untuk menampilkan informasi RME yang dipilih pasien dari daftar RME. Halaman tersebut menjadi titik awal untuk melihat daftar dataset, membaca data segmen yang terkait, serta menelusuri informasi akses untuk RME tersebut. Tampilan dari halaman detail RME dapat dilihat pada Gambar \ref{fig:halaman-detail-rme}.
+
+\subsubsection{Halaman Detail Audit Delegasi}
+\label{subsubsec:halaman-detail-audit-delegasi-rme}
+
+Halaman detail audit delegasi RME digunakan untuk menampilkan detail dari audit delegasi RME. Halaman tersebut berisi data dari audit delegasi RME, seperti tanggal audit delegasi, ID dari audit delegasi RME, dan data dari segmen yang terkait. Tampilan dari halaman detail audit delegasi RME dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
+
+\subsubsection{Halaman Riwayat Akses}
+\label{subsubsec:halaman-riwayat-akses}
+
+Halaman riwayat akses digunakan untuk menampilkan daftar akses yang pernah diberikan atau digunakan pada RME pasien. Informasi ini membantu pasien meninjau aktor yang pernah memperoleh akses, konteks akses, serta status akses yang berkaitan dengan data RME. Tampilan dari halaman riwayat akses dapat dilihat pada Gambar \ref{fig:halaman-riwayat-akses}.
+
+\subsubsection{Halaman Detail \textit{Scan} QR}
+\label{subsubsec:halaman-detail-scan-qr}
+
+Halaman detail \textit{scan} QR digunakan ketika pasien memindai QR rumah sakit untuk memulai proses pemberian akses awal. Setelah QR berhasil dipindai, pasien diarahkan untuk mengonfirmasi cakupan akses yang akan diberikan sebelum token Macaroon awal diterbitkan. Tampilan dari halaman \textit{scan} QR dan halaman konfirmasi akses awal dapat dilihat pada Gambar \ref{fig:halaman-detail-scan-qr} dan Gambar \ref{fig:halaman-konfirmasi-akses-awal}.

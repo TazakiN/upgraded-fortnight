@@ -1,21 +1,44 @@
-\subsection{Pemetaan Kebutuhan terhadap Solusi}
+\subsection{Pemetaan Masalah terhadap Solusi}
 \label{subsec:pemetaan-kebutuhan-solusi}
 
-Hasil analisis solusi dirangkum pada Tabel \ref{tab:pemetaan-kebutuhan-solusi}. Pemetaan ini menunjukkan hubungan antara kebutuhan sistem yang ditemukan pada analisis masalah dengan komponen solusi yang akan dirancang pada bagian berikutnya.
+Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel \ref{tab:daftar-solusi-ta},
+% sedangkan pemetaan masalah terhadap solusi dirangkum pada Tabel \ref{tab:pemetaan-masalah-solusi}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Pemetaan Kebutuhan Sistem terhadap Analisis Solusi}
-	\label{tab:pemetaan-kebutuhan-solusi}
+	\caption{Daftar Analisis Solusi}
+	\label{tab:daftar-solusi-ta}
 	\small
-	\begin{tabular}{|p{0.28\textwidth}|p{0.3\textwidth}|p{0.32\textwidth}|}
+	\begin{tabular}{|p{0.12\textwidth}|p{0.5\textwidth}|p{0.25\textwidth}|}
 		\hline
-		\textbf{Kebutuhan Sistem} & \textbf{Komponen Solusi}                                                                                      & \textbf{Implikasi terhadap Rancangan}                                       \\ \hline
-		Kontrol akses granular    & Macaroons dengan \textit{caveats}                                                                             & Token perlu memuat batasan aktor, kategori data, hak akses, dan waktu.      \\ \hline
-		Segmentasi data           & Pemisahan data berdasarkan kategori fungsi pada penyimpanan \textit{off-chain} dan metadata \textit{on-chain} & Metadata segmen data perlu dapat dicocokkan dengan \textit{caveats} token.  \\ \hline
-		Delegasi berantai         & Atenuasi \textit{offline} pada Macaroons                                                                      & Pemegang token dapat menurunkan hak akses dengan cakupan yang lebih sempit. \\ \hline
+		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                        & \textbf{Masalah Terkait}                                               \\ \hline
+		\texttt{S-TA-01} & Token otorisasi berbasis Macaroons dengan \textit{caveats}                                                                  & \texttt{M-TA-01}, \texttt{M-TA-04}                                     \\ \hline
+		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                       \\ \hline
+		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                     \\ \hline
+		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05} \\ \hline
+		\texttt{S-TA-05} & Validasi sub-role tenaga medis terhadap dataset untuk operasi tulis                                                         & \texttt{M-TA-05}                                                       \\ \hline
+		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                       \\ \hline
 	\end{tabular}
 \end{table}
+
+% \begin{table}[!ht]
+% 	\centering
+% 	\caption{Pemetaan Masalah terhadap Solusi}
+% 	\label{tab:pemetaan-masalah-solusi}
+% 	\small
+% 	\begin{tabular}{|p{0.12\textwidth}|p{0.27\textwidth}|p{0.22\textwidth}|p{0.29\textwidth}|}
+% 		\hline
+% 		\textbf{ID Masalah} & \textbf{Ringkasan Masalah}                        & \textbf{ID Solusi}                                   & \textbf{Ringkasan Solusi}                                                                    \\ \hline
+% 		\texttt{M-TA-01}    & Token belum granular                              & \texttt{S-TA-01}, \texttt{S-TA-04}                   & Macaroons membawa \textit{caveats}, lalu PRE mengevaluasi \textit{caveats} saat akses.       \\ \hline
+% 		\texttt{M-TA-02}    & Data belum tersegmentasi                          & \texttt{S-TA-02}, \texttt{S-TA-04}                   & Data dipecah menjadi segmen, kemudian metadata segmen dicocokkan dengan token.               \\ \hline
+% 		\texttt{M-TA-03}    & Pasien harus menerbitkan akses ulang              & \texttt{S-TA-03}                                     & Pemegang token dapat membuat token turunan secara lokal.                                     \\ \hline
+% 		\texttt{M-TA-04}    & Delegasi dapat memperluas hak jika tidak dibatasi & \texttt{S-TA-01}, \texttt{S-TA-03}, \texttt{S-TA-04} & \textit{Caveats} bersifat \textit{append-only}, dan cakupan efektif dihitung sebagai irisan. \\ \hline
+% 		\texttt{M-TA-05}    & Role tenaga medis terlalu umum                    & \texttt{S-TA-05}, \texttt{S-TA-04}                   & PRE mengambil sub-role dari \textit{on-chain} dan memvalidasi dataset tulis.                 \\ \hline
+% 		\texttt{M-TA-06}    & Revokasi dan audit delegasi belum kuat            & \texttt{S-TA-06}                                     & Revokasi berantai, \textit{revocation key} di Redis, dan audit di \textit{on-chain}.         \\ \hline
+% 	\end{tabular}
+% \end{table}
+
+\texttt{S-TA-01} dan \texttt{S-TA-04} terutama ditujukan untuk menjawab \texttt{M-TA-01}, \texttt{S-TA-02} ditujukan untuk menjawab \texttt{M-TA-02}, \texttt{S-TA-03} ditujukan untuk menjawab \texttt{M-TA-03} dan \texttt{M-TA-04}, \texttt{S-TA-05} ditujukan untuk menjawab \texttt{M-TA-05}, sedangkan \texttt{S-TA-06} ditujukan untuk menjawab \texttt{M-TA-06}.
 
 Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
 

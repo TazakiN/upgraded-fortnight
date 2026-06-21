@@ -11,7 +11,7 @@ Implementasi pada Tugas Akhir ini memiliki beberapa keterbatasan sebagai berikut
 		      \item \textit{Smart contract} yang digunakan diunggah ke jaringan IOTA Testnet.
 	      \end{itemize}
 	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
-	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat fungsi. Kemudian data per \textit{function category} RME disimpan sebagai \textit{freetext}.
+	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat kombinasi \textit{dataset category} dan \textit{function category}, kemudian disimpan sebagai \textit{freetext}.
 \end{enumerate}
 
 Keterbatasan tersebut menunjukkan bahwa implementasi masih berada pada tingkat pembuktian konsep. Pengembangan berikutnya perlu memperluas cakupan pengujian keamanan, memperjelas mekanisme pencabutan akses, memperkuat verifikasi bukti delegasi dan \textit{wallet proof}, serta menguji sistem pada lingkungan yang lebih dekat dengan operasional layanan kesehatan.

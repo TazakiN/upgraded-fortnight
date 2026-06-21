@@ -1,6 +1,8 @@
 \subsection{Rancangan Arsitektur Solusi}
 \label{subsec:rancangan-arsitektur-solusi}
 
+Rancangan arsitektur solusi pada subbab ini direferensikan sebagai \texttt{R-TA-01}. Rancangan ini merealisasikan \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, dan \texttt{S-TA-04} untuk menjawab keterbatasan kontrol akses granular, segmentasi data, dan delegasi pada DecMed awal.
+
 Arsitektur solusi mempertahankan keseluruhan arsitektur kerangka kerja DecMed. Tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client} tetap berada pada ruang lingkup sebagaimana rancangan DecMed awal. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas rekam medis, dokter, perawat, apoteker dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
 
 Perubahan utama berada pada \textit{server} PRE, token otorisasi berbasis Macaroons, dan implementasi Move \textit{smart contract}. Pada rancangan ini, token akses diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil. Implementasi Move \textit{smart contract} disesuaikan untuk menyimpan metadata yang diperlukan oleh mekanisme segmentasi dan kontrol akses.

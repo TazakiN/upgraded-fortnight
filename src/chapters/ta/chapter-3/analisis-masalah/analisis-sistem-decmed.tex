@@ -20,8 +20,9 @@ Model kontrol akses yang digunakan pada sistem DecMed adalah model CapBAC. DecMe
 #[derive(Debug, Deserialize, Serialize)]
 pub struct JwtClaims {
     pub address: String, // address IOTA pemegang token
-    pub role: AuthRole, // bernilai AdministrativePersonnel atau MedicalPersonnel
-    pub purpose: ReencryptionPurposeType, // bernilai Read atau Update
+    pub role: AuthRole, // AdministrativePersonnel 
+    // atau MedicalPersonnel
+    pub purpose: ReencryptionPurposeType, // READ atau UPDATE
 }
 \end{lstlisting}
 
@@ -55,7 +56,8 @@ pub struct MedicalMetadata {
     pub capsule: String, // capsule untuk PRE re-encryption
     pub cid: String, // pointer ke data di IPFS
     pub created_at: String, // timestamp
-    pub enc_key_and_nonce: String, // kunci dan nonce yang terenkripsi
+    pub enc_key_and_nonce: String, // kunci dan nonce yang 
+    // terenkripsi
 }
 \end{lstlisting}
 

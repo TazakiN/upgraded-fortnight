@@ -1,11 +1,13 @@
 \subsection{Implementasi Segmentasi Data RME}
 \label{subsec:implementasi-segmentasi-data-rme}
 
+Implementasi segmentasi data RME pada subbab ini merupakan realisasi dari \texttt{R-TA-02} melalui komponen \texttt{I-TA-01}. Bagian metadata \textit{on-chain} yang mendukung segmentasi juga terkait dengan \texttt{I-TA-04}.
+
 Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Dengan pendekatan ini, satu episode pelayanan tidak lagi direpresentasikan sebagai satu \textit{blob} besar, tetapi sebagai kumpulan segmen yang dapat diberi izin akses secara terpisah. Setiap segmen data RME disimpan sebagai satu entri metadata pada penyimpanan \textit{on-chain} dan satu objek data pada penyimpanan \textit{off-chain}.
 
-Sebagian besar logika segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan untuk kontrol akses granular data RME yang diakses. Implementasi \texttt{DatasetCategory} ditunjukkan pada Listing \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Listing \ref{lst:implementasi-function-category-segmentasi-rme}.
+Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan untuk kontrol akses granular data RME yang diakses. Implementasi \texttt{DatasetCategory} ditunjukkan pada Listing \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Listing \ref{lst:implementasi-function-category-segmentasi-rme}.
 
-\begin{lstlisting}[language=Rust, caption=Implementasi DatasetCategory pada \textit{crate} decmed-rme-segment, label={lst:implementasi-dataset-category-segmentasi-rme}]
+\begin{lstlisting}[language=Rust, caption=Implementasi \texttt{DatasetCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-dataset-category-segmentasi-rme}]
 	pub enum DatasetCategory {
 		RAWAT_JALAN,
 		RAWAT_INAP,
@@ -14,7 +16,7 @@ Sebagian besar logika segmentasi data RME diimplementasikan pada \textit{crate} 
 	}
 \end{lstlisting}
 
-\begin{lstlisting}[language=Rust, caption=Implementasi FunctionCategory pada \textit{crate} decmed-rme-segment, label={lst:implementasi-function-category-segmentasi-rme}]
+\begin{lstlisting}[language=Rust, caption=Implementasi \texttt{FunctionCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-function-category-segmentasi-rme}]
 	pub enum FunctionCategory {
 		// ADMINISTRATIVE
 		ADMINISTRATIVE_GENERAL,
@@ -49,7 +51,7 @@ Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat p
 \subsubsection{Implementasi Segmentasi Metadata RME pada Penyimpanan \textit{On-Chain}}
 \label{subsec:implementasi-segmentasi-metadata-rme-onchain}
 
-Definisi struktur metadata segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentMetadata} yang merupakan representasi metadata segmen pada sisi Rust sebelum diserialisasi menjadi JSON base64 dan disimpan pada textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} yang sudah dijelaskan pada Listing \ref{lst:decmed-patient-medical-metadata}. Implementasi struktur \texttt{RmeSegmentMetadata} terdapat pada Listing \ref{lst:implementasi-segmentasi-metadata-rme}.
+Definisi struktur metadata segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentMetadata} yang merupakan representasi metadata segmen pada sisi Rust sebelum diserialisasi menjadi JSON base64 dan disimpan pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} yang sudah ditunjukkan pada Listing \ref{lst:decmed-patient-medical-metadata}. Implementasi struktur \texttt{RmeSegmentMetadata} terdapat pada Listing \ref{lst:implementasi-segmentasi-metadata-rme}.
 Struktur tersebut sesuai dengan rancangan skema metadata segmen RME pada Lampiran Tabel \ref{tab:onchain-schema}.
 
 Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebih dahulu. Validasi tersebut mencakup pemeriksaan \textit{field} wajib, validitas kombinasi \texttt{dataset\_category} dan \texttt{function\_category}, format \texttt{segment\_id}, serta kesesuaian \texttt{integrity\_hash} terhadap data terenkripsi. Selain itu, metadata on-chain juga divalidasi agar tidak memuat isi medis dalam bentuk plaintext, karena IOTA hanya digunakan untuk menyimpan referensi dan metadata otorisasi, bukan konten klinis utama.
@@ -72,7 +74,7 @@ Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebi
 	}
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen dan diimplementasikan juga dengan memanfaatkan \textit{crate} \texttt{uuid}. Namun untuk \texttt{related\_rme\_id}, format dari ID tersebut ditambahkan tahun, sehingga format lengkapnya adalah \texttt{RME-YYYY-<UUID>}.
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen. Pada implementasi ini, \texttt{related\_rme\_id} dibangkitkan oleh \textit{Server} PRE dengan format \texttt{RME-\{YYYY\}-\{sequence\_6\_digit\}}, misalnya \texttt{RME-2026-000001}. Nilai \textit{sequence} berasal dari counter global per tahun, sehingga nomor urut tersebut unik pada level sistem untuk tahun berjalan dan direset ketika tahun berganti.
 
 \texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. Atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{hospital\_cid} merupakan \textit{identifier} fasyankes, menunjukkan bahwa segmen data tersebut dihasilkan oleh tenaga medis dari fasyankes tersebut.
 
@@ -81,7 +83,7 @@ Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebi
 \subsubsection{Implementasi Segmentasi Data RME pada Penyimpanan \textit{Off-Chain}}
 \label{subsec:implementasi-segmentasi-data-rme-offchain}
 
-Definisi struktur data segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentData} yang memuat struktur data segmen RME yang disimpan pada penyimpanan \textit{off-chain}. Implementasi struktur \texttt{RmeSegmentData} terdapat pada Listing \ref{lst:implementasi-segmentasi-data-rme}. Struktur tersebut sesuai dengan rancangan skema data segmen RME pada Lampiran Tabel \ref{tab:offchain-schema}.
+Definisi struktur data segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentData} yang memuat struktur data segmen RME yang disimpan pada penyimpanan \textit{off-chain}. Implementasi struktur \texttt{RmeSegmentData} terdapat pada Listing \ref{lst:implementasi-segmentasi-data-rme}. Struktur tersebut sesuai dengan rancangan skema data segmen RME pada Tabel \ref{tab:offchain-schema}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi struktur RmeSegmentData pada crate decmed-rme-segment, label={lst:implementasi-segmentasi-data-rme}]
 pub struct RmeSegmentData {
@@ -97,7 +99,7 @@ pub struct RmeSegmentData {
 }
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen dan diimplementasikan juga dengan memanfaatkan \textit{crate} \texttt{uuid}. Namun untuk \texttt{related\_rme\_id}, format dari ID tersebut ditambahkan tahun, sehingga format lengkapnya adalah \texttt{RME-YYYY-<UUID>}.
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen. Pada implementasi ini, \texttt{related\_rme\_id} dibangkitkan oleh \textit{Server} PRE dengan format \texttt{RME-\{YYYY\}-\{sequence\_6\_digit\}}, misalnya \texttt{RME-2026-000001}. Nilai \textit{sequence} berasal dari counter global per tahun, sehingga nomor urut tersebut unik pada level sistem untuk tahun berjalan dan direset ketika tahun berganti.
 
 \texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen.
 

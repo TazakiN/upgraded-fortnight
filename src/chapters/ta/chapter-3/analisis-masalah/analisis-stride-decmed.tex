@@ -19,11 +19,7 @@ Berdasarkan pembahasan pada Subbab \ref{sec:stride}, tahapan awal dalam melakuka
 	\label{fig:dfd-decmed-level-1}
 \end{figure}
 
-Berdasarkan arsitektur DecMed pada Gambar \ref{fig:decmed-archi} dan DFD pada Gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-decmed-level-1}, \textit{attack surface} utama sistem mencakup \textit{Patient Client}, \textit{Hospital Client}, \textit{Ministry Client}, data pada lapisan \textit{on-chain}, data terenkripsi pada lapisan \textit{off-chain}, \textit{instance} PRE, Redis PRE, jaringan IOTA, IOTA \textit{Gas Station}, serta token kapabilitas yang mengatur otorisasi akses.
-
-Tabel \ref{tab:stride-decmed} menunjukkan hasil identifikasi ancaman berdasarkan metode STRIDE terhadap komponen utama pada sistem DecMed.
-
-\input{resources/chapter-3/analisis/stride-decmed.tex}
+Berdasarkan arsitektur DecMed pada Gambar \ref{fig:decmed-archi} dan DFD pada Gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-decmed-level-1}, \textit{attack surface} utama sistem mencakup \textit{Patient Client}, \textit{Hospital Client}, \textit{Ministry Client}, data pada lapisan \textit{on-chain}, data terenkripsi pada lapisan \textit{off-chain}, \textit{instance} PRE, Redis PRE, jaringan IOTA, IOTA \textit{Gas Station}, serta token kapabilitas yang mengatur otorisasi akses. Hasil identifikasi ancaman berdasarkan metode STRIDE terhadap komponen utama pada DecMed dapat dilihat pada Lampiran \ref{lampiran:analisis-stride-decmed}, khususnya Tabel \ref{tab:stride-decmed}.
 
 Berdasarkan hasil analisis STRIDE pada Tabel \ref{tab:stride-decmed}, ancaman yang paling relevan terhadap fokus Tugas Akhir ini adalah \textit{spoofing} (T01), \textit{tampering} (T02 dan T03), \textit{information disclosure} (T05 dan T06), dan \textit{elevation of privilege} (T08). Ancaman-ancaman tersebut secara langsung berkaitan dengan kebutuhan akan kontrol akses yang lebih granular, segmentasi data \textit{off-chain}, serta mekanisme delegasi yang mampu membatasi hak akses secara bertahap. Ancaman \textit{repudiation} (T04) tetap relevan terhadap kebutuhan audit delegasi, tetapi pada penelitian ini diposisikan sebagai implikasi pendukung karena fokus utama berada pada pembatasan cakupan akses dan delegasi.
 

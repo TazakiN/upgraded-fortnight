@@ -1,0 +1,156 @@
+\chapter{Implementasi Smart Contract Sistem DecMed}
+\label{lampiran:implementasi-smart-contract-sistem-decmed}
+
+\let\textunderscorewithoutbreak\_
+\newcommand{\breakabletextunderscore}{\textunderscorewithoutbreak\allowbreak{}}
+\newcolumntype{Y}[1]{>{\let\_\breakabletextunderscore\raggedright\arraybackslash}p{#1}<{\let\_\textunderscorewithoutbreak}}
+
+\begin{longtable}{|Y{0.36\textwidth}|Y{0.56\textwidth}|}
+	\caption{Daftar Module Smart Contract Sistem DecMed}
+	\label{tab:daftar-module-smart-contract-decmed}                                                                                                                                              \\
+	\hline
+	\textbf{Nama Module}                                                & \textbf{Deskripsi}                                                                                                     \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Module}                                                & \textbf{Deskripsi}                                                                                                     \\
+	\hline
+	\endhead
+
+	\texttt{decmed::patient}                                            & Modul berisi \textit{methods} yang dapat dipanggil oleh pasien.                                                        \\ \hline
+	\texttt{decmed::hospital\_personnel}                                & Modul berisi \textit{methods} yang dapat dipanggil oleh personel fasyankes.                                            \\ \hline
+	\texttt{decmed::admin}                                              & Modul berisi \textit{methods} yang dapat dipanggil oleh Kementerian Kesehatan.                                         \\ \hline
+	\texttt{decmed::proxy}                                              & Modul berisi \textit{methods} yang dapat dipanggil oleh proxy.                                                         \\ \hline
+	\texttt{decmed::shared}                                             & Modul berisi \textit{methods} yang berfungsi sebagai \textit{utility}.                                                 \\ \hline
+	\texttt{decmed::std\_enum\_hospital\_personnel\_access\_data\_type} & Modul ini berisi implementasi \texttt{enum hospital\_personnel\_access\_data\_type} dan \textit{methods} pendukungnya. \\ \hline
+	\texttt{decmed::std\_enum\_hospital\_personnel\_access\_type}       & Modul ini berisi implementasi \texttt{enum hospital\_personnel\_access\_type} dan \textit{methods} pendukungnya.       \\ \hline
+	\texttt{decmed::std\_enum\_hospital\_personnel\_role}               & Modul ini berisi implementasi \texttt{enum hospital\_personnel\_role} dan \textit{methods} pendukungnya.               \\ \hline
+	\texttt{decmed::std\_enum\_hospital\_personnel\_sub\_role}          & Modul ini berisi implementasi \texttt{enum hospital\_personnel\_sub\_role} dan \textit{methods} pendukungnya.          \\ \hline
+	\texttt{decmed::std\_struct\_address\_id}                           & Modul ini berisi implementasi \texttt{struct address\_id} dan \textit{methods} pendukungnya.{id}.                      \\ \hline
+	\texttt{decmed::std\_struct\_hospital}                              & Modul ini berisi implementasi \texttt{struct hospital} dan \textit{methods} pendukungnya.                              \\ \hline
+	\texttt{decmed::std\_struct\_hospital\_admin\_metadata}             & Modul ini berisi implementasi \texttt{struct hospital\_admin\_metadata} dan \textit{methods} pendukungnya.             \\ \hline
+	\texttt{decmed::std\_struct\_hospital\_id\_metadata}                & Modul ini berisi implementasi \texttt{struct hospital\_id\_metadata} dan \textit{methods} pendukungnya.                \\ \hline
+	\texttt{decmed::std\_struct\_hospital\_metadata}                    & Modul ini berisi implementasi \texttt{struct hospital\_metadata} dan \textit{methods} pendukungnya.                    \\ \hline
+	\texttt{decmed::std\_struct\_hospital\_personnel\_access}           & Modul ini berisi implementasi \texttt{struct hospital\_personnel\_access} dan \textit{methods} pendukungnya.           \\ \hline
+\end{longtable}
+
+\begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
+	\caption{Daftar Method pada Module \texttt{decmed::patient}}
+	\label{tab:daftar-method-decmed-patient}                                                                                                        \\
+	\hline
+	\textbf{Nama Method}                                & \textbf{Deskripsi}                                                                        \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Method}                                & \textbf{Deskripsi}                                                                        \\
+	\hline
+	\endhead
+
+	\texttt{create\_access}                             & Membuat entri \textit{capability} yang diberikan kepada personel fasyankes.               \\ \hline
+	\texttt{is\_account\_registered}                    & Mengecek apakah suatu IOTA \textit{address} telah memiliki akun yang terdaftar pada IOTA. \\ \hline
+	\texttt{signup}                                     & Mendaftarkan akun pasien.                                                                 \\ \hline
+	\texttt{get\_account\_info}                         & Memperoleh informasi akun pasien.                                                         \\ \hline
+	\texttt{get\_account\_state}                        & Memperoleh \textit{state} akun pasien.                                                    \\ \hline
+	\texttt{get\_hospital\_personnel\_info}             & Memperoleh data administratif publik milik personel fasyankes.                            \\ \hline
+	\texttt{get\_hospital\_personnel\_role\_for\_grant} & Memperoleh data role dari personnel sebelum diberikan akses oleh pasien.                  \\ \hline
+	\texttt{get\_access\_log}                           & Memperoleh log akses terhadap data RME.
+	\\ \hline
+	\texttt{get\_delegation\_audit\_log}                & Memperoleh log delegasi akses awal dan turunannya yang telah diberikan oleh pasien.
+	\\ \hline
+	\texttt{get\_medical\_record}                       & Memperoleh detail dari suatu entri RME.                                                   \\ \hline
+	\texttt{get\_medical\_records}                      & Memperoleh daftar entri RME yang dimiliki pasien.                                         \\ \hline
+	\texttt{revoke\_access}                             & Mencabut \textit{capability} yang telah diberikan.                                        \\ \hline
+	\texttt{update\_administrative\_metadata}           & Mengedit bagian administratif dari data RME pasien.                                       \\ \hline
+\end{longtable}
+
+\begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
+	\caption{Daftar Method pada Module \texttt{decmed::admin}}
+	\label{tab:daftar-method-decmed-admin}                                                                                        \\
+	\hline
+	\textbf{Nama Method}             & \textbf{Deskripsi}                                                                         \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Method}             & \textbf{Deskripsi}                                                                         \\
+	\hline
+	\endhead
+
+	\texttt{create\_activation\_key} & Membuat kunci aktivasi untuk admin fasyankes sekaligus mendaftarkan fasyankes pada sistem. \\ \hline
+	\texttt{get\_hospitals}          & Mendapatkan daftar fasyankes yang telah terdaftar.                                         \\ \hline
+	\texttt{update\_activation\_key} & Mengedit kunci aktivasi admin fasyankes yang telah terdaftar.                              \\ \hline
+\end{longtable}
+
+\begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
+	\caption{Daftar Method pada Module \texttt{decmed::hospital\_personnel}}
+	\label{tab:daftar-method-decmed-hospital-personnel}                                                                                                                 \\
+	\hline
+	\textbf{Nama Method}                                & \textbf{Deskripsi}                                                                                            \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Method}                                & \textbf{Deskripsi}                                                                                            \\
+	\hline
+	\endhead
+
+	\texttt{cleanup\_read\_access}                      & Menghapus entri akses baca yang telah kedaluwarsa.                                                            \\ \hline
+	\texttt{cleanup\_update\_access}                    & Menghapus entri akses tulis yang telah kedaluwarsa.                                                           \\ \hline
+	\texttt{create\_activation\_key}                    & Membuat kunci aktivasi baru untuk personel fasyankes lainnya.                                                 \\ \hline
+	\texttt{get\_account\_info}                         & Memperoleh informasi akun personel fasyankes.                                                                 \\ \hline
+	\texttt{get\_account\_state}                        & Memperoleh state akun personel fasyankes.                                                                     \\ \hline
+	\texttt{get\_hospital\_personnels}                  & Digunakan oleh admin fasyankes memperoleh daftar personel di fasyankes mereka.                                \\ \hline
+	\texttt{get\_hospital\_personnel\_role\_for\_grant} & Memperoleh data \texttt{role} dari personnel sebelum diberikan akses oleh pasien.                             \\ \hline
+	\texttt{get\_read\_access}                          & Memperoleh daftar akses baca yang dimiliki.                                                                   \\ \hline
+	\texttt{get\_update\_access}                        & Memperoleh daftar akses tulis yang dimiliki.                                                                  \\ \hline
+	\texttt{is\_account\_registered}                    & Mengecek apakah suatu ID personel fasyankes telah terdaftar.                                                  \\ \hline
+	\texttt{signup}                                     & Mendaftarkan akun personel fasyankes.                                                                         \\ \hline
+	\texttt{delete\_hospital\_personnel}                & Menghapus akun personel oleh admin fasyankes.                                                                 \\ \hline
+	\texttt{update\_account\_activation\_key}           & Digunakan oleh admin fasyankes mengedit kunci aktivasi personel fasyankes yang telah terdaftar.               \\ \hline
+	\texttt{update\_administrative\_metadata}           & Mengedit data administratif personel fasyankes.                                                               \\ \hline
+	\texttt{use\_activation\_key}                       & Melakukan aktivasi client personel fasyankes.                                                                 \\ \hline
+	\texttt{get\_delegatee\_candidates}                 & Mengambil daftar kandidat personel satu fasyankes yang dapat menerima delegasi akses.                         \\ \hline
+	\texttt{create\_delegated\_access}                  & Membuat delegasi akses \texttt{Read} dan/atau \texttt{Update} kepada personel lain dalam fasyankes yang sama. \\ \hline
+\end{longtable}
+
+\begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
+	\caption{Daftar Method pada Module \texttt{decmed::proxy}}
+	\label{tab:daftar-method-decmed-proxy}                                                                                                                  \\
+	\hline
+	\textbf{Nama Method}                          & \textbf{Deskripsi}                                                                                      \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Method}                          & \textbf{Deskripsi}                                                                                      \\
+	\hline
+	\endhead
+
+	\texttt{create\_capability}                   & Digunakan oleh Kementerian Kesehatan mendaftarkan \texttt{ProxyCapability}.                             \\ \hline
+	\texttt{create\_medical\_record}              & Membuat entri RME baru. (\textit{legacy})                                                               \\ \hline
+	\texttt{get\_administrative\_data}            & Memperoleh bagian administratif dari data RME milik pasien.                                             \\ \hline
+	\texttt{get\_hospital\_personnel\_role}       & Memperoleh role dari personel fasyankes.                                                                \\ \hline
+	\texttt{get\_medical\_record}                 & Memperoleh bagian administratif dan klinis dari data RME milik pasien.                                  \\ \hline
+	\texttt{get\_medical\_record\_update}         & Memperoleh bagian administratif dan klinis dari data RME milik pasien dalam proses edit entri RME baru. \\ \hline
+	\texttt{is\_patient\_registered}              & Mengecek apakah suatu IOTA \textit{address} telah terdaftar sebagai pasien.                             \\ \hline
+	\texttt{update\_medical\_record}              & Melakukan edit entri RME. (\textit{legacy})                                                             \\ \hline
+	\texttt{create\_medical\_record\_segment}     & Menambahkan segmen metadata RME baru berdasarkan akses update yang valid.                               \\ \hline
+	\texttt{get\_hospital\_personnel\_auth\_info} & Mengambil \texttt{role} dan \texttt{sub-role} personel untuk kebutuhan otorisasi.                       \\ \hline
+	\texttt{get\_medical\_records}                & Mengambil daftar metadata RME pasien secara paginasi melalui proxy.                                     \\ \hline
+\end{longtable}
+
+\begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
+	\caption{Daftar Method pada Module \texttt{decmed::shared}}
+	\label{tab:daftar-method-decmed-shared}                                                       \\
+	\hline
+	\textbf{Nama Method}                     & \textbf{Deskripsi}                                 \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Nama Method}                     & \textbf{Deskripsi}                                 \\
+	\hline
+	\endhead
+
+	\texttt{encode\_hospital\_id}            & Melakukan \textit{encoding} ID fasyankes.          \\ \hline
+	\texttt{encode\_hospital\_personnel\_id} & Melakukan \textit{encoding} ID personel fasyankes. \\ \hline
+	\texttt{encode\_patient\_id}             & Melakukan \textit{encoding} ID pasien.             \\ \hline
+	\texttt{transfer\_proxy\_cap}            & Mentransfer \texttt{ProxyCapability}.              \\ \hline
+	\texttt{transfer\_global\_admin\_cap}    & Mentransfer \texttt{GlobalAdminCapability}.        \\ \hline
+\end{longtable}

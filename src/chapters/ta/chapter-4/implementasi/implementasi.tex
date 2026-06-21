@@ -3,10 +3,30 @@
 
 Bagian ini menjelaskan implementasi dari rancangan solusi yang telah dijabarkan pada Bab \ref{chap:analisis-dan-rancangan}. Implementasi difokuskan pada integrasi Macaroons sebagai token otorisasi, segmentasi data RME, mekanisme atenuasi dan delegasi akses, penegakan otoritas pada \textit{Server} PRE, perubahan \textit{smart contract} IOTA Move, serta penyesuaian antarmuka \textit{client}.
 
+Daftar komponen implementasi dan keterkaitannya dengan rancangan solusi ditunjukkan pada Tabel \ref{tab:daftar-implementasi-sistem}. ID \texttt{I-TA} digunakan sebagai rujukan pada pengujian dan evaluasi.
+
+\begin{table}[!ht]
+	\centering
+	\caption{Daftar Implementasi Sistem}
+	\label{tab:daftar-implementasi-sistem}
+	\small
+	\begin{tabular}{|p{0.12\textwidth}|p{0.48\textwidth}|p{0.30\textwidth}|}
+		\hline
+		\textbf{ID}      & \textbf{Komponen}                                                                       & \textbf{Merealisasikan Rancangan}                    \\ \hline
+		\texttt{I-TA-01} & Crate \texttt{decmed-rme-segment}.                                                      & \texttt{R-TA-02}                                     \\ \hline
+		\texttt{I-TA-02} & Crate \texttt{decmed-macaroon-auth} dan \texttt{macaroon}.                              & \texttt{R-TA-03}, \texttt{R-TA-04}, \texttt{R-TA-05} \\ \hline
+		\texttt{I-TA-03} & Implementasi penegakan otoritas pada \textit{Server} PRE.                               & \texttt{R-TA-05}, \texttt{R-TA-06}, \texttt{R-TA-07} \\ \hline
+		\texttt{I-TA-04} & Implementasi smart contract IOTA Move untuk metadata segmen, akses, dan audit.          & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-07} \\ \hline
+		\texttt{I-TA-05} & Implementasi \textit{Patient Client} untuk pemberian akses awal, pencabutan, dan audit. & \texttt{R-TA-07}, \texttt{R-TA-08}                   \\ \hline
+		\texttt{I-TA-06} & Implementasi \textit{Hospital Client} untuk akses segmen dan delegasi \textit{offline}. & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-08} \\ \hline
+	\end{tabular}
+\end{table}
+
 \input{chapters/ta/chapter-4/implementasi/implementasi-arsitektur-sistem.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-segmentasi-data-rme.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-token-macaroons.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-atenuasi-offline-delegasi.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-penegakan-otoritas-pre.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-smart-contract-iota-move.tex}
-\input{chapters/ta/chapter-4/implementasi/implementasi-antarmuka-client.tex}
+\input{chapters/ta/chapter-4/implementasi/implementasi-patient-client.tex}
+\input{chapters/ta/chapter-4/implementasi/implementasi-hospital-client.tex}

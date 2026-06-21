@@ -1,32 +1,40 @@
 \subsection{Pengujian Skenario Akses dan Delegasi}
 \label{subsec:pengujian-skenario-akses-delegasi}
 
-Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan rancangan skenario pada Tabel \ref{tab:rancangan-skenario-uji-aktor}. Pengujian disusun per aktor agar pembuktian \textit{least privilege} terlihat dari operasi yang diterima maupun operasi yang ditolak.
+Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan rancangan skenario pada Tabel \ref{tab:rancangan-skenario-uji-aktor}. Pengujian disusun per aktor agar pembuktian \textit{least privilege} terlihat dari operasi yang diterima maupun operasi yang ditolak. ID pengujian pada bagian ini menggunakan prefix \texttt{PS-TA} agar skenario manual dapat dibedakan dari pengujian unit dan integrasi.
 
 Skenario positif menguji bahwa aktor dapat menjalankan operasi sesuai cakupan token. Pasien dapat menerbitkan akses awal, petugas rekam medis dan dokter dapat melakukan delegasi terbatas, perawat dapat menulis segmen pemeriksaan awal, dokter dapat mengelola segmen klinis, petugas laboratorium dapat membaca permintaan dan menulis hasil pemeriksaan, serta apoteker dapat membaca resep dan menulis status \textit{dispensing}. Pada skenario tersebut, \textit{Server} PRE melanjutkan proses \textit{re-encryption} setelah Macaroon, \textit{wallet proof}, dataset, fungsi klinis, aksi, dan episode RME sesuai.
 
 Skenario negatif menguji penolakan akses ketika aktor mencoba melampaui hak yang didelegasikan. Pengujian mencakup perawat yang mencoba menulis terapi, petugas laboratorium yang mencoba membaca diagnosis, apoteker yang mencoba membaca anamnesis atau hasil laboratorium, penggunaan token kedaluwarsa, penggunaan token oleh alamat \textit{wallet} yang tidak sesuai, serta delegasi melebihi \texttt{max\_delegation\_depth}. Pada seluruh skenario negatif, perilaku yang diharapkan adalah \textit{Server} PRE menolak permintaan sebelum data terenkripsi diambil dan sebelum proses \textit{re-encryption} dijalankan.
 
-Ringkasan pengujian manual ditunjukkan pada Tabel \ref{tab:pengujian-skenario-akses-delegasi}.
+Ringkasan pengujian manual ditunjukkan pada Tabel \ref{tab:pengujian-skenario-akses-delegasi}. Skenario negatif untuk token kedaluwarsa, ketidaksesuaian \textit{wallet proof}, kedalaman delegasi berlebih, dan token dicabut dipisahkan agar setiap klaim keamanan dapat ditelusuri secara mandiri.
 
-\begin{table}[!ht]
-	\centering
-	\caption{Ringkasan Pengujian Manual Skenario Akses dan Delegasi per Aktor}
-	\label{tab:pengujian-skenario-akses-delegasi}
-	\small
-	\begin{tabular}{|p{0.08\textwidth}|p{0.18\textwidth}|p{0.35\textwidth}|p{0.22\textwidth}|p{0.10\textwidth}|}
-		\hline
-		\textbf{ID} & \textbf{Aktor}       & \textbf{Skenario}                                                                       & \textbf{Ekspektasi}                                                              & \textbf{Status} \\ \hline
-		S01         & Pasien               & Pasien memberikan token akses awal untuk satu episode RME.                              & Token terbit dan terikat pada pasien, episode RME, penerima, serta masa berlaku. & Berhasil.       \\ \hline
-		S02         & Petugas Rekam Medis  & Petugas rekam medis mendelegasikan akses pemeriksaan awal kepada perawat.               & Token turunan dibuat dengan cakupan lebih sempit daripada token induk.           & Berhasil.       \\ \hline
-		S03         & Perawat              & Perawat menulis segmen anamnesis pada episode RME yang didelegasikan.                   & Segmen tersimpan sesuai dataset dan fungsi klinis yang diizinkan.                & Berhasil.       \\ \hline
-		S04         & Perawat              & Perawat mencoba menulis segmen terapi.                                                  & Permintaan ditolak karena fungsi terapi tidak termasuk cakupan token.            & Berhasil.       \\ \hline
-		S05         & Dokter               & Dokter membaca dan menulis diagnosis serta terapi.                                      & Permintaan diterima karena cakupan token sesuai.                                 & Berhasil.       \\ \hline
-		S06         & Dokter               & Dokter mendelegasikan akses terbatas kepada petugas laboratorium.                       & Token turunan laboratorium dibuat tanpa memperluas hak token induk.              & Berhasil.       \\ \hline
-		S07         & Petugas Laboratorium & Petugas laboratorium membaca permintaan dan menulis hasil pemeriksaan.                  & Operasi diterima pada segmen laboratorium yang didelegasikan.                    & Berhasil.       \\ \hline
-		S08         & Petugas Laboratorium & Petugas laboratorium mencoba membaca diagnosis pasien.                                  & Permintaan ditolak atau segmen diagnosis tidak ditampilkan.                      & Berhasil.       \\ \hline
-		S09         & Apoteker             & Apoteker membaca resep dan menulis status \textit{dispensing}.                          & Operasi diterima pada segmen apotek yang didelegasikan.                          & Berhasil.       \\ \hline
-		S10         & Apoteker             & Apoteker mencoba membaca anamnesis atau hasil laboratorium.                             & Permintaan ditolak atau data tidak ditampilkan.                                  & Berhasil.       \\ \hline
-		S11         & Aktor Penerima Akses & Token kedaluwarsa, token tanpa \textit{wallet proof}, atau delegasi berlebih digunakan. & \textit{Server} PRE menolak permintaan sebelum \textit{re-encryption}.           & Berhasil.       \\ \hline
-	\end{tabular}
-\end{table}
+\begingroup
+\small
+\begin{longtable}{|p{0.13\textwidth}|p{0.16\textwidth}|p{0.33\textwidth}|p{0.31\textwidth}|}
+	\caption{Pengujian Skenario Akses dan Delegasi per Aktor}
+	\label{tab:pengujian-skenario-akses-delegasi}                                                                                                                                                                       \\
+	\hline
+	\textbf{ID}       & \textbf{Aktor}       & \textbf{Skenario}                                                                     & \textbf{Ekspektasi}                                                              \\ \hline
+	\endfirsthead
+	\caption[]{Ringkasan Pengujian Manual Skenario Akses dan Delegasi per Aktor (lanjutan)}                                                                                                                             \\
+	\hline
+	\textbf{ID}       & \textbf{Aktor}       & \textbf{Skenario}                                                                     & \textbf{Ekspektasi}                                                              \\ \hline
+	\endhead
+	\texttt{PS-TA-01} & Pasien               & Pasien memberikan token akses awal untuk satu episode RME kepada petugas rekam medis. & Token terbit dan terikat pada pasien, episode RME, penerima, serta masa berlaku. \\ \hline
+	\texttt{PS-TA-02} & Petugas Rekam Medis  & Petugas rekam medis mendelegasikan akses pemeriksaan awal kepada perawat.             & Token turunan dibuat dengan cakupan lebih sempit daripada token induk.           \\ \hline
+	\texttt{PS-TA-03} & Perawat              & Perawat menulis segmen anamnesis pada episode RME yang didelegasikan.                 & Segmen tersimpan sesuai dataset dan fungsi klinis yang diizinkan.                \\ \hline
+	\texttt{PS-TA-04} & Perawat              & Perawat mencoba menulis segmen terapi.                                                & Permintaan ditolak karena fungsi terapi tidak termasuk cakupan token.            \\ \hline
+	\texttt{PS-TA-05} & Dokter               & Dokter membaca dan menulis diagnosis serta terapi.                                    & Permintaan diterima karena cakupan token sesuai.                                 \\ \hline
+	\texttt{PS-TA-06} & Dokter               & Dokter mendelegasikan akses terbatas kepada petugas laboratorium.                     & Token turunan laboratorium dibuat tanpa memperluas hak token induk.              \\ \hline
+	\texttt{PS-TA-07} & Petugas Laboratorium & Petugas laboratorium membaca permintaan dan menulis hasil pemeriksaan.                & Operasi diterima pada segmen laboratorium yang didelegasikan.                    \\ \hline
+	\texttt{PS-TA-08} & Petugas Laboratorium & Petugas laboratorium mencoba membaca diagnosis pasien.                                & Permintaan ditolak atau segmen diagnosis tidak ditampilkan.                      \\ \hline
+	\texttt{PS-TA-09} & Dokter               & Dokter mendelegasikan akses terbatas kepada apoteker.                                 & Token turunan apoteker dibuat tanpa memperluas hak token induk.                  \\ \hline
+	\texttt{PS-TA-10} & Apoteker             & Apoteker membaca resep dan menulis status \textit{dispensing}.                        & Operasi diterima pada segmen apotek yang didelegasikan.                          \\ \hline
+	\texttt{PS-TA-11} & Apoteker             & Apoteker mencoba membaca anamnesis atau hasil laboratorium.                           & Permintaan ditolak atau data tidak ditampilkan.                                  \\ \hline
+	\texttt{PS-TA-12} & Aktor Penerima Akses & Token kedaluwarsa digunakan.                                                          & \textit{Server} PRE menolak permintaan sebelum \textit{re-encryption}.           \\ \hline
+	\texttt{PS-TA-13} & Aktor Penerima Akses & Token digunakan oleh \textit{wallet} yang tidak sesuai.                               & \textit{Server} PRE menolak permintaan karena aktor aktif tidak cocok.           \\ \hline
+	\texttt{PS-TA-14} & Aktor Penerima Akses & Delegasi melebihi \texttt{max\_delegation\_depth}.                                    & \textit{Server} PRE menolak token turunan yang melewati batas delegasi.          \\ \hline
+	\texttt{PS-TA-15} & Aktor Penerima Akses & Token yang telah dicabut digunakan kembali.                                           & Token dicabut ditolak sebelum akses data terenkripsi diberikan.                  \\ \hline
+\end{longtable}
+\endgroup

@@ -1,15 +1,13 @@
 \chapter{Contoh \textit{Caveat} Token Awal untuk Petugas Rekam Medis}
 \label{lampiran:contoh-caveat-token-awal-rekam-medis}
 
-Sebagai contoh, pasien dapat memberikan token awal kepada petugas rekam medis dengan cakupan akses yang cukup untuk mengoordinasikan pelayanan pada satu episode RME tertentu. Token tersebut dapat berisi \textit{caveat} sebagai berikut.
-
-\begin{lstlisting}[caption={Contoh Caveat Token Awal untuk Petugas Rekam Medis}, label={lst:contoh-token-awal-rekam-medis}]
+\begin{lstlisting}[caption={Contoh Caveat Token \texttt{READ} Awal untuk Petugas Rekam Medis}, label={lst:contoh-token-baca-awal-rekam-medis}]
+purpose = READ
 patient_address = 0xPASIEN
-related_rme_id = RME-2026-000001
 root_subject = 0xREKAM_MEDIS
+hospital_cid = hos_dalgi
 
 read_dataset_in = [RAWAT_JALAN, RAWAT_INAP, LABORATORIUM, APOTEK]
-write_dataset_in = [RAWAT_JALAN, RAWAT_INAP, LABORATORIUM, APOTEK]
 
 read_function_in = [
   ANAMNESIS,
@@ -22,6 +20,19 @@ read_function_in = [
   ...
 ]
 
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 2
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Contoh Caveat Token \texttt{UPDATE} Awal untuk Petugas Rekam Medis}, label={lst:contoh-token-pembaruan-awal-rekam-medis}]
+purpose = UPDATE
+patient_address = 0xPASIEN
+related_rme_id = RME-000001
+root_subject = 0xREKAM_MEDIS
+hospital_cid = hos_dalgi
+
+write_dataset_in = [RAWAT_INAP, LABORATORIUM, APOTEK]
+
 write_function_in = [
   ANAMNESIS,
   PEMERIKSAAN_FISIK,
@@ -32,7 +43,7 @@ write_function_in = [
 ]
 
 expires_before = 2026-05-16T18:00:00
-max_delegation_depth = 1
+max_delegation_depth = 2
 \end{lstlisting}
 
-Nilai \texttt{0xPASIEN}, \texttt{RME-2026-000001}, dan \texttt{0xREKAM\_MEDIS} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang di-\textit{generate}. ID RME menggunakan format \texttt{RME-\{YYYY\}-\{sequence\_6\_digit\}} dengan nomor urut global per tahun pada \textit{Server} PRE. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.
+Nilai \texttt{0xPASIEN}, \texttt{RME-000001}, \texttt{hos\_dalgi}, dan \texttt{0xREKAM\_MEDIS} adalah contoh nilai yang hanya bersifat ilustratif. Pada kenyataannya, nilai pemegang token akan berbeda-beda tergantung pada alamat \textit{wallet} yang digunakan dan ID RME yang di-\textit{generate}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan di sini.

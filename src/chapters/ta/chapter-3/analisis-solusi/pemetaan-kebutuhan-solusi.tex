@@ -16,7 +16,7 @@ Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusur
 		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                       \\ \hline
 		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                     \\ \hline
 		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05} \\ \hline
-		\texttt{S-TA-05} & Validasi sub-role tenaga medis terhadap dataset untuk operasi tulis                                                         & \texttt{M-TA-05}                                                       \\ \hline
+		\texttt{S-TA-05} & Validasi subrole tenaga medis terhadap dataset untuk operasi tulis                                                          & \texttt{M-TA-05}                                                       \\ \hline
 		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                       \\ \hline
 	\end{tabular}
 \end{table}
@@ -33,7 +33,7 @@ Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusur
 % 		\texttt{M-TA-02}    & Data belum tersegmentasi                          & \texttt{S-TA-02}, \texttt{S-TA-04}                   & Data dipecah menjadi segmen, kemudian metadata segmen dicocokkan dengan token.               \\ \hline
 % 		\texttt{M-TA-03}    & Pasien harus menerbitkan akses ulang              & \texttt{S-TA-03}                                     & Pemegang token dapat membuat token turunan secara lokal.                                     \\ \hline
 % 		\texttt{M-TA-04}    & Delegasi dapat memperluas hak jika tidak dibatasi & \texttt{S-TA-01}, \texttt{S-TA-03}, \texttt{S-TA-04} & \textit{Caveats} bersifat \textit{append-only}, dan cakupan efektif dihitung sebagai irisan. \\ \hline
-% 		\texttt{M-TA-05}    & Role tenaga medis terlalu umum                    & \texttt{S-TA-05}, \texttt{S-TA-04}                   & PRE mengambil sub-role dari \textit{on-chain} dan memvalidasi dataset tulis.                 \\ \hline
+% 		\texttt{M-TA-05}    & Role tenaga medis terlalu umum                    & \texttt{S-TA-05}, \texttt{S-TA-04}                   & PRE mengambil subrole dari \textit{on-chain} dan memvalidasi dataset tulis.                 \\ \hline
 % 		\texttt{M-TA-06}    & Revokasi dan audit delegasi belum kuat            & \texttt{S-TA-06}                                     & Revokasi berantai, \textit{revocation key} di Redis, dan audit di \textit{on-chain}.         \\ \hline
 % 	\end{tabular}
 % \end{table}
@@ -49,13 +49,13 @@ Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada 
 	\small
 	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
 		\hline
-		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                                                           \\ \hline
-		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                                                           \\ \hline
-		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan                               \\ \hline
-		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}                                     \\ \hline
-		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                                             \\ \hline
-		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                                             \\ \hline
-		PRE               & Verifikasi otoritas dan distribusi akses terenkripsi     & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}                           , namun berbasis token Macaroons \\ \hline
+		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                                                          \\ \hline
+		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                                                          \\ \hline
+		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan                              \\ \hline
+		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}                                    \\ \hline
+		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                                            \\ \hline
+		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                                            \\ \hline
+		PRE               & Verifikasi otoritas dan distribusi akses terenkripsi     & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}                           , namun berbasis token Macaroon \\ \hline
 	\end{tabular}
 \end{table}
 

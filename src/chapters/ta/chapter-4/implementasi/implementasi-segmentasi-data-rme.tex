@@ -74,7 +74,7 @@ Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebi
 	}
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen. Pada implementasi ini, \texttt{related\_rme\_id} dibangkitkan oleh \textit{Server} PRE dengan format \texttt{RME-\{YYYY\}-\{sequence\_6\_digit\}}, misalnya \texttt{RME-2026-000001}. Nilai \textit{sequence} berasal dari counter global per tahun, sehingga nomor urut tersebut unik pada level sistem untuk tahun berjalan dan direset ketika tahun berganti.
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen. Pada implementasi ini, \texttt{related\_rme\_id} dibangkitkan oleh \textit{Server} PRE dengan format \verb|RME-{sequence_6_digit}|, misalnya \verb|RME-000001|.
 
 \texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. Atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{hospital\_cid} merupakan \textit{identifier} fasyankes, menunjukkan bahwa segmen data tersebut dihasilkan oleh tenaga medis dari fasyankes tersebut.
 
@@ -99,9 +99,7 @@ pub struct RmeSegmentData {
 }
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. Pembangkitan \texttt{segment\_id} memanfaatkan \textit{crate} \texttt{uuid} pada implementasi Rust. \texttt{related\_rme\_id} merupakan ID RME atau episode pelayanan yang menjadi induk segmen. Pada implementasi ini, \texttt{related\_rme\_id} dibangkitkan oleh \textit{Server} PRE dengan format \texttt{RME-\{YYYY\}-\{sequence\_6\_digit\}}, misalnya \texttt{RME-2026-000001}. Nilai \textit{sequence} berasal dari counter global per tahun, sehingga nomor urut tersebut unik pada level sistem untuk tahun berjalan dan direset ketika tahun berganti.
-
-\texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen.
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. \texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. atribut tersebut memiliki nilai sesuai dengan Listing \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen.
 
 \texttt{service\_date} merupakan tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} beserta informasi \textit{timezone}. \texttt{payload} berisi konten utama segmen dengan tipe data \texttt{Value} Rust, yang berarti bisa berisi format data apapun. Pada implementasi ini, \texttt{payload} berisi data dalam bentuk \texttt{freetext}. \texttt{payload\_hash} merupakan hash integritas dari konten \texttt{payload}.
 
@@ -128,7 +126,7 @@ Pada implementasi ini, \texttt{RmeSegmentData} digunakan sebagai representasi se
 % 	\end{tabular}
 % \end{table}
 
-Implementasi ini membuat proses otorisasi dapat dilakukan pada tingkat segmen. Sebagai contoh, Macaroons yang hanya memuat izin baca untuk \texttt{RAWAT\_JALAN}, fungsi \texttt{PEMERIKSAAN\_PENUNJANG}, dan \texttt{related\_rme\_id} tertentu hanya dapat digunakan untuk meminta segmen yang berada pada episode dan kategori tersebut. Segmen lainnya seperti \texttt{DIAGNOSIS}, \texttt{TERAPI}, atau \texttt{PERESEPAN} tidak akan dikirimkan ke \textit{client} oleh \textit{Server} PRE karena metadata segmennya tidak termasuk dalam cakupan efektif Macaroon.
+Implementasi ini membuat proses otorisasi dapat dilakukan pada tingkat segmen. Sebagai contoh, token Macaroon yang hanya memuat izin baca untuk \texttt{RAWAT\_JALAN}, fungsi \texttt{PEMERIKSAAN\_PENUNJANG}, dan \texttt{related\_rme\_id} tertentu hanya dapat digunakan untuk meminta segmen yang berada pada episode dan kategori tersebut. Segmen lainnya seperti \texttt{DIAGNOSIS}, \texttt{TERAPI}, atau \texttt{PERESEPAN} tidak akan dikirimkan ke \textit{client} oleh \textit{Server} PRE karena metadata segmennya tidak termasuk dalam cakupan efektif Macaroon.
 
 Dengan pendekatan ini, IOTA berperan sebagai penyimpanan metadata dan sumber rujukan status segmen, sedangkan penegakan aturan akses berdasarkan kategori dilakukan oleh \textit{Server} PRE pada saat permintaan baca atau tulis diproses.
 

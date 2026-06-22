@@ -1,7 +1,7 @@
 \subsection{Implementasi \textit{Patient Client}}
 \label{subsec:implementasi-patient-client}
 
-\textit{Patient Client} diimplementasikan sebagai \texttt{I-TA-05} untuk merealisasikan \texttt{R-TA-07} dan \texttt{R-TA-08}. \textit{Client} ini mendukung skenario penerbitan token awal oleh pasien, pembacaan RME, peninjauan audit akses, dan pencabutan akses. \textit{Patient Client} tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan pasien yang dikirimkan ke \textit{Server} PRE.
+\textit{Patient Client} diimplementasikan sebagai \texttt{I-TA-05} untuk merealisasikan \texttt{R-TA-07} dan \texttt{R-TA-08}. \textit{Client} ini mendukung skenario penerbitan token awal oleh pasien, pembacaan RME, peninjauan audit akses, dan pencabutan akses. \textit{Patient Client} tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan pasien yang dikirimkan ke \textit{Server} PRE. Tangkapan layar implementasi disajikan pada Lampiran \ref{lampiran:implementasi-patient-client}.
 
 Pada sisi pasien, \textit{Patient Client} menyediakan proses pendaftaran, pemindaian QR rumah sakit, pemilihan konteks layanan, pemberian akses awal, pembacaan RME, serta tampilan audit dan pencabutan akses. Ketika pasien memberikan akses awal, pasien memilih RME yang akan dibagikan, aktor penerima, cakupan kategori data, hak akses, dan masa berlaku. Informasi tersebut dikirimkan ke \textit{Server} PRE untuk diterbitkan sebagai token Macaroon awal.
 

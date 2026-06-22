@@ -1,0 +1,25 @@
+\chapter{Alur Implementasi Penegakan Otoritas pada Server PRE}
+\label{lampiran:alur-implementasi-penegakan-otoritas-pre}
+
+Alur implementasi penegakan otoritas pada \textit{Server} PRE dibagi menjadi dua gambar. Gambar \ref{fig:legenda-flowdiag-penegakan-otoritas-pre} menunjukkan legenda bentuk pada \textit{Flow Diagram}. Gambar \ref{fig:alur-penegakan-otoritas-pre-a} menunjukkan autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Gambar \ref{fig:alur-penegakan-otoritas-pre-b} menunjukkan validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA yang merupakan kelanjutan dari Gambar \ref{fig:alur-penegakan-otoritas-pre-a}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.65\textwidth,keepaspectratio]{resources/appendix/legenda flowdiag.png}
+	\caption{Legenda bentuk pada \textit{Flow Diagram}}
+	\label{fig:legenda-flowdiag-penegakan-otoritas-pre}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{resources/appendix/flowdiag-penegakan otorisasi a.png}
+	\caption{Alur implementasi penegakan otoritas pada \textit{Server} PRE bagian autentikasi token, \textit{effective capability}, \textit{delegation chain}, dan revokasi}
+	\label{fig:alur-penegakan-otoritas-pre-a}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[height=0.8\textheight,keepaspectratio]{resources/appendix/flowdiag-penegakan otorisasi b.png}
+	\caption{Alur implementasi penegakan otoritas pada \textit{Server} PRE bagian validasi \textit{role} dan \textit{subrole}, validasi segmen, \textit{wallet proof}, serta eksekusi PRE, IPFS, dan IOTA}
+	\label{fig:alur-penegakan-otoritas-pre-b}
+\end{figure}

@@ -1,7 +1,7 @@
 {\small
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{|p{0.65cm}|p{2.2cm}|p{1.9cm}|p{3.6cm}|p{3.4cm}|}
+\begin{longtable}{|p{0.65cm}|p{2.2cm}|p{1.9cm}|p{4cm}|p{4cm}|}
 	\caption{Analisis STRIDE pada Sistem DecMed}
 	\label{tab:stride-decmed}                                                                                                                                                                                                                                                               \\
 	\hline
@@ -18,7 +18,7 @@
 	T01                                                                                                                                                                                               &
 	Token Kapabilitas                                                                                                                                                                                 &
 	\textit{Spoofing}                                                                                                                                                                                 &
-	Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk memperoleh akses terhadap RME.                                                                                                &
+	Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk data RME.                                                                                                                     &
 	Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                                                       \\
 	\hline
 
@@ -46,15 +46,15 @@
 	T05                                                                                                                                                                                               &
 	Mekanisme Delegasi                                                                                                                                                                                &
 	\textit{Information Disclosure}                                                                                                                                                                   &
-	Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan klinis.                                                                                                                 &
-	Kebocoran data kesehatan sensitif pasien.                                                                                                                                                                                                                                               \\
+	Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan.                                                                                                                        &
+	Kebocoran data RME pasien.                                                                                                                                                                                                                                                              \\
 	\hline
 
 	T06                                                                                                                                                                                               &
 	Metadata \textit{On-chain}                                                                                                                                                                        &
 	\textit{Information Disclosure}                                                                                                                                                                   &
-	Metadata transaksi mengungkap relasi pasien, fasilitas kesehatan, atau jenis layanan medis.                                                                                                       &
-	Privasi pasien dan informasi layanan kesehatan dapat terekspos.                                                                                                                                                                                                                         \\
+	Metadata transaksi mengungkap relasi pasien, fasyankes, atau jenis layanan klinis.                                                                                                                &
+	Privasi pasien dan informasi layanan klinis dapat terekspos.                                                                                                                                                                                                                            \\
 	\hline
 
 	T07                                                                                                                                                                                               &
@@ -67,7 +67,7 @@
 	T08                                                                                                                                                                                               &
 	Mekanisme Delegasi                                                                                                                                                                                &
 	\textit{Elevation of Privilege}                                                                                                                                                                   &
-	Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi secara granular.                                                                                                  &
+	Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi.                                                                                                                  &
 	Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                                                           \\
 	\hline
 \end{longtable}

@@ -5,14 +5,7 @@ Implementasi penegakan otoritas pada \textit{Server} PRE merupakan realisasi dar
 
 Secara umum, penegakan otoritas pada \textit{Server} PRE tidak hanya memeriksa keberadaan token akses, tetapi juga memeriksa kesesuaian antara token, aktor aktif, status kelembagaan aktor, metadata segmen, serta aksi yang diminta. Pendekatan ini digunakan karena sistem mendukung token Macaroon yang dapat didelegasikan dan diatenuasi. Oleh karena itu, token yang valid secara kriptografis tetap harus dibatasi oleh konteks akses yang tercantum dalam \textit{caveats} dan metadata segmen.
 
-Alur implementasi penegakan otoritas pada \textit{Server} PRE ditunjukkan pada Gambar \ref{fig:alur-penegakan-otoritas-pre}. Alur tersebut memperlihatkan bahwa setiap permintaan akses melewati beberapa lapisan pemeriksaan sebelum dapat dilanjutkan ke proses PRE, IPFS, dan IOTA.
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=\textwidth]{resources/chapter-4/flowdiag-penegakan otorisasi.png}
-	\caption{Alur penegakan otoritas pada \textit{Server} PRE}
-	\label{fig:alur-penegakan-otoritas-pre}
-\end{figure}
+Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai referensi pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre}. Bagian awal alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-a} mencakup autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Kelanjutan alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-b} mencakup validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA.
 
 \subsubsection{Autentikasi Token Macaroon}
 
@@ -38,7 +31,7 @@ Pemeriksaan revokasi dilakukan menggunakan kunci revokasi yang dibentuk dari \te
 
 % Mekanisme revokasi ini menjadi penting karena Macaroon merupakan token yang dapat beredar di sisi klien hingga masa berlakunya habis. Tanpa mekanisme revokasi, token yang sudah tidak diinginkan masih dapat digunakan sampai mencapai waktu kedaluwarsa. Redis digunakan sebagai penyimpanan status revokasi karena pemeriksaan revokasi perlu dilakukan secara cepat pada setiap permintaan akses.
 
-\subsubsection{Validasi Role dan Sub-role melalui Move Smart Contract}
+\subsubsection{Validasi Role dan subrole melalui Move Smart Contract}
 
 Setelah token dinyatakan tidak dicabut, \textit{Server} PRE memeriksa aktor aktif sesuai hasil dari \texttt{DelegationChain} melalui \textit{Move Smart Contract}. Pemeriksaan ini dilakukan terhadap \textit{Hospital Personnel Registry} untuk memastikan bahwa aktor aktif masih memiliki role atau sub\-role yang sah dalam konteks rumah sakit.
 
@@ -83,17 +76,17 @@ Pengecualian terhadap beberapa \textit{endpoint} dilakukan karena \textit{endpoi
 	\small
 	\begin{tabular}{|p{0.62\textwidth}|p{0.28\textwidth}|}
 		\hline
-		\textbf{Bagian}                                                                            & \textbf{Status}  \\ \hline
-		Validasi \textit{Bearer Macaroon}                                                          & Terimplementasi. \\ \hline
-		Validasi \textit{chained-HMAC} pada Macaroons                                              & Terimplementasi. \\ \hline
-		\textit{Parsing} \textit{caveats} pada Macaroons                                           & Terimplementasi. \\ \hline
-		Perhitungan \texttt{EffectiveCapability}                                                   & Terimplementasi. \\ \hline
-		Penentuan aktor aktif melalui \texttt{DelegationChain}                                     & Terimplementasi. \\ \hline
-		Pemeriksaan revokasi token melalui Redis                                                   & Terimplementasi. \\ \hline
-		Pemeriksaan \textit{role} dan \textit{sub-role} aktor melalui \textit{Move Smart Contract} & Terimplementasi. \\ \hline
-		Validasi konteks segmen terhadap \textit{metadata} IOTA atau \textit{metadata preview}     & Terimplementasi. \\ \hline
-		Validasi aksi baca dan tulis terhadap cakupan \textit{dataset} dan \textit{function}       & Terimplementasi. \\ \hline
-		Verifikasi \textit{wallet} \textit{signature} terhadap aktor aktif                         & Terimplementasi. \\ \hline
+		\textbf{Bagian}                                                                           & \textbf{Status}  \\ \hline
+		Validasi \textit{Bearer Macaroon}                                                         & Terimplementasi. \\ \hline
+		Validasi \textit{chained-HMAC} pada token Macaroon                                        & Terimplementasi. \\ \hline
+		\textit{Parsing} \textit{caveats} pada token Macaroon                                     & Terimplementasi. \\ \hline
+		Perhitungan \texttt{EffectiveCapability}                                                  & Terimplementasi. \\ \hline
+		Penentuan aktor aktif melalui \texttt{DelegationChain}                                    & Terimplementasi. \\ \hline
+		Pemeriksaan revokasi token melalui Redis                                                  & Terimplementasi. \\ \hline
+		Pemeriksaan \textit{role} dan \textit{subrole} aktor melalui \textit{Move Smart Contract} & Terimplementasi. \\ \hline
+		Validasi konteks segmen terhadap \textit{metadata} IOTA atau \textit{metadata preview}    & Terimplementasi. \\ \hline
+		Validasi aksi baca dan tulis terhadap cakupan \textit{dataset} dan \textit{function}      & Terimplementasi. \\ \hline
+		Verifikasi \textit{wallet} \textit{signature} terhadap aktor aktif                        & Terimplementasi. \\ \hline
 	\end{tabular}
 \end{table}
 

@@ -4,51 +4,51 @@
 Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada rancangan segmentasi data. Skema penyimpanan dibagi menjadi metadata segmen yang disimpan pada penyimpanan \textit{on-chain} dan isi segmen terenkripsi yang disimpan pada penyimpanan \textit{off-chain}.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
-	\caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                                    \\
+	\caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                              \\
 	\hline
-	\textbf{Komponen} & \textbf{Key JSON}                                                                                         & \textbf{Keterangan} \\
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Komponen} & \textbf{Key JSON}                                                                                         & \textbf{Keterangan} \\
+	\textbf{Komponen} & \textbf{Key JSON}                                                                                   & \textbf{Keterangan} \\
 	\hline
 	\endhead
 
 	\multirow{4}{2.8cm}{\textbf{Identitas Segmen}}
 	                  & \texttt{segment\_id}
-	                  & UUID unik untuk satu segmen data RME.                                                                                           \\ \cline{2-3}
+	                  & UUID unik untuk satu segmen data RME.                                                                                     \\ \cline{2-3}
 	                  & \texttt{related\_rme\_id}
-	                  & ID RME atau episode pelayanan yang menjadi induk segmen, dengan format \texttt{RME-\{YYYY\}-\{counter\}}.                       \\ \cline{2-3}
+	                  & ID RME atau episode pelayanan yang menjadi induk segmen, dengan format \verb|RME-{6_digit}|.                              \\ \cline{2-3}
 	                  & \texttt{patient\_address}
-	                  & Alamat \textit{wallet} pasien pemilik RME.                                                                                      \\ \cline{2-3}
+	                  & Alamat \textit{wallet} pasien pemilik RME.                                                                                \\ \cline{2-3}
 	                  & \texttt{hospital\_id}
-	                  & ID fasilitas pelayanan kesehatan ketika menerima pelayanan.                                                                     \\ \hline
+	                  & ID fasilitas pelayanan kesehatan ketika menerima pelayanan.                                                               \\ \hline
 
 	\multirow{2}{2.8cm}{\textbf{Kategori Data}}
 	                  & \texttt{dataset\_category}
-	                  & Kategori dataset. Sesuai dengan tabel \ref{tab:mapping-dataset-category}.                                                       \\ \cline{2-3}
+	                  & Kategori dataset. Sesuai dengan tabel \ref{tab:mapping-dataset-category}.                                                 \\ \cline{2-3}
 	                  & \texttt{function\_category}
-	                  & Kategori fungsi klinis atau administratif. Sesuai dengan tabel \ref{tab:mapping-function-category}.                             \\ \hline
+	                  & Kategori fungsi klinis atau administratif. Sesuai dengan tabel \ref{tab:mapping-function-category}.                       \\ \hline
 
 	\multirow{2}{2.8cm}{\textbf{Pointer dan Integritas}}
 	                  & \texttt{ipfs\_cid}
-	                  & CID IPFS dari segmen data terenkripsi.                                                                                          \\ \cline{2-3}
+	                  & CID IPFS dari segmen data terenkripsi.                                                                                    \\ \cline{2-3}
 	                  & \texttt{integrity\_hash}
-	                  & Hash SHA-256 dari segmen terenkripsi.                                                                                           \\ \hline
+	                  & Hash SHA-256 dari segmen terenkripsi.                                                                                     \\ \hline
 
 	\multirow{2}{2.8cm}{\textbf{Kapsul Kunci}}
 	                  & \texttt{capsule}
-	                  & Kapsul PRE yang diperlukan untuk proses \textit{re-encryption}.                                                                 \\ \cline{2-3}
+	                  & Kapsul PRE yang diperlukan untuk proses \textit{re-encryption}.                                                           \\ \cline{2-3}
 	                  & \texttt{enc\_key\_and\_nonce}
-	                  & Kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data.                                             \\ \hline
+	                  & Kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data.                                       \\ \hline
 
 	\multirow{3}{2.8cm}{\textbf{Audit Metadata}}
 	                  & \texttt{created\_at}
-	                  & Waktu pembuatan metadata segmen.                                                                                                \\ \cline{2-3}
+	                  & Waktu pembuatan metadata segmen.                                                                                          \\ \cline{2-3}
 	                  & \texttt{author\_address}
-	                  & Alamat \textit{wallet} aktor yang membuat atau memperbarui segmen.                                                              \\ \cline{2-3}
+	                  & Alamat \textit{wallet} aktor yang membuat atau memperbarui segmen.                                                        \\ \cline{2-3}
 	                  & \texttt{updated\_at}
-	                  & Waktu pembaruan terakhir apabila segmen diganti dengan CID baru.                                                                \\ \hline
+	                  & Waktu pembaruan terakhir apabila segmen diganti dengan CID baru.                                                          \\ \hline
 \end{longtable}
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
@@ -66,7 +66,7 @@ Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada ranca
 	                  & \texttt{segment\_id}
 	                  & UUID yang sama dengan \texttt{segment\_id} pada metadata \textit{on-chain}.                                                                    \\ \cline{2-3}
 	                  & \texttt{related\_rme\_id}
-	                  & ID RME atau episode pelayanan yang menjadi induk segmen, dengan format \texttt{RME-\{YYYY\}-\{6\_digit\}}.                                     \\ \cline{2-3}
+	                  & ID RME atau episode pelayanan yang menjadi induk segmen, dengan format \verb|RME-{6_digit}|.                                                   \\ \cline{2-3}
 	                  & \texttt{dataset\_category}
 	                  & Kategori dataset sesuai Tabel \ref{tab:mapping-dataset-category}.                                                                              \\ \cline{2-3}
 	                  & \texttt{function\_category}

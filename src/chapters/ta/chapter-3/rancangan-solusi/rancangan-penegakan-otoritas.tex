@@ -1,21 +1,30 @@
 \subsection{Rancangan Penegakan Otoritas}
 \label{subsec:rancangan-penegakan-otoritas}
 
-Rancangan penegakan otoritas pada subbab ini direferensikan sebagai \texttt{R-TA-05} untuk verifikasi \textit{caveats} dan \textit{effective capability}, \texttt{R-TA-06} untuk validasi sub-role tenaga medis terhadap dataset, serta \texttt{R-TA-07} untuk pencabutan akses Macaroon delegasi. Rancangan ini merealisasikan \texttt{S-TA-04}, \texttt{S-TA-05}, dan \texttt{S-TA-06} untuk menjawab \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, dan \texttt{M-TA-06}.
+Rancangan penegakan otoritas pada subbab ini direferensikan sebagai \texttt{R-TA-05} untuk verifikasi \textit{caveats} dan \textit{effective capability}, \texttt{R-TA-06} untuk validasi subrole tenaga medis terhadap dataset, serta \texttt{R-TA-07} untuk pencabutan akses token Macaroon delegasi. Rancangan ini merealisasikan \texttt{S-TA-04}, \texttt{S-TA-05}, dan \texttt{S-TA-06} untuk menjawab \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, dan \texttt{M-TA-06}.
 
-Penegakan otoritas pada rancangan ini merujuk pada proses memastikan bahwa setiap permintaan akses terhadap data RME hanya dilayani apabila aktor yang mengajukan permintaan memiliki kewenangan yang sah, sesuai dengan token otorisasi, konteks delegasi, jenis akses, dan segmen data yang diminta. Penegakan ini penting karena token Macaroons memungkinkan hak akses diturunkan kepada aktor lain melalui delegasi. Tanpa mekanisme verifikasi yang ketat pada \textit{Server} PRE, token turunan berpotensi digunakan di luar batas kewenangan awal, misalnya untuk mengakses dataset yang tidak termasuk cakupan token, melewati kedalaman delegasi yang diizinkan, atau tetap digunakan setelah hak akses dicabut.
+Penegakan otoritas pada rancangan ini merujuk pada proses memastikan bahwa setiap permintaan akses terhadap data RME hanya dilayani apabila aktor yang mengajukan permintaan memiliki kewenangan yang sah, sesuai dengan token otorisasi, konteks delegasi, jenis akses, dan segmen data yang diminta. Penegakan ini penting karena token Macaroon memungkinkan hak akses diturunkan kepada aktor lain melalui delegasi. Tanpa mekanisme verifikasi yang ketat pada \textit{Server} PRE, token turunan berpotensi digunakan di luar batas kewenangan awal, misalnya untuk mengakses dataset yang tidak termasuk cakupan token, digunakan oleh aktor yang tidak memiliki kewenangan, atau tetap digunakan setelah hak akses dicabut.
 
-Bagian ini membahas tiga aspek utama penegakan otoritas pada \textit{Server} PRE. Pertama, Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre} menjelaskan verifikasi \textit{caveats} Macaroons untuk memastikan token, tanda tangan aktor, kedalaman delegasi, masa berlaku, dan cakupan akses masih valid. Kedua, Subbab \ref{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset} membahas validasi tambahan terhadap \textit{sub-role} tenaga medis agar akses tulis hanya dapat dilakukan pada dataset yang sesuai dengan kewenangannya. Ketiga, Subbab \ref{subsubsec:pencabutan-hak-akses-macaroon-delegasi} menjelaskan rancangan pencabutan hak akses Macaroon delegasi, termasuk bagaimana revokasi ditegakkan agar token awal maupun token turunannya tidak dapat digunakan kembali setelah dicabut.
+Bagian ini membahas tiga aspek utama penegakan otoritas pada \textit{Server} PRE. Pertama, Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre} menjelaskan verifikasi \textit{caveats} Macaroon untuk memastikan token, tanda tangan aktor, kedalaman delegasi, masa berlaku, dan cakupan akses masih valid. Kedua, Subbab \ref{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset} membahas validasi tambahan terhadap \textit{subrole} tenaga medis agar akses tulis hanya dapat dilakukan pada dataset yang sesuai dengan kewenangannya. Ketiga, Subbab \ref{subsubsec:pencabutan-hak-akses-macaroon-delegasi} menjelaskan rancangan pencabutan hak akses token Macaroon delegasi, termasuk bagaimana revokasi ditegakkan agar token awal maupun token turunannya tidak dapat digunakan kembali setelah dicabut.
 
-\subsubsection{Verifikasi \textit{Caveats} Macaroons di PRE}
+Sebagai gambaran, Gambar \ref{fig:seqdiag-overview-penegakan-otoritas} menunjukkan alur penegakan otoritas pada \textit{Server} PRE. Secara garis besar, alur akses dimulai dengan aktor melalui \textit{client} untuk mengirimkan permintaan akses ke \textit{Server} PRE. \textit{Server} PRE kemudian memverifikasi token Macaroon, memverifikasi status revokasi dari token, dan menentukan aktor aktif. Jika semua verifikasi berhasil, \textit{Server} PRE melanjutkan proses ke 3 kemungkinan skenario, yaitu mengambil daftar RME yang dapat diakses, melakukan pembacaan data RME yang melibatkan proses reenkripsi, dan melakukan penulisan data RME.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\textwidth]{resources/chapter-3/rancangan/penegakan otoritas/seqdiag-overview.png}
+	\caption{Alur penegakan otoritas pada \textit{Server} PRE}
+	\label{fig:seqdiag-overview-penegakan-otoritas}
+\end{figure}
+
+\subsubsection{Verifikasi \textit{Caveats} Macaroons}
 \label{subsubsec:verifikasi-caveats-macaroons-di-pre}
 
-Ketika aktor penerima delegasi menggunakan token macaroons, \textit{Server} PRE bertindak sebagai titik penegakan kebijakan akses. \textit{Server} PRE tidak menerbitkan ulang token, tetapi memverifikasi token macaroons dan seluruh bukti yang menyertainya.
+Ketika aktor penerima delegasi menggunakan token Macaroon, \textit{Server} PRE bertindak sebagai titik penegakan kebijakan akses. \textit{Server} PRE tidak menerbitkan ulang token, tetapi memverifikasi token Macaroon dan seluruh bukti yang menyertainya.
 
-Sebagai ilustrasi, langkah verifikasi token macaroons untuk permintaan akses baca data RME adalah sebagai berikut:
+Sebagai ilustrasi, langkah verifikasi token Macaroon untuk permintaan akses baca data RME adalah sebagai berikut:
 
 \begin{enumerate}[leftmargin=*]
-	\item \textit{Server} PRE memverifikasi validitas Macaroons melalui mekanisme \textit{Chained-HMAC} menggunakan \texttt{RootKey}.
+	\item \textit{Server} PRE memverifikasi validitas token Macaroon melalui mekanisme \textit{Chained-HMAC} menggunakan \texttt{RootKey}.
 	\item \textit{Server} PRE memverifikasi bahwa \texttt{patient\_address} dan \texttt{related\_rme\_id} pada token sesuai dengan data RME yang diminta.
 	\item \textit{Server} PRE menghitung aktor aktif. Jika tidak terdapat \texttt{delegated\_to}, maka aktor aktif adalah \texttt{root\_subject}. Jika terdapat satu atau lebih \texttt{delegated\_to}, maka aktor aktif adalah nilai \texttt{delegated\_to} terakhir.
 	\item \textit{Server} PRE memverifikasi tanda tangan \textit{wallet} dari aktor aktif pada permintaan akses.
@@ -26,59 +35,59 @@ Sebagai ilustrasi, langkah verifikasi token macaroons untuk permintaan akses bac
 	\item Jika seluruh verifikasi berhasil, \textit{Server} PRE melanjutkan proses pengambilan data terenkripsi dari IPFS dan melakukan \textit{re-encryption}. Jika salah satu pemeriksaan gagal, permintaan akses ditolak.
 \end{enumerate}
 
-Nilai \texttt{max\_delegation\_depth} diperlakukan sebagai batas maksimum panjang rantai delegasi, bukan sebagai nilai yang ditimpa secara bebas. \textit{Server} PRE menghitung jumlah \textit{caveat} \texttt{delegated\_to} pada token untuk menentukan kedalaman delegasi aktual. Apabila token awal memiliki \texttt{max\_delegation\_depth = 2}, maka token tersebut dapat diturunkan dari petugas rekam medis kepada dokter, lalu dari dokter kepada laboratorium atau apoteker. Jika penerima terakhir mencoba menurunkan token kembali kepada pihak lain, jumlah delegasi akan melebihi batas dan token ditolak oleh \textit{Server} PRE.
+\textit{Server} PRE menghitung jumlah \textit{caveat} \texttt{delegated\_to} pada token untuk menentukan kedalaman delegasi aktual. Apabila token awal memiliki \texttt{max\_delegation\_depth = 2}, maka token tersebut dapat diturunkan sebanyak 2 kali. Jika penerima terakhir mencoba menurunkan token kembali kepada pihak lain, jumlah delegasi akan melebihi batas dan token ditolak oleh \textit{Server} PRE.
 
 Dengan mekanisme tersebut, token turunan tidak dapat memperluas hak akses token induk. Misalnya, apabila token dokter tidak memiliki akses terhadap \texttt{APOTEK}, maka dokter tidak dapat membuat token turunan yang valid untuk apoteker. Meskipun dokter menambahkan \textit{caveat} \texttt{read\_dataset\_in = [APOTEK]}, cakupan efektif token akan menjadi kosong karena batasan tersebut tidak termasuk dalam cakupan token induk. Demikian pula, apabila token induk hanya berlaku hingga pukul 18.00, token turunan yang mencoba menggunakan \texttt{expires\_before} setelah pukul 18.00 tetap tidak akan memperpanjang masa berlaku efektif token.
 
 Rancangan ini mempertahankan kendali awal pasien karena token awal tetap diterbitkan berdasarkan persetujuan pasien. Pada saat yang sama, rancangan ini menyesuaikan proses delegasi dengan alur pelayanan kesehatan, yaitu petugas rekam medis sebagai koordinator akses awal, perawat sebagai aktor yang melakukan pemeriksaan awal, dokter sebagai aktor yang menentukan tindakan medis, serta laboratorium dan apoteker sebagai aktor layanan pendukung. Dengan demikian, mekanisme delegasi ini mendukung kolaborasi layanan kesehatan yang dinamis, menjaga prinsip \textit{least privilege}, dan tetap mempertahankan peran \textit{Server} PRE sebagai titik verifikasi dan penegakan akses.
 
-\subsubsection{Verifikasi \textit{Role} Tenaga Medis untuk akses \textit{Dataset}}
+\subsubsection{Verifikasi \textit{Role} dan \textit{subrole} Tenaga Medis untuk akses \textit{Dataset}}
 \label{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset}
 
 Pada implementasi DecMed sebelumnya, verifikasi \textit{role} tenaga medis untuk akses data sesuai dengan jenis dokumentasinya, yaitu dokumentasi administratif dan klinis. Verifikasi dilakukan dengan memeriksa \textit{role} tenaga medis yang terdapat pada token otorisasi dan memverifikasi juga akun personnel pada penyimpanan \textit{on-chain}. Terdapat 2 \textit{role} pada implementasi DecMed sebelumnya, yaitu \texttt{AdministrativePersonnel} dan \texttt{MedicalPersonnel}.
 
-Pada implementasi Tugas Akhir ini, kebutuhan melibatkan jenis aktor baru yang merupakan turunan dari \texttt{MedicalPersonnel}, yaitu dokter, perawat, petugas laboratorium, dan apoteker. Keempat aktor baru tersebut akan disebut sebagai \textit{sub-role} dari \texttt{MedicalPersonnel}. Sebagaimana dijelaskan pada Subbab \ref{subsec:analisis-segmentasi-data}, setiap aktor tersebut memiliki kebutuhan akses data yang berbeda-beda untuk melakukan akses jenis \textit{update}. Pemetaan kebutuhan akses data untuk setiap aktor dapat dilihat pada Tabel \ref{tab:pemetaan-kebutuhan-akses-update-untuk-setiap-aktor}.
+Pada implementasi Tugas Akhir ini, kebutuhan melibatkan jenis aktor baru yang merupakan turunan dari \texttt{MedicalPersonnel}, yaitu dokter, perawat, petugas laboratorium, dan apoteker. Keempat aktor baru tersebut akan disebut sebagai \textit{subrole} dari \texttt{MedicalPersonnel}. Sebagaimana dijelaskan pada Subbab \ref{subsec:analisis-segmentasi-data}, setiap \textit{subrole} tersebut memiliki kebutuhan akses data yang berbeda-beda untuk melakukan akses jenis \textit{update}. Pemetaan kebutuhan akses data untuk setiap \textit{subrole} dapat dilihat pada Tabel \ref{tab:pemetaan-hak-akses-update-subrole}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Pemetaan Kebutuhan Akses \textit{Update} untuk Setiap Aktor Tenaga Medis}
-	\label{tab:pemetaan-kebutuhan-akses-update-untuk-setiap-aktor}
-	\begin{tabular}{|l|c|c|c|c|}
+	\caption{Pemetaan Hak Akses Update Berdasarkan subrole Tenaga Medis}
+	\label{tab:pemetaan-hak-akses-update-subrole}
+	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
 		\hline
-		\textbf{\textit{Sub-Role}} & \textbf{\begin{tabular}[c]{@{}c@{}}Rawat\\Jalan\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Rawat\\Inap\end{tabular}} & \textbf{Laboratorium} & \textbf{Apotek} \\
+		\textbf{\textit{subrole}} & \textbf{\textit{Dataset Category}} & \textbf{\textit{Function Category}}                  \\
 		\hline
-		Dokter                     & \checkmark                                                    & \checkmark                                                   &                       &                 \\
+		Perawat                   & Rawat Jalan/Rawat Inap             & Anamnesis, Pemeriksaan Fisik, Pemeriksaan Psikologis \\
 		\hline
-		Perawat                    & \checkmark                                                    & \checkmark                                                   &                       &                 \\
+		Dokter                    & Rawat Jalan/Rawat Inap             & Seluruh \textit{function category}                   \\
 		\hline
-		Petugas Laboratorium       &                                                               &                                                              & \checkmark            &                 \\
+		Lab                       & Laboratorium                       & Laboratorium                                         \\
 		\hline
-		Apoteker                   &                                                               &                                                              &                       & \checkmark      \\
+		Apoteker                  & Apotek                             & Peresepan dan Dispensing                             \\
 		\hline
 	\end{tabular}
 \end{table}
 
-Berdasarkan pemetaan tersebut, terdapat verifikasi tambahan untuk \textit{role} \texttt{MedicalPersonnel}, yaitu melakukan validasi apakah \textit{sub-role} pengguna yang saat ini mencoba melakukan aksi \textit{write} memang sesuai dengan jenis \textit{dataset} yang diakses. Alur tambahan tersebut ditunjukkan pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset}. Pada alur ini, \textit{Server} PRE terlebih dahulu mendapatkan informasi \textit{sub-role} tenaga medis dari penyimpanan \textit{on-chain}. Informasi tersebut kemudian digunakan untuk memvalidasi pasangan \textit{role} dan \textit{sub-role} terhadap kategori \textit{dataset} yang coba ditulis. Apabila \textit{sub-role} aktor tidak memiliki kewenangan untuk menulis pada kategori \textit{dataset} tersebut, maka permintaan ditolak sebelum proses penulisan data dilanjutkan.
+Berdasarkan pemetaan tersebut, terdapat verifikasi tambahan untuk \textit{role} \texttt{MedicalPersonnel}, yaitu melakukan validasi apakah \textit{subrole} pengguna yang saat ini mencoba melakukan aksi \textit{write} memang sesuai dengan jenis \textit{dataset} yang diakses. Alur tambahan tersebut ditunjukkan pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset}. Pada alur ini, \textit{Server} PRE terlebih dahulu mendapatkan informasi \textit{subrole} tenaga medis dari penyimpanan \textit{on-chain}. Informasi tersebut kemudian digunakan untuk memvalidasi pasangan \textit{role} dan \textit{subrole} terhadap kategori \textit{dataset} yang coba ditulis. Apabila \textit{subrole} aktor tidak memiliki kewenangan untuk menulis pada kategori \textit{dataset} tersebut, maka permintaan ditolak sebelum proses penulisan data dilanjutkan.
 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-validasi-subrole X dataset.png}
-	\caption{\textit{Sequence Diagram} Rancangan Validasi \textit{Sub-Role} Tenaga Medis terhadap \textit{Dataset Category}}
+	\caption{\textit{Sequence Diagram} Rancangan Validasi \textit{subrole} Tenaga Medis terhadap \textit{Dataset Category}}
 	\label{fig:seqdiag-validasi-subrole-dataset}
 \end{figure}
 
-Bagian berlatar merah pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset} menunjukkan alur yang berubah atau ditambahkan pada rancangan Tugas Akhir ini dibandingkan Implementasi DecMed sebelumnya. Perubahan tersebut mencakup pengambilan informasi \textit{sub-role} dari penyimpanan \textit{on-chain} serta validasi kesesuaian \textit{role}, \textit{sub-role}, dan kategori \textit{dataset} sebelum akses tulis diberikan.
+Bagian berlatar merah pada Gambar \ref{fig:seqdiag-validasi-subrole-dataset} menunjukkan alur yang berubah atau ditambahkan pada rancangan Tugas Akhir ini dibandingkan Implementasi DecMed sebelumnya. Perubahan tersebut mencakup pengambilan informasi \textit{subrole} dari penyimpanan \textit{on-chain} serta validasi kesesuaian \textit{role}, \textit{subrole}, dan kategori \textit{dataset} sebelum akses tulis diberikan.
 
 \subsubsection{Pencabutan Hak Akses Macaroon Delegasi}
 \label{subsubsec:pencabutan-hak-akses-macaroon-delegasi}
 
 Pada implementasi DecMed sebelumnya, pencabutan hak akses dilakukan oleh pasien dengan mencatat token otorisasi yang dicabut ke dalam penyimpanan IOTA \textit{on-chain}. Ketika seorang \textit{personnel} mengajukan permintaan akses terhadap data pasien, \textit{Server} PRE terlebih dahulu memeriksa apakah token otorisasi yang digunakan masih valid dan belum dicabut. Jika token masih valid, \textit{Server} PRE melanjutkan proses pengambilan data terenkripsi dari IPFS dan melakukan \textit{re-encryption}. Sebaliknya, jika token telah dicabut, permintaan akses ditolak.
 
-Pada implementasi Tugas Akhir ini, mekanisme pencabutan hak akses perlu disesuaikan karena token otorisasi tidak lagi hanya digunakan sebagai token tunggal, melainkan dapat diturunkan melalui proses delegasi Macaroon. Dengan adanya fitur delegasi, pencabutan terhadap akses awal tidak boleh hanya membatalkan token yang dimiliki penerima akses pertama, tetapi juga harus membatalkan seluruh Macaroon turunan yang berasal dari token tersebut. Oleh karena itu, mekanisme revokasi dirancang sebagai pencabutan berantai yang tetap dikendalikan oleh pasien sebagai \textit{resource owner}.
+Pada implementasi Tugas Akhir ini, mekanisme pencabutan hak akses perlu disesuaikan karena token otorisasi tidak lagi hanya digunakan sebagai token tunggal, melainkan dapat diturunkan melalui proses delegasi token Macaroon. Dengan adanya fitur delegasi, pencabutan terhadap akses awal tidak boleh hanya membatalkan token yang dimiliki penerima akses pertama, tetapi juga harus membatalkan seluruh token Macaroon turunan yang berasal dari token tersebut. Oleh karena itu, mekanisme revokasi dirancang sebagai pencabutan berantai yang tetap dikendalikan oleh pasien sebagai \textit{resource owner}.
 
 Revokasi akses pada implementasi ini dilakukan melalui kombinasi pencatatan status di IOTA \textit{on-chain} dan penyimpanan ephemeral di Redis PRE, dengan \textit{server} PRE bertindak sebagai titik penegakan kebijakan akses. Lapisan \textit{on-chain} digunakan untuk mencatat perubahan status akses dan audit trail revokasi, sedangkan Redis PRE digunakan untuk menyimpan \textit{hash} dari token awal yang telah dicabut.
 
-Alur pencabutan akses oleh pasien ditunjukkan pada Gambar \ref{fig:seqdiag-revoke-access}. Pada alur tersebut, pasien memilih akses yang akan dicabut melalui \textit{Patient Client}. \textit{Patient Client} kemudian mengeksekusi fungsi \texttt{revoke\_access()} pada \textit{smart contract} Move untuk menandai akses sebagai dicabut, menghapus hak akses pada penyimpanan \textit{on-chain}, melakukan pencabutan berantai terhadap penerima delegasi turunan, serta mencatat kejadian revokasi ke dalam \textit{audit log}. Setelah transaksi \textit{on-chain} berhasil, \textit{Patient Client} mengirimkan payload revokasi ke \textit{Server} PRE agar menyimpan \textit{hash} dari token awal yang telah dicabut pada Redis PRE dan menghapus \textit{re-encryption key} terkait dengan Macaroons yang direvokasi.
+Alur pencabutan akses oleh pasien ditunjukkan pada Gambar \ref{fig:seqdiag-revoke-access}. Pada alur tersebut, pasien memilih akses yang akan dicabut melalui \textit{Patient Client}. \textit{Patient Client} kemudian mengeksekusi fungsi \texttt{revoke\_access()} pada \textit{smart contract} Move untuk menandai akses sebagai dicabut, menghapus hak akses pada penyimpanan \textit{on-chain}, melakukan pencabutan berantai terhadap penerima delegasi turunan, serta mencatat kejadian revokasi ke dalam \textit{audit log}. Setelah transaksi \textit{on-chain} berhasil, \textit{Patient Client} mengirimkan payload revokasi ke \textit{Server} PRE agar menyimpan \textit{hash} dari token awal yang telah dicabut pada Redis PRE dan menghapus \textit{re-encryption key} terkait dengan token Macaroon yang direvokasi.
 
 \begin{figure}[!ht]
 	\centering
@@ -89,7 +98,7 @@ Alur pencabutan akses oleh pasien ditunjukkan pada Gambar \ref{fig:seqdiag-revok
 
 Bagian berlatar merah pada Gambar \ref{fig:seqdiag-revoke-access} menunjukkan alur baru yang ditambahkan pada Tugas Akhir ini. Alur baru tersebut mencakup pencabutan berantai terhadap \textit{downstream delegatees}, pengiriman payload revokasi ke \textit{Server} PRE, verifikasi tanda tangan pasien, pembentukan \textit{token-level revocation key}, penyimpanan status revokasi pada Redis dengan TTL sesuai masa berlaku token, serta penghapusan kunci \textit{re-encryption}. Dengan penambahan alur ini, revokasi tidak hanya tercatat pada IOTA, tetapi juga langsung ditegakkan oleh \textit{Server} PRE ketika token Macaroon digunakan kembali.
 
-Pada saat verifikasi, \textit{Server} PRE tidak hanya memeriksa \textit{hash} token yang sedang digunakan, tetapi juga informasi relasi delegasi dan \textit{hash root-token}. Dengan demikian, apabila pasien mencabut akses pada delegator awal, maka Macaroon turunan yang dibuat dari akses tersebut juga akan dianggap tidak valid. Pemeriksaan ini dilakukan setiap kali permintaan akses dikirimkan ke \textit{Server} PRE, sehingga token yang telah dicabut tidak dapat digunakan untuk membaca ataupun menulis segmen RME.
+Pada saat verifikasi, \textit{Server} PRE tidak hanya memeriksa \textit{hash} token yang sedang digunakan, tetapi juga informasi relasi delegasi dan \textit{hash root-token}. Dengan demikian, apabila pasien mencabut akses pada delegator awal, maka token Macaroon turunan yang dibuat dari akses tersebut juga akan dianggap tidak valid. Pemeriksaan ini dilakukan setiap kali permintaan akses dikirimkan ke \textit{Server} PRE, sehingga token yang telah dicabut tidak dapat digunakan untuk membaca ataupun menulis segmen RME.
 
 Status revokasi pada Redis diberi TTL sesuai dengan masa berlaku token. Pendekatan ini membuat data revokasi tidak perlu disimpan secara permanen pada penyimpanan \textit{off-chain}, karena setelah token melewati waktu kedaluwarsa, token tersebut tidak lagi dapat digunakan meskipun data revokasinya telah dihapus dari Redis.
 

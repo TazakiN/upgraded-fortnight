@@ -1,7 +1,7 @@
 \subsection{Pengujian Skenario Akses dan Delegasi}
 \label{subsec:pengujian-skenario-akses-delegasi}
 
-Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan rancangan skenario pada Tabel \ref{tab:rancangan-skenario-uji-aktor}. Pengujian disusun per aktor agar pembuktian \textit{least privilege} terlihat dari operasi yang diterima maupun operasi yang ditolak. ID pengujian pada bagian ini menggunakan prefix \texttt{PS-TA} agar skenario manual dapat dibedakan dari pengujian unit dan integrasi.
+Pengujian skenario akses dan delegasi dilakukan secara manual untuk memastikan perilaku sistem sesuai dengan alur akses dan delegasi pada Subbab \ref{subsec:rancangan-alur-akses-dan-delegasi-macaroon}. Pengujian disusun per aktor agar pembuktian \textit{least privilege} terlihat dari operasi yang diterima maupun operasi yang ditolak. ID pengujian pada bagian ini menggunakan prefix \texttt{PS-TA} agar skenario manual dapat dibedakan dari pengujian unit dan integrasi.
 
 Skenario positif menguji bahwa aktor dapat menjalankan operasi sesuai cakupan token. Pasien dapat menerbitkan akses awal, petugas rekam medis dan dokter dapat melakukan delegasi terbatas, perawat dapat menulis segmen pemeriksaan awal, dokter dapat mengelola segmen klinis, petugas laboratorium dapat membaca permintaan dan menulis hasil pemeriksaan, serta apoteker dapat membaca resep dan menulis status \textit{dispensing}. Pada skenario tersebut, \textit{Server} PRE melanjutkan proses \textit{re-encryption} setelah Macaroon, \textit{wallet proof}, dataset, fungsi klinis, aksi, dan episode RME sesuai.
 

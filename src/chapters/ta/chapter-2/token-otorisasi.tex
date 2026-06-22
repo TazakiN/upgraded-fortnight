@@ -50,7 +50,7 @@ $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $\ve
 	sig_n & = \text{HMAC}(sig_{n-1}, c_n)
 \end{align*}
 
-$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Dokter B), tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
+$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Dokter B), tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
 
 \begin{figure}[ht]
 	\centering
@@ -65,9 +65,9 @@ $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan Macaroon awal.
 
 Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{first-party caveats} yang diverifikasi oleh layanan target, \textit{third-party caveats} yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama \autocite{birgisson2014macaroons}. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi.
 
-\textit{First-party caveat} adalah syarat/ketentuan yang bisa diverifikasi langsung oleh pihak yang memegang kunci rahasia macaroon (biasanya \textit{resource server} atau \textit{authorization server} yang menerbitkan token) \autocite{birgisson2014macaroons}. Bentuknya biasanya sebuah predikat/kondisi seperti \texttt{user = 123}, \texttt{expires < t}, atau \texttt{method = GET} yang dapat dicek secara lokal ketika \textit{request} datang.
+\textit{First-party caveat} adalah syarat/ketentuan yang bisa diverifikasi langsung oleh pihak yang memegang kunci rahasia Macaroon (biasanya \textit{resource server} atau \textit{authorization server} yang menerbitkan token) \autocite{birgisson2014macaroons}. Bentuknya biasanya sebuah predikat/kondisi seperti \texttt{user = 123}, \texttt{expires < t}, atau \texttt{method = GET} yang dapat dicek secara lokal ketika \textit{request} datang.
 
-\textit{Third-party caveat} adalah syarat yang tidak bisa diverifikasi langsung oleh pemegang token, tetapi memerlukan bukti dari layanan pihak ketiga dalam bentuk \textit{discharge macaroon} \autocite{birgisson2014macaroons}. \textit{Caveat} ini berisi lokasi (URL/\textit{identifier} layanan ketiga), \textit{identifier} \textit{caveat}, dan kunci rahasia yang dipakai pihak ketiga untuk menandatangani \textit{discharge macaroon}.
+\textit{Third-party caveat} adalah syarat yang tidak bisa diverifikasi langsung oleh pemegang token, tetapi memerlukan bukti dari layanan pihak ketiga dalam bentuk \textit{discharge Macaroon} \autocite{birgisson2014macaroons}. \textit{Caveat} ini berisi lokasi (URL/\textit{identifier} layanan ketiga), \textit{identifier} \textit{caveat}, dan kunci rahasia yang dipakai pihak ketiga untuk menandatangani \textit{discharge Macaroon}.
 
 \subsection{Biscuit Token}
 \label{subsec:biscuit-token}

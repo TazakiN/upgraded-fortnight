@@ -11,7 +11,8 @@ Implementasi pada Tugas Akhir ini memiliki beberapa keterbatasan sebagai berikut
 		      \item \textit{Smart contract} yang digunakan diunggah ke jaringan IOTA Testnet.
 	      \end{itemize}
 	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
-	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat kombinasi \textit{dataset category} dan \textit{function category}, kemudian disimpan sebagai \textit{freetext}.
+	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat kombinasi \textit{dataset category} dan \textit{function category}, kemudian disimpan sebagai \textit{text}.
+	\item \texttt{max\_delegation\_depth} pada token Macaroon hanya diatur sampai tingkat 2. Hal ini untuk memastikan bahwa token turunan hanya dapat diturunkan sebanyak 2 kali sesuai dengan skenario pada Subbab \ref{subsubsec:analisis-skenario-layanan-klinis} dan rancangan pada Subbab \ref{subsec:rancangan-alur-akses-dan-delegasi-macaroon}.
 \end{enumerate}
 
 Keterbatasan tersebut menunjukkan bahwa implementasi masih berada pada tingkat pembuktian konsep. Pengembangan berikutnya perlu memperluas cakupan pengujian keamanan, memperjelas mekanisme pencabutan akses, memperkuat verifikasi bukti delegasi dan \textit{wallet proof}, serta menguji sistem pada lingkungan yang lebih dekat dengan operasional layanan kesehatan.

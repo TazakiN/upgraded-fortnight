@@ -1,29 +1,15 @@
 \section{IOTA}
 \label{sec:iota}
 
-\subsection{DLT}
+\subsection{Distributed Ledger Technology}
 \label{subsec:dlt}
 
-\textit{Distributed Ledger Technology} adalah sebuah paradigma perubahan dalam cara data direkam, disimpan, dan diverifikasi di beberapa lokasi tanpa kontrol terpusat. \textit{DLT} mencakup berbagai implementasi termasuk \textit{blockchain} dan struktur alternatif seperti \textit{Directed Acyclic Graphs} (\textit{DAGs}), setiap implementasi menawarkan pendekatan yang berbeda untuk mencapai konsensus, keamanan, dan skalabilitas dalam \textit{jaringan} terdesentralisasi \autocite{savadatti2025survey}.
+\textit{Distributed Ledger Technology} (DLT) merupakan teknologi pencatatan data terdistribusi yang memungkinkan data direkam, disimpan, dan diverifikasi oleh banyak \textit{node} tanpa bergantung pada satu otoritas terpusat. DLT mencakup berbagai bentuk implementasi, termasuk \textit{blockchain} dan struktur alternatif seperti \textit{Directed Acyclic Graph} (DAG), yang masing-masing memiliki pendekatan berbeda dalam mencapai konsensus, keamanan, dan skalabilitas pada jaringan terdesentralisasi \autocite{savadatti2025survey}.
 
-DLT merevolusi komputasi yang aman dan \textit{scalable} melalui beberapa prinsip utama. DLT menyediakan penyimpanan data terdesentralisasi dengan mereplikasi informasi di banyak \textit{node}, sehingga menghilangkan \textit{single point of failure} \autocite{savadatti2025survey}. Karakteristik \textit{immutability} memastikan bahwa setelah data dicatat, data tersebut menjadi tahan terhadap upaya perubahan melalui \textit{hashing} kriptografi dan mekanisme konsensus. Transparansi memungkinkan semua partisipan pada jaringan untuk memverifikasi transaksi sembari tetap menjaga kontrol privasi yang sesuai. \textit{Smart contract} memungkinkan perjanjian yang dieksekusi secara otomatis untuk menegakkan aturan yang telah ditentukan tanpa perantara, sehingga mengurangi biaya operasional dan meningkatkan efisiensi \autocite{savadatti2025survey}.
+Karakteristik utama DLT meliputi replikasi data pada banyak \textit{node}, ketahanan terhadap perubahan data melalui mekanisme kriptografi, serta kemampuan verifikasi oleh partisipan jaringan. Karakteristik tersebut membuat DLT banyak digunakan sebagai infrastruktur untuk pencatatan transaksi, penyimpanan referensi data, dan eksekusi aturan terprogram melalui \textit{smart contract} \autocite{savadatti2025survey}. Dalam konteks sistem rekam medis elektronik terdesentralisasi, DLT dapat digunakan untuk mendukung pencatatan data yang dapat diverifikasi tanpa menempatkan seluruh kendali pada satu pihak terpusat.
 
 \subsection{IOTA}
 \label{subsec:iota}
 
-IOTA merupakan DLT khusus yang dirancang secara spesifik untuk jaringan \textit{Internet-of-Things} (IoT). IOTA diluncurkan tahun 2015 dengan visi menciptakan mesin ekonomi terdesentralisasi tanpa biaya transaksi. Filosofi IOTA memiliki berdasar pada prinsip setiap peserta yang ingin melakukan transaksi harus terlebih dahulu memvalidasi dua transaksi sebelumnya melalui \textit{proof-of-work} ringan, menciptakan sistem \textit{pay-it-forward} yang \textit{self-sustaining} dan \textit{self-regulating}. Dalam model ini, tidak ada \textit{miner} khusus yang memerlukan kompensasi, sehingga biaya transaksi menjadi nol.
-
-IOTA Rebased merupakan perubahan arsitektur fundamental dari visi IOTA 2.0 yang dibangun pada dasar teknologi yang berbeda. Perubahan ini menangani batasan desentralisasi dan skalabilitas yang menghambat pertumbuhan ekosistem dan penerapan IoT praktis dari arsitektur sebelumnya \autocite{sedi2025from}. Dengan IOTA Rebased, sistem IOTA menjadi lebih \textit{scalable} dan desentralisasi, meningkatkan keandalan dan kemampuan untuk menangani peningkatan beban transaksi.
-
-\subsection{Arsitektur IOTA}
-\label{subsec:arsitektur-iota}
-
-Berbeda dengan arsitektur \textit{blockchain}, IOTA menggunakan struktur \textit{Directed Acyclic Graph} (\textit{DAG}) yang disebut \textit{Tangle} sebagai buku besar yang terdistribusi \autocite{sedi2025from}. Pada IOTA Rebased, validasi dan konsensus dilakukan oleh komite validator berbasis \textit{Delegated Proof‑of‑Stake} (DPoS) yang menjalankan protokol \textit{Byzantine Fault Tolerant} (Mysticeti) di atas \textit{Tangle} \autocite{iota_consensus}. Transaksi baru yang terkirim ke \texttt{mempool} kemudian diverifikasi oleh \textit{IOTA full node}, lalu “dikunci” dan difinalisasi lewat voting para validator yang dipilih oleh para pemegang token \autocite{iota_transaction_lifecycle} \autocite{sedi2025from} seperti yang terlihat pada Gambar \ref{fig:transaction-lifecycle}. Skema ini menghasilkan implikasi utama berupa skalabilitas tinggi, finalitas transaksi cepat sub-detik dan terdesentralisasi, sambil menjaga transaksi \textit{feeless-like}.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\textwidth]{chapter-2/IOTA-transaction-lifecycle.png}
-	\caption{Siklus transaksi IOTA Rebased \autocite{sedi2025from}}
-	\label{fig:transaction-lifecycle}
-\end{figure}
+IOTA merupakan salah satu implementasi DLT yang dirancang untuk mendukung transaksi pada lingkungan terdesentralisasi, khususnya pada skenario yang membutuhkan skalabilitas tinggi dan biaya transaksi rendah. Berbeda dari \textit{blockchain} konvensional, IOTA menggunakan struktur DAG yang dikenal sebagai \textit{Tangle} sebagai dasar buku besar terdistribusinya \autocite{sedi2025from}. Pada perkembangannya, IOTA mengalami perubahan arsitektur melalui IOTA Rebased. Perubahan ini bertujuan meningkatkan skalabilitas, desentralisasi, dan kemampuan ekosistem IOTA untuk mendukung aplikasi terdesentralisasi, termasuk penggunaan \textit{smart contract} \autocite{sedi2025from}. IOTA menggunakan Move \textit{smart contract} untuk berinteraksi dengan data dan melakukan transaksi.
 

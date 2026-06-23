@@ -1,31 +1,13 @@
 \section{Rancangan Solusi}
 \label{sec:rancangan-solusi}
 
-Berdasarkan hasil analisis solusi pada Subbab \ref{sec:analisis-solusi}, rancangan solusi difokuskan pada pengembangan mekanisme kontrol akses granular dan delegasi terbatas pada DecMed melalui integrasi Macaroons. Rancangan ini mempertahankan fondasi utama DecMed, yaitu IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, dan PRE sebagai mekanisme distribusi akses terhadap data terenkripsi. Perancangan ini mencakup arsitektur sistem, token otorisasi berbasis Macaroons, segmentasi data \textit{off-chain}, alur akses data, dan delegasi berantai dengan atenuasi \textit{offline}.
+Berdasarkan hasil analisis solusi pada Subbab \ref{sec:analisis-solusi}, rancangan solusi difokuskan pada pengembangan mekanisme kontrol akses granular dan delegasi terbatas pada DecMed melalui integrasi Macaroons. Rancangan ini mempertahankan fondasi utama DecMed, yaitu IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, dan PRE sebagai mekanisme distribusi akses terhadap data terenkripsi. Perancangan ini mencakup arsitektur sistem, token otorisasi berbasis Macaroons, segmentasi data \textit{off-chain}, penegakan otoritas pada \textit{Server} PRE, validasi subrole tenaga medis, pencabutan akses, audit, alur akses data, dan delegasi berantai dengan atenuasi \textit{offline}.
 
-Daftar rancangan yang merealisasikan solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi} ditunjukkan pada Tabel \ref{tab:daftar-rancangan-solusi}. ID \texttt{R-TA} digunakan sebagai rujukan pada bagian implementasi dan pengujian.
-
-\begin{table}[!ht]
-	\centering
-	\caption{Daftar Rancangan Solusi}
-	\label{tab:daftar-rancangan-solusi}
-	\small
-	\begin{tabular}{|p{0.12\textwidth}|p{0.54\textwidth}|p{0.24\textwidth}|}
-		\hline
-		\textbf{ID}      & \textbf{Nama Rancangan}                                                                                                                                 & \textbf{Merealisasikan Solusi}                                         \\ \hline
-		\texttt{R-TA-01} & Rancangan arsitektur solusi DecMed dengan Macaroons, segmentasi, dan PRE sebagai \textit{policy enforcement point}.                                     & \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, \texttt{S-TA-04} \\ \hline
-		\texttt{R-TA-02} & Rancangan segmentasi data RME berdasarkan \textit{dataset} dan \textit{function category}.                                                              & \texttt{S-TA-02}                                                       \\ \hline
-		\texttt{R-TA-03} & Rancangan \textit{caveats} Macaroons.                                                                                                                   & \texttt{S-TA-01}                                                       \\ \hline
-		\texttt{R-TA-04} & Rancangan rantai delegasi Macaroons dengan \texttt{root\_subject}, \texttt{delegated\_by}, \texttt{delegated\_to}, dan \texttt{max\_delegation\_depth}. & \texttt{S-TA-03}, \texttt{S-TA-04}                                     \\ \hline
-		\texttt{R-TA-05} & Rancangan verifikasi \textit{caveats}, \textit{effective capability}, dan bukti kepemilikan \textit{wallet} pada \textit{Server} PRE.                       & \texttt{S-TA-04}                                                       \\ \hline
-		\texttt{R-TA-06} & Rancangan validasi subrole tenaga medis terhadap dataset.                                                                                               & \texttt{S-TA-05}                                                       \\ \hline
-		\texttt{R-TA-07} & Rancangan pencabutan akses token Macaroon delegasi.                                                                                                     & \texttt{S-TA-06}                                                       \\ \hline
-		\texttt{R-TA-08} & Rancangan alur akses dan delegasi pada skenario layanan kesehatan kolaboratif.                                                                          & \texttt{S-TA-03}, \texttt{S-TA-04}, \texttt{S-TA-05}                   \\ \hline
-	\end{tabular}
-\end{table}
+Setiap rancangan diberi ID \texttt{R-TA} sebagai rujukan pada bagian implementasi dan pengujian. Pemetaan antara rancangan dan solusi yang direalisasikan dijelaskan pada akhir Subbab \ref{sec:rancangan-solusi}.
 
 \input{chapters/ta/chapter-3/rancangan-solusi/rancangan-arsitektur-solusi.tex}
 \input{chapters/ta/chapter-3/rancangan-solusi/rancangan-segmentasi-data-rme.tex}
 \input{chapters/ta/chapter-3/rancangan-solusi/rancangan-token-macaroons.tex}
 \input{chapters/ta/chapter-3/rancangan-solusi/rancangan-penegakan-otoritas.tex}
 \input{chapters/ta/chapter-3/rancangan-solusi/rancangan-alur-akses-dan-delegasi.tex}
+\input{chapters/ta/chapter-3/rancangan-solusi/pemetaan-rancangan-solusi.tex}

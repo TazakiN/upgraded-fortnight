@@ -86,7 +86,7 @@ Selain kebutuhan fungsional, sistem juga memiliki kebutuhan nonfungsional untuk 
 		KNF-TA-03   & Sistem harus menolak permintaan akses apabila token, rantai delegasi, atau bukti identitas aktor aktif tidak valid.                                                                                                               \\ \hline
 		KNF-TA-04   & Sistem harus mendukung keterlacakan akses dan delegasi dengan mencatat informasi aktor, pasien, RME, segmen, aksi, waktu, dan relasi delegasi yang relevan.                                                                       \\ \hline
 		KNF-TA-05   & Sistem harus menerapkan status revokasi sebelum proses pengambilan data dan \textit{re-encryption} dilakukan.                                                                                                                     \\ \hline
-		KNF-TA-06   & Sistem harus membatasi risiko \textit{replay attack} pada permintaan akses dengan memverifikasi kesegaran bukti identitas aktor aktif.                                                                                            \\ \hline
+		KNF-TA-06   & Sistem harus memverifikasi keterikatan bukti kepemilikan \textit{wallet} terhadap aktor aktif, token akses, dan konteks permintaan akses.                                                                                         \\ \hline
 		KNF-TA-07   & Mekanisme yang diusulkan harus tetap mengikuti arsitektur dasar DecMed yang menggunakan IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, dan PRE sebagai mekanisme distribusi akses data. \\ \hline
 	\end{tabular}
 \end{table}

@@ -10,29 +10,46 @@ Terdapat beberapa bagian dari \textit{Patient Client} yang sudah ada dari implem
 \subsubsection{Halaman \textit{Home} (\textit{List} RME)}
 \label{subsubsec:halaman-home-daftar-rme}
 
-Halaman \textit{home} digunakan untuk menampilkan daftar rekam medis milik pasien. Daftar tersebut ditampilkan dalam bentuk \textit{cards list}. \textit{Cards list} tersebut berisi data dari masing-masing RME. Data tersebut meliputi tanggal dibuatnya RME dan ID dari RME tersebut. Masing-masing \textit{card} dapat diklik dan akan mengarahkan pasien menuju halaman detail RME. Tampilan dari halaman \textit{home} dapat dilihat pada Gambar \ref{fig:halaman-home-daftar-rme}.
+Halaman \textit{home} merupakan halaman utama yang pertama kali dilihat pasien setelah berhasil masuk ke dalam aplikasi. Halaman ini menampilkan seluruh rekam medis elektronik milik pasien dalam bentuk daftar \textit{card} yang tersusun secara vertikal. Setiap \textit{card} merepresentasikan satu RME unik dan menampilkan dua informasi utama, yaitu tanggal pembuatan RME sebagai identitas waktu, serta ID RME yang ditampilkan dalam ukuran lebih kecil di bawahnya. Daftar RME diurutkan berdasarkan tanggal terbaru, sehingga RME yang paling baru selalu muncul di bagian atas. Apabila pasien memiliki beberapa dataset dalam satu RME, sistem secara otomatis menggabungkan entri tersebut ke dalam satu \textit{card} yang sama. Setiap \textit{card} bersifat interaktif dan dapat diklik, di mana klik tersebut akan mengarahkan pasien menuju halaman detail RME yang bersangkutan.
 
-\subsubsection{Halaman \textit{Dataset List} per RME}
-\label{subsubsec:halaman-dataset-list-per-rme}
-
-Halaman \textit{Dataset List} per RME digunakan untuk menampilkan daftar dataset yang terkait dengan sebuah RME. Halaman tersebut berisi data dari dataset yang terkait dengan RME tersebut, seperti tanggal dibuatnya dataset, ID dari dataset tersebut, dan data dari segmen yang terkait. Tampilan dari halaman \textit{Dataset List} per RME dapat dilihat pada Gambar \ref{fig:halaman-dataset-list-per-rme}.
+Tampilan dari halaman \textit{home} dapat dilihat pada
+Gambar \ref{fig:halaman-home-daftar-rme}.
 
 \subsubsection{Halaman Detail RME}
 \label{subsubsec:halaman-detail-rme}
 
-Halaman detail RME digunakan untuk menampilkan informasi RME yang dipilih pasien dari daftar RME. Halaman tersebut menjadi titik awal untuk melihat daftar dataset, membaca data segmen yang terkait, serta menelusuri informasi akses untuk RME tersebut. Tampilan dari halaman detail RME dapat dilihat pada Gambar \ref{fig:halaman-detail-rme}.
+Halaman detail RME ditampilkan setelah pasien memilih salah satu \textit{card} dari daftar RME pada halaman \textit{home}. Halaman ini berfungsi sebagai titik navigasi lanjutan yang merangkum isi dari sebuah RME dalam bentuk daftar dataset. Bagian atas halaman menampilkan ID dari RME yang sedang dibuka sebagai konteks identifikasi. Di bawahnya, terdapat daftar dataset yang terkait dengan RME tersebut, di mana setiap entri dataset ditampilkan dalam bentuk \textit{card} yang memuat nama kategori dataset serta tanggal pembuatannya. Dataset diurutkan berdasarkan urutan kategorinya. Setiap entri dataset pada daftar tersebut dapat diklik dan akan mengarahkan pasien menuju halaman \textit{Dataset List} per RME yang
+menampilkan isi dari dataset yang dipilih. Pasien juga dapat kembali ke halaman \textit{home} melalui tautan navigasi balik yang tersedia di bagian atas halaman. Apabila RME tersebut belum memiliki dataset, halaman ini akan menampilkan pesan kosong.
+
+Tampilan dari halaman detail RME dapat dilihat pada Gambar \ref{fig:halaman-detail-rme}.
+
+\subsubsection{Halaman \textit{Dataset List} per RME}
+\label{subsubsec:halaman-dataset-list-per-rme}
+
+Halaman \textit{Dataset List} per RME menampilkan isi detail dari satu kategori dataset dalam sebuah RME. Halaman ini diakses setelah pasien memilih salah satu entri dataset dari halaman detail RME. Bagian atas halaman menampilkan nama kategori dataset yang sedang dibuka beserta ID RME terkait sebagai informasi konteks. Isi utama halaman berupa daftar segmen data yang termasuk dalam kategori dataset tersebut, di mana setiap segmen ditampilkan dalam sebuah kartu yang memuat nama kategori fungsi medis serta konten dari payload segmen tersebut dalam format teks. Daftar segmen diurutkan berdasarkan kategori fungsi dan tanggal pembuatannya. Setiap kartu segmen memiliki tombol ikon informasi yang dapat diklik untuk
+menampilkan atau menyembunyikan detail tambahan berupa tanggal pembuatan segmen. Pasien dapat kembali ke halaman detail RME melalui tautan navigasi balik di bagian atas halaman.
+
+Tampilan dari halaman \textit{Dataset List} per RME dapat dilihat pada Gambar \ref{fig:halaman-dataset-list-per-rme}.
 
 \subsubsection{Halaman Detail Audit Delegasi}
 \label{subsubsec:halaman-detail-audit-delegasi-rme}
 
-Halaman detail audit delegasi RME digunakan untuk menampilkan detail dari audit delegasi RME. Halaman tersebut berisi data dari audit delegasi RME, seperti tanggal audit delegasi, ID dari audit delegasi RME, dan data dari segmen yang terkait. Tampilan dari halaman detail audit delegasi RME dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
+Halaman detail audit delegasi RME menampilkan informasi mengenai seluruh rantai delegasi akses yang terbentuk dari token Macaroon yang telah diterbitkan oleh pasien. Setiap entri pada halaman ini merepresentasikan satu rantai delegasi dan menampilkan identitas personel rumah sakit yang menjadi penerima akses awal, jenis akses yang diberikan, ID RME yang terkait, serta tanggal kedaluwarsa dari akses awal tersebut. Status keseluruhan rantai delegasi juga ditampilkan dalam bentuk label berwarna, yakni \textit{Active} berwarna hijau, \textit{Expired} berwarna kuning, atau \textit{Revoked} berwarna merah. Di dalam setiap entri rantai delegasi, terdapat sub-daftar yang memerinci setiap delegasi, yaitu pasangan delegasi dari satu personel ke personel lainnya, beserta informasi kedalaman delegasi, tanggal kedaluwarsa, dan status aktif atau dicabutnya delegasi tersebut.
+
+Tampilan dari halaman detail audit delegasi RME dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
 
 \subsubsection{Halaman Riwayat Akses}
 \label{subsubsec:halaman-riwayat-akses}
 
-Halaman riwayat akses digunakan untuk menampilkan daftar akses yang pernah diberikan atau digunakan pada RME pasien. Informasi ini membantu pasien meninjau aktor yang pernah memperoleh akses, konteks akses, serta status akses yang berkaitan dengan data RME. Tampilan dari halaman riwayat akses dapat dilihat pada Gambar \ref{fig:halaman-riwayat-akses}.
+Halaman riwayat akses menampilkan log seluruh akses yang pernah digunakan atau diberikan terkait data rekam medis pasien. Setiap entri dalam daftar riwayat memuat informasi tanggal akses, nama rumah sakit yang terlibat, nama personel rumah sakit yang menggunakan akses, serta jenis akses yang digunakan. Informasi ini memberikan visibilitas kepada pasien mengenai siapa saja yang pernah mengakses data medisnya. Selain berfungsi sebagai halaman pemantauan, halaman ini juga memungkinkan pasien untuk melakukan pencabutan akses secara aktif. Apabila sebuah entri akses masih berstatus aktif, yaitu belum dicabut dan belum melewati waktu kedaluwarsanya, tombol \textit{Revoke Access} akan ditampilkan pada entri tersebut. Pasien dapat menekan tombol tersebut untuk mencabut akses yang bersangkutan secara langsung dari halaman ini, dan daftar akan diperbarui secara otomatis setelah proses pencabutan
+selesai.
+
+Tampilan dari halaman riwayat akses dapat dilihat pada Gambar \ref{fig:halaman-riwayat-akses}.
 
 \subsubsection{Halaman Detail \textit{Scan} QR}
 \label{subsubsec:halaman-detail-scan-qr}
 
-Halaman detail \textit{scan} QR digunakan ketika pasien memindai QR rumah sakit untuk memulai proses pemberian akses awal. Setelah QR berhasil dipindai, pasien diarahkan untuk mengonfirmasi cakupan akses yang akan diberikan sebelum token Macaroon awal diterbitkan. Tampilan dari halaman \textit{scan} QR dan halaman konfirmasi akses awal dapat dilihat pada Gambar \ref{fig:halaman-detail-scan-qr} dan Gambar \ref{fig:halaman-konfirmasi-akses-awal}.
+Halaman \textit{scan} QR merupakan halaman yang digunakan pasien untuk memulai proses pemberian akses kepada personel rumah sakit. Halaman ini menyediakan antarmuka unggah berkas gambar QR yang diperoleh dari rumah sakit, di mana pasien dapat memilih berkas gambar dalam format PNG atau JPEG. Setelah berkas QR diunggah dan diproses, sistem akan memvalidasi isi QR dan mengidentifikasi identitas personel rumah sakit yang terkandung di dalamnya. Apabila QR valid, sebuah dialog konfirmasi akan muncul yang menampilkan nama personel dan nama rumah sakit tujuan pemberian akses. Pada dialog konfirmasi ini, pasien dapat mengonfigurasi cakupan akses yang akan diberikan, meliputi jenis layanan medis berupa rawat jalan atau
+rawat inap, mode akses berupa \textit{READ}, \textit{WRITE}, atau keduanya, serta tanggal dan waktu kedaluwarsa akses. Setelah mengonfirmasi pilihan tersebut, pasien akan diarahkan ke dialog masukan PIN enam digit sebagai verifikasi identitas sebelum token Macaroon awal diterbitkan dan akses resmi diberikan kepada personel rumah sakit yang dituju.
+
+Tampilan dari halaman \textit{scan} QR dan halaman konfirmasi akses awal dapat dilihat pada Gambar \ref{fig:halaman-detail-scan-qr} dan Gambar \ref{fig:halaman-konfirmasi-akses-awal}.

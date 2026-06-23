@@ -1,7 +1,26 @@
 \chapter{Penutup}
+\label{chap:penutup}
 
 \section{Kesimpulan}
-\blindtext
+
+Berdasarkan hasil analisis, perancangan, implementasi, dan evaluasi yang telah dilakukan, dapat disimpulkan beberapa hal sebagai berikut:
+
+\begin{enumerate}
+	\item Mekanisme kontrol akses granular pada DecMed berhasil dirancang dan diimplementasikan dengan memanfaatkan Macaroons sebagai token otorisasi. Macaroons digunakan untuk membawa batasan akses melalui \textit{caveats}. Penegakan otoritas dilakukan pada \textit{Server} PRE. Dengan demikian, kontrol akses granular sesuai dengan batasan yang telah ditetapkan.
+
+	\item Segmentasi data RME yang mendukung kontrol akses granular berhasil dirancang dan diimplementasikan dengan memecah data \textit{off-chain} berdasarkan \textit{dataset category} dan \textit{function category}. Segmentasi ini membuat data RME tidak lagi diperlakukan sebagai satu \textit{encrypted blob} besar, melainkan sebagai kumpulan segmen klinis. Metadata dari setiap segmen tersebut digunakan untuk menentukan segmen mana yang dapat diakses oleh aktor sesuai cakupan token.
+
+	\item Fitur atenuasi \textit{offline} berhasil diterapkan untuk mendukung pendelegasian akses antar tenaga kesehatan tanpa memerlukan penerbitan token baru oleh pasien pada setiap perpindahan akses. Pemegang token dapat membentuk token turunan secara lokal dengan menambahkan \textit{caveats} baru yang mempersempit cakupan token induk. Implementasi juga mendukung pencatatan delegasi, pembatasan kedalaman delegasi, validasi agar token turunan tidak memperluas hak akses token induk, serta revokasi berantai.
+\end{enumerate}
 
 \section{Saran}
-\blindtext
+
+Berdasarkan batasan dan hasil evaluasi Tugas Akhir ini, beberapa saran untuk pengembangan berikutnya adalah sebagai berikut:
+
+\begin{enumerate}
+	\item Cakupan skenario layanan klinis perlu diperluas hingga pelayanan antar fasyankes, memungkinkan skenario nyata seperti rujukan.
+
+	\item Integrasi dengan standar interoperabilitas data kesehatan dapat diteliti lebih lanjut. Segmentasi RME dapat dikembangkan lebih lanjut untuk integrasi dengan SATUSEHAT atau pemetaan ke standar FHIR.
+
+	\item Cakupan skenario layanan klinis perlu diperluas hingga pelayanan gawat darurat. Mengimplementasikan data IGD dan mekanisme akses ketika pasien tidak sadar, memungkinkan skenario nyata gawat darurat.
+\end{enumerate}

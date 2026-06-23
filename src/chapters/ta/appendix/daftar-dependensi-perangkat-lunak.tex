@@ -1,9 +1,7 @@
 \chapter{Daftar Dependensi DecMed}
 \label{lampiran:daftar-dependensi-perangkat-lunak}
 
-Daftar dependensi disusun berdasarkan setiap komponenDecMed, yaitu PRE, \textit{client}, serta \textit{crate} internal yang digunakan bersama. Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem.
-
-Dependensi umum pada Tabel \ref{tab:dependensi-umum} merupakan dependensi yang digunakan pada beberapa komponen sistem. \textit{Crate} IOTA yang menggunakan \texttt{git rev} \texttt{3d7c588}.
+Daftar dependensi disusun berdasarkan setiap komponenDecMed, yaitu PRE, \textit{client}, serta \textit{crate} internal yang digunakan bersama. Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem. Dependensi umum pada Tabel \ref{tab:dependensi-umum} merupakan dependensi yang digunakan pada semua komponen sistem, tidak termasuk \textit{crate} internal.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.36\textwidth}|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.28\textwidth}|}
 	\caption{Dependensi Umum yang Digunakan pada Beberapa Komponen}
@@ -120,23 +118,23 @@ Dependensi umum pada Tabel \ref{tab:dependensi-umum} merupakan dependensi yang d
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.36\textwidth}|}
 	\caption{Dependensi \texttt{decmed-macaroon-auth}}
-	\label{tab:dependensi-decmed-macaroon-auth}                                                           \\
+	\label{tab:dependensi-decmed-macaroon-auth}                                                    \\
 	\hline
-	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                             \\
+	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                      \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                             \\
+	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                      \\
 	\hline
 	\endhead
 
-	\texttt{chrono}             & \texttt{0.4}          & Pengelolaan tanggal dan waktu.                  \\ \hline
-	\texttt{serde}              & \texttt{1}            & Serialisasi dan deserialisasi data.             \\ \hline
-	\texttt{serde\_json}        & \texttt{1}            & Pengolahan data JSON.                           \\ \hline
-	\texttt{thiserror}          & \texttt{2.0}          & Definisi tipe error.                            \\ \hline
-	\texttt{uuid}               & \texttt{1}            & Pembentukan identifier unik.                    \\ \hline
-	\texttt{sha2}               & \texttt{0.10}         & Fungsi hash SHA-2.                              \\ \hline
-	\texttt{hex}                & \texttt{0.4}          & Encoding dan decoding heksadesimal.             \\ \hline
-	\texttt{macaroon}           & \texttt{path}         & Crate eksternal lokal \texttt{macaroon}.        \\ \hline
-	\texttt{decmed-rme-segment} & \texttt{path}         & Crate internal untuk segmentasi RME.            \\ \hline
+	\texttt{chrono}             & \texttt{0.4}          & Pengelolaan tanggal dan waktu.           \\ \hline
+	\texttt{serde}              & \texttt{1}            & Serialisasi dan deserialisasi data.      \\ \hline
+	\texttt{serde\_json}        & \texttt{1}            & Pengolahan data JSON.                    \\ \hline
+	\texttt{thiserror}          & \texttt{2.0}          & Definisi tipe error.                     \\ \hline
+	\texttt{uuid}               & \texttt{1}            & Pembentukan identifier unik.             \\ \hline
+	\texttt{sha2}               & \texttt{0.10}         & Fungsi hash SHA-2.                       \\ \hline
+	\texttt{hex}                & \texttt{0.4}          & Encoding dan decoding heksadesimal.      \\ \hline
+	\texttt{macaroon}           & \texttt{path}         & Crate eksternal lokal \texttt{macaroon}. \\ \hline
+	\texttt{decmed-rme-segment} & \texttt{path}         & Crate internal untuk segmentasi RME.     \\ \hline
 \end{longtable}

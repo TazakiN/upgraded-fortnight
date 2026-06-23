@@ -1,12 +1,13 @@
 \subsection{Pemetaan Masalah terhadap Solusi}
 \label{subsec:pemetaan-kebutuhan-solusi}
+\label{subsec:pemetaan-masalah-solusi}
 
-Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel \ref{tab:daftar-solusi-ta},
+Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel \ref{tab:daftar-solusi-ta}.
 % sedangkan pemetaan masalah terhadap solusi dirangkum pada Tabel \ref{tab:pemetaan-masalah-solusi}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Daftar Analisis Solusi}
+	\caption{Daftar Solusi yang Diusulkan Berdasarkan Hasil Analisis}
 	\label{tab:daftar-solusi-ta}
 	\small
 	\begin{tabular}{|p{0.12\textwidth}|p{0.5\textwidth}|p{0.25\textwidth}|}
@@ -55,7 +56,7 @@ Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada 
 		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}                                    \\ \hline
 		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                                            \\ \hline
 		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                                            \\ \hline
-		PRE               & Verifikasi otoritas dan proses \textit{re-encryption}    & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}                           , namun berbasis token Macaroon \\ \hline
+		PRE               & Verifikasi otoritas dan proses \textit{re-encryption}    & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}, namun berbasis token Macaroon \\ \hline
 	\end{tabular}
 \end{table}
 

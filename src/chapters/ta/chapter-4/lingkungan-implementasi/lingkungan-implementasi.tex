@@ -1,16 +1,19 @@
-\section{Lingkungan Implementasi}
-\label{sec:lingkungan-implementasi}
+\section{Lingkungan dan Batasan Implementasi}
+\label{sec:lingkungan-dan-batasan-implementasi}
 
-Implementasi sistem dilakukan pada lingkungan prototipe yang merepresentasikan komponen utama DecMed, yaitu \textit{patient client}, \textit{hospital client}, \textit{ministry client}, \textit{Server} PRE, penyimpanan \textit{off-chain} IPFS, Redis, IOTA \textit{Gas Station}, dan \textit{smart contract} IOTA Move pada jaringan IOTA Testnet. Lingkungan ini dipilih agar rancangan pada Bab \ref{chap:analisis-dan-rancangan} dapat diuji tanpa bergantung pada integrasi langsung dengan sistem informasi rumah sakit yang sesungguhnya.
+\subsection{Lingkungan Implementasi}
+\label{subsec:lingkungan-implementasi}
 
-Pada implementasi DecMed sebelumnya, semua komponen dijalankan pada lingkungan lokal. Semua \textit{client}, \textit{Server} PRE, Redis PRE, kluster IPFS, IOTA \textit{Gas Station}, dan jaringan IOTA jenis Localnet dijalankan langsung di komputer lokal. Perangkat lokal yang digunakan tidak cukup kuat untuk menjalankan semua komponen secara bersamaan. Oleh karena itu, dilakukan pembagian komponen implementasi tersebut ke dalam lingkungan lokal, VPS, dan jaringan IOTA Testnet.
+Implementasi sistem dilakukan pada lingkungan prototipe yang merepresentasikan komponen utama DecMed, yaitu \textit{patient client}, \textit{hospital client}, \textit{ministry client}, \textit{Server} PRE, penyimpanan \textit{off-chain} IPFS, Redis, IOTA \textit{Gas Station}, dan \textit{smart contract} IOTA Move pada jaringan IOTA Localnet. Lingkungan ini dipilih agar rancangan pada Bab \ref{chap:analisis-dan-rancangan} dapat diuji tanpa bergantung pada integrasi langsung dengan sistem informasi rumah sakit yang sesungguhnya.
 
-Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, serta pengamatan respons sistem ketika token Macaroon diterbitkan, diatenuasi, dan diverifikasi. Komponen pendukung yang membutuhkan ketersediaan jaringan, seperti kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada \textit{Virtual Private Server} (VPS). VPS digunakan untuk menjalankan komponen pendukung karena komponen tersebut tidak membutuhkan perubahan pada masa implementasi, namun dibutuhkan pada masa pengembangan. Pemanfaatan VPS juga meringankan beban perangkat lokal karena tidak perlu menjalankan komponen pendukung. Sementara itu, \textit{smart contract} IOTA Move diunggah pada jaringan IOTA Testnet. IOTA Testnet cukup dimanfaatkan karena sudah cukup untuk menyimulasikan jaringan IOTA sesungguhnya.
+Pada implementasi DecMed sebelumnya, semua komponen dijalankan pada lingkungan lokal. Semua \textit{client}, \textit{Server} PRE, Redis PRE, kluster IPFS, IOTA \textit{Gas Station}, dan jaringan IOTA jenis Localnet dijalankan langsung di komputer lokal. Perangkat lokal yang digunakan tidak cukup kuat untuk menjalankan semua komponen secara bersamaan. Oleh karena itu, dilakukan pembagian komponen implementasi tersebut ke dalam lingkungan lokal dan dua buah \textit{Virtual Private Server} (VPS).
+
+Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, serta pengamatan respons sistem. Komponen pendukung yang membutuhkan ketersediaan jaringan, seperti kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada VPS. Sementara itu, \textit{smart contract} IOTA Move diunggah pada VPS yang menjalankan jaringan IOTA Localnet. IOTA Localnet cukup dimanfaatkan karena sudah cukup untuk menyimulasikan jaringan IOTA sesungguhnya. VPS digunakan untuk menjalankan komponen pendukung karena komponen tersebut tidak membutuhkan perubahan pada masa implementasi, namun dibutuhkan pada masa pengembangan. Pemanfaatan VPS juga meringankan beban perangkat lokal karena tidak perlu menjalankan komponen pendukung.
 
 Berikut adalah spesifikasi dari perangkat lokal yang digunakan untuk implementasi:
 \begin{itemize}
 	\item Sistem Operasi: Ubuntu 24.04.4, berjalan di lingkungan WSL2
-	\item CPU: Intel Core i5-11400H (6 core fisik, 12 logical thread), dengan 3 core fisik dan 6 logical thread dialokasikan untuk WSL2
+	\item CPU: Intel Core i5-11400H (3 core fisik dan 6 \textit{logical thread} dialokasikan untuk WSL2)
 	\item Memori RAM: 16 GB (8 GB teralokasi untuk WSL2)
 	\item \textit{Tools}:
 	      \begin{itemize}
@@ -20,8 +23,7 @@ Berikut adalah spesifikasi dari perangkat lokal yang digunakan untuk implementas
 	      \end{itemize}
 \end{itemize}
 
-
-Sementara itu, spesifikasi VPS yang digunakan adalah sebagai berikut:
+Sementara itu, spesifikasi kedua VPS yang digunakan adalah sebagai berikut:
 \begin{itemize}
 	\item Sistem Operasi: Ubuntu 24.04.4 LTS
 	\item Jumlah vCPU: 8 vCPU
@@ -32,25 +34,18 @@ Sementara itu, spesifikasi VPS yang digunakan adalah sebagai berikut:
 	      \end{itemize}
 \end{itemize}
 
-% Pembagian komponen implementasi tersebut dirangkum pada Tabel \ref{tab:lingkungan-implementasi}.
+\subsection{Batasan Implementasi}
+\label{subsec:batasan-implementasi}
 
-% \begin{table}[!ht]
-% 	\centering
-% 	\caption{Komponen dan Lingkungan Implementasi Sistem}
-% 	\label{tab:lingkungan-implementasi}
-% 	\small
-% 	\begin{tabular}{|p{0.23\textwidth}|p{0.24\textwidth}|p{0.43\textwidth}|}
-% 		\hline
-% 		\textbf{Komponen}         & \textbf{Teknologi}           & \textbf{Peran}                                                                                                  \\ \hline
-% 		\textit{Patient Client}   & Tauri/Svelte                 & Registrasi pasien, pemindaian QR rumah sakit, pemberian akses awal, pembacaan RME, audit, dan pencabutan akses. \\ \hline
-% 		\textit{Hospital Client}  & Tauri/Svelte                 & Pembacaan dan penulisan segmen RME, pembuatan bukti \textit{wallet}, delegasi akses, dan atenuasi Macaroon.     \\ \hline
-% 		\textit{Ministry Client}  & Tauri/Svelte                 & Registrasi rumah sakit dan pengelolaan \textit{activation key}.                                                 \\ \hline
-% 		\textit{Server} PRE       & Rust Axum                    & Verifikasi token, penegakan \textit{caveats}, integrasi IPFS, Redis, IOTA Move, dan Umbral PRE.                 \\ \hline
-% 		IOTA Move                 & Move \textit{smart contract} & Penyimpanan metadata \textit{on-chain}, metadata akses, dan audit.                                              \\ \hline
-% 		IPFS                      & Kubo/IPFS \textit{gateway}   & Penyimpanan \textit{ciphertext} segmen RME secara \textit{off-chain}.                                           \\ \hline
-% 		Redis                     & Redis Docker                 & Penyimpanan \textit{nonce}, kunci akses PRE, dan kunci pencabutan akses.                                        \\ \hline
-% 		IOTA \textit{Gas Station} & IOTA \textit{Gas Station}    & Sponsor transaksi Move pada jaringan IOTA Testnet.                                                              \\ \hline
-% 	\end{tabular}
-% \end{table}
+Implementasi pada Tugas Akhir ini memiliki beberapa batasan sebagai berikut:
 
-% Lingkungan tersebut belum ditujukan untuk penggunaan produksi. Seluruh alamat \textit{wallet}, data pasien, data RME, dan relasi antaraktor yang digunakan merupakan data uji untuk mengevaluasi rancangan kontrol akses granular, segmentasi data RME, dan delegasi akses berbasis Macaroons.
+\begin{enumerate}
+	\item Implementasi dilakukan dalam lingkungan komputer lokal dan VPS.
+	      \begin{itemize}
+		      \item Semua \textit{client} dan \textit{Server} PRE dijalankan langsung di komputer lokal.
+		      \item VPS menjalankan kluster IPFS dan IOTA \textit{Gas Station}.
+		      \item \textit{Smart contract} yang digunakan diunggah ke VPS yang menjalankan jaringan IOTA Localnet.
+	      \end{itemize}
+	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
+	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat kombinasi \textit{dataset category} dan \textit{function category}, kemudian disimpan sebagai \textit{freetext}.
+\end{enumerate}

@@ -15,7 +15,7 @@ Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusur
 		\texttt{S-TA-01} & Token otorisasi berbasis Macaroons dengan \textit{caveats}                                                                  & \texttt{M-TA-01}, \texttt{M-TA-04}                                     \\ \hline
 		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                       \\ \hline
 		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                     \\ \hline
-		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05} \\ \hline
+		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
 		\texttt{S-TA-05} & Validasi subrole tenaga medis terhadap dataset untuk operasi tulis                                                          & \texttt{M-TA-05}                                                       \\ \hline
 		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                       \\ \hline
 	\end{tabular}
@@ -38,7 +38,7 @@ Setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusur
 % 	\end{tabular}
 % \end{table}
 
-\texttt{S-TA-01} dan \texttt{S-TA-04} terutama ditujukan untuk menjawab \texttt{M-TA-01}, \texttt{S-TA-02} ditujukan untuk menjawab \texttt{M-TA-02}, \texttt{S-TA-03} ditujukan untuk menjawab \texttt{M-TA-03} dan \texttt{M-TA-04}, \texttt{S-TA-05} ditujukan untuk menjawab \texttt{M-TA-05}, sedangkan \texttt{S-TA-06} ditujukan untuk menjawab \texttt{M-TA-06}.
+\texttt{S-TA-01} dan \texttt{S-TA-04} terutama ditujukan untuk menjawab \texttt{M-TA-01}, \texttt{S-TA-02} ditujukan untuk menjawab \texttt{M-TA-02}, \texttt{S-TA-03} ditujukan untuk menjawab \texttt{M-TA-03} dan \texttt{M-TA-04}, \texttt{S-TA-05} ditujukan untuk menjawab \texttt{M-TA-05}, \texttt{S-TA-06} ditujukan untuk menjawab \texttt{M-TA-06}, sedangkan pembuktian identitas aktor aktif pada \texttt{M-TA-07} ditangani melalui \textit{wallet proof} pada \texttt{S-TA-04}.
 
 Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
 

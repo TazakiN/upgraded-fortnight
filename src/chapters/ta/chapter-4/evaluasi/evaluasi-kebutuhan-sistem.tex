@@ -1,30 +1,60 @@
 \subsection{Evaluasi terhadap Kebutuhan Sistem}
 \label{subsec:evaluasi-kebutuhan-sistem}
 
-Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, implementasi dievaluasi terhadap kebutuhan utama yang menjadi dasar pengembangan dari DecMed awal, yaitu kontrol akses granular, segmentasi data RME, delegasi berantai dengan atenuasi \textit{offline}, penegakan akses pada PRE, pencabutan akses, serta audit.
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, implementasi dievaluasi terhadap kebutuhan fungsional dan nonfungsional yang menjadi dasar pengembangan DecMed. Evaluasi ini tidak hanya melihat apakah komponen telah dibuat, tetapi juga apakah kebutuhan tersebut memiliki bukti pengujian yang sesuai. Dengan demikian, alur kebutuhan, implementasi, dan pengujian dapat ditelusuri secara eksplisit.
 
-Kebutuhan kontrol akses granular dipenuhi melalui penggunaan Macaroons dengan \textit{caveats}. Token tidak hanya menyatakan aktor penerima akses, tetapi juga membatasi pasien, RME, kategori dataset, kategori fungsi, hak baca atau tulis, masa berlaku, dan kedalaman delegasi. Evaluasi pengujian menunjukkan bahwa keputusan akses dapat dibuat berdasarkan kombinasi batasan tersebut, bukan hanya berdasarkan peran aktor secara umum.
+Kebutuhan kontrol akses granular dipenuhi melalui penggunaan Macaroons dengan \textit{caveats}. Token tidak hanya menyatakan aktor penerima akses, tetapi juga membatasi pasien, RME, kategori dataset, kategori fungsi, hak baca atau tulis, masa berlaku, dan kedalaman delegasi. Kebutuhan segmentasi data RME dipenuhi dengan memecah data \textit{off-chain} menjadi segmen berdasarkan \textit{dataset category} dan \textit{function category}. Kebutuhan delegasi berantai dipenuhi melalui atenuasi token pada sisi \textit{client}, sedangkan penegakan akses dilakukan pada \textit{Server} PRE sebelum data terenkripsi diambil dan sebelum proses \textit{re-encryption} dijalankan.
 
-Kebutuhan segmentasi data RME dipenuhi dengan memecah data \textit{off-chain} menjadi segmen berdasarkan \textit{dataset category} dan \textit{function category}. Setiap segmen memiliki metadata sendiri pada IOTA dan data terenkripsi sendiri pada IPFS. Dengan demikian, \textit{Server} PRE dapat mencocokkan token dengan segmen yang diminta sebelum melakukan \textit{re-encryption}.
+Ringkasan pemetaan kebutuhan sistem terhadap implementasi dan pengujian ditunjukkan pada Tabel \ref{tab:evaluasi-kebutuhan-sistem}.
 
-Kebutuhan delegasi berantai dipenuhi melalui atenuasi token pada sisi \textit{client}. Aktor yang menerima token dapat membuat token turunan dengan cakupan lebih sempit tanpa meminta penerbitan ulang dari pasien atau \textit{Server} PRE. Karena token turunan tetap membawa seluruh \textit{caveats} token induk, implementasi menjaga agar delegasi tidak memperluas hak akses.
+\begingroup
+\small
+\begin{longtable}{|p{0.14\textwidth}|p{0.32\textwidth}|p{0.30\textwidth}|p{0.14\textwidth}|}
+	\caption{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian}
+	\label{tab:evaluasi-kebutuhan-sistem}                                                                                                                                                                               \\
+	\hline
+	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                                                    & \textbf{Pengujian Terkait}                                                                                                      & \textbf{Status}     \\ \hline
+	\endfirsthead
+	\caption[]{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian (lanjutan)}                                                                                                                                 \\
+	\hline
+	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                                                    & \textbf{Pengujian Terkait}                                                                                                      & \textbf{Status}     \\ \hline
+	\endhead
+	\texttt{KF-TA-01} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-05}                             & \texttt{PS-TA-01}                                                                                                               & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-02} & \texttt{I-TA-03}, \texttt{I-TA-04}, \texttt{I-TA-05}                             & \texttt{PU-TA-10}, \texttt{PS-TA-15}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-03} & \texttt{I-TA-04}, \texttt{I-TA-05}                                               & \texttt{PS-TA-01}, \texttt{PS-TA-02}, \texttt{PS-TA-06}, \texttt{PS-TA-09}, \texttt{PS-TA-15}                                  & Terpenuhi sebagian. \\ \hline
+	\texttt{KF-TA-04} & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06}                             & \texttt{PS-TA-02}, \texttt{PS-TA-05}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-05} & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06}                             & \texttt{PS-TA-05}                                                                                                               & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-06} & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06}                             & \texttt{PS-TA-06}, \texttt{PS-TA-09}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-07} & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06}                             & \texttt{PS-TA-03}, \texttt{PS-TA-04}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-08} & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06}                             & \texttt{PS-TA-07}, \texttt{PS-TA-08}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-09} & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06}                             & \texttt{PS-TA-10}, \texttt{PS-TA-11}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KF-TA-10} & \texttt{I-TA-03}, \texttt{I-TA-06}                                               & \texttt{PU-TA-07}, \texttt{PS-TA-13}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KNF-TA-01} & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06}                            & \texttt{PU-TA-09}, \texttt{PS-TA-04}, \texttt{PS-TA-08}, \texttt{PS-TA-11}                                                      & Terpenuhi.          \\ \hline
+	\texttt{KNF-TA-02} & \texttt{I-TA-02}, \texttt{I-TA-03}                                              & \texttt{PU-TA-01}, \texttt{PU-TA-02}, \texttt{PU-TA-03}, \texttt{PU-TA-04}                                                      & Terpenuhi.          \\ \hline
+	\texttt{KNF-TA-03} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-06}                            & \texttt{PU-TA-02}, \texttt{PU-TA-05}, \texttt{PU-TA-06}, \texttt{PU-TA-07}, \texttt{PU-TA-09}, \texttt{PU-TA-10}, \texttt{PS-TA-04}, \texttt{PS-TA-08}, \texttt{PS-TA-11}--\texttt{PS-TA-15} & Terpenuhi.          \\ \hline
+	\texttt{KNF-TA-04} & \texttt{I-TA-04}, \texttt{I-TA-05}, \texttt{I-TA-06}                            & \texttt{PS-TA-01}, \texttt{PS-TA-02}, \texttt{PS-TA-06}, \texttt{PS-TA-09}, \texttt{PS-TA-15}                                  & Terpenuhi sebagian. \\ \hline
+	\texttt{KNF-TA-05} & \texttt{I-TA-03}, \texttt{I-TA-05}                                              & \texttt{PU-TA-10}, \texttt{PS-TA-15}                                                                                            & Terpenuhi.          \\ \hline
+	\texttt{KNF-TA-06} & \texttt{I-TA-03}, \texttt{I-TA-06}                                              & \texttt{PU-TA-07}, \texttt{PS-TA-13}                                                                                            & Terpenuhi sebagian. \\ \hline
+	\texttt{KNF-TA-07} & \texttt{I-TA-01}--\texttt{I-TA-06}                                             & \texttt{PU-TA-08}, \texttt{PU-TA-09}, \texttt{PS-TA-01}--\texttt{PS-TA-15}                                                      & Terpenuhi.          \\ \hline
+\end{longtable}
+\endgroup
 
-Ringkasan evaluasi kebutuhan sistem ditunjukkan pada Tabel \ref{tab:evaluasi-kebutuhan-sistem}.
+Untuk memperjelas pertanyaan implementasi apa diuji dengan pengujian apa, pemetaan komponen implementasi terhadap bukti pengujian dirangkum pada Tabel \ref{tab:pemetaan-implementasi-pengujian}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Evaluasi terhadap Kebutuhan Sistem}
-	\label{tab:evaluasi-kebutuhan-sistem}
+	\caption{Pemetaan Implementasi terhadap Pengujian}
+	\label{tab:pemetaan-implementasi-pengujian}
 	\small
-	\begin{tabular}{|p{0.19\textwidth}|p{0.30\textwidth}|p{0.24\textwidth}|p{0.17\textwidth}|}
+	\begin{tabular}{|p{0.14\textwidth}|p{0.38\textwidth}|p{0.36\textwidth}|}
 		\hline
-		\textbf{Kebutuhan Sistem}     & \textbf{Implementasi}                                                                                                                                     & \textbf{Bukti Pengujian}                                                & \textbf{Status}     \\ \hline
-		Kontrol akses granular        & Macaroons dengan \textit{caveats} \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}. & Test cakupan dataset/fungsi dan skenario akses di luar \textit{caveat}. & Terpenuhi.          \\ \hline
-		Segmentasi data RME           & \texttt{DatasetCategory}, \texttt{FunctionCategory}, \texttt{RmeSegmentMetadata}, \textit{ciphertext} IPFS, dan metadata Move.                            & Pengujian tulis dan baca segmen RME.                                    & Terpenuhi.          \\ \hline
-		Delegasi \textit{offline}     & Atenuasi lokal di \textit{Hospital Client} tanpa kunci akar.                                                                                              & Skenario admin atau dokter membuat token turunan.                       & Terpenuhi.          \\ \hline
-		Enforcement PRE               & Middleware dan handler validasi Macaroon, aktor aktif, \textit{wallet proof}, serta \textit{re-encryption}.                                               & Test proxy dan skenario manual.                                         & Terpenuhi sebagian. \\ \hline
-		Revocation                    & Redis \textit{revocation key} dan pencabutan akses \textit{on-chain}.                                                                                     & Test \textit{revocation} dan endpoint \textit{revocation} delegasi.     & Terpenuhi           \\ \hline
-		Audit dan uji keamanan formal & Audit sebagian tersedia, tetapi uji formal end-to-end belum dilakukan.                                                                                    & Belum ada test formal.                                                  & Belum penuh.        \\ \hline
+		\textbf{Implementasi} & \textbf{Komponen}                                                                       & \textbf{Pengujian}                                                                                  \\ \hline
+		\texttt{I-TA-01}      & Segmentasi data RME.                                                                    & \texttt{PU-TA-08}, \texttt{PS-TA-03}, \texttt{PS-TA-05}, \texttt{PS-TA-07}, \texttt{PS-TA-10}       \\ \hline
+		\texttt{I-TA-02}      & Token Macaroon, \textit{caveats}, dan atenuasi token.                                   & \texttt{PU-TA-01}--\texttt{PU-TA-06}, \texttt{PS-TA-02}, \texttt{PS-TA-06}, \texttt{PS-TA-09}, \texttt{PS-TA-12}, \texttt{PS-TA-14} \\ \hline
+		\texttt{I-TA-03}      & Penegakan otoritas pada \textit{Server} PRE.                                            & \texttt{PU-TA-02}, \texttt{PU-TA-03}, \texttt{PU-TA-05}--\texttt{PU-TA-07}, \texttt{PU-TA-09}, \texttt{PU-TA-10}, \texttt{PS-TA-04}, \texttt{PS-TA-08}, \texttt{PS-TA-11}--\texttt{PS-TA-15} \\ \hline
+		\texttt{I-TA-04}      & \textit{Smart contract} IOTA Move untuk metadata, akses, delegasi, revokasi, dan audit. & \texttt{PU-TA-08}, \texttt{PU-TA-10}, \texttt{PS-TA-01}, \texttt{PS-TA-02}, \texttt{PS-TA-06}, \texttt{PS-TA-09}, \texttt{PS-TA-15} \\ \hline
+		\texttt{I-TA-05}      & \textit{Patient Client}.                                                                & \texttt{PS-TA-01}, \texttt{PS-TA-15}                                                               \\ \hline
+		\texttt{I-TA-06}      & \textit{Hospital Client}.                                                               & \texttt{PS-TA-02}--\texttt{PS-TA-14}                                                               \\ \hline
 	\end{tabular}
 \end{table}
 

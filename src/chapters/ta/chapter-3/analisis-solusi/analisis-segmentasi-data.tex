@@ -1,7 +1,7 @@
 \subsection{Analisis Segmentasi Data}
 \label{subsec:analisis-segmentasi-data}
 
-Masalah granularitas tidak hanya berada pada token, tetapi juga pada struktur data yang dilindungi. Jika data RME disimpan sebagai satu \textit{encrypted blob}, maka pemberian akses terhadap blob tersebut akan membuka seluruh isi data meskipun aktor hanya membutuhkan sebagian kecil informasi. Oleh karena itu, implementasi pemrosesan data pada DecMed perlu disesuaikan untuk memenuhi kebutuhan akses granular sebagaimana dijelaskan pada Subbab \ref{subsec:identifikasi-masalah}.
+Masalah granularitas tidak hanya berada pada token, tetapi juga pada struktur data yang dilindungi. Jika data RME disimpan sebagai satu \textit{encrypted blob}, maka pemberian akses terhadap blob tersebut akan membuka seluruh isi data meskipun aktor hanya membutuhkan sebagian kecil informasi. Oleh karena itu, implementasi pemrosesan data pada DecMed perlu disesuaikan untuk memenuhi kebutuhan akses granular sebagaimana dijelaskan pada Subbab \ref{subsec:kebutuhan-sistem}.
 
 Alternatif yang dianalisis adalah dengan melakukan pemetaan segmentasi data ketika data diambil dari penyimpanan \textit{off-chain}. Pada pendekatan ini, data klinis tetap disimpan sebagai sebuah \textit{encrypted blob}, tetapi sudah terkategorikan sesuai dengan dokumen KMK \autocite{kemenkes1423-2022}. Setelah data terenkripsi diambil, sistem akan melakukan pemetaan segmentasi data berdasarkan hak akses yang telah ditentukan. Dengan pendekatan tersebut, pengguna akan mendapatkan data klinis sesuai dengan batasan akses pengguna.
 

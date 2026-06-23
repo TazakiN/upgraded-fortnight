@@ -47,9 +47,9 @@ Tabel \ref{tab:daftar-endpoint-rest-api-pre} menunjukkan endpoint REST API ypada
 			                & Mengambil data administratif pasien.
 			                & Eksisting                                                                                                      \\ \hline
 
-			\texttt{POST}   & \texttt{/revocations/\allowbreak delegation}
-			                & Mencabut delegasi akses.
-			                & Baru                                                                                                           \\ \hline
+			% \texttt{POST}   & \texttt{/revocations/\allowbreak delegation}
+			%                 & Mencabut delegasi akses.
+			%                 & Baru                                                                                                           \\ \hline
 
 			\texttt{GET}    & \texttt{/gen/\allowbreak macaroon-\allowbreak key}
 			                & Menghasilkan \texttt{RootKey} Macaroon.
@@ -77,4 +77,4 @@ Tabel \ref{tab:daftar-endpoint-rest-api-pre} menunjukkan endpoint REST API ypada
 		\end{longtable}
 	}
 
-Endpoint dengan \texttt{auth\_middleware} memerlukan token Macaroon pada header \texttt{Authorization}. Endpoint tersebut mencakup semua endpoint pada Tabel \ref{tab:daftar-endpoint-rest-api-pre}, kecuali \texttt{/gen/*}, \texttt{/nonce}, \texttt{/keys}, dan \texttt{/revocations/patient}.
+Endpoint dengan pemeriksaan autentikasi \texttt{middleware} memerlukan token Macaroon pada header \texttt{Authorization}. Endpoint tersebut mencakup semua endpoint pada Tabel \ref{tab:daftar-endpoint-rest-api-pre}, kecuali \texttt{/gen/*}, \texttt{/nonce}, \texttt{/keys}, dan \texttt{/revocations/patient}.

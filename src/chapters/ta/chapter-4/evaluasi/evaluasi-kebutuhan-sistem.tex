@@ -1,7 +1,7 @@
 \subsection{Evaluasi terhadap Kebutuhan Sistem}
 \label{subsec:evaluasi-kebutuhan-sistem}
 
-Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:identifikasi-masalah}, implementasi dievaluasi terhadap kebutuhan utama yang menjadi dasar pengembangan dari DecMed awal, yaitu kontrol akses granular, segmentasi data RME, delegasi berantai dengan atenuasi \textit{offline}, penegakan akses pada PRE, pencabutan akses, serta audit.
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, implementasi dievaluasi terhadap kebutuhan utama yang menjadi dasar pengembangan dari DecMed awal, yaitu kontrol akses granular, segmentasi data RME, delegasi berantai dengan atenuasi \textit{offline}, penegakan akses pada PRE, pencabutan akses, serta audit.
 
 Kebutuhan kontrol akses granular dipenuhi melalui penggunaan Macaroons dengan \textit{caveats}. Token tidak hanya menyatakan aktor penerima akses, tetapi juga membatasi pasien, RME, kategori dataset, kategori fungsi, hak baca atau tulis, masa berlaku, dan kedalaman delegasi. Evaluasi pengujian menunjukkan bahwa keputusan akses dapat dibuat berdasarkan kombinasi batasan tersebut, bukan hanya berdasarkan peran aktor secara umum.
 

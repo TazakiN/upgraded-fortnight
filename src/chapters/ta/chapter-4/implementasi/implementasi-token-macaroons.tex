@@ -10,9 +10,9 @@ Seperti yang sudah dijelaskan pada subbab \ref{subsec:implementasi-arsitektur-si
 
 \texttt{macaroon} merupakan hasil adaptasi dari implementasi Macaroons berbasis Rust yang tersedia secara \textit{open source} pada URL \url{https://github.com/macaroon-rs/macaroon}. Adaptasi dilakukan karena \textit{crate} asli memerlukan beberapa penyesuaian agar lebih sesuai dengan kebutuhan implementasi sistem DecMed, terutama dari sisi kompatibilitas \textit{toolchain} dan pengelolaan \textit{dependency},
 
-Perubahan utama pada \texttt{macaroon} meliputi penggantian \textit{dependency} kriptografi berbasis \texttt{sodiumoxide} dengan \textit{crate} pure Rust, yaitu \texttt{hmac}, \texttt{sha2}, \texttt{chacha20poly1305}, dan \texttt{rand}. Perubahan ini dilakukan untuk mengurangi ketergantungan terhadap pustaka eksternal dan menyederhanakan proses kompilasi pada lingkungan Rust yang digunakan. Selain itu, proses \textit{encoding} dan \textit{decoding} Base64 juga diperkuat agar mendukung format dengan maupun tanpa \textit{padding}, sehingga kompatibilitas serialisasi token dapat dipertahankan pada variasi format yang berbeda.
+Perubahan utama pada \textit{crate} \texttt{macaroon} adalah penggantian \textit{dependency} kriptografi berbasis \texttt{sodiumoxide} dengan \textit{crate} pure Rust, yaitu \texttt{hmac}, \texttt{sha2}, \texttt{chacha20poly1305}, dan \texttt{rand}. Perubahan ini dilakukan untuk mengurangi ketergantungan terhadap pustaka eksternal dan menyederhanakan proses kompilasi pada lingkungan Rust yang digunakan.
 
-Setelah perubahan tersebut dilakukan, \textit{unit testing} pada \textit{crate} dijalankan untuk memastikan bahwa fungsi utama Macaroons tetap berjalan dengan benar. Pengujian tersebut mencakup pembuatan Macaroon, penambahan \textit{caveat}, serialisasi, deserialisasi, serta verifikasi token. Dengan demikian, \textit{crate} \texttt{macaroon} digunakan sebagai fondasi implementasi Macaroons yang telah disesuaikan dengan kebutuhan sistem DecMed.
+Setelah perubahan tersebut dilakukan, \textit{unit testing} pada \textit{crate} dijalankan untuk memastikan bahwa fungsi utama Macaroons tetap berjalan dengan benar. Pengujian tersebut mencakup pembuatan Macaroon, penambahan \textit{caveat}, serialisasi, deserialisasi, serta verifikasi token. Dengan demikian, \textit{crate} \texttt{macaroon} digunakan sebagai fondasi implementasi Macaroons pada sistem DecMed.
 
 \texttt{decmed-macaroon-auth} merupakan wrapper yang dibangun untuk mempermudah penggunaan \textit{crate} \texttt{macaroon} pada implementasi sistem DecMed. Wrapper ini menyediakan fungsi-fungsi utilitas untuk kebutuhan otorisasi DecMed, seperti proses penerbitan token Macaroon, melakukan atenuasi dengan penambahan \textit{caveat} baru, verifikasi Macaroon, dan fungsi pendukung lainnya.
 % sepertinya perlu masukin diagram module or something untuk ngegambarin implementasinya
@@ -29,21 +29,36 @@ Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan 
 	\small
 	\begin{tabular}{|p{0.34\textwidth}|p{0.56\textwidth}|}
 		\hline
-		\textbf{\textit{Caveat}}        & \textbf{Fungsi}                                                               \\ \hline
-		\texttt{patient\_address}       & Mengikat token ke pasien tertentu.                                            \\ \hline
-		\texttt{related\_rme\_id}       & Membatasi token ke episode RME tertentu.                                      \\ \hline
-		\texttt{root\_subject}          & Menyatakan aktor penerima token awal.                                         \\ \hline
-		\texttt{delegated\_by}          & Menyatakan aktor pemberi delegasi.                                            \\ \hline
-		\texttt{delegated\_to}          & Menyatakan aktor penerima delegasi.                                           \\ \hline
-		\texttt{read\_dataset\_in}      & Membatasi \textit{dataset category} yang boleh dibaca.                        \\ \hline
-		\texttt{write\_dataset\_in}     & Membatasi \textit{dataset category} yang boleh ditulis.                       \\ \hline
-		\texttt{read\_function\_in}     & Membatasi \textit{function category} yang boleh dibaca.                       \\ \hline
-		\texttt{write\_function\_in}    & Membatasi \textit{function category} yang boleh ditulis.                      \\ \hline
-		\texttt{expires\_before}        & Menentukan batas waktu penggunaan token.                                      \\ \hline
-		\texttt{max\_delegation\_depth} & Membatasi kedalaman delegasi.                                                 \\ \hline
-		\texttt{hospital\_cid}          & Mengikat token dengan rumah sakit tertentu.                                   \\ \hline
-		\texttt{parent\_token\_hash}    & Mengikat token turunan dengan token induk untuk proses revokasi.              \\ \hline
-		\texttt{purpose}                & Menyatakan tujuan penggunaan token, yaitu \texttt{READ} atau \texttt{UPDATE}. \\ \hline
+		\textbf{\textit{Caveat}}        & \textbf{Tipe Data}
+		\\ \hline
+		\texttt{patient\_address}       & \texttt{String} (alamat IOTA dalam format heksadesimal)
+		\\ \hline
+		\texttt{related\_rme\_id}       & \texttt{String} (ID episode RME)
+		\\ \hline
+		\texttt{root\_subject}          & \texttt{String} (alamat IOTA dalam format heksadesimal)
+		\\ \hline
+		\texttt{delegated\_by}          & \texttt{String} (alamat IOTA dalam format heksadesimal)
+		\\ \hline
+		\texttt{delegated\_to}          & \texttt{String} (alamat IOTA dalam format heksadesimal)
+		\\ \hline
+		\texttt{read\_dataset\_in}      & \texttt{HashSet<DatasetCategory>}
+		\\ \hline
+		\texttt{write\_dataset\_in}     & \texttt{HashSet<DatasetCategory>}
+		\\ \hline
+		\texttt{read\_function\_in}     & \texttt{HashSet<FunctionCategory>}
+		\\ \hline
+		\texttt{write\_function\_in}    & \texttt{HashSet<FunctionCategory>}
+		\\ \hline
+		\texttt{expires\_before}        & \texttt{DateTime<Utc>} (format RFC 3339 / \texttt{YYYY-MM-DDTHH:MM:SS})
+		\\ \hline
+		\texttt{max\_delegation\_depth} & \texttt{u32}
+		\\ \hline
+		\texttt{hospital\_cid}          & \texttt{String} (CID IPFS)
+		\\ \hline
+		\texttt{parent\_token\_hash}    & \texttt{String} (hash SHA-256 dari token induk)
+		\\ \hline
+		\texttt{purpose}                & \texttt{String} (nilai: \texttt{READ} atau \texttt{UPDATE})
+		\\ \hline
 	\end{tabular}
 \end{table}
 

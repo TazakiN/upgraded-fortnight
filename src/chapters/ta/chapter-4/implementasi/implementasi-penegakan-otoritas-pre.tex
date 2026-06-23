@@ -5,69 +5,7 @@ Implementasi penegakan otoritas pada \textit{Server} PRE merupakan realisasi dar
 
 Secara umum, penegakan otoritas pada \textit{Server} PRE tidak hanya memeriksa keberadaan token akses, tetapi juga memeriksa kesesuaian antara token, aktor aktif, status kelembagaan aktor, metadata segmen, serta aksi yang diminta. Pendekatan ini digunakan karena sistem mendukung token Macaroon yang dapat didelegasikan dan diatenuasi. Oleh karena itu, token yang valid secara kriptografis tetap harus dibatasi oleh konteks akses yang tercantum dalam \textit{caveats} dan metadata segmen.
 
-Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai referensi pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre}. Bagian awal alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-a} mencakup autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Kelanjutan alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-b} mencakup validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA.
-
-\subsubsection{Autentikasi Token Macaroon}
-
-Tahap pertama penegakan otoritas dilakukan pada \textit{middleware} autentikasi. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon melalui header \texttt{Authorization} dengan skema \texttt{Bearer}. Token ini menjadi bukti bahwa aktor memiliki hak akses yang sebelumnya diterbitkan oleh sistem atau diperoleh melalui proses delegasi.
-
-\textit{Middleware} melakukan proses deserialisasi token Macaroon, kemudian memverifikasi keaslian token melalui mekanisme \textit{chained-HMAC} menggunakan \texttt{MACAROON\_ROOT\_KEY}. Verifikasi ini memastikan bahwa token tidak dimodifikasi oleh pihak lain setelah diterbitkan. Apabila token tidak dapat dideserialisasi atau nilai HMAC tidak valid, permintaan langsung ditolak dan tidak diteruskan ke \textit{handler} segmentasi.
-
-Setelah token dinyatakan autentik, \textit{Server} PRE membaca \textit{caveats} DecMed yang tersimpan di dalam token. \textit{Caveats} tersebut merepresentasikan batasan akses, seperti alamat pasien, identitas RME, \textit{dataset category}, \textit{function category}, aksi yang diizinkan, masa berlaku token, serta informasi delegasi apabila token merupakan hasil delegasi dari aktor lain.
-
-\subsubsection{Perhitungan \texttt{EffectiveCapability} dan \texttt{DelegationChain}}
-
-Setelah \textit{caveats} berhasil dibaca, \textit{Server} PRE menghitung \texttt{EffectiveCapability}. Struktur ini merepresentasikan cakupan akses akhir yang berlaku terhadap permintaan. Nilai \texttt{EffectiveCapability} diperoleh dari hasil penggabungan dan pembatasan seluruh \textit{caveats} yang ada pada token.
-
-Cakupan akses yang dihitung meliputi \textit{dataset category} yang boleh dibaca, \textit{dataset category} yang boleh ditulis, \textit{function category} yang boleh dibaca, \textit{function category} yang boleh ditulis, batas waktu berlaku token, alamat pasien, \texttt{related\_rme\_id}, serta \texttt{hospital\_cid}. Dengan mekanisme ini, token hasil delegasi tidak dapat memperluas hak akses dari token induknya. Token hanya dapat mempertahankan atau mempersempit cakupan akses yang telah diberikan sebelumnya.
-
-Selain menghitung \texttt{EffectiveCapability}, \textit{Server} PRE juga membangun \texttt{DelegationChain}. Struktur ini digunakan untuk menentukan aktor aktif dari token yang digunakan. Jika token belum didelegasikan, aktor aktif adalah nilai \texttt{root\_subject}. Jika token sudah didelegasikan, aktor aktif adalah penerima delegasi terakhir pada rantai \texttt{delegated\_to}. Aktor aktif inilah yang kemudian digunakan dalam pemeriksaan bukti kepemilikan \textit{wallet} dan validasi peran pada registry personel rumah sakit.
-
-\subsubsection{Pemeriksaan Status Pencabutan Token}
-
-Setelah cakupan akses dan aktor aktif diketahui, \textit{Server} PRE memeriksa status pencabutan token melalui Redis. Pemeriksaan ini dilakukan agar token yang masih valid secara HMAC dan belum melewati masa berlaku tetap dapat ditolak apabila sudah dicabut oleh pihak yang berwenang.
-
-Pemeriksaan revokasi dilakukan menggunakan kunci revokasi yang dibentuk dari \textit{hash} token dan \textit{hash} token induk pada \textit{caveat} \texttt{parent\_token\_hash}. Dengan pendekatan ini, sistem dapat mendukung pencabutan akses secara langsung terhadap token tertentu maupun pencabutan berantai terhadap token hasil delegasi. Apabila token terdeteksi sebagai token yang telah dicabut, permintaan ditolak sebelum masuk ke proses validasi konteks segmen.
-
-% Mekanisme revokasi ini menjadi penting karena Macaroon merupakan token yang dapat beredar di sisi klien hingga masa berlakunya habis. Tanpa mekanisme revokasi, token yang sudah tidak diinginkan masih dapat digunakan sampai mencapai waktu kedaluwarsa. Redis digunakan sebagai penyimpanan status revokasi karena pemeriksaan revokasi perlu dilakukan secara cepat pada setiap permintaan akses.
-
-\subsubsection{Validasi Role dan subrole melalui Move Smart Contract}
-
-Setelah token dinyatakan tidak dicabut, \textit{Server} PRE memeriksa aktor aktif sesuai hasil dari \texttt{DelegationChain} melalui \textit{Move Smart Contract}. Pemeriksaan ini dilakukan terhadap \textit{Hospital Personnel Registry} untuk memastikan bahwa aktor aktif masih memiliki role atau sub\-role yang sah dalam konteks rumah sakit.
-
-Validasi melalui \textit{Move Smart Contract} memiliki tanggung jawab yang berbeda dari validasi Macaroon. Macaroon merepresentasikan otorisasi delegatif, yaitu hak akses yang diberikan melalui token dan dibatasi oleh \textit{caveats}. Sementara itu, registry pada \textit{Move Smart Contract} merepresentasikan status kelembagaan aktor, misalnya apakah aktor masih terdaftar sebagai personel rumah sakit dengan peran tertentu. Dengan demikian, akses hanya dilanjutkan apabila aktor memiliki token yang valid sekaligus masih memiliki otoritas kelembagaan yang sesuai.
-
-% Pemisahan ini mencegah kondisi ketika token yang masih valid digunakan oleh aktor yang status kelembagaannya sudah berubah. Sebagai contoh, apabila seorang aktor tidak lagi memiliki role yang sah pada registry rumah sakit, maka permintaan akses dapat ditolak meskipun token Macaroon yang digunakan belum kedaluwarsa.
-
-\subsubsection{Validasi Konteks Segmen}
-
-Validasi berikutnya dilakukan pada \textit{handler} baca dan tulis segmen. Pada operasi baca, \textit{handler} mengambil metadata segmen dari IOTA, kemudian mendekode metadata JSON yang tersimpan dalam format base64. Pada operasi tulis, \textit{handler} membangun metadata preview dari payload segmen yang akan disimpan. Metadata ini kemudian digunakan sebagai dasar pemeriksaan kesesuaian antara permintaan akses dan cakupan token.
-
-Pemeriksaan konteks segmen meliputi kesesuaian \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{hospital\_cid}, \texttt{dataset\_category}, \texttt{function\_category}, dan aksi akses. Untuk operasi baca, \textit{Server} PRE memastikan bahwa \texttt{dataset\_category} berada dalam cakupan \texttt{read\_dataset\_in} dan \texttt{function\_category} berada dalam cakupan \texttt{read\_function\_in}. Untuk operasi tulis, \textit{Server} PRE memastikan bahwa \texttt{dataset\_category} berada dalam cakupan \texttt{write\_dataset\_in} dan \texttt{function\_category} berada dalam cakupan \texttt{write\_function\_in}.
-
-% Validasi ini memastikan bahwa token tidak hanya sah secara umum, tetapi juga sesuai dengan segmen yang benar-benar diminta. Dengan demikian, token yang hanya diberikan untuk RME tertentu tidak dapat digunakan untuk mengakses RME lain. Token yang hanya diberikan untuk kategori dataset atau fungsi tertentu juga tidak dapat digunakan untuk membaca atau menulis segmen di luar cakupan tersebut.
-
-\subsubsection{Verifikasi Bukti Kepemilikan Wallet}
-
-Setelah konteks segmen dinyatakan sesuai, \textit{Server} PRE memverifikasi bukti kepemilikan \textit{wallet} yang dikirimkan oleh \textit{client}. Bukti ini berupa tanda tangan terhadap data permintaan, seperti endpoint yang diakses, waktu permintaan, dan informasi lain yang relevan dengan akses. Verifikasi dilakukan terhadap alamat aktor aktif yang telah ditentukan dari \texttt{DelegationChain}.
-
-Pemeriksaan ini mencegah token digunakan oleh pihak yang hanya memiliki salinan token, tetapi tidak memiliki kunci privat dari alamat penerima akses yang sah. Dengan kata lain, token Macaroon berperan sebagai bukti otorisasi, sedangkan tanda tangan \textit{wallet} berperan sebagai bukti penguasaan identitas kriptografis aktor aktif.
-
-Penggunaan waktu permintaan atau \textit{timestamp} pada bukti \textit{wallet} juga digunakan untuk mengurangi risiko penggunaan ulang tanda tangan. Apabila tanda tangan tidak valid, tidak sesuai dengan aktor aktif, atau berada di luar batas waktu yang diterima, permintaan ditolak.
-
-\subsubsection{Eksekusi Operasi PRE, IPFS, dan IOTA}
-
-Permintaan yang lolos seluruh tahap validasi dilanjutkan ke operasi utama pada \textit{Server} PRE. Untuk operasi baca, \textit{Server} PRE mengambil data terenkripsi dari IPFS, kemudian menjalankan proses \textit{re-encryption} menggunakan Umbral PRE. Hasil proses tersebut dikembalikan kepada aktor yang berwenang agar data dapat dibuka sesuai mekanisme kriptografi yang telah dirancang.
-
-Untuk operasi tulis, \textit{Server} PRE menerima data terenkripsi dari \textit{client}, menyimpannya ke IPFS, lalu menyimpan metadata segmen ke IOTA. Metadata yang disimpan digunakan sebagai referensi untuk validasi akses pada operasi baca berikutnya. Dengan demikian, IPFS berperan sebagai media penyimpanan data terenkripsi, sedangkan IOTA berperan sebagai penyimpanan metadata segmen yang digunakan dalam proses verifikasi konteks akses.
-
-Operasi PRE, IPFS, dan IOTA hanya dijalankan setelah token, aktor aktif, status revokasi, role kelembagaan, konteks segmen, dan bukti \textit{wallet} dinyatakan valid. Hal ini menempatkan \textit{Server} PRE sebagai titik penegakan kebijakan akses sebelum data terenkripsi diproses lebih lanjut.
-
-\subsubsection{Cakupan \textit{Endpoint} yang Dilindungi}
-
-Daftar \textit{endpoint} REST API yang menjadi antarmuka fungsi pada \textit{Server} PRE disajikan pada Lampiran \ref{lampiran:implementasi-rest-api-pre}. \textit{Endpoint} yang berada di luar \texttt{/api/v1/gen/*}, \texttt{/api/v1/nonce}, \texttt{/api/v1/keys}, dan \texttt{/api/v1/revocations/patient} diproses melalui \texttt{auth\_middleware}. Dengan demikian, \textit{endpoint} segmentasi dan \textit{endpoint} lain yang membutuhkan otorisasi harus membawa token Macaroon pada header \texttt{Authorization}.
-
-Pengecualian terhadap beberapa \textit{endpoint} dilakukan karena \textit{endpoint} tersebut memiliki fungsi yang berbeda dalam alur sistem. \textit{Endpoint} \texttt{/api/v1/gen/*} digunakan untuk kebutuhan pembangkitan material awal, \textit{endpoint} \texttt{/api/v1/nonce} digunakan untuk mendukung pembuktian kepemilikan \textit{wallet}, \textit{endpoint} \texttt{/api/v1/keys} digunakan pada proses penerbitan akses awal, sedangkan \textit{endpoint} \texttt{/api/v1/revocations/patient} digunakan untuk proses pencabutan akses oleh pasien.
+Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai referensi pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre}. Bagian awal alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-a} mencakup autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Kelanjutan alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-b} mencakup validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA. Status implementasi penegakan otoritas pada \textit{Server} PRE disajikan pada Tabel \ref{tab:status-implementasi-penegakan-otoritas-pre}.
 
 \begin{table}[!ht]
 	\centering
@@ -90,6 +28,114 @@ Pengecualian terhadap beberapa \textit{endpoint} dilakukan karena \textit{endpoi
 	\end{tabular}
 \end{table}
 
-% Berdasarkan implementasi tersebut, \textit{Server} PRE tidak hanya berperan sebagai komponen kriptografis untuk menjalankan \textit{re-encryption}, tetapi juga sebagai titik penegakan kebijakan akses. Penegakan ini dilakukan dengan menghubungkan token Macaroon, rantai delegasi, status revokasi, status kelembagaan aktor, metadata segmen, dan data terenkripsi.
 
-% Meskipun pendekatan ini menambah kompleksitas dibandingkan validasi token sederhana, setiap lapisan validasi memiliki tanggung jawab yang berbeda. Macaroon digunakan untuk memvalidasi otorisasi delegatif, Redis digunakan untuk memeriksa pencabutan token, Move Smart Contract digunakan untuk memeriksa status kelembagaan aktor, metadata segmen digunakan untuk memastikan kesesuaian konteks akses, dan \textit{wallet signature} digunakan untuk membuktikan penguasaan identitas kriptografis aktor aktif. Dengan demikian, hanya permintaan yang lolos seluruh pemeriksaan yang dapat dilanjutkan ke proses PRE.
+\subsubsection{Autentikasi Token Macaroon}
+
+Tahap pertama penegakan otoritas dilakukan pada \textit{middleware} autentikasi. Setiap permintaan akses ke endpoint segmentasi harus membawa token Macaroon melalui header \texttt{Authorization} dengan skema \texttt{Bearer}. Token ini menjadi bukti bahwa aktor memiliki hak akses yang sebelumnya diterbitkan oleh sistem atau diperoleh melalui proses delegasi.
+
+\textit{Middleware} melakukan proses deserialisasi token Macaroon, kemudian memverifikasi keaslian token melalui mekanisme \textit{chained-HMAC} menggunakan \texttt{MACAROON\_ROOT\_KEY}. Verifikasi ini memastikan bahwa token tidak dimodifikasi oleh pihak lain setelah diterbitkan. Apabila token tidak dapat dideserialisasi atau nilai HMAC tidak valid, permintaan langsung ditolak dan tidak diteruskan ke \textit{handler} segmentasi.
+
+Setelah token dinyatakan autentik, \textit{Server} PRE membaca \textit{caveats} DecMed yang tersimpan di dalam token. \textit{Caveats} tersebut merepresentasikan batasan akses, seperti alamat pasien, identitas RME, \textit{dataset category}, \textit{function category}, aksi yang diizinkan, masa berlaku token, serta informasi delegasi apabila token merupakan hasil delegasi dari aktor lain.
+
+\subsubsection{Perhitungan \texttt{EffectiveCapability} dan \texttt{DelegationChain}}
+
+Setelah \textit{caveats} berhasil dibaca, \textit{Server} PRE menghitung \texttt{EffectiveCapability}. Struktur ini merepresentasikan cakupan akses akhir yang berlaku terhadap permintaan. Nilai \texttt{EffectiveCapability} diperoleh dari hasil penggabungan dan pembatasan seluruh \textit{caveats} yang ada pada token.
+
+Cakupan akses yang dihitung meliputi \textit{dataset category} yang boleh dibaca, \textit{dataset category} yang boleh ditulis, \textit{function category} yang boleh dibaca, \textit{function category} yang boleh ditulis, batas waktu berlaku token, alamat pasien, \texttt{related\_rme\_id}, serta \texttt{hospital\_cid}. Dengan mekanisme ini, token hasil delegasi tidak dapat memperluas hak akses dari token induknya. Token hanya dapat mempertahankan atau mempersempit cakupan akses yang telah diberikan sebelumnya.
+
+\begin{lstlisting}[language=Rust, caption={Definisi \texttt{EffectiveCapability}}]
+pub struct EffectiveCapability {
+    pub read_datasets: HashSet<DatasetCategory>,
+    pub write_datasets: HashSet<DatasetCategory>,
+    pub read_functions: HashSet<FunctionCategory>,
+    pub write_functions: HashSet<FunctionCategory>,
+    pub expires_before: Option<DateTime<Utc>>,
+    pub root_max_delegation_depth: Option<u32>,
+    pub remaining_max_delegation_depth: Option<u32>,
+    pub patient_address: Option<String>,
+    pub related_rme_id: Option<String>,
+    pub hospital_cid: Option<String>,
+}
+\end{lstlisting}
+
+Selain menghitung \texttt{EffectiveCapability}, \textit{Server} PRE juga membangun \texttt{DelegationChain}. Struktur ini digunakan untuk menentukan aktor aktif dari token yang digunakan. Jika token belum didelegasikan, aktor aktif adalah nilai \texttt{root\_subject}. Jika token sudah didelegasikan, aktor aktif adalah penerima delegasi terakhir pada rantai \texttt{delegated\_to}. Aktor aktif inilah yang kemudian digunakan dalam pemeriksaan bukti kepemilikan \textit{wallet} yang akan dijelaskan pada subbab \ref{subsec:verifikasi-bukti-kepemilikan-wallet}.
+
+\begin{lstlisting}[language=Rust, caption={Definisi \texttt{DelegationStep} dan \texttt{DelegationChain}}]
+
+pub struct DelegationStep {
+    pub delegated_by: String,
+    pub delegated_to: String,
+}
+
+pub struct DelegationChain {
+    pub root_subject: String,
+    pub steps: Vec<DelegationStep>,
+    pub active_subject: String,
+}
+\end{lstlisting}
+
+Setelah \texttt{EffectiveCapability} terbentuk, \textit{Server} PRE juga memeriksa batas waktu berlaku token pada nilai \texttt{expires\_before}. Pemeriksaan ini dilakukan dengan membandingkan waktu kedaluwarsa token terhadap waktu saat permintaan diproses. Apabila token telah melewati batas waktu berlaku, permintaan akses ditolak sebelum pemeriksaan revokasi dan validasi konteks segmen dilakukan.
+
+\subsubsection{Pemeriksaan Status Revokasi Token}
+\label{subsec:pemeriksaan-status-revokasi-token}
+
+Setelah cakupan akses dan aktor aktif diketahui, \textit{Server} PRE memeriksa status revokasi token melalui Redis. Pemeriksaan ini dilakukan agar token yang masih valid secara HMAC dan belum melewati masa berlaku tetap dapat ditolak apabila sudah dicabut oleh pihak yang berwenang.
+
+Pemeriksaan revokasi dilakukan menggunakan kunci revokasi yang dibentuk dari \textit{hash} token dan \textit{hash} token induk pada \textit{caveat} \texttt{parent\_token\_hash}. Dengan pendekatan ini, sistem dapat mendukung revokasi akses secara langsung terhadap token tertentu maupun revokasi berantai terhadap token hasil delegasi. Apabila token terdeteksi sebagai token yang telah dicabut, permintaan ditolak sebelum masuk ke proses validasi konteks segmen.
+
+% Mekanisme revokasi ini menjadi penting karena Macaroon merupakan token yang dapat beredar di sisi klien hingga masa berlakunya habis. Tanpa mekanisme revokasi, token yang sudah tidak diinginkan masih dapat digunakan sampai mencapai waktu kedaluwarsa. Redis digunakan sebagai penyimpanan status revokasi karena pemeriksaan revokasi perlu dilakukan secara cepat pada setiap permintaan akses.
+
+\subsubsection{Validasi \textit{Role} dan \textit{Subrole} melalui \textit{Move Smart Contract}}
+\label{subsec:validasi-role-subrole-move-smart-contract}
+
+Setelah token dinyatakan tidak dicabut, \textit{Server} PRE memeriksa aktor aktif sesuai hasil dari \texttt{DelegationChain} melalui \textit{Move Smart Contract}. Pemeriksaan ini dilakukan terhadap identitas \textit{personnel} yang tersimpan pada penyimpanan \textit{on-chain}. Pemeriksaan ini dilakukan untuk memastikan bahwa aktor aktif masih memiliki \textit{role} atau \textit{subrole} yang sah dalam konteks rumah sakit.
+
+Validasi dilakukan dengan Fungsi yang dipanggil adalah  \texttt{get\_hospital\_personnel\_auth\_info}  pada modul  \texttt{decmed::proxy}. Fungsi ini digunakan untuk mengambil informasi \textit{role} dan \textit{subrole} dari \textit{personnel} yang tersimpan pada penyimpanan \textit{on-chain}. Fungsi ini juga secara tidak langsung memvalidasi alamat IOTA \textit{personnel}.
+
+% Validasi melalui \textit{Move Smart Contract} memiliki tanggung jawab yang berbeda dari validasi Macaroon. Macaroon merepresentasikan otorisasi delegatif, yaitu hak akses yang diberikan melalui token dan dibatasi oleh \textit{caveats}. Sementara itu, \textit{registry} pada \textit{Move Smart Contract} merepresentasikan status kelembagaan aktor, misalnya apakah aktor masih terdaftar sebagai \textit{personnel} rumah sakit dengan \textit{role} atau \textit{subrole} tertentu. Dengan demikian, akses hanya dilanjutkan apabila aktor memiliki token yang valid sekaligus masih memiliki otoritas kelembagaan yang sesuai.
+
+% Pemisahan ini mencegah kondisi ketika token yang masih valid digunakan oleh aktor yang status kelembagaannya sudah berubah. Sebagai contoh, apabila seorang aktor tidak lagi memiliki role yang sah pada registry rumah sakit, maka permintaan akses dapat ditolak meskipun token Macaroon yang digunakan belum kedaluwarsa.
+
+\subsubsection{Validasi Konteks Segmen}
+\label{subsec:validasi-konteks-segmen}
+
+Validasi berikutnya dilakukan pada \textit{handler} baca dan tulis segmen. Pada operasi baca, \textit{handler} mengambil metadata segmen dari IOTA, kemudian mendekode metadata JSON yang tersimpan dalam format base64. Pada operasi tulis, \textit{handler} membangun metadata preview dari \textit{payload} segmen yang akan disimpan. Metadata ini kemudian digunakan sebagai dasar pemeriksaan kesesuaian antara permintaan akses dan cakupan token.
+
+Pemeriksaan konteks segmen meliputi kesesuaian \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{hospital\_cid}, \texttt{dataset\_category}, \texttt{function\_category}, dan aksi akses. Untuk operasi baca, \textit{Server} PRE memastikan bahwa \texttt{dataset\_category} berada dalam cakupan \texttt{read\_dataset\_in} dan \texttt{function\_category} berada dalam cakupan \texttt{read\_function\_in}. Untuk operasi tulis, \textit{Server} PRE memastikan bahwa \texttt{dataset\_category} berada dalam cakupan \texttt{write\_dataset\_in} dan \texttt{function\_category} berada dalam cakupan \texttt{write\_function\_in}.
+
+% Validasi ini memastikan bahwa token tidak hanya sah secara umum, tetapi juga sesuai dengan segmen yang benar-benar diminta. Dengan demikian, token yang hanya diberikan untuk RME tertentu tidak dapat digunakan untuk mengakses RME lain. Token yang hanya diberikan untuk kategori dataset atau fungsi tertentu juga tidak dapat digunakan untuk membaca atau menulis segmen di luar cakupan tersebut.
+
+\subsubsection{Verifikasi Bukti Kepemilikan \textit{Wallet}}
+\label{subsec:verifikasi-bukti-kepemilikan-wallet}
+
+Setelah konteks segmen dinyatakan sesuai, \textit{Server} PRE memverifikasi bukti kepemilikan \textit{wallet} dari aktor aktif. Verifikasi ini bertujuan memastikan bahwa permintaan akses tidak hanya membawa token Macaroon yang valid, tetapi juga dikirim oleh pihak yang menguasai kunci privat dari alamat \textit{wallet} penerima akses yang sah. Aktor aktif yang menjadi dasar verifikasi ditentukan dari \texttt{DelegationChain}.
+
+Verifikasi bukti kepemilikan \textit{wallet} diimplementasikan menggunakan pola \textit{challenge--response}. Pada permintaan pertama, \textit{client} dapat mengirimkan permintaan akses tanpa \textit{wallet signature}. Apabila tanda tangan belum tersedia, \textit{Server} PRE membentuk konteks pembuktian berupa \texttt{WalletProofContext} berdasarkan informasi akses yang telah divalidasi, kemudian mengembalikannya kepada \textit{client} dalam respons \texttt{401 UNAUTHORIZED}. Konteks verifikasi tersebut ditunjukkan pada Listing \ref{lst:struktur-walletproofcontext}.
+
+\begin{lstlisting}[language=Rust, caption={Struktur \texttt{WalletProofContext} sebagai konteks verifikasi \textit{wallet signature}}, label={lst:struktur-walletproofcontext}]
+pub struct WalletProofContext {
+pub token_id: String,             // identifier Macaroon
+pub patient_address: String,      // alamat pasien
+pub related_rme_id: String,       // ID episode RME
+pub operation: AccessMode,        // READ / UPDATE
+pub segment_id: String,           // ID segmen yang diakses
+pub dataset_category: DatasetCategory,
+pub function_category: FunctionCategory,
+pub timestamp: String,            // format RFC 3339
+}
+\end{lstlisting}
+
+Setelah menerima \texttt{WalletProofContext}, \textit{client} menandatangani konteks tersebut menggunakan kunci privat \textit{wallet} aktor aktif. Permintaan kemudian dikirim ulang dengan menyertakan tanda tangan pada \textit{header request} \texttt{x-decmed-wallet-signature} dan nilai waktu pembuktian pada \textit{header request} \texttt{x-decmed-wallet-timestamp}. \textit{Server} PRE kemudian memverifikasi tanda tangan \texttt{ED25519} tersebut terhadap alamat aktor aktif yang telah ditentukan dari \texttt{DelegationChain}.
+
+Pemeriksaan ini mencegah token digunakan oleh pihak yang hanya memiliki salinan token, tetapi tidak memiliki kunci privat dari alamat penerima akses yang sah. Dengan demikian, token Macaroon berperan sebagai bukti otorisasi, sedangkan \textit{wallet signature} berperan sebagai bukti penguasaan identitas kriptografis aktor aktif.
+
+Keberadaan \textit{timestamp} pada konteks yang ditandatangani juga membuat tanda tangan terikat pada konteks permintaan tertentu. Dengan demikian, tanda tangan tidak hanya membuktikan kepemilikan \textit{wallet}, tetapi juga mengikat pembuktian tersebut pada token, pasien, RME, segmen, operasi, kategori data, kategori fungsi, dan waktu pembuktian yang digunakan dalam permintaan. Apabila tanda tangan tidak valid atau tidak sesuai dengan alamat aktor aktif, permintaan akses ditolak.
+
+\subsubsection{Eksekusi Operasi \textit{Re-encryption}, IPFS, dan IOTA}
+\label{subsec:eksekusi-operasi-re-encryption-ipfs-iota}
+
+Permintaan yang lolos seluruh tahap validasi dilanjutkan ke operasi utama pada \textit{Server} PRE. Untuk operasi baca, \textit{Server} PRE mengambil data terenkripsi dari IPFS, kemudian menjalankan proses \textit{re-encryption} menggunakan Umbral PRE. Hasil proses tersebut dikembalikan kepada aktor yang berwenang agar data dapat dibuka sesuai mekanisme kriptografi yang telah dirancang.
+
+Untuk operasi tulis, \textit{Server} PRE menerima data terenkripsi dari \textit{client}, menyimpannya ke IPFS, lalu menyimpan metadata segmen ke IOTA. Metadata yang disimpan digunakan sebagai referensi untuk validasi akses pada operasi baca berikutnya. Dengan demikian, IPFS berperan sebagai media penyimpanan data terenkripsi, sedangkan IOTA berperan sebagai penyimpanan metadata segmen yang digunakan dalam proses verifikasi konteks akses.
+
+Operasi \textit{re-encryption} serta akses ke IPFS dan IOTA hanya dijalankan setelah Macaroon, aktor aktif, status revokasi, role kelembagaan, konteks segmen, dan bukti \textit{wallet} dinyatakan valid. Hal ini menempatkan \textit{Server} PRE sebagai titik penegakan kebijakan akses sebelum data terenkripsi diproses lebih lanjut.

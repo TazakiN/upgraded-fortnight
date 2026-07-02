@@ -1,0 +1,42 @@
+\chapter{Modul dan Implementasi \textit{Crate} \texttt{decmed-rme-segment}}
+\label{lampiran:implementasi-crate-decmed-rme-segment}
+
+\begingroup
+\small
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.68\textwidth}|}
+	\caption{Daftar Modul dan Implementasi \textit{Crate} \texttt{decmed-rme-segment}}
+	\label{tab:modul-crate-decmed-rme-segment}                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+	\hline
+	\textbf{Modul} & \textbf{Implementasi}                                                                                                                                                                                                                                                                                                                                                                                                                            \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{Modul} & \textbf{Implementasi}                                                                                                                                                                                                                                                                                                                                                                                                                            \\
+	\hline
+	\endhead
+
+	\texttt{types}
+	               & \texttt{CreateRmeSegmentRequest} (\textit{struct}), \texttt{RmeSegmentData} (\textit{struct}) dengan \texttt{new()} dan \texttt{validate()}; \texttt{ClientEncryptedRmeSegment} (\textit{struct}) dengan \texttt{validate()} dan \texttt{into\_metadata()}; \texttt{RmeSegmentMetadata} (\textit{struct}) dengan \texttt{validate()}; \texttt{CreateRmeSegmentResponse} (\textit{struct}) dengan implementasi \texttt{From<RmeSegmentMetadata>}.
+	\\ \hline
+
+	\texttt{category}
+	               & \texttt{DatasetCategory} (\textit{enum}), \texttt{FunctionCategory} (\textit{enum}), \texttt{ALL\_DATASET\_CATEGORIES} (\textit{const}), \texttt{ALL\_FUNCTION\_CATEGORIES} (\textit{const}).
+	\\ \hline
+
+	\texttt{crypto}
+	               & \texttt{canonical\_json()}, \texttt{payload\_hash()}, \texttt{sha256\_hex()}, \texttt{ciphertext\_integrity\_hash\_from\_base64()}.
+	\\ \hline
+
+	\texttt{error}
+	               & \texttt{SegmentValidationError} (\textit{enum}).
+	\\ \hline
+
+	\texttt{administrative\newline \_payload}
+	               & \texttt{AdministrativeGeneralPayload} (\textit{struct}) dengan \texttt{validate()} dan \texttt{to\_payload\_value()}; \texttt{administrative\_general\_payload\_from\_value()}, \texttt{administrative\_general\_payload\_from\_fields()}.
+	\\ \hline
+
+	\texttt{validation}
+	               & \texttt{assert\_valid\_correction\_request()}, \texttt{assert\_valid\_correction\_metadata()}, \texttt{get\_allowed\_function\_categories()}, \texttt{is\_valid\_segment\_category()}, \texttt{assert\_valid\_segment\_category()}, \texttt{assert\_segment\_pair\_consistent()}, \texttt{assert\_no\_plaintext\_medical\_fields()}.
+	\\ \hline
+\end{longtable}
+\endgroup

@@ -1,5 +1,4 @@
-
-,\chapter{Pendahuluan}
+\chapter{Pendahuluan}
 \label{chap:pendahuluan}
 
 \input{chapters/ta/chapter-1/latar-belakang.tex}
@@ -20,7 +19,7 @@ Berdasarkan latar belakang yang telah diuraikan pada subbab \ref{sec:latarbelaka
 Tujuan dari Tugas Akhir ini adalah:
 \begin{enumerate}
 	\item Merancang dan menerapkan kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan teknologi Macaroons.
-	\item Merancang dan menerapkan segmentasi data \textit{off-chain} yang mendukung penegakan kontrol akses granular pada DecMed.
+	\item Merancang dan menerapkan segmentasi data yang mendukung penegakan kontrol akses granular pada DecMed.
 	\item Merancang dan menerapkan fitur atenuasi \textit{offline} untuk memfasilitasi pendelegasian hak akses antar tenaga medis tanpa memerlukan intervensi langsung dari pasien.
 \end{enumerate}
 
@@ -29,10 +28,9 @@ Tujuan dari Tugas Akhir ini adalah:
 Terdapat beberapa batasan masalah dari Tugas Akhir ini. Batasan masalah tersebut antara lain:
 
 \begin{enumerate}
-	\item Implementasi dilakukan dalam bentuk pengembangan prototipe kerangka kerja DecMed dan belum mencakup kesiapan operasional pada lingkungan nyata rumah sakit.
-	      % \item Tugas Akhir ini tidak membahas implementasi integrasi dengan SATUSEHAT atau pemetaan struktur data RME ke standar FHIR.
-	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor dokter, perawat, petugas laboratorium, dan apoteker. Implementasi tidak membahas keseluruhan kemungkinan skenario layanan klinis;
+	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor dokter, perawat, petugas laboratorium, dan apoteker pada alur Rawat Jalan dan Rawat Inap.
 	\item Data RME pada dataset Instalasi Gawat Darurat (IGD) tidak termasuk dalam kajian rancangan dan implementasi.
+	\item Segmentasi data RME hanya dilakukan untuk dokumentasi klinis. Dokumentasi administratif tidak termasuk ke dalam fokus Tugas Akhir ini dan hanya diimplementasikan sesuai dengan implementasi DecMed sebelumnya.
 \end{enumerate}
 
 \input{chapters/ta/chapter-1/metodologi.tex}

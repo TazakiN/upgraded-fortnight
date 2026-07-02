@@ -5,7 +5,7 @@
 \begin{center}
 	\center
 	\begin{singlespace}
-		\large\bfseries\MakeUppercase{Judul TA Disini}
+		\large\bfseries\MakeUppercase{\thetitle}
 
 		\normalfont\normalsize
 		By:
@@ -16,14 +16,8 @@
 
 \begin{singlespace}
 	\small
-	Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+	The transformation of electronic medical records (EMRs) requires access-control mechanisms that preserve patient control while supporting collaborative healthcare workflows. DecMed, as a decentralized EMR system, already uses IOTA, IPFS, and Proxy Re-Encryption (PRE); however, its previous mechanism still depended on patients to issue new access, did not represent token constraints with sufficient context, and stored EMR data as large objects that were difficult to enforce granularly. This thesis aims to design and implement an access-control extension for DecMed so that access can be constrained by actor, service context, data segment, validity period, and delegation chain. The proposed approach integrates Macaroon as an authorization token with caveats for attenuation, off-chain EMR segmentation based on dataset categories and clinical functions, metadata and audit recording on IOTA, and PRE as the authority enforcement point before encrypted data is retrieved or reprocessed for an access recipient. The implementation includes EMR segmentation components, Macaroon-based tokens, authority enforcement on the PRE Server, IOTA Move smart contracts, the Patient Client, and the Hospital Client for workflows involving patients, medical record officers, nurses, physicians, laboratory officers, and pharmacists. Testing was conducted through 12 functional scenarios for outpatient and inpatient workflows, as well as unit or integration tests from \texttt{PU-TA-01} to \texttt{PU-TA-09} for nonfunctional requirements. The evaluation states that all formulated functional and nonfunctional requirements were fulfilled. The results show that granular access control, EMR segmentation, limited delegation, revocation, auditing, and active-actor identity verification can be operationalized in DecMed within the evaluated prototype implementation boundaries.
 
-	It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-
-	Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-	\textbf{\textit{Keywords: Lorem, Ipsum, Lorem Ipsum }}
+	\textbf{\textit{Keywords: electronic medical records, granular access control, Macaroon, IOTA, Proxy Re-Encryption}}
 \end{singlespace}
-\clearpage
-
 \clearpage

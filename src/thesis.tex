@@ -15,6 +15,8 @@
 \input{config/ta/if-itb-thesis.sty}
 \input{config/hypenation-id.tex}
 \input{config/hypenation-en.tex}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
 
 \makeatletter
 \let\thesis@defaultfigure\figure
@@ -22,14 +24,14 @@
 \let\thesis@defaulttable\table
 \let\endthesis@defaulttable\endtable
 \newcommand{\usemainfloatplacements}{%
-	\renewenvironment{figure}[1][!b]{\@float{figure}[!b]}{\end@float}%
-	\renewenvironment{table}[1][!t]{\@float{table}[!t]}{\end@float}%
+  \renewenvironment{figure}[1][!b]{\@float{figure}[!b]}{\end@float}%
+  \renewenvironment{table}[1][!t]{\@float{table}[!t]}{\end@float}%
 }
 \newcommand{\restoredefaultfloatplacements}{%
-	\let\figure\thesis@defaultfigure
-	\let\endfigure\endthesis@defaultfigure
-	\let\table\thesis@defaulttable
-	\let\endtable\endthesis@defaulttable
+  \let\figure\thesis@defaultfigure
+  \let\endfigure\endthesis@defaultfigure
+  \let\table\thesis@defaulttable
+  \let\endtable\endthesis@defaulttable
 }
 
 \makeatother
@@ -38,27 +40,28 @@
 
 \begin{document}
 
-\title{Implementasi Kontrol Akses Granular pada Sistem Rekam Medis Elektronik DecMed Menggunakan Macaroons}
+\title{Pengembangan Kontrol Akses Granular dan Delegasi \textit{Offline} pada Sistem Rekam Medis Elektronik DecMed Menggunakan Macaroons}
 \date{}
 \author{
 	Tazkia Nizami \\
 	NIM: 13522032
 }
-\newcommand\tanggalpengesahan{15 Juni 2026}
+\newcommand\tanggalpengesahan{2 Juli 2026}
 
 \pagenumbering{roman}
 \setcounter{page}{1}
 
 \input{chapters/ta/cover}
 \input{chapters/ta/approval-1}
-% \input{chapters/ta/statement}
+% \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{../a.pdf}
+\input{chapters/ta/statement}
 
 \pagestyle{plain}
 
-% \input{chapters/ta/abstract-id}
-% \input{chapters/ta/abstract-en}
+\input{chapters/ta/abstract-id}
+\input{chapters/ta/abstract-en}
 
-% \input{chapters/ta/forewords}
+\input{chapters/ta/forewords}
 
 \titleformat*{\section}{\centering\bfseries\Large\MakeUpperCase}
 \titlespacing*{\chapter}{0pt}{0pt}{4pt}
@@ -67,6 +70,8 @@
 \renewcommand{\contentsname}{DAFTAR ISI}
 \renewcommand{\listfigurename}{DAFTAR GAMBAR}
 \renewcommand{\listtablename}{DAFTAR TABEL}
+\renewcommand{\lstlistingname}{Kode}
+\renewcommand{\lstlistlistingname}{DAFTAR KODE PROGRAM}
 \renewcommand{\bibname}{DAFTAR REFERENSI}
 
 % daftar isi, lampiran, gambar, table
@@ -74,6 +79,7 @@
 \listofappendices
 \listoffigures
 \listoftables
+\lstlistoflistings
 
 \newpage
 

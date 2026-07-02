@@ -3,46 +3,46 @@
 {\small
 	\begin{longtable}{|p{0.10\textwidth}|p{0.30\textwidth}|p{0.34\textwidth}|p{0.16\textwidth}|}
 		\caption{Daftar Endpoint REST API pada Server PRE}
-		\label{tab:daftar-endpoint-rest-api-pre}                                                                                         \\
+		\label{tab:daftar-endpoint-rest-api-pre}                                                                         \\
 		\hline
-		\textbf{Method} & \textbf{Endpoint}                                                          & \textbf{Fungsi} & \textbf{Status} \\ \hline
+		\textbf{Method} & \textbf{Endpoint}                                          & \textbf{Fungsi} & \textbf{Status} \\ \hline
 		\endfirsthead
 
 		\hline
-		\textbf{Method} & \textbf{Endpoint}                                                          & \textbf{Fungsi} & \textbf{Status} \\ \hline
+		\textbf{Method} & \textbf{Endpoint}                                          & \textbf{Fungsi} & \textbf{Status} \\ \hline
 		\endhead
 
 		\texttt{GET}    & \texttt{/}
 		                & \textit{Health check}.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{GET}    & \texttt{/medical-\allowbreak records}
 		                & Mengambil daftar rekam medis.
-		                & Dimodifikasi                                                                                                   \\ \hline
+		                & Dimodifikasi                                                                                   \\ \hline
 
 		\texttt{GET}    & \texttt{/medical-\allowbreak record}
 		                & Mengambil detail rekam medis.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{POST}   & \texttt{/medical-\allowbreak record}
 		                & Membuat rekam medis.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{PUT}    & \texttt{/medical-\allowbreak record}
 		                & Memperbarui rekam medis.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{POST}   & \texttt{/medical-\allowbreak record-\allowbreak segment}
 		                & Membuat segmen rekam medis.
-		                & Baru                                                                                                           \\ \hline
+		                & Baru                                                                                           \\ \hline
 
 		\texttt{GET}    & \texttt{/medical-\allowbreak record-\allowbreak update}
 		                & Mengambil data untuk pembaruan RME.
-		                & Baru                                                                                                           \\ \hline
+		                & Baru                                                                                           \\ \hline
 
 		\texttt{GET}    & \texttt{/administrative}
 		                & Mengambil data administratif pasien.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		% \texttt{POST}   & \texttt{/revocations/\allowbreak delegation}
 		%                 & Mencabut delegasi akses.
@@ -50,28 +50,30 @@
 
 		\texttt{GET}    & \texttt{/gen/\allowbreak macaroon-\allowbreak key}
 		                & Menghasilkan \texttt{RootKey} Macaroon.
-		                & Baru                                                                                                           \\ \hline
+		                & Baru                                                                                           \\ \hline
 
 		\texttt{GET}    & \texttt{/gen/sig}
 		                & Menghasilkan \textit{signature}.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{GET}    & \texttt{/gen/\allowbreak proxy-\allowbreak address}
 		                & Menghasilkan dan mendaftarkan alamat proxy.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{POST}   & \texttt{/nonce}
 		                & Mengambil nonce.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{POST}   & \texttt{/keys}
 		                & Menyimpan kunci.
-		                & Eksisting                                                                                                      \\ \hline
+		                & Eksisting                                                                                      \\ \hline
 
 		\texttt{POST}   & \texttt{/revocations/\allowbreak patient}
-		                & Mencabut akses yang telah diberikan kepada \textit{personnel} dari pasien.
-		                & Baru                                                                                                           \\ \hline
+		                & Mencabut hak akses dan turunannya.
+		                & Baru                                                                                           \\ \hline
+
+		\texttt{POST}   & \texttt{/delegations/\allowbreak attenuate}
+		                & Melakukan atenuasi token Macaroon sesuai \textit{request}.
+		                & Baru                                                                                           \\ \hline
 	\end{longtable}
 }
-
-Endpoint dengan pemeriksaan autentikasi \texttt{middleware} memerlukan token Macaroon pada header \texttt{Authorization}. Endpoint tersebut mencakup semua endpoint pada Tabel \ref{tab:daftar-endpoint-rest-api-pre}, kecuali \texttt{/gen/*}, \texttt{/nonce}, \texttt{/keys}, dan \texttt{/revocations/patient}.

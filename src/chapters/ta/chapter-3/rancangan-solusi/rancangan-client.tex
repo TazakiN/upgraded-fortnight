@@ -1,0 +1,32 @@
+\subsection{Rancangan Client}
+\label{subsec:rancangan-client}
+
+Rancangan client tidak menjadi bagian dari rancangan solusi utama, melainkan menjadi implikasi dari rancangan solusi yang telah dijelaskan pada subbab sebelumnya.
+
+Pada DecMed, terdapat tiga \textit{client} utama, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client}. Perubahan yang dibutuhkan pada rancangan \textit{client} adalah hanya pada \textit{Patient Client} dan \textit{Hospital Client} saja.
+
+\subsubsection{Rancangan \textit{Patient Client}}
+\label{subsubsec:rancangan-patient-client}
+
+Perubahan pada \textit{Patient Client} dibutuhkan pada halaman berikut:
+
+\begin{itemize}
+	\item Halaman Home (List RME) disesuaikan agar tetap menampilkan daftar RME milik pasien, namun yang dibaca adalah segmen-segmen data yang dikelompokkan.
+	\item Halaman Detail RME tetap menampilkan detail RME milik pasien, namun yang dibaca adalah segmen-segmen data RME. Data dikelompokkan berdasarkan \textit{dataset category}.
+	\item Halaman Audit Delegasi merupakan halaman baru yang menampilkan informasi mengenai seluruh rantai delegasi akses yang terbentuk dari token Macaroon yang telah diterbitkan oleh pasien.
+	      % \item Halaman Log Akses disesuaikan agar tetap menampilkan log akses milik pasien, namun yang dibaca adalah log akses yang terkait delegasi Macaroons.
+	\item Halaman \textit{Scan} QR disesuaikan dengan menambahkan form untuk menentukan batasan akses yang akan diberikan.
+\end{itemize}
+
+\subsubsection{Rancangan \textit{Hospital Client}}
+\label{subsubsec:rancangan-hospital-client}
+
+Perubahan pada \textit{Hospital Client} dibutuhkan pada halaman berikut:
+
+\begin{itemize}
+	\item Halaman \textit{Dashboard} disesuaikan agar tetap menampilkan daftar akses yang dimiliki \textit{personnel} sesuai token yang dimiliki.
+	\item Halaman Delegasi Akses merupakan halaman baru yang menampilkan informasi mengenai seluruh rantai delegasi akses yang terbentuk dari token Macaroon yang telah diterbitkan oleh pasien.
+	\item Halaman Daftar RME pasien disesuaikan agar tetap menampilkan daftar RME milik pasien, namun sudah dikelompokan per episode RME.
+	\item Halaman Detail RME disesuaikan agar tetap menampilkan detail RME milik pasien, namun yang dibaca adalah segmen-segmen data yang dikelompokkan.
+	\item Halaman penulisan segmenRME disesuaikan agar tetap menampilkan form untuk menulis segmen RME milik pasien, namun yang ditulis adalah segmen-segmen data yang dikelompokkan.
+\end{itemize}

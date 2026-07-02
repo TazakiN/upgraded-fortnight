@@ -1,15 +1,11 @@
 \subsection{Rancangan Segmentasi Data RME}
 \label{subsec:rancangan-segmentasi-data-rme}
 
-Rancangan segmentasi data RME pada subbab ini direferensikan sebagai \texttt{R-TA-02}. Rancangan ini merealisasikan \texttt{S-TA-02} untuk menjawab \texttt{M-TA-02}, yaitu belum tersedianya objek data RME yang cukup granular untuk dijadikan dasar penegakan akses.
+% Rancangan segmentasi data RME pada subbab ini direferensikan sebagai \texttt{R-TA-02}. Rancangan ini merealisasikan \texttt{S-TA-02} untuk menjawab \texttt{M-TA-02}, yaitu belum tersedianya objek data RME yang cukup granular untuk dijadikan dasar penegakan akses.
 
-Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, rancangan ini memecah data RME menjadi beberapa unit data terenkripsi berdasarkan kategori fungsi klinis yang diinterpretasikan dari dokumen KMK yang dibahas pada \ref{subsec:isi-rme}. Setiap unit data perlu memiliki identitas kategori yang dapat dikenali secara konsisten oleh sistem agar segmentasi data dapat digunakan dalam mekanisme kontrol akses granular. Identitas kategori tersebut digunakan pada proses validasi \textit{caveat} dan pemfilteran data saat diambil dari penyimpanan \textit{on-chain}. Oleh karena itu, setiap data fungsi klinis direpresentasikan dalam bentuk \textit{category} yang digunakan secara konsisten pada metadata dan implementasi sistem.
+Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, rancangan segmentasi data RME memecah data klinis menjadi beberapa segmen terenkripsi. Setiap segmen dibentuk berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. \textit{Dataset category} merepresentasikan konteks layanan, seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. \textit{Function category} merepresentasikan fungsi data di dalam \textit{dataset}, seperti anamnesis, diagnosis, terapi, pemeriksaan penunjang, atau \textit{dispensing}. Kombinasi kedua kategori tersebut menjadi unit data terkecil yang digunakan dalam proses kontrol akses.
 
-Segmentasi diawali dengan membagi data berdasarkan \textit{dataset} yang dibahas pada Subbab \ref{subsec:isi-rme}. Pemisahan ini memungkinkan agar data yang dapat diakses oleh tenaga medis sesuai dengan konteks pelayanan yang sedang diberikan kepada pasien. Data di dalam \textit{dataset} kemudian dikategorikan berdasarkan jenis dokumentasinya, yaitu dokumentasi administratif dan dokumentasi klinis. Dokumentasi administratif terdapat pada setiap \textit{dataset}, sesuai dengan dokumen KMK yang disebut pada \ref{subsec:isi-rme}. Terakhir, Data RME dibagi berdasarkan fungsi klinis seperti yang sudah dibahas pada Subbab \ref{subsec:analisis-segmentasi-data-rme}. Penyimpanan data di dalam penyimpanan \textit{off-chain} dilakukan berdasarkan kombinasi kategori \textit{dataset} dan fungsi klinis.
-
-Pada rancangan ini, istilah \textit{dataset category} digunakan untuk merepresentasikan kelompok dataset seperti rawat jalan atau laboratorium, sedangkan \textit{function category} merepresentasikan jenis fungsi klinis atau administratif di dalam masing-masing \textit{dataset}. Kombinasi kedua kategori tersebut membentuk unit segmentasi terkecil yang digunakan dalam proses kontrol akses.
-
-Dokumentasi administratif dapat dibagi menjadi beberapa \textit{function category} berdasarkan dokumen KMK. Namun, dokumentasi administratif tidak menjadi fokus dari Tugas Akhir ini, sehingga hanya dikelompokkan menjadi sebuah \textit{function category} di setiap dataset dengan nama \texttt{ADMINISTRATIVE\_GENERAL}. Dokumentasi administratif tetap diimplementasikan karena berkaitan dengan kebutuhan fungsionalitas DecMed, khususnya kebutuhan fungsional dengan ID F01, F06, F07, F14, dan F21 pada Tabel di Lampiran \ref{tab:kebutuhan-fungsional-decmed}. Tabel pemetaan \textit{dataset category} dapat dilihat pada Tabel \ref{tab:mapping-dataset-category}.
+Tabel \ref{tab:mapping-dataset-category} menunjukkan \textit{dataset category} yang digunakan pada rancangan ini.
 
 \begin{table}[!ht]
 	\centering
@@ -26,18 +22,20 @@ Dokumentasi administratif dapat dibagi menjadi beberapa \textit{function categor
 	\end{tabular}
 \end{table}
 
-Setiap \textit{dataset category} kemudian dibagi berdasarkan kategori fungsi. Masing-masing kategori fungsi inilah yang kemudian dijadikan sebagai segmen terkecil dalam rancangan solusi segmentasi data. Kategori fungsi klinis tersebut dapat dilihat pada Lampiran \ref{lampiran:metadata-rme} untuk \textit{dataset} Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. Tabel \ref{tab:mapping-function-category} adalah pemetaan kategori fungsi klinis dan administratif yang akan digunakan pada implementasi.
+Setiap \textit{dataset category} kemudian dibagi lagi berdasarkan \textit{function category}. Kategori fungsi klinis mengacu pada hasil klasifikasi metadata RME yang disajikan pada Lampiran \ref{lampiran:metadata-rme}. Selain fungsi klinis, rancangan ini juga tetap menyediakan kategori untuk dokumentasi administratif. Dokumentasi administratif tidak menjadi fokus utama Tugas Akhir ini, sehingga dokumen administratif dikelompokkan ke dalam satu kategori umum, yaitu \texttt{ADMINISTRATIVE\_GENERAL}. Kategori ini tetap disediakan karena beberapa kebutuhan fungsional DecMed masih bergantung pada keberadaan data administratif, khususnya F01, F06, F07, F14, dan F21 pada Tabel di Lampiran \ref{tab:kebutuhan-fungsional-decmed}.
+
+Tabel \ref{tab:mapping-function-category} menunjukkan \textit{function category} yang digunakan pada implementasi.
 
 \begin{table}[!ht]
 	\centering
 	\caption{Tabel Pemetaan \textit{Function Category}}
 	\label{tab:mapping-function-category}
 	\small
-	\begin{tabular}{|p{0.35\textwidth}|p{0.45\textwidth}|}
+	\begin{tabular}{|p{0.4\textwidth}|p{0.45\textwidth}|}
 		\hline
 		\textbf{\textit{Function Category}} & \textbf{\textit{Enum Value}}                \\ \hline
 
-		DokumentasiAdministratif
+		Dokumentasi Administratif
 		                                    & \texttt{ADMINISTRATIVE\_GENERAL}
 		\\ \hline
 
@@ -97,12 +95,11 @@ Setiap \textit{dataset category} kemudian dibagi berdasarkan kategori fungsi. Ma
 		                                    & \texttt{DISPENSING}
 		\\ \hline
 	\end{tabular}
+
 \end{table}
 
-Setiap segmen data di penyimpanan \textit{off-chain} memiliki CID dan metadata sendiri yang tersimpan pada penyimpanan \textit{on-chain}. Metadata tersebut memuat informasi seperti \texttt{dataset\_category}, \texttt{ipfs\_cid}, \texttt{integrity\_hash}, serta kapsul kunci yang diperlukan oleh PRE untuk melakukan proses \textit{re-encryption}. Dengan demikian, ketika seorang aktor meminta akses terhadap suatu segmen, \textit{server} PRE dapat mencocokkan \textit{caveats} pada token dengan metadata segmen data yang diminta. Apabila token hanya mengizinkan akses terhadap dataset laboratorium, maka token tersebut tidak dapat digunakan untuk meminta segmen riwayat klinis dataset rawat jalan.
+Pada rancangan ini, \textit{function category} tidak selalu dibentuk dari setiap subkelompok metadata secara langsung. Beberapa subkelompok metadata dapat digabung ke dalam satu \textit{function category} selama masih memiliki fungsi pelayanan dan kebutuhan akses yang sama. Sebagai contoh, subkelompok pada \textit{dataset} Laboratorium, seperti permintaan pemeriksaan, spesimen klinis, hasil pemeriksaan, serta interpretasi dan validasi hasil, dikelompokkan ke dalam \textit{function category} \texttt{LABORATORIUM} karena seluruhnya merepresentasikan satu rangkaian fungsi pemeriksaan laboratorium. Sementara itu, \textit{dataset} Apotek dibedakan menjadi \texttt{PERESEPAN} dan \texttt{DISPENSING} karena keduanya merepresentasikan dua fungsi yang berbeda, yaitu pencatatan resep dan proses penyiapan serta penyerahan obat.
 
-Rancangan ini menjadikan segmentasi penyimpanan sebagai prasyarat teknis bagi penegakan prinsip \textit{need-to-know}. Penyimpanan data pada sistem yang diusulkan dibagi menjadi dua lapisan. Lapisan \textit{on-chain} pada IOTA menyimpan metadata segmen yang diperlukan untuk penemuan data, validasi kategori akses, verifikasi integritas, dan pengelolaan kapsul kunci. Lapisan \textit{off-chain} pada IPFS menyimpan isi RME dalam bentuk segmen data terenkripsi. Pemisahan ini memungkinkan \textit{server} PRE mencocokkan \textit{caveats} pada Macaroon dengan metadata segmen sebelum mengambil dan melakukan \textit{re-encryption} terhadap data di IPFS.
+Secara penyimpanan, satu entri metadata \textit{on-chain} menunjuk pada satu segmen data terenkripsi di penyimpanan \textit{off-chain}. Rincian skema metadata \textit{on-chain} disajikan pada Tabel \ref{tab:onchain-schema}, sedangkan skema objek data segmen \textit{off-chain} disajikan pada Tabel \ref{tab:offchain-schema}.
 
-Rincian skema penyimpanan metadata segmen \textit{on-chain} disajikan pada Tabel \ref{tab:onchain-schema}, sedangkan skema objek data segmen \textit{off-chain} disajikan pada Tabel \ref{tab:offchain-schema}.
-
-Secara konseptual, satu entri metadata \textit{on-chain} selalu menunjuk pada satu segmen terenkripsi \textit{off-chain}. Karena relasi ini dibuat per segmen, penegakan akses tidak lagi dilakukan terhadap satu \textit{encrypted blob} besar, melainkan terhadap unit data yang lebih kecil dan sesuai dengan kategori yang dinyatakan pada token Macaroon.
+Rancangan ini membuat \textit{Server} PRE dapat menegakkan akses pada tingkat segmen. Ketika aktor meminta akses terhadap data RME, \textit{Server} PRE mencocokkan \textit{caveats} pada token Macaroon dengan metadata segmen yang diminta. Sebagai contoh, token yang hanya mengizinkan akses tulis terhadap \textit{dataset} Laboratorium tidak dapat digunakan untuk menulis segmen pada \textit{dataset} Rawat Jalan.

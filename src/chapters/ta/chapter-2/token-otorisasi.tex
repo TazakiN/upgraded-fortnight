@@ -34,9 +34,6 @@ Keunggulan PASETO terletak pada desainnya yang lebih \textit{opinionated} diband
 
 Macaroon adalah \textit{credential} otorisasi berbasis \textit{bearer} yang mendukung delegasi terdesentralisasi dalam sistem terdistribusi \autocite{birgisson2014macaroons}. Keunggulan utama Macaroon terletak pada penggunaan \textit{chained-HMAC}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat \textit{caveat} yang sesuai dengan konteks penggunaan.
 
-\subsubsection{Struktur Macaroon}
-\label{subsec:struktur-macaroon}
-
 Sebuah Macaroon $M$ didefinisikan dengan struktur:
 
 \begin{equation*}
@@ -50,7 +47,7 @@ $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $\ve
 	sig_n & = \text{HMAC}(sig_{n-1}, c_n)
 \end{align*}
 
-$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon (misalnya: Dokter A) menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain (misalnya: Dokter B), tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
+$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
 
 \begin{figure}[ht]
 	\centering
@@ -60,22 +57,11 @@ $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon
 	\label{fig:delegasi-macaroon}
 \end{figure}
 
-\subsubsection{Arsitektur Macaroons}
-\label{subsec:arsitektur-macaroons}
-
-Arsitektur Macaroons terdiri dari tiga komponen kunci: \textit{first-party caveats} yang diverifikasi oleh layanan target, \textit{third-party caveats} yang diverifikasi oleh layanan \textit{discharge} eksternal, dan struktur \textit{HMAC} berantai yang mengikat semua \textit{caveat} bersama-sama \autocite{birgisson2014macaroons}. Desain ini memungkinkan pembatasan otoritas yang fleksibel, menentukan bagaimana, oleh siapa, dan dalam konteks apa hak akses dapat dieksekusi.
-
-\textit{First-party caveat} adalah syarat/ketentuan yang bisa diverifikasi langsung oleh pihak yang memegang kunci rahasia Macaroon (biasanya \textit{resource server} atau \textit{authorization server} yang menerbitkan token) \autocite{birgisson2014macaroons}. Bentuknya biasanya sebuah predikat/kondisi seperti \texttt{user = 123}, \texttt{expires < t}, atau \texttt{method = GET} yang dapat dicek secara lokal ketika \textit{request} datang.
-
-\textit{Third-party caveat} adalah syarat yang tidak bisa diverifikasi langsung oleh pemegang token, tetapi memerlukan bukti dari layanan pihak ketiga dalam bentuk \textit{discharge Macaroon} \autocite{birgisson2014macaroons}. \textit{Caveat} ini berisi lokasi (URL/\textit{identifier} layanan ketiga), \textit{identifier} \textit{caveat}, dan kunci rahasia yang dipakai pihak ketiga untuk menandatangani \textit{discharge Macaroon}.
-
 \subsection{Biscuit Token}
 \label{subsec:biscuit-token}
 
-Biscuit adalah token otorisasi yang dirancang untuk mendukung verifikasi terdesentralisasi, atenuasi \textit{offline}, dan penegakan kebijakan akses berbasis \textit{logic language} \autocite{biscuitsec}. Berbeda dari JWT dan PASETO yang terutama berperan sebagai pembawa klaim, Biscuit dirancang sebagai token otorisasi berbasis \textit{capability}. Token ini memungkinkan suatu layanan memverifikasi hak akses menggunakan informasi publik, sehingga cocok untuk lingkungan terdistribusi dan arsitektur layanan yang tidak selalu bergantung pada satu server otorisasi pusat.
+Biscuit adalah token otorisasi yang dirancang untuk mendukung verifikasi terdesentralisasi, atenuasi \textit{offline}, dan penegakan kebijakan akses berbasis \textit{logic language} \autocite{biscuitsec}. Berbeda dari JWT dan PASETO yang berperan sebagai pembawa klaim, Biscuit dirancang sebagai token otorisasi berbasis \textit{capability}. Token ini memungkinkan suatu layanan memverifikasi hak akses menggunakan informasi publik, sehingga cocok untuk lingkungan terdistribusi.
 
-Biscuit menggunakan kriptografi kunci publik untuk memungkinkan verifikasi token oleh pihak yang memiliki kunci publik dari penerbit token. Selain itu, Biscuit mendukung atenuasi hak akses melalui penambahan blok baru pada token. Pemegang token dapat menambahkan batasan baru untuk mempersempit hak akses sebelum token diberikan kepada pihak lain. Dengan demikian, seperti Macaroons, Biscuit mendukung skenario delegasi di mana hak akses token turunan tidak boleh lebih luas daripada hak akses token asal.
+Biscuit menggunakan kriptografi kunci publik untuk memungkinkan verifikasi token oleh pihak yang memiliki kunci publik dari penerbit token. Biscuit mendukung atenuasi hak akses melalui penambahan blok baru pada token. Pemegang token dapat menambahkan batasan baru untuk mempersempit hak akses sebelum token diberikan ke pihak lain.
 
-Karakteristik utama Biscuit adalah penggunaan \textit{logic language} untuk mengekspresikan \textit{rule}. Informasi otorisasi dapat direpresentasikan dalam bentuk \textit{fact}, \textit{rule}, dan \textit{check}. Pada saat token digunakan, pihak verifier dapat mengevaluasi token bersama dengan kebijakan lokal untuk menentukan apakah suatu permintaan akses diperbolehkan. Pendekatan ini membuat Biscuit lebih ekspresif dalam memodelkan kebijakan akses yang kompleks, misalnya kebijakan berbasis relasi antar aktor, sumber daya, aksi, dan konteks permintaan.
-
-% Namun, ekspresivitas Biscuit juga meningkatkan kompleksitas implementasi. Sistem yang menggunakan Biscuit perlu mendefinisikan model fakta, aturan, dan proses evaluasi kebijakan secara lebih formal. Dalam konteks penelitian ini, kebutuhan DecMed berfokus pada pembatasan akses yang dapat direpresentasikan melalui constraint langsung, seperti identitas pasien, aktor penerima akses, dataset, fungsi klinis, aksi, episode RME, waktu kedaluwarsa, dan batas kedalaman delegasi. Oleh karena itu, Biscuit relevan sebagai pembanding karena memiliki kemampuan atenuasi dan verifikasi terdesentralisasi, tetapi kompleksitasnya lebih tinggi dibandingkan Macaroons untuk ruang lingkup implementasi DecMed saat ini.
+Karakteristik utama Biscuit adalah penggunaan \textit{logic language} untuk mengekspresikan \textit{rule}. Informasi otorisasi dapat direpresentasikan dalam bentuk \textit{fact}, \textit{rule}, dan \textit{check}. Pada saat token digunakan, pihak \textit{verifier} dapat mengevaluasi token bersama dengan kebijakan lokal untuk menentukan apakah suatu permintaan akses diperbolehkan. Pendekatan ini membuat Biscuit lebih ekspresif dalam memodelkan kebijakan akses yang kompleks, misalnya kebijakan berbasis relasi antar aktor, sumber daya, aksi, dan konteks permintaan.

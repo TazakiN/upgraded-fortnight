@@ -1,26 +1,21 @@
 \subsection{Implementasi Token Otorisasi Berbasis Macaroons}
 \label{subsec:implementasi-token-macaroons}
 
-Implementasi token otorisasi pada subbab ini merupakan realisasi dari \texttt{R-TA-03}, \texttt{R-TA-04}, dan sebagian \texttt{R-TA-05} melalui komponen \texttt{I-TA-02}.
-
 \subsubsection{Komponen Implementasi Macaroons}
 \label{subsubsec:komponen-implementasi-macaroons}
 
-Seperti yang sudah dijelaskan pada subbab \ref{subsec:implementasi-arsitektur-sistem}, terdapat dua \textit{crate} yang berkaitan dengan implementasi Macaroons pada implementasi Tugas Akhir ini, yaitu \texttt{macaroon} dan \texttt{decmed-macaroon-auth}. Kedua \textit{crate} kemudian menjadi \textit{dependency} utama untuk komponen lainnya, seperti \textit{client} dan PRE.
+Seperti yang sudah dijelaskan pada subbab \ref{subsec:implementasi-arsitektur-sistem}, terdapat dua \textit{crate} yang berkaitan dengan implementasi Macaroons pada implementasi Tugas Akhir ini, yaitu \texttt{macaroon} dan \texttt{decmed-macaroon-auth}.
 
-\texttt{macaroon} merupakan hasil adaptasi dari implementasi Macaroons berbasis Rust yang tersedia secara \textit{open source} pada URL \url{https://github.com/macaroon-rs/macaroon}. Adaptasi dilakukan karena \textit{crate} asli memerlukan beberapa penyesuaian agar lebih sesuai dengan kebutuhan implementasi sistem DecMed, terutama dari sisi kompatibilitas \textit{toolchain} dan pengelolaan \textit{dependency},
-
-Perubahan utama pada \textit{crate} \texttt{macaroon} adalah penggantian \textit{dependency} kriptografi berbasis \texttt{sodiumoxide} dengan \textit{crate} pure Rust, yaitu \texttt{hmac}, \texttt{sha2}, \texttt{chacha20poly1305}, dan \texttt{rand}. Perubahan ini dilakukan untuk mengurangi ketergantungan terhadap pustaka eksternal dan menyederhanakan proses kompilasi pada lingkungan Rust yang digunakan.
+\textit{Crate} \texttt{macaroon} merupakan hasil penyesuaian dari implementasi Macaroons berbasis Rust yang tersedia secara \textit{open source} pada URL \url{https://github.com/macaroon-rs/macaroon}. Penyesuaian dilakukan karena \textit{crate} asli memerlukan beberapa penyesuaian agar lebih sesuai dengan kebutuhan implementasi sistem DecMed, terutama dari sisi kompatibilitas \textit{toolchain} dan pengelolaan \textit{dependency}. Perubahan utama pada \textit{crate} \texttt{macaroon} adalah penggantian \textit{dependency} kriptografi berbasis \texttt{sodiumoxide} dengan \textit{crate} pure Rust, yaitu \texttt{hmac}, \texttt{sha2}, \texttt{chacha20poly1305}, dan \texttt{rand}.
 
 Setelah perubahan tersebut dilakukan, \textit{unit testing} pada \textit{crate} dijalankan untuk memastikan bahwa fungsi utama Macaroons tetap berjalan dengan benar. Pengujian tersebut mencakup pembuatan Macaroon, penambahan \textit{caveat}, serialisasi, deserialisasi, serta verifikasi token. Dengan demikian, \textit{crate} \texttt{macaroon} digunakan sebagai fondasi implementasi Macaroons pada sistem DecMed.
 
-\texttt{decmed-macaroon-auth} merupakan wrapper yang dibangun untuk mempermudah penggunaan \textit{crate} \texttt{macaroon} pada implementasi sistem DecMed. Wrapper ini menyediakan fungsi-fungsi utilitas untuk kebutuhan otorisasi DecMed, seperti proses penerbitan token Macaroon, melakukan atenuasi dengan penambahan \textit{caveat} baru, verifikasi Macaroon, dan fungsi pendukung lainnya.
-% sepertinya perlu masukin diagram module or something untuk ngegambarin implementasinya
+\texttt{decmed-macaroon-auth} merupakan \textit{wrapper} yang dibangun untuk mempermudah penggunaan \textit{crate} \texttt{macaroon} pada implementasi sistem DecMed. \textit{Wrapper} ini menyediakan fungsi-fungsi utilitas untuk kebutuhan otorisasi DecMed, seperti proses penerbitan token Macaroon, melakukan atenuasi dengan penambahan \textit{caveat} baru, definisi struktur \textit{caveats} Macaroon, verifikasi Macaroon, dan fungsi pendukung lainnya. Rincian modul dan implementasi yang diimplementasikan pada \textit{crate} \texttt{decmed-macaroon-auth} ditunjukkan pada Lampiran \ref{lampiran:implementasi-crate-decmed-macaroon-auth}.
 
 \subsubsection{Struktur \textit{Caveats} Macaroons}
 \label{subsubsec:struktur-caveats-macaroons}
 
-Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}. Perbedaan dengan rancangan pada Subbab \ref{subsec:rancangan-token-macaroons} pada Tabel \ref{tab:rancangan-caveats-macaroons-baru} adalah pada \textit{caveat} \texttt{purpose} yang digunakan pada implementasi ini adalah \texttt{READ} atau \texttt{UPDATE} sesuai dengan jenis token yang diterbitkan. Hal ini dilakukan agar sesuai dengan implementasi \textit{hospital client} pada DecMed sebelumnya yang menampilkan hak akses berdasarkan jenis token yang dimiliki oleh tenaga kesehatan.
+Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}. \textit{caveats} terdefinisi pada \textit{crate} \texttt{decmed-macaroon-auth}, sehingga \textit{hospital client} membentuk token dengan menambahkan \textit{caveats} sesuai dengan daftar \textit{caveats} yang terdefinisi pada \textit{crate}, dan PRE akan menolak \textit{request} jika terdapat \textit{caveats} yang tidak termasuk ke dalam daftar \textit{caveats}.
 
 \begin{table}[!ht]
 	\centering
@@ -49,7 +44,7 @@ Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan 
 		\\ \hline
 		\texttt{write\_function\_in}    & \texttt{HashSet<FunctionCategory>}
 		\\ \hline
-		\texttt{expires\_before}        & \texttt{DateTime<Utc>} (format RFC 3339 / \texttt{YYYY-MM-DDTHH:MM:SS})
+		\texttt{expires\_before}        & \texttt{DateTime<Utc>} (\texttt{YYYY-MM-DD HH:MM:SS})
 		\\ \hline
 		\texttt{max\_delegation\_depth} & \texttt{u32}
 		\\ \hline
@@ -57,7 +52,7 @@ Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan 
 		\\ \hline
 		\texttt{parent\_token\_hash}    & \texttt{String} (hash SHA-256 dari token induk)
 		\\ \hline
-		\texttt{purpose}                & \texttt{String} (nilai: \texttt{READ} atau \texttt{UPDATE})
+		\texttt{purpose}                & \texttt{String} (nilai: \texttt{Read} atau \texttt{Update})
 		\\ \hline
 	\end{tabular}
 \end{table}
@@ -65,30 +60,22 @@ Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan 
 \subsubsection{Penerbitan Token Macaroon}
 \label{subsubsec:penerbitan-awal-token-macaroons}
 
-Token otorisasi diimplementasikan menggunakan Macaroons sebagaimana dirancang pada Subbab \ref{subsec:rancangan-token-macaroons}. Pada implementasi ini, penerbitan token dilakukan oleh \textit{Server} PRE setelah permintaan akses dari pasien dinyatakan valid. Dengan demikian, pasien berperan sebagai pihak yang menginisiasi persetujuan akses, sedangkan pembentukan token Macaroon dilakukan oleh \textit{Server} PRE menggunakan \texttt{RootKey} Macaroon yang telah dikonfigurasi pada lingkungan server.
+Token otorisasi diimplementasikan menggunakan Macaroons sesuai rancangan pada Subbab \ref{subsec:rancangan-token-macaroons}. Pada implementasi ini, penerbitan token dilakukan oleh \textit{Server} PRE setelah permintaan akses dari pasien dinyatakan valid.
 
-Sebelum token dapat diterbitkan, \texttt{RootKey} Macaroon harus tersedia pada konfigurasi \textit{Server} PRE. Kunci tersebut digunakan untuk membentuk \texttt{MacaroonKey} yang menjadi dasar pembuatan dan verifikasi token Macaroon. Implementasi fungsi penerbitan token terdapat pada \textit{crate} \texttt{decmed-macaroon-auth}, sedangkan operasi dasar Macaroon, seperti penambahan \textit{caveat}, serialisasi, deserialisasi, dan verifikasi, disediakan oleh \textit{crate} \texttt{macaroon}.
+Pada proses penerbitan akses awal, \textit{Server} PRE menerbitkan dua jenis token untuk penerima akses, yaitu token \texttt{Read} dan token \texttt{Update}. Token \texttt{Read} memuat \textit{caveat} utama berupa \texttt{patient\_address}, \texttt{root\_subject}, \texttt{read\_dataset\_in}, \texttt{read\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = Read}. Token \texttt{Update} memuat \textit{caveat} berupa \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{root\_subject}, \texttt{write\_dataset\_in}, \texttt{write\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = Update}.
 
-Pada proses penerbitan akses awal, \textit{Server} PRE menerbitkan dua jenis token untuk penerima akses, yaitu token \texttt{READ} dan token \texttt{UPDATE}. Token \texttt{READ} digunakan untuk memberikan hak baca terhadap data pasien sesuai cakupan yang ditentukan, sedangkan token \texttt{UPDATE} digunakan untuk memberikan hak penulisan atau pembaruan data pada episode RME tertentu.
-
-Token \texttt{READ} memuat \textit{caveat} utama berupa \texttt{patient\_address}, \texttt{root\_subject}, \texttt{read\_dataset\_in}, \texttt{read\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = READ}. Token \texttt{UPDATE} memuat \textit{caveat} berupa \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{root\_subject}, \texttt{write\_dataset\_in}, \texttt{write\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = UPDATE}.
-
-Setelah token diterbitkan, \textit{Server} PRE melakukan serialisasi token dan menghitung \textit{hash} dari masing-masing token. Hash token digunakan sebagai referensi audit dan revokasi tanpa perlu menyimpan isi token secara langsung. Hasil dari proses penerbitan berupa token \texttt{READ}, token \texttt{UPDATE}, hash dari masing-masing token, serta \texttt{related\_rme\_id} apabila token berkaitan dengan episode RME tertentu.
-
-Alur lengkap pemberian akses awal dari pasien kepada petugas rekam medis, termasuk pemindaian QR code, verifikasi identitas, pembentukan material PRE, penyimpanan ke Redis, dan pencatatan grant akses ke \textit{smart contract}, dijelaskan secara terpisah pada Subbab \ref{subsec:implementasi-atenuasi-offline-delegasi}.
+Ketika melakukan penerbitan untuk petugas rekam medis, fungsi yang dipanggil adalah \texttt{issue\_admin\_personnel\_token} yang termasuk implementasi pada \textit{crate} \texttt{decmed-macaroon-auth}. Alur lengkap pemberian akses awal dari pasien kepada petugas rekam medis, termasuk pemindaian QR code, verifikasi identitas, pembentukan material PRE, penyimpanan ke Redis, dan pencatatan grant akses ke \textit{smart contract}, dijelaskan pada subbab \ref{subsec:implementasi-atenuasi-offline-delegasi}.
 
 \subsubsection{Atenuasi Token Macaroon}
 \label{subsubsec:atenuasi-token-macaroons}
 
-Token yang baru diterbitkan dapat memuat batasan pasien, RME, daftar \textit{dataset category} dan \textit{function category} yang boleh dibaca atau ditulis, masa berlaku, batas kedalaman delegasi, dan identitas rumah sakit. Pada token yang sudah diterbitkan, pemegang token dapat melakukan atenuasi dengan menambahkan \textit{caveat} baru seperti \texttt{delegated\_by}, \texttt{delegated\_to}, \textit{dataset category}, \textit{function category}, dan waktu yang lebih sempit.
-
-Pemegang token, dalam implementasi ini utamanya adalah para tenaga kesehatan, dengan role \texttt{AdministrativePersonnel} atau \texttt{MedicalPersonnel}. Pemegang token melakukan atenuasi token melalui \textit{hospital client} dengan menambahkan \textit{caveat} baru. Implementasi dari fungsi atenuasi ini terdapat pada \textit{crate} \texttt{decmed-macaroon-auth} pada implementasi \texttt{I-TA-02} dengan nama fungsi \texttt{attenuate\_macaroon}. Fungsi ini bekerja dengan tahapan melakukan deserialisasi token Macaroon, lalu menambahkan \textit{caveat} baru sesuai dengan caveats yang ingin ditambahkan, kemudian melakukan serialisasi kembali terhadap token Macaroon yang telah diatenuasi sebelum di-\textit{return} sebagai \textit{response}. Perhitungan \textit{signature} baru dari Macaroon pada proses \textit{chained-HMAC} dilakukan pada setiap kali \textit{caveat} baru ditambahkan.
+Pada implementasi ini, pemegang token utama adalah para tenaga kesehatan, dengan role \texttt{AdministrativePersonnel} atau \texttt{MedicalPersonnel}. Pemegang token melakukan atenuasi token melalui \textit{hospital client} dengan melakukan \textit{request} atenuasi token ke \textit{server} PRE. Implementasi dari fungsi atenuasi ini terdapat pada \textit{crate} \texttt{decmed-macaroon-auth} dengan nama fungsi \texttt{attenuate\_macaroon}. Fungsi ini bekerja dengan tahapan melakukan deserialisasi token Macaroon, lalu menambahkan \textit{caveat} baru sesuai dengan \textit{caveats} yang ingin ditambahkan, kemudian melakukan serialisasi kembali terhadap token Macaroon yang telah diatenuasi sebelum di-\textit{return} sebagai \textit{response}. Perhitungan \textit{signature} baru dari Macaroon pada proses \textit{chained-HMAC} dilakukan pada setiap kali \textit{caveat} baru ditambahkan.
 
 \subsubsection{Revokasi Token Macaroon}
 \label{subsubsec:revokasi-token-macaroons}
 
-Implementasi juga mendukung pencabutan akses terhadap token Macaroon. Revokasi akses pada implementasi ini sesuai dengan rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}. Implementasi revokasi akses melibatkan pencatatan di IOTA \textit{on-chain}, Redis PRE, dan \textit{server} PRE.
+Revokasi token pada implementasi ini sesuai dengan rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}. Implementasi revokasi akses melibatkan pencatatan di IOTA \textit{on-chain}, Redis PRE, dan \textit{server} PRE.
 
-Setiap token turunan menyimpan keterkaitan terhadap token induknya melalui nilai \textit{hash} token induk. Pada token Macaroon yang diimplementasikan, informasi ini disimpan pada \textit{caveat} \texttt{parent\_token\_hash}. Informasi ini digunakan untuk mendukung pencabutan berantai, sehingga pencabutan terhadap token pada tingkat tertentu dapat berdampak pada token-token turunan yang bergantung kepadanya.
+Setiap token turunan menyimpan keterkaitan terhadap token induknya melalui \textit{caveat} \texttt{parent\_token\_hash}. Informasi ini digunakan untuk mendukung pencabutan berantai, sehingga pencabutan terhadap token pada tingkat tertentu dapat berdampak pada token-token turunan yang bergantung kepadanya.
 
-Pemeriksaan pencabutan dilakukan oleh \textit{Server} PRE sebelum akses terhadap data terenkripsi diberikan. Saat \textit{request} diterima oleh PRE, maka PRE akan memeriksa \textit{hash} dari token Macaroon yang digunakan, dan mengecek apakah ada di daftar \textit{revoked keys} yang tersimpan pada Redis PRE dengan pola \verb|revoked:token:<hash>|. Hal ini juga dilakukan dengan semua \textit{hash} token yang ada pada \textit{caveat} \texttt{parent\_token\_hash}. Jika ada salah satu \textit{hash} yang ditemukan, maka \textit{request} akan ditolak dan \textit{response} akan berupa \texttt{401 Unauthorized}.
+Pemeriksaan pencabutan dilakukan oleh \textit{Server} PRE sebelum akses terhadap data terenkripsi diberikan. Saat \textit{request} diterima oleh PRE, maka PRE akan memeriksa \textit{hash} dari token Macaroon yang digunakan, dan mengecek apakah ada di daftar \textit{revoked keys} yang tersimpan pada Redis PRE dengan pola \verb|revoked:token:<hash>|. Hal ini juga dilakukan dengan semua \textit{hash} token yang ada pada \textit{caveat} \texttt{parent\_token\_hash}. Jika ada salah satu \textit{hash} yang ditemukan, maka \textit{request} akan ditolak. Selain itu, proses ini juga akan menandai hak akses yang tercatat pada \textit{on-chain} sebagai \textit{revoked}.

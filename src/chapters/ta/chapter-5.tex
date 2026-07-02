@@ -6,11 +6,11 @@
 Berdasarkan hasil analisis, perancangan, implementasi, dan evaluasi yang telah dilakukan, dapat disimpulkan beberapa hal sebagai berikut:
 
 \begin{enumerate}
-	\item Mekanisme kontrol akses granular pada DecMed berhasil dirancang dan diimplementasikan dengan memanfaatkan Macaroons sebagai token otorisasi. Macaroons digunakan untuk membawa batasan akses melalui \textit{caveats}. Penegakan otoritas dilakukan pada \textit{Server} PRE. Dengan demikian, kontrol akses granular sesuai dengan batasan yang telah ditetapkan.
+	\item Merancang dan mengimplementasikan kontrol akses granular pada DecMed dengan Macaroons sebagai token otorisasi. Batasan akses direpresentasikan melalui \textit{caveats}, sedangkan penegakan otoritas dilakukan pada \textit{Server} PRE sebelum data diakses.
 
-	\item Segmentasi data RME yang mendukung kontrol akses granular berhasil dirancang dan diimplementasikan dengan memecah data \textit{off-chain} berdasarkan \textit{dataset category} dan \textit{function category}. Segmentasi ini membuat data RME tidak lagi diperlakukan sebagai satu \textit{encrypted blob} besar, melainkan sebagai kumpulan segmen klinis. Metadata dari setiap segmen tersebut digunakan untuk menentukan segmen mana yang dapat diakses oleh aktor sesuai cakupan token.
+	\item Segmentasi data RME diterapkan dengan memecah data \textit{off-chain} berdasarkan \textit{dataset category} dan \textit{function category}. Dengan struktur ini, data RME tidak lagi diperlakukan sebagai satu \textit{encrypted blob} besar, tetapi sebagai kumpulan segmen klinis. Metadata setiap segmen digunakan untuk menentukan segmen yang dapat diakses oleh aktor sesuai cakupan token.
 
-	\item Fitur atenuasi \textit{offline} berhasil diterapkan untuk mendukung pendelegasian akses antar tenaga kesehatan tanpa memerlukan penerbitan token baru oleh pasien pada setiap perpindahan akses. Pemegang token dapat membentuk token turunan secara lokal dengan menambahkan \textit{caveats} baru yang mempersempit cakupan token induk. Implementasi juga mendukung pencatatan delegasi, pembatasan kedalaman delegasi, validasi agar token turunan tidak memperluas hak akses token induk, serta revokasi berantai.
+	\item Atenuasi \textit{offline} diterapkan untuk mendukung pendelegasian akses antar tenaga kesehatan tanpa penerbitan token baru oleh pasien pada setiap perpindahan akses. Pemegang token membentuk token turunan secara \textit{offline} dengan menambahkan \textit{caveats} yang mempersempit cakupan token induk. Implementasi ini juga mencakup pencatatan delegasi, pembatasan kedalaman delegasi, validasi agar token turunan tidak memperluas hak akses token induk, serta revokasi berantai.
 \end{enumerate}
 
 \section{Saran}
@@ -18,9 +18,11 @@ Berdasarkan hasil analisis, perancangan, implementasi, dan evaluasi yang telah d
 Berdasarkan batasan dan hasil evaluasi Tugas Akhir ini, beberapa saran untuk pengembangan berikutnya adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Cakupan skenario layanan klinis perlu diperluas hingga pelayanan antar fasyankes, memungkinkan skenario nyata seperti rujukan.
+	\item Cakupan skenario layanan klinis hingga pelayanan antar fasyankes, memungkinkan skenario nyata seperti rujukan antar fasyankes.
 
-	\item Integrasi dengan standar interoperabilitas data kesehatan dapat diteliti lebih lanjut. Segmentasi RME dapat dikembangkan lebih lanjut untuk integrasi dengan SATUSEHAT atau pemetaan ke standar FHIR.
+	\item Cakupan skenario layanan klinis hingga pelayanan gawat darurat. Mengimplementasikan data IGD dan mekanisme akses ketika pasien tidak sadar, memungkinkan skenario nyata gawat darurat.
 
-	\item Cakupan skenario layanan klinis perlu diperluas hingga pelayanan gawat darurat. Mengimplementasikan data IGD dan mekanisme akses ketika pasien tidak sadar, memungkinkan skenario nyata gawat darurat.
+	\item Integrasi dengan standar interoperabilitas data kesehatan dapat diteliti lebih lanjut. Segmentasi RME dapat dikembangkan untuk integrasi dengan SATUSEHAT atau pemetaan ke standar FHIR.
+
+	\item Integrasi dan Pengujian dengan Sistem Rumah Sakit untuk mendukung penggunaan sistem dalam konteks nyata. Disesuaikan dengan tata laksana atau dokumen Pedoman Nasional Pelayanan Kesehatan.
 \end{enumerate}

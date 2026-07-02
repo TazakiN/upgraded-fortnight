@@ -1,140 +1,140 @@
 \chapter{Daftar Dependensi DecMed}
 \label{lampiran:daftar-dependensi-perangkat-lunak}
 
-Daftar dependensi disusun berdasarkan setiap komponenDecMed, yaitu PRE, \textit{client}, serta \textit{crate} internal yang digunakan bersama. Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem. Dependensi umum pada Tabel \ref{tab:dependensi-umum} merupakan dependensi yang digunakan pada semua komponen sistem, tidak termasuk \textit{crate} internal.
+Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem.
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.36\textwidth}|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.28\textwidth}|}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi Umum yang Digunakan pada Beberapa Komponen}
-	\label{tab:dependensi-umum}                                                                                          \\
+	\label{tab:dependensi-umum}                                       \\
 	\hline
-	\textbf{Crate}                        & \textbf{Versi/Sumber}     & \textbf{Keterangan}                              \\
+	\textbf{\textit{Crate}}               & \textbf{Versi/Sumber}     \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Crate}                        & \textbf{Versi/Sumber}     & \textbf{Keterangan}                              \\
+	\textbf{\textit{Crate}}               & \textbf{Versi/Sumber}     \\
 	\hline
 	\endhead
 
-	\texttt{serde}                        & \texttt{1}                & Serialisasi dan deserialisasi data.              \\ \hline
-	\texttt{serde\_json}                  & \texttt{1}                & Pengolahan data JSON.                            \\ \hline
-	\texttt{sha2}                         & \texttt{0.10}             & Fungsi hash SHA-2.                               \\ \hline
-	\texttt{uuid}                         & \texttt{1}                & Pembentukan identifier unik.                     \\ \hline
-	\texttt{bip39}                        & \texttt{2}                & Pengelolaan mnemonic.                            \\ \hline
-	\texttt{iota-sdk}                     & Git rev. \texttt{3d7c588} & SDK IOTA.                                        \\ \hline
-	\texttt{iota-keys}                    & Git rev. \texttt{3d7c588} & Utilitas kunci IOTA.                             \\ \hline
-	\texttt{iota-config}                  & Git rev. \texttt{3d7c588} & Konfigurasi IOTA.                                \\ \hline
-	\texttt{iota-types}                   & Git rev. \texttt{3d7c588} & Tipe data IOTA.                                  \\ \hline
-	\texttt{iota-json-rpc-types}          & Git rev. \texttt{3d7c588} & Tipe data JSON-RPC IOTA.                         \\ \hline
-	\texttt{shared\_crypto}               & Git rev. \texttt{3d7c588} & Utilitas kriptografi IOTA.                       \\ \hline
-	\texttt{move-core-types}              & Git rev. \texttt{3d7c588} & Tipe dasar Move.                                 \\ \hline
-	\texttt{dotenv}                       & \texttt{0.15}             & Pembacaan konfigurasi dari berkas \texttt{.env}. \\ \hline
-	\texttt{bcs}                          & \texttt{0.1.4}            & Serialisasi Binary Canonical Serialization.      \\ \hline
-	\texttt{schemars}                     & \texttt{0.8}              & Pembentukan skema JSON.                          \\ \hline
-	\texttt{rand}                         & \texttt{0.9}              & Pembangkitan bilangan acak.                      \\ \hline
-	\texttt{bincode}                      & \texttt{2}                & Serialisasi biner.                               \\ \hline
-	\texttt{umbral-pre}                   & \texttt{0.11}             & Implementasi umbral PRE.                         \\ \hline
-	\texttt{aes-gcm}                      & \texttt{0.10}             & Enkripsi simetris AES-GCM.                       \\ \hline
-	\texttt{argon2}                       & \texttt{0.5.3}            & Derivasi kunci berbasis kata sandi.              \\ \hline
-	\texttt{hex}                          & \texttt{0.4.3}            & Encoding dan decoding heksadesimal.              \\ \hline
-	\texttt{regex}                        & \texttt{1.11.1}           & Pemrosesan ekspresi reguler.                     \\ \hline
-	\texttt{generic-array}                & \texttt{1.2.0}            & Struktur array generik.                          \\ \hline
-	\texttt{k256}                         & \texttt{0.13.4}           & Operasi kurva eliptik secp256k1.                 \\ \hline
-	\texttt{elliptic-curve}               & \texttt{0.13.8}           & Abstraksi operasi kurva eliptik.                 \\ \hline
-	\texttt{chrono}                       & \texttt{0.4}              & Pengelolaan tanggal dan waktu.                   \\ \hline
-	\texttt{base64}                       & \texttt{0.22}             & Encoding dan decoding Base64.                    \\ \hline
-	\texttt{strum}/\texttt{strum\_macros} & \texttt{0.27}             & Utilitas enum dan makro turunannya.              \\ \hline
-	\texttt{anyhow}                       & \texttt{1.0}              & Penanganan error umum.                           \\ \hline
-	\texttt{thiserror}                    & \texttt{2.0}              & Definisi tipe error.                             \\ \hline
+	\texttt{serde}                        & \texttt{1}                \\ \hline
+	\texttt{serde\_json}                  & \texttt{1}                \\ \hline
+	\texttt{sha2}                         & \texttt{0.10}             \\ \hline
+	\texttt{uuid}                         & \texttt{1}                \\ \hline
+	\texttt{bip39}                        & \texttt{2}                \\ \hline
+	\texttt{iota-sdk}                     & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{iota-keys}                    & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{iota-config}                  & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{iota-types}                   & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{iota-json-rpc-types}          & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{shared\_crypto}               & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{move-core-types}              & Git rev. \texttt{3d7c588} \\ \hline
+	\texttt{dotenv}                       & \texttt{0.15}             \\ \hline
+	\texttt{bcs}                          & \texttt{0.1.4}            \\ \hline
+	\texttt{schemars}                     & \texttt{0.8}              \\ \hline
+	\texttt{rand}                         & \texttt{0.9}              \\ \hline
+	\texttt{bincode}                      & \texttt{2}                \\ \hline
+	\texttt{umbral-pre}                   & \texttt{0.11}             \\ \hline
+	\texttt{aes-gcm}                      & \texttt{0.10}             \\ \hline
+	\texttt{argon2}                       & \texttt{0.5.3}            \\ \hline
+	\texttt{hex}                          & \texttt{0.4.3}            \\ \hline
+	\texttt{regex}                        & \texttt{1.11.1}           \\ \hline
+	\texttt{generic-array}                & \texttt{1.2.0}            \\ \hline
+	\texttt{k256}                         & \texttt{0.13.4}           \\ \hline
+	\texttt{elliptic-curve}               & \texttt{0.13.8}           \\ \hline
+	\texttt{chrono}                       & \texttt{0.4}              \\ \hline
+	\texttt{base64}                       & \texttt{0.22}             \\ \hline
+	\texttt{strum}/\texttt{strum\_macros} & \texttt{0.27}             \\ \hline
+	\texttt{anyhow}                       & \texttt{1.0}              \\ \hline
+	\texttt{thiserror}                    & \texttt{2.0}              \\ \hline
 \end{longtable}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.36\textwidth}|}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi PRE}
-	\label{tab:dependensi-backend-pre}                                                                           \\
+	\label{tab:dependensi-backend-pre}                    \\
 	\hline
-	\textbf{Crate}                & \textbf{Versi/Sumber} & \textbf{Keterangan}                                  \\
-	\hline
-	\endfirsthead
-	\hline
-	\textbf{Crate}                & \textbf{Versi/Sumber} & \textbf{Keterangan}                                  \\
-	\hline
-	\endhead
-
-	\texttt{axum}                 & \texttt{0.8.4}        & HTTP server.                                         \\ \hline
-	\texttt{axum-extra}           & \texttt{0.10.1}       & Dukungan \textit{typed-header}.                      \\ \hline
-	\texttt{tower}                & \texttt{0.5.2}        & Middleware.                                          \\ \hline
-	\texttt{tokio}                & \texttt{1.44.2}       & \textit{Async runtime}.                              \\ \hline
-	\texttt{reqwest}              & \texttt{0.12}         & HTTP client dengan rustls.                           \\ \hline
-	\texttt{redis}                & \texttt{0.32}         & Koneksi Redis dan integrasi r2d2.                    \\ \hline
-	\texttt{r2d2}                 & \texttt{0.8}          & Connection pool.                                     \\ \hline
-	\texttt{dotenvy}              & \texttt{0.15.7}       & Pembacaan konfigurasi dari berkas \texttt{.env}.     \\ \hline
-	\texttt{decmed-rme-segment}   & \texttt{path}         & Crate internal untuk segmentasi RME.                 \\ \hline
-	\texttt{decmed-macaroon-auth} & \texttt{path}         & Crate internal untuk autentikasi berbasis Macaroons. \\ \hline
-\end{longtable}
-
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
-	\caption{Dependensi Client}
-	\label{tab:dependensi-client-tauri}                                                                                                                      \\
-	\hline
-	\textbf{Crate}                             & \textbf{Versi/Sumber} & \textbf{Keterangan}                                                                 \\
+	\textbf{\textit{Crate}}       & \textbf{Versi/Sumber} \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Crate}                             & \textbf{Versi/Sumber} & \textbf{Keterangan}                                                                 \\
+	\textbf{\textit{Crate}}       & \textbf{Versi/Sumber} \\
 	\hline
 	\endhead
 
-	\texttt{tauri}                             & \texttt{2}            & Desktop framework.                                                                  \\ \hline
-	\texttt{tauri-plugin-opener}               & \texttt{2}            & Membuka file atau URL.                                                              \\ \hline
-	\texttt{tauri-plugin-http}                 & \texttt{2}            & Plugin HTTP.                                                                        \\ \hline
-	\texttt{tauri-plugin-fs}                   & \texttt{2}            & Plugin filesystem.                                                                  \\ \hline
-	\texttt{keyring}                           & \texttt{3}            & Penyimpanan OS keyring.                                                             \\ \hline
-	\texttt{rustls-platform-\newline verifier} & \texttt{0.5}          & Verifikasi TLS berbasis platform. (\textit{Patient Client})                         \\ \hline
-	\texttt{rqrr}                              & \texttt{0.9}          & Pembacaan kode QR. (\textit{Patient Client})                                        \\ \hline
-	\texttt{image}                             & \texttt{0.25}         & Pemrosesan gambar. (\textit{Patient Client})                                        \\ \hline
-	\texttt{tokio-stream}                      & \texttt{0.1.17}       & Dukungan \textit{async stream}. (\textit{Patient Client})                           \\ \hline
-	\texttt{decmed-rme-segment}                & \texttt{path}         & Crate internal untuk segmentasi RME. (\textit{Patient} \& \textit{Hospital Client}) \\ \hline
-	\texttt{decmed-macaroon-auth}              & \texttt{path}         & Crate internal untuk autentikasi berbasis Macaroons. (\textit{Hospital Client})     \\ \hline
-	\texttt{tauri-build}                       & \texttt{2}            & Dependensi build Tauri.                                                             \\ \hline
+	\texttt{axum}                 & \texttt{0.8.4}        \\ \hline
+	\texttt{axum-extra}           & \texttt{0.10.1}       \\ \hline
+	\texttt{tower}                & \texttt{0.5.2}        \\ \hline
+	\texttt{tokio}                & \texttt{1.44.2}       \\ \hline
+	\texttt{reqwest}              & \texttt{0.12}         \\ \hline
+	\texttt{redis}                & \texttt{0.32}         \\ \hline
+	\texttt{r2d2}                 & \texttt{0.8}          \\ \hline
+	\texttt{dotenvy}              & \texttt{0.15.7}       \\ \hline
+	\texttt{decmed-rme-segment}   & \texttt{path}         \\ \hline
+	\texttt{decmed-macaroon-auth} & \texttt{path}         \\ \hline
 \end{longtable}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.36\textwidth}|}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
+	\caption{Dependensi \textit{Client}}
+	\label{tab:dependensi-client-tauri}                       \\
+	\hline
+	\textbf{\textit{Crate}}           & \textbf{Versi/Sumber} \\
+	\hline
+	\endfirsthead
+	\hline
+	\textbf{\textit{Crate}}           & \textbf{Versi/Sumber} \\
+	\hline
+	\endhead
+
+	\texttt{tauri}                    & \texttt{2}            \\ \hline
+	\texttt{tauri-plugin-opener}      & \texttt{2}            \\ \hline
+	\texttt{tauri-plugin-http}        & \texttt{2}            \\ \hline
+	\texttt{tauri-plugin-fs}          & \texttt{2}            \\ \hline
+	\texttt{keyring}                  & \texttt{3}            \\ \hline
+	\texttt{rustls-platform-verifier} & \texttt{0.5}          \\ \hline
+	\texttt{rqrr}                     & \texttt{0.9}          \\ \hline
+	\texttt{image}                    & \texttt{0.25}         \\ \hline
+	\texttt{tokio-stream}             & \texttt{0.1.17}       \\ \hline
+	\texttt{decmed-rme-segment}       & \texttt{path}         \\ \hline
+	\texttt{decmed-macaroon-auth}     & \texttt{path}         \\ \hline
+	\texttt{tauri-build}              & \texttt{2}            \\ \hline
+\end{longtable}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi \texttt{decmed-rme-segment}}
-	\label{tab:dependensi-decmed-rme-segment}                                          \\
+	\label{tab:dependensi-decmed-rme-segment}       \\
 	\hline
-	\textbf{Crate}       & \textbf{Versi/Sumber} & \textbf{Keterangan}                 \\
+	\textbf{\textit{Crate}} & \textbf{Versi/Sumber} \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Crate}       & \textbf{Versi/Sumber} & \textbf{Keterangan}                 \\
+	\textbf{\textit{Crate}} & \textbf{Versi/Sumber} \\
 	\hline
 	\endhead
 
-	\texttt{base64}      & \texttt{0.22}         & Encoding dan decoding Base64.       \\ \hline
-	\texttt{serde}       & \texttt{1}            & Serialisasi dan deserialisasi data. \\ \hline
-	\texttt{serde\_json} & \texttt{1}            & Pengolahan data JSON.               \\ \hline
-	\texttt{sha2}        & \texttt{0.10}         & Fungsi hash SHA-2.                  \\ \hline
-	\texttt{uuid}        & \texttt{1}            & Pembentukan identifier unik.        \\ \hline
+	\texttt{base64}         & \texttt{0.22}         \\ \hline
+	\texttt{serde}          & \texttt{1}            \\ \hline
+	\texttt{serde\_json}    & \texttt{1}            \\ \hline
+	\texttt{sha2}           & \texttt{0.10}         \\ \hline
+	\texttt{uuid}           & \texttt{1}            \\ \hline
 \end{longtable}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.36\textwidth}|}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi \texttt{decmed-macaroon-auth}}
-	\label{tab:dependensi-decmed-macaroon-auth}                                                    \\
+	\label{tab:dependensi-decmed-macaroon-auth}         \\
 	\hline
-	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                      \\
+	\textbf{\textit{Crate}}     & \textbf{Versi/Sumber} \\
 	\hline
 	\endfirsthead
 	\hline
-	\textbf{Crate}              & \textbf{Versi/Sumber} & \textbf{Keterangan}                      \\
+	\textbf{\textit{Crate}}     & \textbf{Versi/Sumber} \\
 	\hline
 	\endhead
 
-	\texttt{chrono}             & \texttt{0.4}          & Pengelolaan tanggal dan waktu.           \\ \hline
-	\texttt{serde}              & \texttt{1}            & Serialisasi dan deserialisasi data.      \\ \hline
-	\texttt{serde\_json}        & \texttt{1}            & Pengolahan data JSON.                    \\ \hline
-	\texttt{thiserror}          & \texttt{2.0}          & Definisi tipe error.                     \\ \hline
-	\texttt{uuid}               & \texttt{1}            & Pembentukan identifier unik.             \\ \hline
-	\texttt{sha2}               & \texttt{0.10}         & Fungsi hash SHA-2.                       \\ \hline
-	\texttt{hex}                & \texttt{0.4}          & Encoding dan decoding heksadesimal.      \\ \hline
-	\texttt{macaroon}           & \texttt{path}         & Crate eksternal lokal \texttt{macaroon}. \\ \hline
-	\texttt{decmed-rme-segment} & \texttt{path}         & Crate internal untuk segmentasi RME.     \\ \hline
+	\texttt{chrono}             & \texttt{0.4}          \\ \hline
+	\texttt{serde}              & \texttt{1}            \\ \hline
+	\texttt{serde\_json}        & \texttt{1}            \\ \hline
+	\texttt{thiserror}          & \texttt{2.0}          \\ \hline
+	\texttt{uuid}               & \texttt{1}            \\ \hline
+	\texttt{sha2}               & \texttt{0.10}         \\ \hline
+	\texttt{hex}                & \texttt{0.4}          \\ \hline
+	\texttt{macaroon}           & \texttt{path}         \\ \hline
+	\texttt{decmed-rme-segment} & \texttt{path}         \\ \hline
 \end{longtable}

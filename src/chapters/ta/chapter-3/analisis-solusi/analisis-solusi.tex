@@ -1,17 +1,12 @@
 \section{Analisis Solusi}
 \label{sec:analisis-solusi}
 
-Berdasarkan masalah yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah}, solusi yang diperlukan bukan hanya penggantian format token, tetapi pembaruan cara DecMed mengekspresikan, menegakkan, dan mendelegasikan hak akses. DecMed sudah memiliki fondasi yang sesuai untuk sistem RME terdesentralisasi melalui IOTA, IPFS, dan PRE. Oleh karena itu, solusi yang dianalisis pada bagian ini diarahkan untuk memperkuat lapisan kontrol akses tanpa mengubah peran utama komponen-komponen tersebut.
+DecMed sudah memiliki fondasi yang sesuai untuk sistem RME terdesentralisasi melalui IOTA, IPFS, dan PRE. Oleh karena itu, solusi yang dianalisis pada bagian ini diarahkan untuk memperkuat lapisan kontrol akses agar menjadi lebih granular dan memfasilitasi kemampuan delegasi \textit{offline}.
 
-Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, solusi yang dianalisis pada Tugas Akhir ini dikelompokkan ke dalam enam aspek utama, yaitu mekanisme token otorisasi, segmentasi objek data, delegasi akses, penegakan otoritas, validasi kewenangan aktor, serta revokasi dan audit delegasi. Pengelompokan ini diperlukan karena kontrol akses granular tidak dapat ditegakkan hanya melalui satu komponen. Token otorisasi diperlukan untuk menyatakan batasan akses, segmentasi data diperlukan agar batasan tersebut memiliki objek penegakan yang jelas, sedangkan \textit{Server} PRE diperlukan sebagai titik penegakan sebelum data terenkripsi diambil dan diproses \textit{re-encryption}.
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, solusi yang dianalisis pada Tugas Akhir ini dikelompokkan ke dalam enam aspek utama, yaitu token otorisasi, segmentasi objek data, delegasi akses \textit{offline}, serta penegakan otoritas. Pengelompokan ini diperlukan karena kontrol akses granular dan kemampuan delegasi \textit{offline} tidak dapat ditegakkan hanya melalui satu komponen. Token otorisasi diperlukan untuk menyatakan batasan akses, segmentasi data diperlukan agar batasan tersebut memiliki objek penegakan yang jelas, sedangkan \textit{Server} PRE diperlukan sebagai titik penegakan sebelum data terenkripsi diambil dan diproses \textit{re-encryption}. Dengan demikian, analisis solusi pada bagian ini berfungsi sebagai dasar pemilihan pendekatan sebelum rancangan teknis dijelaskan pada Subbab \ref{sec:rancangan-solusi}.
 
-Keenam aspek tersebut saling bergantung. Token yang granular tidak cukup apabila data yang dilindungi masih berbentuk objek terenkripsi yang terlalu besar. Sebaliknya, segmentasi data tidak dapat dimanfaatkan secara aman apabila token tidak mampu menyatakan batasan akses secara eksplisit. Delegasi akses juga memerlukan token yang dapat dipersempit tanpa membuka peluang perluasan hak akses, sedangkan revokasi dan audit diperlukan agar delegasi yang terjadi tetap dapat dikendalikan dan ditelusuri. Dengan demikian, analisis solusi pada bagian ini berfungsi sebagai dasar pemilihan pendekatan sebelum rancangan teknis dijelaskan pada Subbab \ref{sec:rancangan-solusi}.
-
-% \input{chapters/ta/chapter-3/analisis-solusi/arah-penyelesaian-masalah.tex}
+\input{chapters/ta/chapter-3/analisis-solusi/analisis-delegasi-atenuasi-offline.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/analisis-perbandingan-token-otorisasi.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/analisis-segmentasi-data.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-delegasi-atenuasi-offline.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-integrasi-pre.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-validasi-aktor-operasi-tulis.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-revokasi-audit-delegasi.tex}
+\input{chapters/ta/chapter-3/analisis-solusi/analisis-penegakan-otoritas-pre.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/pemetaan-kebutuhan-solusi.tex}

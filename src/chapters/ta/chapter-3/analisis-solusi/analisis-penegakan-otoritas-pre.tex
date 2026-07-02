@@ -1,0 +1,29 @@
+\subsection{Analisis Penegakan Otoritas pada \textit{Server} PRE}
+\label{subsec:analisis-penegakan-otoritas-pre}
+
+Pada DecMed, PRE digunakan untuk mengubah data terenkripsi dari pasien ke penerima akses tanpa sekalipun membuka \textit{plaintext}. Pada implementasi DecMed sebelumnya, PRE berfokus melakukan verifikasi token dan menjalankan proses \textit{re-encryption}. \textit{Server} PRE dipilih sebagai titik penegakan otoritas karena komponen ini berada pada jalur kritis sebelum data terenkripsi diproses. Pengguna tidak memperoleh \textit{plaintext} langsung dari penyimpanan \textit{off-chain}, melainkan membutuhkan proses \textit{re-encryption} yang dikendalikan oleh PRE. Oleh karena itu, PRE dapat berperan sebagai titik penegakan kebijakan akses yang memverifikasi token dan menolak permintaan sebelum data diambil dari IPFS apabila otorisasi tidak valid.
+
+\subsubsection{Analisis Verifikasi Aktor dan Operasi Tulis}
+\label{subsec:analisis-verifikasi-aktor-operasi-tulis}
+
+Pada DecMed sebelumnya, \textit{role} \texttt{MedicalPersonnel} digunakan untuk merepresentasikan tenaga medis secara umum, dan memberikan hak untuk mengakses data klinis pasien. Namun, \textit{role} tersebut belum cukup untuk membedakan dokter, perawat, petugas laboratorium, dan apoteker. Padahal, keempat aktor tersebut memiliki kewenangan tulis yang berbeda. Sebagai contoh, dokter dapat menulis diagnosis dan terapi sedangkan petugas laboratorium hanya dapat menulis hasil laboratorium.
+
+Oleh karena itu, diperlukan verifikasi tambahan terhadap \textit{subrole} tenaga medis, terutama untuk operasi tulis. \textit{Server} PRE tetap perlu memastikan bahwa aktor aktif memiliki \textit{subrole} yang sesuai dengan \textit{dataset category} dan \textit{function category} yang akan ditulis. Verifikasi ini mencegah kondisi ketika aktor membawa token dengan izin tulis, tetapi secara kewenangan profesional tidak berhak memperbarui segmen data tertentu.
+
+\subsubsection{Analisis Verifikasi Bukti Identitas Aktor Aktif}
+\label{subsec:analisis-verifikasi-bukti-identitas-aktor-aktif}
+
+Pada DecMed sebelumnya, proses otorisasi berfokus pada pemeriksaan klaim yang terdapat pada token. Namun, mekanisme tersebut belum memastikan bahwa pengirim \textit{request} merupakan aktor yang identitasnya tercantum pada token. Kondisi ini menimbulkan kebutuhan verifikasi tambahan, yaitu verifikasi bukti identitas aktor aktif sebagaimana dirumuskan pada KNF-TA-06.
+
+Identitas pengguna pada DecMed direpresentasikan melalui \textit{wallet} yang dibuat saat pendaftaran akun. \textit{Wallet address} menjadi identifikator unik yang dapat membedakan setiap pengguna pada sistem. Oleh karena itu, solusi yang diusulkan adalah menggunakan \textit{wallet} sebagai dasar verifikasi identitas aktor aktif.
+
+Verifikasi dilakukan dengan meminta aktor aktif membuktikan kepemilikan \textit{wallet} yang sesuai dengan klaim pada token. Dengan mekanisme ini, \textit{request} tidak hanya membawa token otorisasi, tetapi juga membawa bukti bahwa pengirim \textit{request} menguasai \textit{wallet} dari aktor yang sedang menggunakan hak akses tersebut. Hasil verifikasi ini kemudian digunakan oleh \textit{Server} PRE untuk menentukan apakah aktor aktif berwenang melanjutkan operasi akses terhadap data RME.
+
+\subsubsection{Analisis Revokasi dan Audit Delegasi}
+\label{subsec:analisis-revokasi-audit-delegasi}
+
+Delegasi akses menyebabkan token tidak lagi berdiri sendiri, tetapi membentuk relasi antara token induk dan token turunan. Oleh karena itu, mekanisme revokasi pada DecMed perlu diperluas agar pencabutan token induk dapat berdampak pada token turunan yang berasal dari token tersebut. Tanpa pencabutan berantai, aktor yang memperoleh token turunan masih dapat menggunakan akses meskipun akses asalnya telah dicabut oleh pasien.
+
+Revokasi berantai diperlukan untuk mempertahankan kendali pasien sebagai pemilik data. Ketika pasien mencabut akses awal, sistem harus dapat mengenali bahwa token-token turunan yang berada dalam rantai delegasi yang sama tidak lagi memiliki dasar kewenangan yang sah. Dengan demikian, pemeriksaan revokasi tidak cukup hanya dilakukan terhadap token yang dikirim pada saat permintaan akses, tetapi juga perlu mempertimbangkan hubungan token tersebut dengan token asalnya.
+
+Selain revokasi, delegasi juga membutuhkan audit yang mencatat hubungan antaraktor. Audit tidak cukup hanya mencatat bahwa suatu segmen diakses, tetapi juga perlu mencatat sumber kewenangan akses tersebut, termasuk aktor pemberi delegasi, aktor penerima delegasi, waktu delegasi, cakupan akses, dan token yang digunakan. Informasi ini diperlukan agar pasien dan sistem dapat menelusuri bagaimana akses terhadap data RME terbentuk selama proses pelayanan.

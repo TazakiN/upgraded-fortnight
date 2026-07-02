@@ -1,51 +1,222 @@
-\subsection{Pengujian Unit dan Integrasi}
-\label{subsec:pengujian-unit-integrasi}
+\subsection{Pengujian Kebutuhan Nonfungsional}
+\label{subsec:pengujian-kebutuhan-nonfungsional}
 
-Pengujian unit dan integrasi dilakukan terhadap komponen yang menangani token, segmentasi data, validasi akses, PRE, \textit{client}, dan \textit{smart contract}. Setiap fokus uji diberi ID \texttt{PU-TA} dan dipetakan terhadap target rancangan serta masalah yang diuji pada Tabel \ref{tab:target-pengujian-unit-integrasi}. Komponen token diuji dengan membentuk token Macaroon awal, menambahkan \textit{caveats} baru, serta memverifikasi bahwa token yang dimodifikasi tanpa prosedur Macaroon yang sah ditolak. Komponen segmentasi diuji dengan memastikan setiap data RME menghasilkan metadata \texttt{dataset\_category} dan \texttt{function\_category} yang sesuai.
+Pengujian kebutuhan nonfungsional dilakukan untuk mengevaluasi pemenuhan aspek keamanan dan keterlacakan pada sistem, khususnya pada komponen yang menangani token Macaroon, segmentasi data RME, validasi akses, \textit{wallet proof}, revokasi, pencatatan delegasi, dan \textit{Server} PRE. Setiap pengujian dikaitkan dengan kebutuhan nonfungsional yang telah didefinisikan pada Tabel \ref{tab:kebutuhan-nonfungsional-tambahan-decmed}. Untuk memudahkan ketertelusuran evaluasi, pengujian unit dan integrasi yang mendukung kebutuhan nonfungsional diberi ID \texttt{PU-TA}.
 
-Komponen validasi pada \textit{Server} PRE diuji dengan beberapa variasi permintaan. Variasi tersebut meliputi token valid, token dengan kategori data yang tidak sesuai, token dengan masa berlaku yang sudah habis, token dengan tanda tangan \textit{wallet} yang tidak sesuai, dan token dengan kedalaman delegasi yang melebihi batas. Hasil yang diharapkan adalah hanya token valid yang dapat melanjutkan proses hingga tahap \textit{re-encryption}.
+\subsubsection{Pengujian KNF-TA-01}
+\label{subsubsec:pengujian-knf-ta-01}
 
-Pengujian integrasi dilakukan dengan menjalankan alur lengkap dari \textit{client} sampai penyimpanan data. Pada alur simpan data, \textit{client} membentuk segmen RME, mengenkripsi segmen, mengunggahnya ke IPFS, lalu mencatat metadata pada IOTA. Pada alur baca data, \textit{client} mengirimkan permintaan akses ke \textit{Server} PRE, \textit{server} mengambil metadata dari IOTA, memvalidasi token, mengambil data dari IPFS, dan mengembalikan hasil \textit{re-encryption}.
+Pengujian \texttt{KNF-TA-01} memastikan bahwa penerima akses hanya dapat memperoleh data RME dalam bentuk \textit{plaintext} apabila segmen yang diminta berada dalam cakupan otorisasi token. Dengan demikian, permintaan terhadap segmen di luar cakupan harus ditolak sebelum proses \textit{re-encryption} menghasilkan data yang dapat didekripsi oleh penerima akses.
 
-Ringkasan target pengujian unit dan integrasi ditunjukkan pada Tabel \ref{tab:target-pengujian-unit-integrasi}.
-% , sedangkan ringkasan hasil eksekusi per komponen dapat dilihat pada Tabel \ref{tab:pengujian-unit-integrasi}.
+Pengujian pertama, yaitu \texttt{PU-TA-01}, dilakukan melalui \textit{unit testing} pada komponen PRE. Tes ini menyimulasikan kondisi ketika aktor memiliki token baca, tetapi token tersebut tidak mencakup akses baca terhadap segmen data laboratorium. Kemudian fungsi yang diuji, yaitu \texttt{verify\_segment\_access}, dipanggil dengan parameter Macaroon tanpa akses ke laboratorium dan segmen data laboratorium. Tes ini mengharapkan akses ditolak. Kode pengujian dapat dilihat pada Kode \ref{lst:kode-pengujian-knf-ta-01}.
 
-\begin{table}[!ht]
-	\centering
-	\caption{Target Pengujian Unit dan Integrasi}
-	\label{tab:target-pengujian-unit-integrasi}
-	\small
-	\begin{tabular}{|p{0.12\textwidth}|p{0.12\textwidth}|p{0.30\textwidth}|p{0.18\textwidth}|p{0.11\textwidth}|}
-		\hline
-		\textbf{ID}       & \textbf{Jenis} & \textbf{Fokus Uji}                                                                   & \textbf{Rancangan}                 & \textbf{Masalah}                                     \\ \hline
-		\texttt{PU-TA-01} & Unit           & Pembentukan dan verifikasi Macaroon valid.                                           & \texttt{R-TA-03}                   & \texttt{M-TA-01}                                     \\ \hline
-		\texttt{PU-TA-02} & Unit           & Token yang dimodifikasi tanpa prosedur Macaroon ditolak.                             & \texttt{R-TA-03}, \texttt{R-TA-05} & \texttt{M-TA-01}, \texttt{M-TA-04}                   \\ \hline
-		\texttt{PU-TA-03} & Unit           & Perhitungan \textit{effective capability} sebagai irisan \textit{caveats}.           & \texttt{R-TA-05}                   & \texttt{M-TA-01}, \texttt{M-TA-04}                   \\ \hline
-		\texttt{PU-TA-04} & Unit           & Token turunan tidak dapat memperluas dataset atau fungsi token induk.                & \texttt{R-TA-04}, \texttt{R-TA-05} & \texttt{M-TA-04}                                     \\ \hline
-		\texttt{PU-TA-05} & Unit           & Token kedaluwarsa ditolak.                                                           & \texttt{R-TA-03}, \texttt{R-TA-05} & \texttt{M-TA-01}, \texttt{M-TA-04}                   \\ \hline
-		\texttt{PU-TA-06} & Unit           & Kedalaman delegasi melebihi batas ditolak.                                           & \texttt{R-TA-04}, \texttt{R-TA-05} & \texttt{M-TA-04}                                     \\ \hline
-		\texttt{PU-TA-07} & Integrasi      & \textit{Wallet proof} harus sesuai aktor aktif.                                      & \texttt{R-TA-04}, \texttt{R-TA-05} & \texttt{M-TA-04}, \texttt{M-TA-07}                   \\ \hline
-		\texttt{PU-TA-08} & Integrasi      & Metadata segmen memiliki dataset dan \textit{function category} yang valid.          & \texttt{R-TA-02}                   & \texttt{M-TA-02}                                     \\ \hline
-		\texttt{PU-TA-09} & Integrasi      & PRE menolak akses ke segmen di luar \textit{caveats} sebelum \textit{re-encryption}. & \texttt{R-TA-05}, \texttt{R-TA-06} & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-05} \\ \hline
-		\texttt{PU-TA-10} & Integrasi      & \textit{Revocation key} menyebabkan token dicabut ditolak.                           & \texttt{R-TA-07}                   & \texttt{M-TA-06}                                     \\ \hline
-	\end{tabular}
-\end{table}
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-01 untuk KNF-TA-01, label=lst:kode-pengujian-knf-ta-01]
+#[test]
+fn pre_rejects_segment_outside_caveats() {
+	let (_token, mac, verified) = verified_read_token();
+	let outside_scope = segment(
+		DatasetCategory::LABORATORIUM,
+		FunctionCategory::LABORATORIUM,
+	);
 
-% \begin{table}[!ht]
-% 	\centering
-% 	\caption{Ringkasan Eksekusi Pengujian Otomatis}
-% 	\label{tab:pengujian-unit-integrasi}
-% 	\small
-% 	\begin{tabular}{|p{0.29\textwidth}|p{0.25\textwidth}|p{0.36\textwidth}|}
-% 		\hline
-% 		\textbf{Komponen}              & \textbf{Perintah}       & \textbf{Hasil Aktual}             \\ \hline
-% 		\texttt{decmed-rme-segment}    & \texttt{cargo check}    & Library berhasil divalidasi.      \\ \hline
-% 		\texttt{decmed-macaroon-auth}  & \texttt{cargo test}     & 46 test lulus.                    \\ \hline
-% 		\texttt{proxy-reencryption}    & \texttt{cargo test}     & 22 test lulus.                    \\ \hline
-% 		\textit{Hospital Client} Tauri & \texttt{cargo test}     & 16 test lulus.                    \\ \hline
-% 		\textit{Patient Client} Tauri  & \texttt{cargo test}     & 6 test lulus.                     \\ \hline
-% 		IOTA Move                      & \texttt{iota move test} & Build berhasil, 0 unit test Move. \\ \hline
-% 	\end{tabular}
-% \end{table}
+	let err = verify_segment_for_token(
+		...,
+		&outside_scope,
+		&mac,
+	)
+	.unwrap_err();
+	// assert error DatasetCategoryNotAllowed
+}
+\end{lstlisting}
 
-Hasil tersebut menunjukkan bahwa sebagian besar komponen utama berhasil melewati pengujian otomatis. Pengujian pada crate \texttt{decmed-rme-segment} dicatat sebagai validasi \texttt{cargo check}, bukan kelulusan penuh \texttt{cargo test}, karena masih terdapat kendala pada bagian test akibat import \texttt{serde\_json::json} yang belum tersedia. Sementara itu, hasil \texttt{iota move test} dicatat sebagai validasi build karena belum terdapat unit test Move fungsional.
+Pengujian kedua dilakukan melalui \textit{client hospital} untuk memastikan aktor apoteker tidak dapat membuka atau memperoleh segmen data laboratorium. Pada skenario ini, akun apoteker tidak memiliki caveat akses terhadap kategori laboratorium, sehingga segmen laboratorium tidak ditampilkan sebagai data yang dapat diakses.
+
+\subsubsection{Pengujian KNF-TA-02}
+\label{subsubsec:pengujian-knf-ta-02}
+
+Pengujian \texttt{KNF-TA-02} memastikan integritas token otorisasi dan batasan akses tetap terjaga selama proses delegasi. Secara khusus, pengujian diarahkan untuk memastikan bahwa token turunan tidak dapat memperluas cakupan akses, menaikkan kedalaman delegasi, atau memperpanjang masa berlaku melebihi token induk.
+
+Pengujian pertama, yaitu \texttt{PU-TA-02}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-a}. Tes ini memastikan token delegasi tidak dapat menambahkan hak akses \texttt{write\_function} yang tidak dimiliki oleh \textit{parent token}. Ketika \textit{child token} mencoba meminta \texttt{write\_functions} di luar scope \textit{parent token}, proses \texttt{attenuate\_macaroon()} ditolak dengan error \texttt{DelegationExpandsAccess}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-02 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-a]
+#[test]
+fn cannot_delegate_write_function_from_parent_read_only_scope() {
+    let write_functions: Vec<_> = ... // tidak mencakup PERESEPAN
+    let parent = scoped_token(
+        ...
+        &write_functions,
+        Some("Read"),
+    );
+    let params = DelegationAttenuationParams {
+        write_functions: vec![FunctionCategory::PERESEPAN],
+        ...
+    };
+    let err = attenuate_macaroon(&parent, &params).unwrap_err();
+	// assert error DelegationExpandsAccess
+}
+\end{lstlisting}
+
+Pengujian kedua, yaitu \texttt{PU-TA-03}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-b}. Tes ini memastikan batas kedalaman delegasi tidak dapat dinaikkan oleh token turunan. Jika \textit{child token} mencoba menetapkan \texttt{max\_delegation\_depth} lebih besar dari batas \textit{parent token}, delegasi ditolak dengan error \texttt{DelegationDepthNotMonotonic}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-03 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-b]
+#[test]
+fn cannot_increase_max_delegation_depth_on_delegate() {
+    let mut params = DelegationAttenuationParams {
+        ...,
+        max_delegation_depth: 99
+    };
+    let err = attenuate_macaroon(
+		&doctor_token(), // max depth 1
+		&params
+	)
+	// assert error DelegationDepthNotMonotonic
+}	
+\end{lstlisting}
+
+Pengujian ketiga, yaitu \texttt{PU-TA-04}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-c}. Tes ini memastikan delegasi dari token admin write tetap tidak dapat memperluas cakupan dataset. Ketika \textit{child token} mencoba meminta \texttt{write\_datasets} di luar cakupan \textit{parent token}, sistem menolak dengan error \texttt{DelegationExpandsAccess}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-04 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-c]
+#[test]
+fn admin_write_true_expansion_still_fails() {
+    let params = DelegationAttenuationParams {
+        ...,
+        write_datasets: vec![DatasetCategory::RAWAT_INAP],
+    };
+    let err = attenuate_macaroon(
+		&admin_write_token(), // write token RAWAT_JALAN
+		&params
+	)
+	// assert error DelegationExpandsAccess
+}
+\end{lstlisting}
+
+Pengujian terakhir dilakukan melalui \textit{client hospital} untuk memastikan sistem menolak atenuasi hak akses dengan batas waktu yang melebihi masa berlaku token induk. Pada skenario ini, halaman delegasi menampilkan notifikasi \textit{error} ketika pengguna mencoba membuat token turunan dengan waktu kedaluwarsa yang lebih panjang daripada token induk.
+
+\subsubsection{Pengujian KNF-TA-03}
+\label{subsubsec:pengujian-knf-ta-03}
+
+Pengujian \texttt{KNF-TA-03} memastikan permintaan akses ditolak apabila token, rantai delegasi, atau bukti identitas aktor aktif tidak valid.
+
+Pengujian pertama, yaitu \texttt{PU-TA-05}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-a}. Tes ini memastikan token yang sudah melewati batas waktu berlaku tidak dapat digunakan untuk mengakses segmen RME. Pada skenario ini, waktu verifikasi dibuat berada setelah waktu kedaluwarsa token. Sistem menolak permintaan akses dengan error \texttt{ExpiredToken}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-05 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-a]
+#[test]
+fn expired_token_rejected() {
+    let mac = ... // token dokter, expired 2026-07-02
+    let future = ... // 2031-01-01T00:00:00+00:00
+    let err = verify_decmed_token(
+		...
+        &mac,
+        &ctx({
+            ...,
+            now: future,
+        }),
+    )
+    // assert error ExpiredToken
+}
+\end{lstlisting}
+
+Pengujian kedua, yaitu \texttt{PU-TA-06}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-b}. Tes ini memastikan rantai delegasi yang tidak valid akan ditolak. Pada pengujian ini, token dimodifikasi dengan caveat \texttt{delegated\_by} yang tidak sesuai dengan rantai delegasi semestinya. Ketika token diverifikasi, sistem menolak permintaan dengan error \texttt{InvalidDelegationChain}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-06 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-b]
+#[test]
+fn broken_delegation_chain_rejected() {
+    let mut mac = ... // token dokter
+    add_caveat_to_macaroon(&mut mac, "delegated_by", "0xAPOTEK");
+    add_caveat_to_macaroon(&mut mac, "delegated_to", LAB);
+    let err = verify_ctx(
+        &mac,
+        ...
+    )
+    // assert error InvalidDelegationChain
+}
+\end{lstlisting}
+
+Pengujian ketiga, yaitu \texttt{PU-TA-07}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c}. Tes ini memastikan bukti identitas aktor aktif harus sesuai dengan subjek aktif pada token hasil delegasi. Pada skenario ini, token diberikan kepada aktor \texttt{LAB}, tetapi permintaan pertama menggunakan tanda tangan \texttt{doctor-sig}. Sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-07 untuk KNF-TA-03 dan KNF-TA-06, label=lst:kode-pengujian-knf-ta-03-c]
+#[test]
+fn wallet_proof_must_match_active_actor() {
+    let mac = ... // token LAB
+    let verifier = ActiveActorVerifier {
+        active_actor: LAB,
+        valid_sig: "lab-sig",
+	};
+    let ctx = TokenVerificationContext {
+        ...,
+        wallet_signature: Some("doctor-sig"),
+    };
+    let err = verify_decmed_token(
+        &mac,
+        &ctx,
+        Some(&verifier),
+    )
+	// assert error InvalidWalletSignature
+}
+\end{lstlisting}
+
+\subsubsection{Pengujian KNF-TA-04}
+\label{subsubsec:pengujian-knf-ta-04}
+
+Pengujian \texttt{KNF-TA-04} memastikan sistem menyediakan keterlacakan akses dan delegasi melalui pencatatan metadata yang dapat ditinjau kembali oleh pasien.
+
+Pengujian dilakukan melalui \textit{client} pasien. Skenario dimulai dari pemberian akses awal oleh pasien kepada petugas rekam medis, kemudian dilanjutkan dengan delegasi dari petugas rekam medis kepada dokter. Setelah proses tersebut dilakukan, pasien membuka halaman riwayat delegasi untuk memastikan informasi delegator, delegatee, status, waktu, dan relasi delegasi dapat ditelusuri. Tangkapan layar halaman ini dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
+
+\subsubsection{Pengujian KNF-TA-05}
+\label{subsubsec:pengujian-knf-ta-05}
+
+Pengujian \texttt{KNF-TA-05} memastikan sistem menolak akses untuk hak akses yang sudah dicabut.
+
+Pengujian pertama, yaitu \texttt{PU-TA-08}, dilakukan melalui tes pada Kode \ref{lst:kode-pengujian-knf-ta-05-a}. Tes ini memastikan token yang sudah masuk daftar revokasi tidak dapat digunakan kembali. Pada skenario ini, sistem terlebih dahulu memverifikasi token yang belum dicabut dan hasilnya berhasil. Setelah itu, \texttt{revocation key} token dibuat bernilai cocok dengan token yang sedang diverifikasi. Sistem kemudian menolak akses dengan status \texttt{UNAUTHORIZED}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-08 untuk KNF-TA-05, label=lst:kode-pengujian-knf-ta-05-a]
+#[test]
+fn revocation_key_rejects_revoked_token() {
+    let token = verified_read_token(); // token valid
+    let revoked_key = ... // hash token valid
+
+    ensure_token_not_revoked(
+		...,
+        &token,
+        |_| Ok(false), // simulasi Redis kosong
+    ) // success
+
+    let err = ensure_token_not_revoked(
+        ...,
+        &token,
+        |key| Ok(key == revoked_key), // simulasi revoked key 
+		// terdapat pada Redis
+    ) // error UNAUTHORIZED
+
+    // assert status UNAUTHORIZED
+}
+\end{lstlisting}
+
+Pengujian kedua dilakukan melalui \textit{client} pasien dan \textit{client hospital}. Pengujian dimulai dengan pasien mencabut hak akses yang sebelumnya diberikan kepada petugas rekam medis. Setelah revokasi dilakukan, akses dicoba kembali dari akun petugas rekam medis dan dokter yang memperoleh delegasi. Sistem dinyatakan memenuhi kebutuhan apabila hak akses yang telah dicabut tidak lagi dapat digunakan dan tidak lagi muncul sebagai akses aktif pada halaman \textit{Home} maupun halaman delegasi.
+
+\subsubsection{Pengujian KNF-TA-06}
+\label{subsubsec:pengujian-knf-ta-06}
+
+Pengujian \texttt{KNF-TA-06} memastikan bukti kepemilikan identitas terikat terhadap aktor aktif, token akses, dan konteks permintaan akses.
+
+Pengujian pertama, yaitu \texttt{PU-TA-09}, dilakukan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-06-a}. Tes ini memastikan setiap permintaan akses menggunakan token DecMed harus menyertakan bukti kepemilikan identitas berupa tanda tangan wallet. Jika \texttt{wallet\_signature} tidak diberikan, sistem menolak permintaan dengan error \texttt{WalletSignatureRequired}. Hal ini menunjukkan bahwa token akses saja tidak cukup untuk memperoleh akses tanpa bukti identitas dari aktor aktif.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian PU-TA-09 untuk KNF-TA-06, label=lst:kode-pengujian-knf-ta-06-a]
+#[test]
+fn wallet_signature_required_for_every_decmed_token() {
+    let mac = ... // token dokter 
+    let err = verify_decmed_token(
+        &mac,
+        ...,
+        &TokenVerificationContext {
+			...,
+            wallet_signature: None, // tidak ada
+        },
+    )
+    // assert error WalletSignatureRequired
+}
+\end{lstlisting}
+
+Pengujian kedua dilakukan melalui \texttt{PU-TA-07} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c}, sama dengan yang digunakan sebelumnya untuk menguji \texttt{KNF-TA-03}. Tes ini memastikan bukti identitas harus sesuai dengan aktor aktif pada rantai delegasi. Token pada skenario ini merupakan token untuk aktor \texttt{LAB}. Ketika permintaan menggunakan tanda tangan \texttt{doctor-sig}, sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}. Setelah tanda tangan diganti menjadi \texttt{lab-sig}, verifikasi token berhasil.
+
+Pada implementasinya, fungsi \texttt{verify\_decmed\_token()} membentuk \texttt{WalletProofContext} dari token dan konteks akses yang sedang diminta. Konteks tersebut memuat \texttt{token\_id}, alamat pasien, \texttt{related\_rme\_id}, mode operasi, \texttt{segment\_id}, kategori dataset, kategori fungsi, dan \texttt{timestamp}. Konteks ini kemudian diverifikasi terhadap \texttt{active\_subject} pada rantai delegasi, sehingga bukti kepemilikan identitas terikat pada aktor aktif.

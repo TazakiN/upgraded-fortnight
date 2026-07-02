@@ -3,72 +3,156 @@
 \setlength{\tabcolsep}{3pt}
 \begin{longtable}{|p{0.65cm}|p{2.2cm}|p{1.9cm}|p{4cm}|p{4cm}|}
 	\caption{Analisis STRIDE pada Sistem DecMed}
-	\label{tab:stride-decmed}                                                                                                                                                                                                                                                               \\
+	\label{tab:stride-decmed}                                                                                                                                                                                                                                                \\
 	\hline
-	\textbf{ID}                                                                                                                                                                                       & \textbf{Komponen} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+	\textbf{ID}                                                                                                                                                                 & \textbf{Komponen / Flow} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
 	\hline
 	\endfirsthead
 
-	\caption[]{Analisis STRIDE pada Sistem DecMed (lanjutan)}                                                                                                                                                                                                                               \\
+	\caption[]{Analisis STRIDE pada Sistem DecMed (lanjutan)}                                                                                                                                                                                                                \\
 	\hline
-	\textbf{ID}                                                                                                                                                                                       & \textbf{Komponen} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+	\textbf{ID}                                                                                                                                                                 & \textbf{Komponen / Flow} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
 	\hline
 	\endhead
 
-	T01                                                                                                                                                                                               &
-	Token Kapabilitas                                                                                                                                                                                 &
-	\textit{Spoofing}                                                                                                                                                                                 &
-	Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk data RME.                                                                                                                     &
-	Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                                                       \\
+	T01                                                                                                                                                                         &
+	P5, F7                                                                                                                                                                      &
+	\textit{Spoofing}                                                                                                                                                           &
+	Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk data RME.                                                                                               &
+	Akses tidak sah terhadap data rekam medis pasien.                                                                                                                                                                                                                        \\
 	\hline
 
-	T02                                                                                                                                                                                               &
-	Metadata \textit{On-chain}                                                                                                                                                                        &
-	\textit{Tampering}                                                                                                                                                                                &
-	Pengguna mengirim transaksi pembaruan atau pemberian akses yang valid secara kriptografis, tetapi cakupan pembaruannya tidak dibatasi secara tepat oleh logika otorisasi \textit{smart contract}. &
-	Metadata akses atau metadata RME dapat menunjuk pada cakupan data yang tidak semestinya, sehingga integritas kontrol akses terganggu.                                                                                                                                                   \\
+	T02                                                                                                                                                                         &
+	P8, D4, E4, dan F9                                                                                                                                                          &
+	\textit{Tampering}                                                                                                                                                          &
+	Pengguna mengirim transaksi pemberian akses yang valid secara kriptografis, tetapi cakupan akses tidak dibatasi secara tepat oleh logika otorisasi \textit{smart contract}. &
+	Metadata akses atau metadata RME dapat menunjuk pada cakupan data yang tidak semestinya, sehingga integritas terganggu.                                                                                                                                                  \\
 	\hline
 
-	T03                                                                                                                                                                                               &
-	Data \textit{Off-chain}                                                                                                                                                                           &
-	\textit{Tampering}                                                                                                                                                                                &
-	Referensi CID yang mengarah ke objek \textit{off-chain} dimanipulasi sehingga sistem mengambil \textit{blob} terenkripsi yang tidak sesuai.                                                       &
-	Data RME yang diambil tidak valid, tidak konsisten, atau gagal diverifikasi.                                                                                                                                                                                                            \\
+	T03                                                                                                                                                                         &
+	P6, D2, dan F19                                                                                                                                                             &
+	\textit{Tampering}                                                                                                                                                          &
+	Referensi CID yang mengarah ke objek \textit{off-chain} dimanipulasi sehingga sistem mengambil \textit{blob} terenkripsi yang tidak sesuai.                                 &
+	Data RME yang diambil tidak valid, tidak konsisten, atau gagal diverifikasi.                                                                                                                                                                                             \\
 	\hline
 
-	T04                                                                                                                                                                                               &
-	Mekanisme Delegasi                                                                                                                                                                                &
-	\textit{Repudiation}                                                                                                                                                                              &
-	Pihak tertentu menyangkal pernah memberikan atau menggunakan delegasi akses.                                                                                                                      &
-	Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                                                                                                             \\
+	T04                                                                                                                                                                         &
+	P2, P5, P8, D4, F8, F9, F21, dan F29                                                                                                                                        &
+	\textit{Repudiation}                                                                                                                                                        &
+	Pihak tertentu menyangkal pernah memberikan atau menggunakan akses.                                                                                                         &
+	Kesulitan dalam audit dan investigasi penyalahgunaan akses.                                                                                                                                                                                                              \\
 	\hline
 
-	T05                                                                                                                                                                                               &
-	Mekanisme Delegasi                                                                                                                                                                                &
-	\textit{Information Disclosure}                                                                                                                                                                   &
-	Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan.                                                                                                                        &
-	Kebocoran data RME pasien.                                                                                                                                                                                                                                                              \\
+	T05                                                                                                                                                                         &
+	P5, P8, D4, F16, F19, F20, F21, dan F29                                                                                                                                     &
+	\textit{Information Disclosure}                                                                                                                                             &
+	Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan.                                                                                                  &
+	Kebocoran data RME pasien.                                                                                                                                                                                                                                               \\
 	\hline
 
-	T06                                                                                                                                                                                               &
-	Metadata \textit{On-chain}                                                                                                                                                                        &
-	\textit{Information Disclosure}                                                                                                                                                                   &
-	Metadata transaksi mengungkap relasi pasien, fasyankes, atau jenis layanan klinis.                                                                                                                &
-	Privasi pasien dan informasi layanan klinis dapat terekspos.                                                                                                                                                                                                                            \\
+	T06                                                                                                                                                                         &
+	P8, D4, dan F22                                                                                                                                                             &
+	\textit{Information Disclosure}                                                                                                                                             &
+	Metadata transaksi mengungkap relasi pasien, fasyankes, atau data pasien.                                                                                                   &
+	Privasi pasien dan informasi layanan klinis jadi terekspos.                                                                                                                                                                                                              \\
 	\hline
 
-	T07                                                                                                                                                                                               &
-	\textit{Instance} PRE dan IPFS                                                                                                                                                                    &
-	\textit{Denial of Service}                                                                                                                                                                        &
-	Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.                                                                                                      &
-	Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                                                                                                            \\
+	T07                                                                                                                                                                         &
+	P4, P5, P6, P7, P8, D1, E4, dan F7                                                                                                                                          &
+	\textit{Denial of Service}                                                                                                                                                  &
+	Layanan PRE atau penyimpanan IPFS tidak dapat diakses akibat serangan atau gangguan layanan.                                                                                &
+	Proses akses rekam medis menjadi lambat atau tidak tersedia.                                                                                                                                                                                                             \\
 	\hline
 
-	T08                                                                                                                                                                                               &
-	Mekanisme Delegasi                                                                                                                                                                                &
-	\textit{Elevation of Privilege}                                                                                                                                                                   &
-	Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi.                                                                                                                  &
-	Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                                                           \\
+	T08                                                                                                                                                                         &
+	P2, P5, P8, dan D4, F8, F9,                                                                                                                                                 &
+	\textit{Elevation of Privilege}                                                                                                                                             &
+	Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi.                                                                                            &
+	Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah.                                                                                                                                                                                                            \\
 	\hline
 \end{longtable}
 }
+
+
+% {\small
+% \renewcommand{\arraystretch}{1.3}
+% \setlength{\tabcolsep}{2pt}
+% \begin{longtable}{|p{0.55cm}|p{1.8cm}|p{2.45cm}|p{1.65cm}|p{3.35cm}|p{3.35cm}|}
+% 	\caption{Analisis STRIDE pada Sistem DecMed}
+% 	\label{tab:stride-decmed} \\
+% 	\hline
+% 	\textbf{ID} & \textbf{Komponen} & \textbf{Data Flow Terkait} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+% 	\hline
+% 	\endfirsthead
+
+% 	\caption[]{Analisis STRIDE pada Sistem DecMed (lanjutan)} \\
+% 	\hline
+% 	\textbf{ID} & \textbf{Komponen} & \textbf{Data Flow Terkait} & \textbf{Kategori} & \textbf{Skenario Ancaman} & \textbf{Dampak} \\
+% 	\hline
+% 	\endhead
+
+% 	T01 &
+% 	P1, P2, P4, P5, D1 &
+% 	F7, F8, F11, F13, F15 &
+% 	\textit{Spoofing} &
+% 	Penyerang menggunakan token akses yang dicuri atau dipalsukan untuk mengakses data RME. &
+% 	Akses tidak sah terhadap data rekam medis pasien. \\
+% 	\hline
+
+% 	T02 &
+% 	P2, P8, D4, E4 &
+% 	F9, F21, F23, F26, F27 &
+% 	\textit{Tampering} &
+% 	Pengguna mengirim transaksi pemberian akses yang valid secara kriptografis, tetapi cakupan akses tidak dibatasi secara tepat oleh logika otorisasi \textit{smart contract}. &
+% 	Metadata akses atau metadata RME dapat menunjuk pada cakupan data yang tidak semestinya, sehingga integritas akses terganggu. \\
+% 	\hline
+
+% 	T03 &
+% 	P6, P7, D2, D4 &
+% 	F18, F19, F22 &
+% 	\textit{Tampering} &
+% 	Referensi CID yang mengarah ke objek \textit{off-chain} dimanipulasi sehingga sistem mengambil \textit{blob} terenkripsi yang tidak sesuai. &
+% 	Data RME yang diambil tidak valid, tidak konsisten, atau gagal diverifikasi. \\
+% 	\hline
+
+% 	T04 &
+% 	P1, P2, P4, P5, P8, D4 &
+% 	F7, F8, F9, F21, F23, F29 &
+% 	\textit{Repudiation} &
+% 	Pihak tertentu menyangkal pernah memberikan atau menggunakan akses. &
+% 	Kesulitan dalam audit dan investigasi penyalahgunaan akses. \\
+% 	\hline
+
+% 	T05 &
+% 	P2, P5, P6, P7, P8, D2, D4 &
+% 	F8, F9, F16, F19, F20, F21, F22 &
+% 	\textit{Information Disclosure} &
+% 	Delegasi akses membuka cakupan data pasien yang lebih luas dari kebutuhan. &
+% 	Kebocoran data RME pasien. \\
+% 	\hline
+
+% 	T06 &
+% 	P2, P3, P8, D4, E4 &
+% 	F9, F10, F21, F23, F29 &
+% 	\textit{Information Disclosure} &
+% 	Metadata transaksi mengungkap relasi pasien, fasyankes, atau data pasien. &
+% 	Privasi pasien dan informasi layanan klinis menjadi terekspos. \\
+% 	\hline
+
+% 	T07 &
+% 	P4, P5, P6, P7, D1, D2, E4, E5 &
+% 	F7, F8, F11, F12, F13, F14, F16, F17, F18, F19, F23, F24, F25 &
+% 	\textit{Denial of Service} &
+% 	Layanan PRE, Redis, IPFS, IOTA Network, atau IOTA Gas Station tidak dapat diakses akibat serangan atau gangguan layanan. &
+% 	Proses akses rekam medis menjadi lambat atau tidak tersedia. \\
+% 	\hline
+
+% 	T08 &
+% 	P2, P5, P6, P7, P8, D4 &
+% 	F8, F9, F16, F20, F21, F22, F26, F27 &
+% 	\textit{Elevation of Privilege} &
+% 	Pengguna memperoleh hak akses lebih tinggi melalui delegasi yang tidak dibatasi. &
+% 	Terjadi eskalasi hak akses di luar kebutuhan klinis yang sah. \\
+% 	\hline
+% \end{longtable}
+% }

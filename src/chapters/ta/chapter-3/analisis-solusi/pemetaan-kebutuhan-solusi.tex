@@ -3,7 +3,6 @@
 \label{subsec:pemetaan-masalah-solusi}
 
 Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel \ref{tab:daftar-solusi-ta}.
-% sedangkan pemetaan masalah terhadap solusi dirangkum pada Tabel \ref{tab:pemetaan-masalah-solusi}.
 
 \begin{table}[!ht]
 	\centering
@@ -12,81 +11,31 @@ Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \t
 	\small
 	\begin{tabular}{|p{0.12\textwidth}|p{0.5\textwidth}|p{0.25\textwidth}|}
 		\hline
-		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                        & \textbf{Masalah Terkait}                                               \\ \hline
-		\texttt{S-TA-01} & Token otorisasi berbasis Macaroons dengan \textit{caveats}                                                                  & \texttt{M-TA-01}, \texttt{M-TA-04}                                     \\ \hline
-		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                       \\ \hline
-		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                     \\ \hline
+		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                        & \textbf{Masalah Terkait}                                                                 \\ \hline
+		\texttt{S-TA-01} & Token otorisasi berbasis Macaroons dengan \textit{caveats}                                                                  & \texttt{M-TA-01}, \texttt{M-TA-04}                                                       \\ \hline
+		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                                         \\ \hline
+		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                                       \\ \hline
 		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
-		\texttt{S-TA-05} & Validasi subrole tenaga medis terhadap dataset untuk operasi tulis                                                          & \texttt{M-TA-05}                                                       \\ \hline
-		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                       \\ \hline
+		\texttt{S-TA-05} & Validasi subrole tenaga medis terhadap dataset untuk operasi tulis                                                          & \texttt{M-TA-05}                                                                         \\ \hline
+		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                                         \\ \hline
 	\end{tabular}
 \end{table}
 
-% \begin{table}[!ht]
-% 	\centering
-% 	\caption{Pemetaan Masalah terhadap Solusi}
-% 	\label{tab:pemetaan-masalah-solusi}
-% 	\small
-% 	\begin{tabular}{|p{0.12\textwidth}|p{0.27\textwidth}|p{0.22\textwidth}|p{0.29\textwidth}|}
-% 		\hline
-% 		\textbf{ID Masalah} & \textbf{Ringkasan Masalah}                        & \textbf{ID Solusi}                                   & \textbf{Ringkasan Solusi}                                                                    \\ \hline
-% 		\texttt{M-TA-01}    & Token belum granular                              & \texttt{S-TA-01}, \texttt{S-TA-04}                   & Macaroons membawa \textit{caveats}, lalu PRE mengevaluasi \textit{caveats} saat akses.       \\ \hline
-% 		\texttt{M-TA-02}    & Data belum tersegmentasi                          & \texttt{S-TA-02}, \texttt{S-TA-04}                   & Data dipecah menjadi segmen, kemudian metadata segmen dicocokkan dengan token.               \\ \hline
-% 		\texttt{M-TA-03}    & Pasien harus menerbitkan akses ulang              & \texttt{S-TA-03}                                     & Pemegang token dapat membuat token turunan secara lokal.                                     \\ \hline
-% 		\texttt{M-TA-04}    & Delegasi dapat memperluas hak jika tidak dibatasi & \texttt{S-TA-01}, \texttt{S-TA-03}, \texttt{S-TA-04} & \textit{Caveats} bersifat \textit{append-only}, dan cakupan efektif dihitung sebagai irisan. \\ \hline
-% 		\texttt{M-TA-05}    & Role tenaga medis terlalu umum                    & \texttt{S-TA-05}, \texttt{S-TA-04}                   & PRE mengambil subrole dari \textit{on-chain} dan memvalidasi dataset tulis.                 \\ \hline
-% 		\texttt{M-TA-06}    & Revokasi dan audit delegasi belum kuat            & \texttt{S-TA-06}                                     & Revokasi berantai, \textit{revocation key} di Redis, dan audit di \textit{on-chain}.         \\ \hline
-% 	\end{tabular}
-% \end{table}
-
-\texttt{S-TA-01} dan \texttt{S-TA-04} terutama ditujukan untuk menjawab \texttt{M-TA-01}, \texttt{S-TA-02} ditujukan untuk menjawab \texttt{M-TA-02}, \texttt{S-TA-03} ditujukan untuk menjawab \texttt{M-TA-03} dan \texttt{M-TA-04}, \texttt{S-TA-05} ditujukan untuk menjawab \texttt{M-TA-05}, \texttt{S-TA-06} ditujukan untuk menjawab \texttt{M-TA-06}, sedangkan pembuktian identitas aktor aktif pada \texttt{M-TA-07} ditangani melalui \textit{wallet proof} pada \texttt{S-TA-04}.
-
-Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
-
-\begin{table}[!ht]
-	\centering
-	\caption{Perbandingan DecMed Awal dan Pengembangan pada Tugas Akhir}
-	\label{tab:perbandingan-decmed-ta}
-	\small
-	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
-		\hline
-		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                                                          \\ \hline
-		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                                                          \\ \hline
-		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan                              \\ \hline
-		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}                                    \\ \hline
-		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                                            \\ \hline
-		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                                            \\ \hline
-		PRE               & Verifikasi otoritas dan proses \textit{re-encryption}    & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}, namun berbasis token Macaroon \\ \hline
-	\end{tabular}
-\end{table}
-
-% Penelitian sebelumnya mengenai DecMed telah mendefinisikan kebutuhan fungsional dasar sistem, seperti pengelolaan akun, pemberian akses data RME, serta pengelolaan entri rekam medis. Kebutuhan Fungsional tersebut dapat dilihat pada lampiran \ref{lampiran:kebutuhan-fungsional-decmed}. Pada Tugas Akhir ini, kebutuhan fungsional tersebut diperluas untuk mendukung mekanisme kontrol akses granular berbasis Macaroons dan segmentasi data klinis.
-
-% Berbeda dengan kebutuhan fungsional pada penelitian DecMed sebelumnya yang berfokus pada interaksi aktor dengan sistem, kebutuhan fungsional tambahan pada penelitian ini difokuskan pada kemampuan sistem dalam mendukung mekanisme kontrol akses granular dan segmentasi data klinis.
+% Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
 
 % \begin{table}[!ht]
 % 	\centering
-% 	\caption{Kebutuhan Fungsional Tambahan pada Tugas Akhir}
-% 	\label{tab:kebutuhan-fungsional-tambahan}
+% 	\caption{Perbandingan DecMed Awal dan Pengembangan pada Tugas Akhir}
+% 	\label{tab:perbandingan-decmed-ta}
 % 	\small
-% 	\begin{tabular}{|>{\centering\arraybackslash}m{0.12\textwidth}|p{0.78\textwidth}|}
+% 	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
 % 		\hline
-% 		\textbf{ID}    & \textbf{Deskripsi}                                                                                                                         \\ \hline
-
-% 		\centering F30 & Sistem dapat menghasilkan token otorisasi berbasis Macaroons untuk akses data klinis.                                                      \\ \hline
-
-% 		\centering F31 & Sistem dapat menambahkan \textit{caveats} pada token untuk membatasi akses berdasarkan kategori fungsi klinis, hak akses, dan waktu akses. \\ \hline
-
-% 		\centering F32 & Sistem dapat melakukan validasi \textit{caveats} sebelum data klinis diakses.                                                              \\ \hline
-
-% 		\centering F33 & Sistem dapat melakukan delegasi token dengan hak akses yang lebih terbatas melalui mekanisme atenuasi \textit{offline}.                    \\ \hline
-
-% 		\centering F34 & Sistem dapat menyimpan data klinis \textit{off-chain} berdasarkan kategori fungsi klinis.                                                  \\ \hline
-
-% 		\centering F35 & Sistem dapat menyimpan metadata kategori segmen data klinis pada \textit{smart contract}.                                                  \\ \hline
-
-% 		\centering F36 & Sistem dapat melakukan pengambilan segmen data klinis berdasarkan metadata kategori yang tersimpan pada \textit{on-chain}.                 \\ \hline
+% 		\textbf{Aspek}    & \textbf{DecMed awal}                                     & \textbf{Pengembangan pada TA ini}                                                               \\ \hline
+% 		Token akses       & JWT berbasis \textit{role} dan \textit{purpose}          & Macaroons dengan \textit{caveats}                                                               \\ \hline
+% 		Delegasi akses    & Pasien perlu menerbitkan akses baru untuk setiap petugas & Pemegang token dapat melakukan atenuasi pada Macaroons, kemudian mendelegasikan token turunan   \\ \hline
+% 		Granularitas data & Data klinis masih berupa \textit{blob} besar             & Data dipecah menjadi segmen berdasarkan \textit{dataset} dan \textit{function category}         \\ \hline
+% 		Penegakan akses   & Berdasarkan klaim pada token                             & Berdasarkan \textit{caveat} dan metadata segmen                                                 \\ \hline
+% 		Penyimpanan data  & IOTA untuk metadata, IPFS untuk \textit{encrypted data}  & Tetap sama, tetapi metadata diperluas agar mendukung segmentasi                                 \\ \hline
+% 		PRE               & Verifikasi otoritas dan proses \textit{re-encryption}    & Tetap menjadi titik verifikasi dan proses \textit{re-encryption}, namun berbasis token Macaroon \\ \hline
 % 	\end{tabular}
 % \end{table}
-
-% Dengan hasil analisis tersebut, solusi yang dirancang pada bagian berikutnya difokuskan pada tiga aspek utama, yaitu arsitektur integrasi Macaroons ke DecMed, struktur token dan \textit{caveats}, serta mekanisme segmentasi data klinis pada penyimpanan \textit{off-chain}.

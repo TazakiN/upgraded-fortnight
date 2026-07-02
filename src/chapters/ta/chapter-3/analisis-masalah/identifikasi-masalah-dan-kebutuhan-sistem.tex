@@ -1,7 +1,7 @@
 \subsection{Identifikasi Masalah}
 \label{subsec:identifikasi-masalah}
 
-Berdasarkan analisis terhadap arsitektur DecMed pada Subbab \ref{subsec:analisis-sistem-decmed}, Tugas Akhir ini mengidentifikasi sejumlah masalah yang perlu diselesaikan agar DecMed dapat mendukung kontrol akses granular dan delegasi berantai secara aman. Permasalahan utama terdiri atas tiga aspek. Pertama, token otorisasi DecMed belum mampu menyatakan batasan akses secara granular, seperti jenis data, aksi akses, masa berlaku, dan ruang lingkup delegasi. Kedua, data RME pada penyimpanan \textit{off-chain} belum direpresentasikan sebagai objek akses yang tersegmentasi sehingga pembatasan akses sulit ditegakkan pada unit data spesifik. Ketiga, alur pemberian akses DecMed masih bergantung pada keterlibatan langsung pasien sehingga belum mendukung delegasi antaraktor dalam proses layanan kesehatan yang kolaboratif.
+Berdasarkan analisis terhadap arsitektur DecMed pada Subbab \ref{subsec:analisis-sistem-decmed}, Tugas Akhir ini mengidentifikasi sejumlah masalah yang perlu diselesaikan agar DecMed dapat mendukung kontrol akses granular dan delegasi \textit{offline}. Permasalahan utama terdiri atas tiga aspek. Pertama, token otorisasi DecMed belum mampu menyatakan batasan akses secara granular, seperti jenis data, aksi akses, masa berlaku, dan ruang lingkup delegasi. Kedua, data RME pada penyimpanan \textit{off-chain} belum direpresentasikan sebagai objek akses yang tersegmentasi sehingga pembatasan akses sulit ditegakkan pada unit data spesifik. Ketiga, alur pemberian akses DecMed masih bergantung pada keterlibatan langsung pasien sehingga belum mendukung delegasi antaraktor dalam proses layanan kesehatan yang kolaboratif.
 
 Selain tiga masalah utama tersebut, terdapat beberapa masalah turunan yang perlu diperhatikan agar rancangan solusi dapat ditegakkan secara aman. Delegasi antaraktor harus dibatasi agar hak akses turunan tidak melebihi hak akses induknya. Perbedaan data klinis yang dapat diakses oleh masing-masing aktor juga perlu diperhitungkan karena \textit{role} umum seperti \texttt{MedicalPersonnel} belum cukup untuk membedakan kewenangan dokter, perawat, petugas laboratorium, dan apoteker. Selain itu, karena delegasi dapat membentuk rantai akses, mekanisme pencabutan dan audit pada DecMed perlu diperluas agar dapat mencakup akses turunan. Penggunaan token akses juga perlu dikaitkan dengan pembuktian identitas aktor aktif pada setiap permintaan agar token tidak hanya diperlakukan sebagai \textit{bearer token} yang dapat digunakan oleh pihak yang tidak semestinya.
 
@@ -12,16 +12,16 @@ Agar keterhubungan antara analisis masalah, ancaman keamanan, kebutuhan sistem, 
 	\caption{Identifikasi Masalah DecMed}
 	\label{tab:identifikasi-masalah-decmed}
 	\small
-	\begin{tabular}{|p{0.12\textwidth}|p{0.50\textwidth}|p{0.28\textwidth}|}
+	\begin{tabular}{|p{0.12\textwidth}|p{0.60\textwidth}|p{0.15\textwidth}|}
 		\hline
-		\textbf{ID}      & \textbf{Masalah}                                                                                            & \textbf{Dasar Analisis}                                         \\ \hline
-		\texttt{M-TA-01} & Token otorisasi DecMed belum mampu mengekspresikan batasan akses secara granular.                           & Analisis token kapabilitas dan skenario layanan kolaboratif.    \\ \hline
-		\texttt{M-TA-02} & Data RME belum direpresentasikan sebagai objek akses yang tersegmentasi.                                    & Analisis struktur metadata dan data \textit{off-chain}.         \\ \hline
-		\texttt{M-TA-03} & Alur pemberian akses belum mendukung delegasi antaraktor dalam layanan kolaboratif.                         & Analisis alur pemberian akses dan skenario layanan kolaboratif. \\ \hline
-		\texttt{M-TA-04} & Delegasi antaraktor memerlukan mekanisme atenuasi agar hak akses turunan tidak melebihi hak akses induknya. & Implikasi dari kebutuhan delegasi berantai.                     \\ \hline
-		\texttt{M-TA-05} & \textit{Role} \texttt{MedicalPersonnel} terlalu umum untuk membedakan kewenangan baca/tulis antar aktor.    & Analisis kebutuhan akses aktor pada layanan kolaboratif.        \\ \hline
-		\texttt{M-TA-06} & Mekanisme revokasi dan audit akses perlu diperluas agar mencakup akses turunan pada rantai delegasi.        & Implikasi dari delegasi berantai dan kebutuhan akuntabilitas.   \\ \hline
-		\texttt{M-TA-07} & Token akses belum secara eksplisit membuktikan kepemilikan identitas aktor aktif pada setiap permintaan.    & Implikasi keamanan penggunaan token akses pada PRE.             \\ \hline
+		\textbf{ID}      & \textbf{Masalah}                                                                                         & \textbf{Dasar Analisis}                                                    \\ \hline
+		\texttt{M-TA-01} & Token otorisasi DecMed belum mampu mengekspresikan batasan akses secara granular.                        & \ref{subsubsec:keterbatasan-token-kapabilitas-decmed}, T02, T05            \\ \hline
+		\texttt{M-TA-02} & Data RME belum direpresentasikan sebagai objek akses yang tersegmentasi.                                 & \ref{subsubsec:keterbatasan-segmentasi-data-decmed}, T05                   \\ \hline
+		\texttt{M-TA-03} & Alur pemberian akses belum mendukung delegasi antaraktor dalam layanan kolaboratif.                      & \ref{subsubsec:analisis-skenario-layanan-klinis}                           \\ \hline
+		\texttt{M-TA-04} & Delegasi antaraktor memerlukan mekanisme atenuasi.                                                       & \ref{subsubsec:analisis-skenario-layanan-klinis},     T05, T08             \\ \hline
+		\texttt{M-TA-05} & \textit{Role} \texttt{MedicalPersonnel} terlalu umum untuk membedakan kewenangan antar aktor.            & \ref{subsubsec:analisis-skenario-layanan-klinis}, T02, T05                 \\ \hline
+		\texttt{M-TA-06} & Mekanisme revokasi dan audit akses perlu diperluas agar mencakup akses turunan pada rantai delegasi.     & \ref{subsubsec:analisis-mekanisme-penggunaan-dan-revokasi-akses}, T04, T08 \\ \hline
+		\texttt{M-TA-07} & Token akses belum secara eksplisit membuktikan kepemilikan identitas aktor aktif pada setiap permintaan. & \ref{subsubsec:analisis-mekanisme-penggunaan-dan-revokasi-akses}, T01      \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -58,7 +58,6 @@ Kebutuhan fungsional tambahan dirumuskan dari sudut pandang aktor, sama seperti 
 		KF-TA-07    & Perawat dapat membaca data yang relevan dan menulis segmen klinis pemeriksaan awal sesuai cakupan akses.                              \\ \hline
 		KF-TA-08    & Petugas laboratorium dapat membaca data yang relevan dan menulis segmen klinis terkait pemeriksaan laboratorium sesuai cakupan akses. \\ \hline
 		KF-TA-09    & Apoteker dapat membaca data yang relevan dan menulis segmen klinis terkait pelayanan obat sesuai cakupan akses.                       \\ \hline
-		KF-TA-10    & Sistem dapat memverifikasi bukti kepemilikan identitas aktor aktif pada setiap permintaan akses terhadap segmen RME.                  \\ \hline
 	\end{tabular}
 \end{table}
 \FloatBarrier
@@ -70,7 +69,7 @@ KF-TA-02 juga merupakan penyesuaian dari F09 pada Lampiran \ref{lampiran:kebutuh
 \subsubsection{Kebutuhan Nonfungsional}
 \label{subsubsec:kebutuhan-nonfungsional}
 
-Selain kebutuhan fungsional, sistem juga memiliki kebutuhan nonfungsional untuk memastikan bahwa mekanisme kontrol akses granular dan delegasi berantai dapat diterapkan secara aman. Kebutuhan nonfungsional pada Tugas Akhir ini difokuskan pada aspek keamanan, keterlacakan, dan kompatibilitas dengan arsitektur DecMed. Aspek ketersediaan layanan tidak dibahas sebagai kebutuhan utama karena berada di luar fokus Tugas Akhir ini sebagaimana dijelaskan pada pemetaan ancaman STRIDE.
+Selain kebutuhan fungsional, sistem juga memiliki kebutuhan nonfungsional untuk memastikan bahwa mekanisme kontrol akses granular dan delegasi berantai dapat diterapkan secara aman. Kebutuhan nonfungsional pada Tugas Akhir ini difokuskan pada aspek keamanan, keterlacakan, dan kompatibilitas dengan arsitektur DecMed.
 
 \begin{table}[!ht]
 	\centering
@@ -79,15 +78,14 @@ Selain kebutuhan fungsional, sistem juga memiliki kebutuhan nonfungsional untuk 
 	\small
 	\begin{tabular}{|p{2cm}|p{10.5cm}|}
 		\hline
-		\textbf{ID} & \textbf{Deskripsi}                                                                                                                                                                                                                \\
+		\textbf{ID} & \textbf{Deskripsi}                                                                                                                                                              \\
 		\hline
-		KNF-TA-01   & Sistem harus menjaga kerahasiaan data RME dengan memastikan bahwa penerima akses hanya dapat memperoleh \textit{plaintext} dari segmen yang sesuai dengan cakupan otorisasinya.                                                   \\ \hline
-		KNF-TA-02   & Sistem harus menjamin integritas token otorisasi dan batasan akses sehingga perubahan terhadap token atau \textit{caveat} menyebabkan proses verifikasi gagal.                                                                    \\ \hline
-		KNF-TA-03   & Sistem harus menolak permintaan akses apabila token, rantai delegasi, atau bukti identitas aktor aktif tidak valid.                                                                                                               \\ \hline
-		KNF-TA-04   & Sistem harus mendukung keterlacakan akses dan delegasi dengan mencatat informasi aktor, pasien, RME, segmen, aksi, waktu, dan relasi delegasi yang relevan.                                                                       \\ \hline
-		KNF-TA-05   & Sistem harus menerapkan status revokasi sebelum proses pengambilan data dan \textit{re-encryption} dilakukan.                                                                                                                     \\ \hline
-		KNF-TA-06   & Sistem harus memverifikasi keterikatan bukti kepemilikan \textit{wallet} terhadap aktor aktif, token akses, dan konteks permintaan akses.                                                                                         \\ \hline
-		KNF-TA-07   & Mekanisme yang diusulkan harus tetap mengikuti arsitektur dasar DecMed yang menggunakan IOTA sebagai penyimpanan \textit{on-chain}, IPFS sebagai penyimpanan \textit{off-chain}, dan PRE sebagai mekanisme distribusi akses data. \\ \hline
+		KNF-TA-01   & Sistem harus menjaga kerahasiaan data RME dengan memastikan bahwa penerima akses hanya dapat memperoleh \textit{plaintext} dari segmen yang sesuai dengan cakupan otorisasinya. \\ \hline
+		KNF-TA-02   & Sistem menjamin integritas token otorisasi dan batasan akses tidak mungkin diperluas ketika delegasi.                                                                           \\ \hline
+		KNF-TA-03   & Sistem menjamin penolakan permintaan akses jila token, rantai delegasi, atau bukti identitas aktor aktif tidak valid.                                                           \\ \hline
+		KNF-TA-04   & Sistem menyediakan keterlacakan delegasi dengan mencatat informasi delegasi.                                                                                                    \\ \hline
+		KNF-TA-05   & Sistem menjamin penolakan akses untuk hak akses yang dicabut.                                                                                                                   \\ \hline
+		KNF-TA-06   & Sistem harus memverifikasi keterikatan bukti kepemilikan identitas terhadap aktor aktif, token akses, dan konteks permintaan akses.                                             \\ \hline
 	\end{tabular}
 \end{table}
 \FloatBarrier
@@ -105,14 +103,14 @@ Setelah kebutuhan fungsional dan nonfungsional dirumuskan, dilakukan pemetaan an
 	\begin{tabular}{|p{0.15\textwidth}|p{0.35\textwidth}|p{0.38\textwidth}|}
 		\hline
 		\textbf{ID Masalah} & \textbf{Kebutuhan Fungsional}                                              & \textbf{Kebutuhan Nonfungsional}                           \\ \hline
-		\texttt{M-TA-01}    & \texttt{KF-TA-01}, \texttt{KF-TA-04}--\texttt{KF-TA-10}                    & \texttt{KNF-TA-01}, \texttt{KNF-TA-02}, \texttt{KNF-TA-03} \\ \hline
-		\texttt{M-TA-02}    & \texttt{KF-TA-05}, \texttt{KF-TA-07}, \texttt{KF-TA-08}, \texttt{KF-TA-09} & \texttt{KNF-TA-01}, \texttt{KNF-TA-07}                     \\ \hline
-		\texttt{M-TA-03}    & \texttt{KF-TA-01}, \texttt{KF-TA-04}, \texttt{KF-TA-06}                    & \texttt{KNF-TA-04}, \texttt{KNF-TA-07}                     \\ \hline
+		\texttt{M-TA-01}    & \texttt{KF-TA-01}, \texttt{KF-TA-04}--\texttt{KF-TA-09}                    & \texttt{KNF-TA-01}, \texttt{KNF-TA-02}, \texttt{KNF-TA-03} \\ \hline
+		\texttt{M-TA-02}    & \texttt{KF-TA-05}, \texttt{KF-TA-07}, \texttt{KF-TA-08}, \texttt{KF-TA-09} & \texttt{KNF-TA-01}                                         \\ \hline
+		\texttt{M-TA-03}    & \texttt{KF-TA-01}, \texttt{KF-TA-04}, \texttt{KF-TA-06}                    & \texttt{KNF-TA-04}                                         \\ \hline
 		\texttt{M-TA-04}    & \texttt{KF-TA-04}, \texttt{KF-TA-06}                                       & \texttt{KNF-TA-02}, \texttt{KNF-TA-03}                     \\ \hline
 		\texttt{M-TA-05}    & \texttt{KF-TA-05}, \texttt{KF-TA-07}, \texttt{KF-TA-08}, \texttt{KF-TA-09} & \texttt{KNF-TA-01}, \texttt{KNF-TA-03}                     \\ \hline
 		\texttt{M-TA-06}    & \texttt{KF-TA-02}, \texttt{KF-TA-03}                                       & \texttt{KNF-TA-04}, \texttt{KNF-TA-05}                     \\ \hline
-		\texttt{M-TA-07}    & \texttt{KF-TA-10}                                                          & \texttt{KNF-TA-03}, \texttt{KNF-TA-06}                     \\ \hline
+		\texttt{M-TA-07}    & \textit{Tidak ada}                                                         & \texttt{KNF-TA-03}, \texttt{KNF-TA-06}                     \\ \hline
 	\end{tabular}
 \end{table}
 
-Kebutuhan fungsional dan nonfungsional tambahan tersebut menjadi dasar bagi perancangan solusi pada tahap berikutnya. Secara khusus, kebutuhan ini digunakan untuk merancang integrasi Macaroons sebagai mekanisme token otorisasi, menentukan struktur pembatasan akses melalui \textit{caveats}, menyusun skema segmentasi data RME berbasis unit data klinis, merancang alur delegasi berantai antaraktor, serta menentukan batasan keamanan yang harus ditegakkan pada proses verifikasi akses. Dengan demikian, rancangan sistem tidak hanya mempertahankan fungsi dasar DecMed, tetapi juga menambahkan mekanisme kontrol akses yang lebih granular, terbatas, dan sesuai dengan kebutuhan layanan kesehatan kolaboratif.
+Kebutuhan fungsional dan nonfungsional tambahan tersebut menjadi dasar bagi perancangan solusi pada tahap berikutnya.

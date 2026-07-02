@@ -1,19 +1,21 @@
 \subsection{Rancangan Arsitektur Solusi}
 \label{subsec:rancangan-arsitektur-solusi}
 
-Rancangan arsitektur solusi pada subbab ini direferensikan sebagai \texttt{R-TA-01}. Rancangan ini merealisasikan \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, dan \texttt{S-TA-04} untuk menjawab keterbatasan kontrol akses granular, segmentasi data, dan delegasi pada DecMed awal.
+% Rancangan arsitektur solusi pada subbab ini direferensikan sebagai \texttt{R-TA-01}. Rancangan ini merealisasikan \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, dan \texttt{S-TA-04} untuk menjawab keterbatasan kontrol akses granular, segmentasi data, dan delegasi pada DecMed awal.
 
-Arsitektur solusi mempertahankan keseluruhan arsitektur kerangka kerja DecMed. Tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client} tetap berada pada ruang lingkup sebagaimana rancangan DecMed awal. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas rekam medis, dokter, perawat, apoteker dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
+Arsitektur solusi mempertahankan keseluruhan arsitektur kerangka kerja DecMed. Tiga \textit{client} utama DecMed, yaitu \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Ministry Client} tetap ada namun disesuaikan sesuai kebutuhan Tugas Akhir ini. \textit{Patient Client} digunakan pasien untuk menerbitkan token akses awal. \textit{Hospital Client} digunakan oleh petugas rekam medis, dokter, perawat, apoteker dan petugas laboratorium untuk mengakses atau memperbarui data sesuai kewenangannya. \textit{Ministry Client} tetap berada pada ruang lingkup manajemen fasyankes sebagaimana rancangan DecMed awal.
 
-Perubahan utama berada pada \textit{server} PRE, token otorisasi berbasis Macaroons, dan implementasi Move \textit{smart contract}. Pada rancangan ini, token akses diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memvalidasi keaslian token, mengevaluasi seluruh \textit{caveats}, memastikan bahwa permintaan akses sesuai dengan segmen data yang diminta, lalu menjalankan proses \textit{re-encryption} hanya jika semua pemeriksaan berhasil. Implementasi Move \textit{smart contract} disesuaikan untuk menyimpan metadata yang diperlukan oleh mekanisme segmentasi dan kontrol akses.
+Perubahan utama berada pada \textit{server} PRE, token otorisasi berbasis Macaroons, dan implementasi Move \textit{smart contract}. Pada rancangan ini, token akses diganti dengan Macaroon yang membawa daftar \textit{caveats}. Setiap \textit{request} akses data harus menyertakan Macaroon. \textit{Server} PRE kemudian memverifikasi hak akses, lalu menjalankan proses \textit{re-encryption} untuk operasi baca dan enkripsi data ketika operasi tulis. Implementasi Move \textit{smart contract} disesuaikan untuk menyimpan metadata yang diperlukan oleh mekanisme segmentasi dan kontrol akses.
 
-Skema penyimpanan \textit{on-chain} dan \textit{off-chain} disesuaikan agar dapat mendukung kontrol akses granular dan prinsip \textit{need-to-know}. Penyimpanan data pada sistem yang diusulkan dibagi menjadi dua lapisan. Penyimpanan pada lapisan \textit{on-chain} disesuaikan dengan mengubah implementasi dari \textit{smart contract} yang digunakan pada DecMed awal. Sedangkan penyimpanan pada lapisan \textit{off-chain} disesuaikan dengan mengubah mekanisme penyimpanan data yang diproses pada \textit{client}.
+Pada rancangan ini, \textit{server} PRE juga berperan sebagai komponen pembentuk token Macaroon turunan pada proses delegasi. \textit{Client delegator} mengirimkan permintaan atenuasi kepada \textit{server} PRE. \textit{Server} PRE memverifikasi \textit{request} delegasi. Apabila valid, \textit{server} PRE mengembalikan token turunan untuk diproses lebih lanjut oleh \textit{client delegator} untuk dicatat pada penyimpanan \textit{on-chain}.
+
+Skema penyimpanan \textit{on-chain} dan \textit{off-chain} disesuaikan agar dapat mendukung kontrol akses granular sesuai hasil analisis solusi pada Subbab \ref{subsec:analisis-segmentasi-data-rme}. Penyimpanan data pada sistem yang diusulkan dibagi menjadi dua lapisan. Penyimpanan pada lapisan \textit{on-chain} disesuaikan dengan mengubah implementasi dari Move \textit{smart contract}. Sedangkan penyimpanan pada lapisan \textit{off-chain} disesuaikan dengan mengubah mekanisme penyimpanan data yang diproses pada \textit{hospital client}.
 
 Gambaran arsitektur sistem secara keseluruhan dapat dilihat pada gambar \ref{fig:arsitektur-solusi}. Warna merah digunakan untuk merepresentasikan komponen yang diubah dari rancangan DecMed awal. Legenda dari diagram arsitektur ini dapat dilihat pada lampiran \ref{lampiran:legenda-diagram-arsitektur-solusi}.
 
 \begin{figure}[!ht]
-    \centering
-    \includegraphics[width=1\textwidth]{resources/chapter-3/rancangan/decmed_archi_changed.png}
-    \caption{Arsitektur Solusi (Dokumentasi Penulis)}
-    \label{fig:arsitektur-solusi}
+	\centering
+	\includegraphics[width=1\textwidth]{resources/chapter-3/rancangan/decmed_archi_changed.png}
+	\caption{Arsitektur Solusi (Dokumentasi Penulis)}
+	\label{fig:arsitektur-solusi}
 \end{figure}

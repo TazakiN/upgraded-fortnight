@@ -1,26 +1,36 @@
 \section{Metodologi}
 
-Metodologi yang digunakan dalam Tugas Akhir ini terdiri dari empat tahap pelaksanaan, sebagai berikut:
+Terdapat beberapa tahapan untuk melaksanakan tugas akhir secara sistematis,
+berikut merupakan tahapan-tahapan yang dilakukan:
 
 \begin{enumerate}
-	\item \textbf{Studi Literatur dan Analisis Kebutuhan}
-	      \label{subsec:studi-literatur-dan-analisis-kebutuhan}
+	\item \textbf{Studi Literatur}
+	      \label{subsec:studi-literatur}
 
-	      Tahap awal ini berfokus pada pengumpulan fondasi teoretis dan kontekstual melalui studi literatur mendalam mengenai RME, arsitektur DecMed, teknologi DLT (khususnya IOTA), model CapBAC, dan implementasi Macaroons untuk manajemen akses. Selain itu, dilakukan analisis komparatif terhadap penelitian terkait kontrol akses pada sistem RME terdesentralisasi untuk mengidentifikasi kelemahan dan peluang pengembangan dari solusi yang sudah ada, serta analisis regulasi, khususnya Permenkes No. 24 Tahun 2022, untuk memastikan kerangka kerja yang diusulkan sejalan dengan kebutuhan hukum di Indonesia. Tahap ini diakhiri dengan perumusan kebutuhan fungsional dan nonfungsional sistem berdasarkan hasil studi dan analisis tersebut.
+	      Tahap awal berfokus pada pengumpulan fondasi teoretis dan kontekstual melalui studi literatur.
 
-	\item \textbf{Perancangan Arsitektur dan Model Kontrol Akses}
+	\item \textbf{Analisis Kebutuhan}
+	      \label{subsec:analisis-kebutuhan}
+
+	      Tahap ini membahas analisis untuk mendefinisikan kekurangan pada kerangka kerja DecMed. Kekurangan tersebut diinterpretasikan sebagai masalah dan didefinisikan menjadi kebutuhan. Tahap ini diakhiri dengan perumusan kebutuhan fungsional dan nonfungsional sistem.
+
+	\item \textbf{Analisis dan Rancangan Solusi}
 	      \label{subsec:perancangan-arsitektur-dan-model-kontrol-akses}
 
-	      Berdasarkan analisis kebutuhan, tahap selanjutnya berfokus pada perancangan teknis sistem, yang dimulai dengan merancang arsitektur sistem RME terdesentralisasi yang dikembangkan dari arsitektur DecMed. Perancangan ini juga mencakup model kontrol akses berbasis Macaroons secara rinci, termasuk mendefinisikan struktur \textit{caveats} untuk granularitas akses, serta mendesain \textit{workflow} untuk proses-proses kunci seperti penerbitan token awal, \textit{attenuation} oleh pemegang akses, dan verifikasi token oleh PRE.
+	      Tahap ini membahas alternatif solusi yang dapat digunakan untuk mengatasi masalah pada kerangka kerja DecMed. Solusi yang terpilih kemudian direncanakan menjadi rancangan solusi.
 
 	\item \textbf{Implementasi Prototipe}
 	      \label{subsec:implementasi-prototipe}
 
-	      Tahap ini merupakan realisasi dari rancangan ke dalam bentuk prototipe fungsional. Kegiatan dimulai dengan konfigurasi lingkungan pengembangan, termasuk penyiapan \textit{node} IOTA (atau simulasinya) dan IPFS. Selanjutnya dilakukan pengembangan \textit{services} inti yang mencakup logika untuk membuat, mengatenuasi, dan memverifikasi Macaroons, serta implementasi \textit{business logic} untuk menangani skenario akses (misalnya, pasien ke dokter, dokter ke petugas laboratorium). Seluruh komponen kemudian diintegrasikan menjadi satu prototipe yang kohesif.
+	      Tahap ini merupakan realisasi dari rancangan ke dalam bentuk pengembangan dari prototipe DecMed yang sudah ada.
 
-	\item \textbf{Pengujian dan Evaluasi Fungsional}
-	      \label{subsec:pengujian-dan-evaluasi-fungsional}
+	\item \textbf{Pengujian}
+	      \label{subsec:pengujian}
 
-	      Tahap akhir bertujuan untuk memvalidasi fungsionalitas sistem melalui pengujian fungsional guna memverifikasi bahwa semua \textit{workflow} yang dirancang berjalan sesuai ekspektasi. Simulasi berbagai skenario akses dilakukan dengan fokus utama pada pengujian mekanisme delegasi untuk memvalidasi efektivitas dan keamanan model kontrol akses. Hasil pengujian kemudian dianalisis untuk menilai keberhasilan prototipe dalam mengatasi tantangan delegasi akses granular, serta pemenuhan tujuan penelitian.
+	      Tahap ini merupakan tahapan untuk menguji prototipe dapat memenuhi kebutuhan sistem sesuai dengan skenario pengujian yang ditentukan.
 
+	\item \textbf{Evaluasi}
+	      \label{subsec:evaluasi}
+
+	      Tahap ini merupakan tahapan untuk mengevaluasi prototipe berdasarkan hasil pengujian, yang menjadi dasar dari kesimpulan dan memberikan saran untuk penelitian selanjutnya.
 \end{enumerate}

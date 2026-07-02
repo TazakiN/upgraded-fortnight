@@ -1,0 +1,133 @@
+\chapter{Contoh \textit{Caveat} Token Macaroon untuk Setiap Tahapan}
+\label{lampiran:contoh-caveat-macaroon}
+
+Lampiran ini menyajikan contoh \textit{caveat} token Macaroon pada setiap tahapan alur pemberian akses, mulai dari penerbitan token awal oleh pasien hingga rangkaian delegasi yang dilakukan oleh tenaga medis. Nilai alamat \textit{wallet} (\texttt{0xPASIEN}, \texttt{0xPETUGAS\_RM}, \texttt{0xDOKTER}, \texttt{0xPERAWAT}, \texttt{0xLAB}, \texttt{0xAPOTEKER}), \texttt{hospital-001}, dan \texttt{RME-001} hanya bersifat ilustratif. Pada implementasi, nilai-nilai tersebut akan berbeda tergantung pada alamat \textit{wallet} pemegang token serta ID RME yang di-\textit{generate}. Simbol titik tiga (\texttt{...}) adalah bentuk ilustrasi yang digunakan untuk menunjukkan bahwa token dapat memiliki lebih banyak nilai lainnya selain yang dituliskan.
+
+\section*{Penerbitan Awal: Pasien $\rightarrow$ Petugas Rekam Medis}
+\label{subsec:contoh-caveat-token-macaroon-penerbitan-awal}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Token \texttt{Read} Awal untuk Petugas Rekam Medis}, label={lst:contoh-token-baca-awal-rekam-medis}]
+purpose = Read
+patient_address = 0xPASIEN
+root_subject = 0xPETUGAS_RM
+hospital_cid = hospital-001
+
+read_dataset_in = [RAWAT_JALAN, RAWAT_INAP, LABORATORIUM, APOTEK]
+
+read_function_in = [
+  ADMINISTRATIVE_GENERAL,
+  ANAMNESIS,
+  PEMERIKSAAN_FISIK,
+  PEMERIKSAAN_PSIKOLOGIS,
+  ...
+]  // seluruh 15 fungsi
+
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 2
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Token \texttt{Update} Awal untuk Petugas Rekam Medis}, label={lst:contoh-token-pembaruan-awal-rekam-medis}]
+purpose = Update
+patient_address = 0xPASIEN
+root_subject = 0xPETUGAS_RM
+related_rme_id = RME-001
+hospital_cid = hospital-001
+
+write_dataset_in = [RAWAT_JALAN, LABORATORIUM, APOTEK]
+
+write_function_in = [
+  ... // union fungsi dari ketiga dataset di atas
+]
+
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 2
+\end{lstlisting}
+
+\section*{Delegasi: Petugas Rekam Medis $\rightarrow$ Dokter}
+\label{subsec:contoh-caveat-token-macaroon-delegasi-dokter}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Delegasi Petugas Rekam Medis $\rightarrow$ Dokter}, label={lst:contoh-token-delegasi-dokter}]
+parent_token_hash = <sha256(parent)>
+delegated_by = 0xPETUGAS_RM
+delegated_to = 0xDOKTER
+
+read_dataset_in = [RAWAT_JALAN, RAWAT_INAP, LABORATORIUM, APOTEK]
+write_dataset_in = [RAWAT_JALAN, LABORATORIUM, APOTEK]
+
+read_function_in = [
+  ... // semua 15 fungsi
+]
+write_function_in = [
+  ... // 14 fungsi, ADMINISTRATIVE_GENERAL dihapus
+]
+
+related_rme_id = RME-001
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 1
+\end{lstlisting}
+
+\section*{Delegasi: Petugas Rekam Medis $\rightarrow$ Perawat}
+\label{subsec:contoh-caveat-token-macaroon-delegasi-perawat}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Delegasi Petugas Rekam Medis $\rightarrow$ Perawat}, label={lst:contoh-token-delegasi-perawat}]
+parent_token_hash = <sha256(parent)>
+delegated_by = 0xPETUGAS_RM
+delegated_to = 0xPERAWAT
+
+read_dataset_in = [RAWAT_JALAN]
+write_dataset_in = [RAWAT_JALAN]
+
+read_function_in = [
+  ADMINISTRATIVE_GENERAL, 
+  ANAMNESIS, 
+  PEMERIKSAAN_FISIK]
+write_function_in = [ANAMNESIS, PEMERIKSAAN_FISIK]
+
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 1
+\end{lstlisting}
+
+\section*{Delegasi: Dokter $\rightarrow$ Petugas Laboratorium}
+\label{subsec:contoh-caveat-token-macaroon-delegasi-lab}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Delegasi Dokter $\rightarrow$ Petugas Laboratorium}, label={lst:contoh-token-delegasi-lab}]
+parent_token_hash = <sha256(token_dokter)>
+delegated_by = 0xDOKTER
+delegated_to = 0xLAB
+
+read_dataset_in = [LABORATORIUM]
+write_dataset_in = [LABORATORIUM]
+
+read_function_in = [
+  ADMINISTRATIVE_GENERAL, 
+  PEMERIKSAAN_PENUNJANG, 
+  LABORATORIUM]
+write_function_in = [LABORATORIUM]
+
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 0
+\end{lstlisting}
+
+\section*{Delegasi: Dokter $\rightarrow$ Apoteker}
+\label{subsec:contoh-caveat-token-macaroon-delegasi-apoteker}
+
+\begin{lstlisting}[caption={Contoh \textit{Caveat} Delegasi Dokter $\rightarrow$ Apoteker}, label={lst:contoh-token-delegasi-apoteker}]
+parent_token_hash = <sha256(token_dokter)>
+delegated_by = 0xDOKTER
+delegated_to = 0xAPOTEKER
+
+read_dataset_in = [RAWAT_JALAN, APOTEK]
+write_dataset_in = [APOTEK]
+
+read_function_in = [
+  ADMINISTRATIVE_GENERAL,
+  RIWAYAT_PENGGUNAAN_OBAT,
+  TERAPI,
+  PERESEPAN,
+  DISPENSING
+]
+write_function_in = [PERESEPAN, DISPENSING]
+
+expires_before = 2026-05-16T18:00:00
+max_delegation_depth = 0
+\end{lstlisting}

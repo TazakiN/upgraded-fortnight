@@ -1,11 +1,84 @@
-\section{Ease of Use}
+\section{Background and Related Work}
+\label{sec:background}
 
-\subsection{Maintaining the Integrity of the Specifications}
+\subsection{Capability-Based Authorization and Attenuation}
 
-The IEEEtran class file is used to format your paper and style the text. All margins,
-column widths, line spaces, and text fonts are prescribed; please do not
-alter them. You may note peculiarities. For example, the head margin
-measures proportionately more than is customary. This measurement
-and others are deliberate, using specifications that anticipate your paper
-as one part of the entire proceedings, and not as an independent document.
-Please do not revise any of the current designations.
+Capability-Based Access Control (CapBAC) represents authority as a token that identifies permitted operations over a resource; possession of a valid capability is evaluated by the resource-side verifier \cite{li2022capability}. Granularity therefore depends on both the token vocabulary and the protected resource model. A token may distinguish operations and contexts, but that distinction is ineffective if the storage layer exposes only an entire record. Conversely, segmented storage does not prevent excessive access unless requests are checked against an authorization scope.
+
+A Macaroon is a bearer authorization credential whose signature is extended whenever a first-party caveat is appended \cite{birgisson2014macaroons}. For root key $K$, identifier $id$, and caveats $c_i$, the signature chain is
+\begin{equation}
+	s_0=\operatorname{HMAC}(K,id),\qquad
+	s_i=\operatorname{HMAC}(s_{i-1},c_i).
+	\label{eq:macaroon-chain}
+\end{equation}
+A holder can therefore add a restriction without learning $K$ or removing prior caveats. Verification recomputes the chain and evaluates every caveat. This append-only property is useful for delegation because a child credential can retain all parent restrictions and add narrower ones.
+
+JWT and PASETO can carry static authorization claims, but neither format provides holder-driven attenuation as a built-in operation \cite{jones2015jwt,arciszewski2022paseto}. Biscuit supports offline attenuation and a rule language, but that language and its public-key verification model exceeded the direct attribute checks required by the DecMed prototype \cite{biscuitsec}. The choice of Macaroons in this work is thus an architectural fit: caveats encode direct constraints, and the PRE Server remains the single verification and enforcement point.
+
+\subsection{DecMed Context and Research Gap}
+
+DecMed stores encrypted medical data in IPFS and records references and access state on IOTA; Umbral PRE transforms key material for an authorized recipient without exposing plaintext to the proxy \cite{sadewa2025decmed,benet2014ipfs,nunez2017umbral}. This separates bulk encrypted data from verifiable metadata, but the previous access unit and token claims remained coarse.
+
+Related EMR studies address complementary parts of this problem. Singh \emph{et al.} combine role- and attribute-based controls to obtain contextual blockchain authorization \cite{singh2025granular}. Liu and Chen place role, identity, policy, and data-volume checks in a layered blockchain model \cite{liu2025accesscontrol}. Amaracitra and Alamsyah use a composable-NFT hierarchy to represent medical-record, diagnosis, laboratory, and pharmacy units separately \cite{amaracitra2025composable}. These approaches motivate contextual policy and data decomposition, but they do not resolve the combined DecMed requirement of a patient-authorized root capability, segment-level PRE enforcement, and attenuated clinician-to-clinician delegation.
+
+Outside healthcare, dCache demonstrates that Macaroons can constrain storage operations, paths, network context, and time windows and can be shared after adding caveats \cite{dcache_macaroons}. This use confirms the practicality of caveat-based attenuation in distributed storage, while leaving healthcare-specific actor authority, patient episodes, revocation chains, and wallet-bound requests to the present design.
+
+\section{Problem Analysis and Proposed Approach}
+\label{sec:approach}
+
+\subsection{Baseline Limitations and Requirements}
+
+The previous DecMed JWT contained only \texttt{address}, \texttt{role}, and \texttt{purpose}, where the role was administrative or medical personnel and the purpose was read or update. It could not state a permitted dataset, clinical function, episode, expiry, or delegation depth. The medical role also did not distinguish physicians, nurses, laboratory personnel, and pharmacists. These actors have different write authority even when they participate in the same care episode.
+
+The off-chain record compounded this limitation. One on-chain \texttt{PatientMedicalMetadata} entry referenced a comparatively large encrypted clinical object. Granting PRE processing for that object could expose more plaintext than a task required. Filtering at the client would be too late because the client would already possess the decrypted record. The enforceable resource must instead be selected before retrieval and re-encryption.
+
+Finally, the prior grant flow ran from patient to one healthcare worker and provided neither parent--child delegation nor derived-token audit. A valid-looking bearer token also did not prove that the requester controlled the wallet represented by the active identity. The resulting requirements were to (1) align token scope with segmented data, (2) distinguish read and write authority by actor and context, (3) make every derived scope monotonically no broader than its parent, (4) bind use and delegation to wallet signatures, and (5) extend revocation and audit across a delegation chain.
+
+\subsection{Segmented Record Model}
+
+The proposed model segments clinical data before encryption and storage. The implemented \texttt{dataset\_category} values are \texttt{RAWAT\_JALAN} (outpatient), \texttt{RAWAT\_INAP} (inpatient), \texttt{LABORATORIUM}, and \texttt{APOTEK} (pharmacy), following the available Indonesian EMR metadata guideline \cite{kemenkes1423-2022}. Fifteen \texttt{function\_category} values refine those datasets, including administrative-general data, anamnesis, physical and psychological examinations, diagnosis, therapy, supporting examinations, laboratory data, prescribing, and dispensing. Inpatient data additionally includes discharge planning.
+
+One on-chain metadata entry refers to one encrypted off-chain segment. Metadata includes the segment and episode identifiers, patient and author wallets, hospital identifier, both categories, IPFS content identifier, ciphertext integrity hash, PRE capsule, encrypted key material, and creation time. The corresponding IPFS object contains the same contextual identifiers and the encrypted payload. This design selects an authorized segment using metadata before the PRE path can yield decryptable material.
+
+Category caveats are complemented by institutional authority. For writes, nurses are limited to initial-examination functions in outpatient or inpatient datasets; physicians can write clinical functions for the current encounter; laboratory personnel write the laboratory dataset; and pharmacists write prescribing or dispensing data in the pharmacy dataset. Administrative personnel can create only \texttt{ADMINISTRATIVE\_GENERAL} segments. The token scope and on-chain role/subrole check must both permit the operation.
+
+\subsection{Macaroon Capability and Delegation Model}
+
+Table~\ref{tab:caveats} groups the implemented caveats by the decision they support. DecMed retains separate read and update tokens. \texttt{related\_rme\_id} binds an update token to one care episode; a read token may cover historical segments only within its category scope. The prototype limits the root delegation depth to two, corresponding to patient-to-records-personnel issuance followed by at most two clinician delegation levels.
+
+\begin{table*}[t]
+	\caption{Implemented Macaroon Caveats and Their Enforcement}
+	\label{tab:caveats}
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}p{0.15\textwidth}p{0.31\textwidth}p{0.48\textwidth}@{}}
+		\toprule
+		\textbf{Decision dimension}                                                                                        & \textbf{Caveats} & \textbf{Enforced constraint} \\
+		\midrule
+		Resource and operation                                                                                             &
+		\texttt{purpose}, \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{hospital\_cid}                     &
+		Restricts a read/update token to the patient, current episode where applicable, and issuing hospital.                                                                \\
+		Data scope                                                                                                         &
+		\texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, \texttt{write\_function\_in} &
+		Whitelists dataset/function pairs; repeated caveats are combined by intersection.                                                                                    \\
+		Delegation chain                                                                                                   &
+		\texttt{root\_subject}, \texttt{delegated\_by}, \texttt{delegated\_to}, \texttt{parent\_token\_hash}               &
+		Identifies the initial holder, ordered delegation steps, active subject, and parent token used for chain validation and revocation.                                  \\
+		Time and depth                                                                                                     &
+		\texttt{expires\_before}, \texttt{max\_delegation\_depth}                                                          &
+		Uses the earliest expiry and prevents a child from extending validity or increasing remaining depth.                                                                 \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+For caveat sets $D_i$ and $F_i$ and expiration values $t_i$, the PRE Server derives the effective capability as
+\begin{equation}
+	D_{\mathrm{eff}}=\bigcap_i D_i,\quad
+	F_{\mathrm{eff}}=\bigcap_i F_i,\quad
+	t_{\mathrm{eff}}=\min_i t_i .
+	\label{eq:effective-capability}
+\end{equation}
+An attenuation request is accepted only if every requested dataset and function is a subset of the parent's effective scope, the child expiry does not exceed $t_{\mathrm{eff}}$, and depth does not increase. A \texttt{parent\_token\_hash} is appended with each child so that verification can inspect revocation keys for both the presented token and its ancestors.
+
+Although Macaroons permit local caveat addition, this implementation asks the PRE Server to validate and produce the attenuated result. A client is not trusted to decide whether its requested scope is legitimate. The request includes a wallet-signed delegation context; PRE authenticates the parent, computes its effective capability and delegation chain, checks Redis revocation state, and consults the IOTA access snapshot before returning a child token. This mediation preserves attenuation semantics while making PRE an explicit policy-enforcement and trust boundary.

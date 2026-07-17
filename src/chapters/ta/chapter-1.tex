@@ -18,9 +18,9 @@ Berdasarkan latar belakang yang telah diuraikan pada subbab \ref{sec:latarbelaka
 
 Tujuan dari Tugas Akhir ini adalah:
 \begin{enumerate}
-	\item Merancang dan menerapkan kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan teknologi Macaroons.
-	\item Merancang dan menerapkan segmentasi data yang mendukung penegakan kontrol akses granular pada DecMed.
-	\item Merancang dan menerapkan fitur atenuasi \textit{offline} untuk memfasilitasi pendelegasian hak akses antar tenaga medis tanpa memerlukan intervensi langsung dari pasien.
+	\item Kontrol akses berbasis kebijakan (PBAC) dirancang dan diterapkan pada kerangka kerja DecMed agar keputusan akses mencakup aktor, objek, hak akses, dan kondisi secara lebih luas.
+	\item Segmentasi data yang mendukung penegakan kontrol akses pada DecMed dirancang dan diterapkan.
+	\item Fitur atenuasi \textit{offline} dirancang dan diterapkan untuk memfasilitasi pendelegasian hak akses antar tenaga medis tanpa memerlukan intervensi langsung dari pasien.
 \end{enumerate}
 
 \section{Batasan Masalah}
@@ -28,6 +28,8 @@ Tujuan dari Tugas Akhir ini adalah:
 Terdapat beberapa batasan masalah dari Tugas Akhir ini. Batasan masalah tersebut antara lain:
 
 \begin{enumerate}
+	\item Kajian dan pengembangan hanya mencakup implementasi kerangka kerja DecMed.
+	\item Masalah terkait \textit{performance} dan \textit{availability} tidak termasuk ke dalam kajian dan skenario uji.
 	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor dokter, perawat, petugas laboratorium, dan apoteker pada alur Rawat Jalan dan Rawat Inap.
 	\item Data RME pada dataset Instalasi Gawat Darurat (IGD) tidak termasuk dalam kajian rancangan dan implementasi.
 	\item Segmentasi data RME hanya dilakukan untuk dokumentasi klinis. Dokumentasi administratif tidak termasuk ke dalam fokus Tugas Akhir ini dan hanya diimplementasikan sesuai dengan implementasi DecMed sebelumnya.

@@ -5,7 +5,7 @@
 
 Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Setiap segmen data RME disimpan sebagai satu entri metadata pada penyimpanan \textit{on-chain} dan satu objek data pada penyimpanan \textit{off-chain}.
 
-Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan untuk kontrol akses granular data RME yang diakses. Implementasi \texttt{DatasetCategory} ditunjukkan pada Kode \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Kode \ref{lst:implementasi-function-category-segmentasi-rme}.
+Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan sebagai atribut objek dalam penegakan kebijakan akses terhadap data RME. Rincian modul dan implementasi pada \textit{crate} \texttt{decmed-rme-segment} disajikan pada Lampiran \ref{lampiran:implementasi-crate-decmed-rme-segment}. Implementasi \texttt{DatasetCategory} ditunjukkan pada Kode \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Kode \ref{lst:implementasi-function-category-segmentasi-rme}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi \texttt{DatasetCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-dataset-category-segmentasi-rme}]
 	pub enum DatasetCategory {
@@ -15,6 +15,8 @@ Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-seg
 		APOTEK,
 	}
 \end{lstlisting}
+
+Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat pada \textit{function category} \texttt{PERENCANAAN\_PEMULANGAN}. Segmen data ini hanya ada pada \textit{dataset category} \texttt{RAWAT\_INAP}, sedangkan pada \textit{dataset category} \texttt{RAWAT\_JALAN} tidak ada. Selain itu, \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL} ada pada setiap \textit{dataset category}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi \texttt{FunctionCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-function-category-segmentasi-rme}]
 	pub enum FunctionCategory {
@@ -44,8 +46,6 @@ Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-seg
 		DISPENSING,
 	}
 \end{lstlisting}
-
-Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat pada \textit{function category} \texttt{PERENCANAAN\_PEMULANGAN}. Segmen data ini hanya ada pada \textit{dataset category} \texttt{RAWAT\_INAP}, sedangkan pada \textit{dataset category} \texttt{RAWAT\_JALAN} tidak ada. Selain itu, \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL} ada pada setiap \textit{dataset category}.
 
 \subsubsection{Implementasi Segmentasi Metadata RME pada Penyimpanan \textit{On-Chain}}
 \label{subsec:implementasi-segmentasi-metadata-rme-onchain}
@@ -91,7 +91,7 @@ pub struct RmeSegmentData {
 }
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. \texttt{dataset\_category} dan \texttt{function\_category} digunakan untuk kontrol akses granular data RME. atribut tersebut memiliki nilai sesuai dengan Kode \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen.\texttt{service\_date} merupakan tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} beserta informasi \textit{timezone}. \texttt{payload} berisi konten utama segmen dengan tipe data \texttt{Value}. Pada implementasi ini, \texttt{payload} berisi data dalam bentuk \texttt{text}. \texttt{payload\_hash} merupakan hash integritas dari konten \texttt{payload}.
+\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. \texttt{dataset\_category} dan \texttt{function\_category} digunakan sebagai atribut objek untuk penegakan kebijakan akses terhadap data RME. Atribut tersebut memiliki nilai sesuai dengan Kode \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{service\_date} merupakan tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} beserta informasi \textit{timezone}. \texttt{payload} berisi konten utama segmen dengan tipe data \texttt{Value}. Pada implementasi ini, \texttt{payload} berisi data dalam bentuk \texttt{text}. \texttt{payload\_hash} merupakan hash integritas dari konten \texttt{payload}.
 
 % \texttt{payload\_hash} dihitung dari isi \texttt{payload} sebelum enkripsi, sedangkan \texttt{integrity\_hash} dihitung dari data segmen terenkripsi yang disimpan di IPFS. Dengan demikian, \texttt{payload\_hash} digunakan untuk integritas isi segmen sebelum enkripsi, sedangkan \texttt{integrity\_hash} digunakan untuk memverifikasi kesesuaian \textit{ciphertext} IPFS dengan metadata pada IOTA.
 

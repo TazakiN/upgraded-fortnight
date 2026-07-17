@@ -1,0 +1,116 @@
+\chapter{Pengujian dan Evaluasi Kebutuhan Sistem}
+\label{lampiran:pengujian-dan-evaluasi-kebutuhan-sistem}
+
+\section{Pengujian Kebutuhan Fungsional}
+
+Tabel berikut menyajikan rincian pengujian kebutuhan fungsional pada alur Rawat Jalan dan Rawat Inap.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{|p{0.12\textwidth}|p{0.32\textwidth}|p{0.28\textwidth}|p{0.12\textwidth}|}
+	\caption{Pengujian Kebutuhan Fungsional pada Alur Rawat Jalan dan Rawat Inap}
+	\label{tab:pengujian-kebutuhan-fungsional}                                                                                                 \\
+	\hline
+	\textbf{ID}                                                                        & \textbf{Skenario} & \textbf{Ekspektasi} & \textbf{KF} \\ \hline
+	\endfirsthead
+
+	\caption[]{Pengujian Kebutuhan Fungsional pada Alur Rawat Jalan dan Rawat Inap (lanjutan)}                                                 \\
+	\hline
+	\textbf{ID}                                                                        & \textbf{Skenario} & \textbf{Ekspektasi} & \textbf{KF} \\ \hline
+	\endhead
+
+	\texttt{P-KF-01}                                                                   &
+	Pasien memberikan akses awal kepada petugas RM sesuai konteks episode pelayanan.   &
+	Token awal episode pelayanan berhasil diterbitkan.                                 &
+	\texttt{KF-TA-01}                                                                                                                          \\ \hline
+	\texttt{P-KF-02}                                                                   &
+	Petugas RM mendelegasikan akses pemeriksaan awal kepada perawat.                   &
+	Token turunan perawat berhasil dibuat.                                             &
+	\texttt{KF-TA-04}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-03}                                                                   &
+	Petugas RM mendelegasikan akses klinis kepada dokter.                              &
+	Token turunan dokter berhasil dibuat.                                              &
+	\texttt{KF-TA-04}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-04}                                                                   &
+	Perawat mengisi hasil pemeriksaan awal.                                            &
+	Data pemeriksaan awal berhasil disimpan.                                           &
+	\texttt{KF-TA-07}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-05}                                                                   &
+	Dokter membaca pemeriksaan awal dan mengisi data klinis.                           &
+	Data klinis berhasil dibaca dan disimpan.                                          &
+	\texttt{KF-TA-05}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-06}                                                                   &
+	Dokter mendelegasikan akses laboratorium.                                          &
+	Token turunan laboratorium berhasil dibuat.                                        &
+	\texttt{KF-TA-06}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-07}                                                                   &
+	Petugas laboratorium membaca pemeriksaan penunjang dan mengisi hasil laboratorium. &
+	Data pemeriksaan penunjang berhasil dibaca dan hasil laboratorium disimpan.        &
+	\texttt{KF-TA-08}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-08}                                                                   &
+	Dokter membaca hasil laboratorium.                                                 &
+	Hasil laboratorium berhasil dibaca oleh dokter.                                    &
+	\texttt{KF-TA-05}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-09}                                                                   &
+	Dokter mendelegasikan akses apotek.                                                &
+	Token turunan apoteker berhasil dibuat.                                            &
+	\texttt{KF-TA-06}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-10}                                                                   &
+	Apoteker membaca resep dan mengisi status pelayanan obat.                          &
+	Data resep dan pelayanan obat berhasil diproses.                                   &
+	\texttt{KF-TA-09}                                                                                                                          \\ \hline
+
+	\texttt{P-KF-11}                                                                   &
+	Pasien membuka riwayat delegasi episode pelayanan.                                 &
+	Riwayat delegasi episode pelayanan ditampilkan.                                    &
+	\texttt{KF-TA-03}                                                                                                                          \\ \hline
+	\texttt{P-KF-12}                                                                   &
+	Pasien merevokasi salah satu akses delegasi episode pelayanan.                     &
+	Aktor \textit{delegatee} tidak bisa mengakses data RME pasien lagi.                &
+	\texttt{KF-TA-02}                                                                                                                          \\ \hline
+\end{longtable}
+\endgroup
+
+\section{Evaluasi Kebutuhan Sistem}
+
+Tabel berikut menyajikan pemetaan kebutuhan sistem terhadap implementasi dan pengujian.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{|p{0.14\textwidth}|p{0.32\textwidth}|p{0.30\textwidth}|p{0.14\textwidth}|}
+	\caption{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian}
+	\label{tab:evaluasi-kebutuhan-sistem}                                                                                                                                    \\
+	\hline
+	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                        & \textbf{Pengujian Terkait}                                                 & \textbf{Status} \\ \hline
+	\endfirsthead
+	\caption[]{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian (lanjutan)}                                                                                     \\
+	\hline
+	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                        & \textbf{Pengujian Terkait}                                                 & \textbf{Status} \\ \hline
+	\endhead
+	\texttt{KF-TA-01}  & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-05} & \texttt{P-KF-01}                                                           & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-02}  & \texttt{I-TA-03}, \texttt{I-TA-04}, \texttt{I-TA-05} & \texttt{P-KF-12}, \texttt{P-KNF-11}, \texttt{P-KNF-12}                     & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-03}  & \texttt{I-TA-04}, \texttt{I-TA-05}                   & \texttt{P-KF-11}                                                           & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-04}  & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06} & \texttt{P-KF-02}, \texttt{P-KF-03}                                         & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-05}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KF-05}, \texttt{P-KF-08}                                         & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-06}  & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06} & \texttt{P-KF-06}, \texttt{P-KF-09}                                         & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-07}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KF-04}                                                           & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-08}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KF-07}                                                           & Terpenuhi.      \\ \hline
+	\texttt{KF-TA-09}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KF-10}                                                           & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-01} & \texttt{I-TA-01}, \texttt{I-TA-02}, \texttt{I-TA-03} & \texttt{P-KNF-01}, \texttt{P-KNF-02}                                       & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-02} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KNF-03}, \texttt{P-KNF-04}, \texttt{P-KNF-05}, \texttt{P-KNF-06} & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-03} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{P-KNF-07}, \texttt{P-KNF-08}, \texttt{P-KNF-09}                    & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-04} & \texttt{I-TA-04}, \texttt{I-TA-05}, \texttt{I-TA-06} & \texttt{P-KF-11}, \texttt{P-KNF-10}                                        & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-05} & \texttt{I-TA-03}, \texttt{I-TA-05}                   & \texttt{P-KNF-11}, \texttt{P-KF-12}, \texttt{P-KNF-12}                     & Terpenuhi.      \\ \hline
+	\texttt{KNF-TA-06} & \texttt{I-TA-03}, \texttt{I-TA-06}                   & \texttt{P-KNF-09}, \texttt{P-KNF-13}                                       & Terpenuhi.      \\ \hline
+\end{longtable}
+\endgroup

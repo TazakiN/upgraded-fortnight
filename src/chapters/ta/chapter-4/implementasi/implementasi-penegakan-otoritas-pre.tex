@@ -2,9 +2,9 @@
 \label{subsec:implementasi-penegakan-otoritas-pre}
 
 % Implementasi penegakan otoritas pada \textit{Server} PRE merupakan realisasi dari \texttt{R-TA-05}, \texttt{R-TA-06}, dan sebagian \texttt{R-TA-07} melalui komponen \texttt{I-TA-03}. 
-Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi berlapis sebelum operasi terhadap data RME dijalankan. Secara umum, mekanisme ini memastikan bahwa setiap \textit{request} yang membutuhkan otorisasi membawa Macaroon yang valid, belum kedaluwarsa, belum dicabut, sesuai dengan cakupan akses yang diminta, dan digunakan oleh aktor aktif yang sah.
+Penegakan otoritas pada \textit{Server} PRE diimplementasikan sebagai tahap validasi berlapis sebelum operasi terhadap data RME dijalankan. Secara umum, mekanisme ini memastikan bahwa setiap \textit{request} yang membutuhkan otorisasi membawa Macaroon yang valid, belum kedaluwarsa, belum dicabut, sesuai dengan cakupan akses yang diminta, dan digunakan oleh salah satu aktor yang tercatat pada rantai delegasi.
 
-Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai referensi pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre}. Bagian awal alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-a} mencakup autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Kelanjutan alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-b} mencakup validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA. Status implementasi penegakan otoritas pada \textit{Server} PRE disajikan pada Tabel \ref{tab:status-implementasi-penegakan-otoritas-pre}.
+Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai referensi pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre}. Bagian awal alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-a} mencakup autentikasi token, perhitungan \textit{effective capability}, pembentukan \textit{delegation chain}, dan pemeriksaan revokasi. Kelanjutan alur pada Gambar \ref{fig:alur-penegakan-otoritas-pre-b} mencakup validasi \textit{role} dan \textit{subrole}, validasi konteks segmen, verifikasi bukti kepemilikan \textit{wallet}, serta eksekusi operasi PRE, IPFS, dan IOTA. Daftar endpoint REST API yang digunakan pada \textit{Server} PRE disajikan pada Lampiran \ref{lampiran:implementasi-rest-api-pre}. Status implementasi penegakan otoritas pada \textit{Server} PRE disajikan pada Tabel \ref{tab:status-implementasi-penegakan-otoritas-pre}.
 
 \begin{table}[!ht]
 	\centering
@@ -18,11 +18,11 @@ Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai 
 		Validasi \textit{chained-HMAC} pada token Macaroon                                        & Terimplementasi. \\ \hline
 		\textit{Parsing} \textit{caveats} pada token Macaroon                                     & Terimplementasi. \\ \hline
 		Perhitungan \texttt{EffectiveCapability}                                                  & Terimplementasi. \\ \hline
-		Penentuan aktor aktif melalui \texttt{DelegationChain}                                    & Terimplementasi. \\ \hline
+		Pembentukan himpunan subjek rantai melalui \texttt{DelegationChain}                       & Terimplementasi. \\ \hline
 		Pemeriksaan revokasi token melalui Redis                                                  & Terimplementasi. \\ \hline
 		Pemeriksaan \textit{role} dan \textit{subrole} aktor melalui \textit{Move Smart Contract} & Terimplementasi. \\ \hline
 		Validasi aksi baca dan tulis terhadap cakupan \textit{dataset} dan \textit{function}      & Terimplementasi. \\ \hline
-		Verifikasi \textit{wallet signature} terhadap aktor aktif dan konteks akses segmen        & Terimplementasi. \\ \hline
+		Verifikasi \textit{wallet signature} terhadap subjek rantai dan konteks akses segmen      & Terimplementasi. \\ \hline
 		% Verifikasi bukti delegasi melalui \texttt{x-decmed-delegation-signature}                  & Terimplementasi. \\ \hline
 	\end{tabular}
 \end{table}
@@ -30,7 +30,7 @@ Alur implementasi penegakan otoritas pada \textit{Server} PRE disajikan sebagai 
 \subsubsection{Autentikasi Token Macaroon}
 \label{subsec:autentikasi-token-macaroon}
 
-Tahap awal validasi dilakukan pada \textit{middleware} PRE. \textit{Middleware} membaca token Macaroon dari \textit{header} \texttt{Authorization} dengan skema \texttt{Bearer}, melakukan deserialisasi token, mem-parsing \textit{caveats} DecMed, serta memverifikasi keaslian token menggunakan mekanisme \textit{chained-HMAC} dengan \texttt{RootKey} PRE. Apabila token tidak dapat dideserialisasi, bukan merupakan token DecMed, atau nilai HMAC tidak valid, \textit{request} langsung ditolak.
+Tahap awal validasi dilakukan pada \textit{middleware} PRE. \textit{Middleware} membaca token Macaroon dari \textit{header} \texttt{Authorization} dengan skema \texttt{Bearer}, mendeserialisasi token, mem-parsing \textit{caveats} DecMed, serta memverifikasi keaslian token menggunakan mekanisme \textit{chained-HMAC} dengan \texttt{RootKey} PRE. Apabila token tidak dapat dideserialisasi, bukan merupakan token DecMed, atau nilai HMAC tidak valid, \textit{request} langsung ditolak.
 
 Setelah token dinyatakan autentik, \textit{Server} PRE membentuk \texttt{EffectiveCapability} dari seluruh \textit{caveats} yang terdapat pada token. Struktur ini merepresentasikan cakupan akses efektif yang berlaku setelah proses pembatasan dan penggabungan \textit{caveats}. Untuk \textit{caveat} berbentuk \textit{set}, seperti \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}, cakupan efektif diperoleh melalui irisan antar-\textit{caveats}. Untuk \texttt{expires\_before}, waktu kedaluwarsa efektif diambil dari nilai paling awal. Struktur \texttt{EffectiveCapability} ditunjukkan pada Kode \ref{lst:definisi-effective-capability}.
 
@@ -49,7 +49,7 @@ pub struct EffectiveCapability {
 }
 \end{lstlisting}
 
-Selain menghitung \texttt{EffectiveCapability}, \textit{Server} PRE membentuk \texttt{DelegationChain} untuk menentukan aktor aktif dari token. Jika token belum didelegasikan, aktor aktif adalah \texttt{root\_subject}. Jika token telah didelegasikan, aktor aktif adalah nilai \texttt{delegated\_to} pada langkah delegasi terakhir. Rantai delegasi juga divalidasi agar setiap langkah delegasi tersambung secara konsisten, yaitu penerima delegasi pada satu langkah harus menjadi pemberi delegasi pada langkah berikutnya.
+Selain menghitung \texttt{EffectiveCapability}, \textit{Server} PRE membentuk \texttt{DelegationChain} untuk menentukan himpunan subjek yang berwenang menggunakan token. Himpunan tersebut diperoleh melalui \texttt{subjects()}, yaitu \texttt{root\_subject} bersama seluruh nilai \texttt{delegated\_to} pada langkah delegasi. Pemeriksaan keanggotaan dilakukan melalui \texttt{contains\_subject()}. Rantai delegasi juga divalidasi agar setiap langkah delegasi tersambung secara konsisten, yaitu penerima delegasi pada satu langkah harus menjadi pemberi delegasi pada langkah berikutnya.
 % Apabila token merupakan hasil delegasi antaraktor, \textit{middleware} juga memverifikasi bukti delegasi melalui \textit{header} \texttt{x-decmed-delegation-signature}. 
 Struktur \texttt{DelegationChain} ditunjukkan pada Kode \ref{lst:definisi-delegation-chain}.
 
@@ -62,11 +62,15 @@ pub struct DelegationStep {
 pub struct DelegationChain {
     pub root_subject: String,
     pub steps: Vec<DelegationStep>,
-    pub active_subject: String,
+}
+
+impl DelegationChain {
+    pub fn subjects(&self) -> Vec<&str> { /* root_subject + seluruh delegated_to */ }
+    pub fn contains_subject(&self, address: &str) -> bool { /* cek keanggotaan subjects() */ }
 }
 \end{lstlisting}
 
-Setelah \texttt{EffectiveCapability} dan \texttt{DelegationChain} terbentuk, \textit{Server} PRE memeriksa waktu kedaluwarsa token. Token ditolak apabila nilai \texttt{expires\_before} pada \texttt{EffectiveCapability} telah melewati waktu saat \textit{request} diproses. \textit{Server} PRE juga memeriksa batas kedalaman delegasi sudah melewati \texttt{max\_delegation\_depth} dengan menghitung jumlah \texttt{steps} pada \texttt{DelegationChain} untuk memastikan jumlah delegasi yang digunakan tidak melebihi batas yang ditentukan Apabila ada yang tidak terpenuhi, \textit{request} langsung ditolak.
+Setelah \texttt{EffectiveCapability} dan \texttt{DelegationChain} terbentuk, \textit{Server} PRE memeriksa waktu kedaluwarsa token. Token ditolak apabila nilai \texttt{expires\_before} pada \texttt{EffectiveCapability} telah melewati waktu saat \textit{request} diproses. \textit{Server} PRE juga memeriksa batas kedalaman delegasi sudah melewati \texttt{max\_delegation\_depth} dengan menghitung jumlah \texttt{steps} pada \texttt{DelegationChain} untuk memastikan jumlah delegasi yang digunakan tidak melebihi batas yang ditentukan. Apabila ada yang tidak terpenuhi, \textit{request} langsung ditolak.
 
 \subsubsection{Pemeriksaan Status Revokasi Token}
 \label{subsec:pemeriksaan-status-revokasi-token}
@@ -76,7 +80,7 @@ Pemeriksaan revokasi token dilakukan melalui Redis. \textit{Server} PRE menghitu
 \subsubsection{Verifikasi \textit{Role} dan \textit{Subrole} melalui \textit{Move Smart Contract}}
 \label{subsec:validasi-role-subrole-move-smart-contract}
 
-Setelah token dinyatakan valid dan tidak dicabut, \textit{Server} PRE memeriksa identitas kelembagaan aktor aktif melalui \textit{smart contract} \texttt{get\_hospital\_personnel\_auth\_info} menggunakan alamat IOTA aktor aktif. Fungsi ini mengembalikan \textit{role} dan \textit{subrole} personel yang tersimpan pada penyimpanan \textit{on-chain}. Eksistensi aktor aktif dalam sistem juga tervalidasi melalui pemeriksaan ini.
+Setelah token dinyatakan valid dan tidak dicabut, \textit{Server} PRE memeriksa identitas kelembagaan aktor pemohon melalui \textit{smart contract} \texttt{get\_hospital\_personnel\_auth\_info} menggunakan alamat IOTA yang terbukti melalui \textit{wallet proof}. Fungsi ini mengembalikan \textit{role} dan \textit{subrole} personel yang tersimpan pada penyimpanan \textit{on-chain}. Eksistensi aktor pemohon dalam sistem juga tervalidasi melalui pemeriksaan ini.
 
 \subsubsection{Verifikasi Konteks Segmen}
 \label{subsec:verifikasi-konteks-segmen}
@@ -85,12 +89,12 @@ Validasi konteks segmen dilakukan pada \textit{handler} operasi baca dan tulis. 
 
 Pemeriksaan akses segmen dilakukan dengan membandingkan konteks segmen terhadap \texttt{EffectiveCapability}. Pada operasi baca, \textit{Server} PRE memastikan bahwa \texttt{patient\_address} sesuai dengan token, serta \texttt{dataset\_category} dan \texttt{function\_category} berada dalam cakupan \texttt{read\_dataset\_in} dan \texttt{read\_function\_in}. Pada operasi tulis, \textit{Server} PRE memastikan bahwa \texttt{patient\_address} sesuai, \texttt{related\_rme\_id} sesuai, serta \texttt{dataset\_category} dan \texttt{function\_category} berada dalam cakupan \texttt{write\_dataset\_in} dan \texttt{write\_function\_in}.
 
-Untuk operasi tulis segmen, \textit{Server} PRE juga melakukan pemeriksaan tambahan berdasarkan \textit{role} dan \textit{subrole} aktor aktif. Aktor dengan \textit{role} \texttt{MedicalPersonnel} hanya dapat menulis kategori dataset yang sesuai dengan \textit{subrole}-nya. Dokter dan perawat dapat menulis dataset \texttt{RAWAT\_JALAN} dan \texttt{RAWAT\_INAP}, petugas laboratorium dapat menulis dataset \texttt{LABORATORIUM}, sedangkan apoteker dapat menulis dataset \texttt{APOTEK}. Aktor dengan \textit{role} \texttt{AdministrativePersonnel} hanya dapat membuat segmen dengan \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL}. Selain itu, pada operasi tulis, \textit{Server} PRE memeriksa kesesuaian \texttt{hospital\_cid} pada token dengan \texttt{hospital\_cid} pada segmen yang akan disimpan.
+Untuk operasi tulis segmen, \textit{Server} PRE juga melakukan pemeriksaan tambahan berdasarkan \textit{role} dan \textit{subrole} aktor pemohon. Aktor dengan \textit{role} \texttt{MedicalPersonnel} hanya dapat menulis kategori dataset yang sesuai dengan \textit{subrole}-nya. Dokter dan perawat dapat menulis dataset \texttt{RAWAT\_JALAN} dan \texttt{RAWAT\_INAP}, petugas laboratorium dapat menulis dataset \texttt{LABORATORIUM}, sedangkan apoteker dapat menulis dataset \texttt{APOTEK}. Aktor dengan \textit{role} \texttt{AdministrativePersonnel} hanya dapat membuat segmen dengan \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL}. Selain itu, pada operasi tulis, \textit{Server} PRE memeriksa kesesuaian \texttt{hospital\_cid} pada token dengan \texttt{hospital\_cid} pada segmen yang akan disimpan.
 
 \subsubsection{Verifikasi Bukti Kepemilikan \textit{Wallet}}
 \label{subsec:verifikasi-bukti-kepemilikan-wallet}
 
-Setelah konteks akses dinyatakan sesuai, \textit{Server} PRE memverifikasi bukti kepemilikan \textit{wallet} dari aktor aktif. Bukti ini dikirimkan melalui \textit{header} \texttt{x-decmed-wallet-signature}, sedangkan waktu pembuktian dikirimkan melalui \textit{header} \texttt{x-decmed-wallet-timestamp}. Tanda tangan dibuat terhadap representasi \texttt{WalletProofContext}. Struktur \texttt{WalletProofContext} ditunjukkan pada Kode \ref{lst:struktur-walletproofcontext}. \textit{Server} PRE kemudian memverifikasi \textit{wallet signature} tersebut terhadap alamat IOTA aktor aktif yang diperoleh dari \texttt{DelegationChain}. Timestamp pada konteks pembuktian juga divalidasi agar berada dalam rentang waktu yang dapat diterima. Pada implementasi ini, waktu yang diterima adalah rentang waktu 5 menit.
+Setelah konteks akses dinyatakan sesuai, \textit{Server} PRE memverifikasi bukti kepemilikan \textit{wallet} dari aktor pemohon. Bukti ini dikirimkan melalui \textit{header} \texttt{x-decmed-wallet-signature}, sedangkan waktu pembuktian dikirimkan melalui \textit{header} \texttt{x-decmed-wallet-timestamp}. Tanda tangan dibuat terhadap representasi \texttt{WalletProofContext}. Struktur \texttt{WalletProofContext} ditunjukkan pada Kode \ref{lst:struktur-walletproofcontext}. \textit{Server} PRE kemudian mencoba mencocokkan \textit{wallet signature} terhadap seluruh subjek pada \texttt{DelegationChain::subjects()}. Apabila tanda tangan cocok dengan salah satu subjek, aktor tersebut digunakan sebagai identitas pemohon untuk pemeriksaan lanjutan. Apabila tanda tangan tidak cocok dengan subjek mana pun, permintaan ditolak. Timestamp pada konteks pembuktian juga divalidasi agar berada dalam rentang waktu yang dapat diterima. Pada implementasi ini, waktu yang diterima adalah rentang waktu 5 menit.
 
 \begin{lstlisting}[language=Rust, caption={Struktur \texttt{WalletProofContext} sebagai konteks verifikasi \textit{wallet signature}}, label={lst:struktur-walletproofcontext}]
 pub struct WalletProofContext {
@@ -105,7 +109,7 @@ pub struct WalletProofContext {
 }
 \end{lstlisting}
 
-Pada jalur operasi baca, apabila \textit{wallet signature} belum disertakan, \textit{Server} PRE mengembalikan respons \texttt{401 UNAUTHORIZED} yang berisi \texttt{proof\_context}. \textit{Client} kemudian dapat menandatangani konteks tersebut menggunakan kunci privat \textit{wallet} aktor aktif dan mengirimkan ulang \textit{request} dengan menyertakan \texttt{x-decmed-wallet-signature} serta \texttt{x-decmed-wallet-timestamp}.
+Pada jalur operasi baca, apabila \textit{wallet signature} belum disertakan, \textit{Server} PRE mengembalikan respons \texttt{401 UNAUTHORIZED} yang berisi \texttt{proof\_context}. \textit{Client} kemudian dapat menandatangani konteks tersebut menggunakan kunci privat \textit{wallet} aktor pemohon dan mengirimkan ulang \textit{request} dengan menyertakan \texttt{x-decmed-wallet-signature} serta \texttt{x-decmed-wallet-timestamp}.
 
 \subsubsection{Eksekusi Operasi \textit{Re-encryption}, IPFS, dan IOTA}
 \label{subsec:eksekusi-operasi-re-encryption-ipfs-iota}
@@ -118,12 +122,10 @@ Proses \textit{re-encryption} dilakukan dengan Umbral PRE terhadap \textit{capsu
 
 \textit{Response} yang dikembalikan ke \textit{client} untuk operasi baca berisi data medis terenkripsi, \texttt{cfrag} hasil \textit{re-encryption}, informasi kunci publik yang diperlukan oleh \textit{client}, \textit{capsule}, \textit{encrypted key and nonce}, dan waktu pembuatan data.
 
-Pada operasi tulis, \textit{client} mengirimkan segmen RME yang sudah terenkripsi. \textit{Server} PRE menyimpan \textit{payload} terenkripsi ke IPFS. Setelah penyimpanan berhasil, IPFS mengembalikan CID sebagai penunjuk terhadap data terenkripsi tersebut.
-
-CID dari IPFS kemudian dimasukkan ke dalam metadata segmen final. Metadata ini memuat informasi sesuai dengan skema pada Lampiran \ref{lampiran:skema-penyimpanan-rme}. Setelah metadata final terbentuk, \textit{Server} PRE menyimpannya ke IOTA melalui \textit{smart contract} \texttt{create\_medical\_record\_segment}.
+Pada operasi tulis, \textit{client} mengirimkan segmen RME yang sudah terenkripsi. \textit{Server} PRE menyimpan \textit{payload} terenkripsi ke IPFS. Setelah penyimpanan berhasil, IPFS mengembalikan CID sebagai penunjuk terhadap data terenkripsi tersebut. CID dari IPFS kemudian dimasukkan ke dalam metadata segmen final. Metadata ini memuat informasi sesuai dengan skema pada Lampiran \ref{lampiran:skema-penyimpanan-rme}. Setelah metadata final terbentuk, \textit{Server} PRE menyimpannya ke IOTA melalui \textit{smart contract} \texttt{create\_medical\_record\_segment}.
 
 \textit{Response} yang dikembalikan ke \textit{client} untuk operasi tulis berisi ringkasan metadata segmen yang baru dibuat, yaitu \texttt{segment\_id}, \texttt{related\_rme\_id}, \texttt{dataset\_category}, \texttt{function\_category}, \texttt{ipfs\_cid}, \texttt{integrity\_hash}, dan \texttt{created\_at}. \textit{Response} ini menjadi konfirmasi bahwa data terenkripsi telah tersimpan di IPFS dan metadata referensinya telah dicatat di IOTA.
 
-Pada operasi \textit{list}, \textit{Server} PRE mengambil kumpulan metadata dari IOTA secara bertahap menggunakan mekanisme \textit{pagination}. Setiap metadata yang berhasil di-\textit{decode} RME kemudian diubah menjadi \textit{list item} yang berisi informasi ringkas, yaitu \texttt{index}, \texttt{segment\_id}, \texttt{related\_rme\_id}, alamat pasien, \texttt{dataset category}, \texttt{function category}, \texttt{ipfs\_cid}, \texttt{created\_at} dan \texttt{author\_address}. Daftar metadata tersebut kemudian diproses agar hanya menampilkan metadata aktif sesuai dengan \texttt{EffectiveCapability}. Setelah itu, hasilnya diurutkan dan dipotong sesuai parameter \texttt{cursor} dan \texttt{limit} dari \textit{request}. \textit{Response} yang dikembalikan berisi daftar item metadata aktif dan \texttt{next\_cursor} apabila masih terdapat data lanjutan yang dapat diambil oleh \textit{client}.
+Pada operasi \textit{list}, \textit{Server} PRE mengambil kumpulan metadata dari IOTA secara bertahap menggunakan mekanisme \textit{pagination}. Setiap metadata yang berhasil di-\textit{decode} kemudian diubah menjadi \textit{list item} yang berisi informasi ringkas, yaitu \texttt{index}, \texttt{segment\_id}, \texttt{related\_rme\_id}, alamat pasien, \texttt{dataset category}, \texttt{function category}, \texttt{ipfs\_cid}, \texttt{created\_at} dan \texttt{author\_address}. Daftar metadata tersebut kemudian diproses agar hanya menampilkan metadata aktif sesuai dengan \texttt{EffectiveCapability}. Setelah itu, hasilnya diurutkan dan dipotong sesuai parameter \texttt{cursor} dan \texttt{limit} dari \textit{request}. \textit{Response} yang dikembalikan berisi daftar item metadata aktif dan \texttt{next\_cursor} apabila masih terdapat data lanjutan yang dapat diambil oleh \textit{client}.
 
 Dengan alur ini, IPFS digunakan untuk menyimpan isi data RME terenkripsi, sedangkan IOTA digunakan untuk menyimpan metadata referensial yang diperlukan untuk pencarian, validasi konteks, dan navigasi data. \textit{Server} PRE menghubungkan keduanya dengan mekanisme Umbral PRE pada operasi baca, pencatatan metadata pada operasi tulis, dan penyusunan daftar metadata aktif pada operasi \textit{list}.

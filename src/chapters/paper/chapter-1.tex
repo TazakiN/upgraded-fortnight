@@ -1,4 +1,20 @@
-
 \section{Introduction}
-This document is a model and instructions for \LaTeX.
-Please observe the conference page limits.
+\label{sec:introduction}
+
+Electronic medical records (EMRs) enable health information to follow a patient across services, but integration also enlarges the set of parties and systems that may process sensitive clinical data. Indonesian regulation requires healthcare facilities to implement integrated EMRs, while health information is classified as specific personal data that must be protected from unauthorized processing \cite{permenkes24_2022,uu27-2022-pdp}. Consequently, an integrated EMR system must support data availability for care without turning a valid clinical relationship into unrestricted access.
+
+Patient-centric access control gives patients authority over who may use their records \cite{peng2023patientcentric}. Direct care, however, is collaborative: medical-records personnel, nurses, physicians, laboratory personnel, and pharmacists participate at different stages and require different subsets of the record \cite{who2010_interprofessional_collaborative_practice}. The Indonesian EMR metadata guideline similarly separates outpatient, inpatient, laboratory, and pharmacy datasets and distinguishes administrative from clinical documentation \cite{kemenkes1423-2022}. These workflows require access decisions over the actor, operation, episode, data category, and time---not merely a distinction between administrative and medical personnel.
+
+DecMed is a patient-centric decentralized EMR prototype that combines IOTA for on-chain state, IPFS for encrypted off-chain records, and proxy re-encryption (PRE) for controlled data disclosure \cite{sadewa2025decmed}. Its previous capability token was a JSON Web Token (JWT) containing an IOTA address, a broad role, and a read/update purpose. The protected clinical record was also represented as a relatively large encrypted object. This combination created three connected limitations. First, the token did not express which service dataset or clinical function could be accessed. Second, the storage unit did not provide a corresponding segment on which to enforce such a restriction. Third, each recipient depended on a new patient-issued grant; there was no clinician-to-clinician delegation mechanism for a collaborative episode. The bearer-token workflow also needed evidence that the requester controlled the wallet associated with the active actor, together with revocation and audit semantics for derived grants.
+
+This paper extends DecMed with segmented EMR objects and Macaroon capability tokens. Macaroons were selected for their append-only caveats and attenuation property, rather than on a claim that they are universally more secure than JWT, PASETO, or Biscuit. A patient still authorizes the initial access. A legitimate holder can subsequently request a narrower child token from the PRE Server, which validates the parent capability before producing the attenuation result. In this paper, \emph{offline delegation} means delegation without the patient's direct involvement or online presence after that initial grant. It does not mean that the clients, PRE Server, Redis, IOTA, IPFS, or network operate without connectivity.
+
+The contributions are:
+\begin{enumerate}
+	\item an EMR segmentation model that aligns authorization with combinations of \texttt{dataset\_category} and \texttt{function\_category};
+	\item a Macaroon caveat model for read/update scope, episode, hospital, expiration, delegation depth, and parent--child attenuation;
+	\item integration of PRE-mediated delegation with active-wallet proof, institutional role checks, Redis-backed revocation, and IOTA audit records; and
+	\item a prototype evaluation covering collaborative outpatient and inpatient workflows and negative authorization cases.
+\end{enumerate}
+
+Section~\ref{sec:background} summarizes the technical context and related work. Section~\ref{sec:approach} develops the problem analysis and proposed approach. Sections~\ref{sec:architecture} and \ref{sec:implementation} describe the system and its implementation. Sections~\ref{sec:evaluation} and \ref{sec:discussion} present the evidence and limitations, followed by the conclusion.

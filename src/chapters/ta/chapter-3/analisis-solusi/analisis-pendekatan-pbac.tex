@@ -1,0 +1,63 @@
+\subsection{Analisis Pendekatan Kontrol Akses Berbasis Kebijakan}
+\label{subsec:analisis-pendekatan-model-pbac}
+
+Hasil analisis masalah menunjukkan bahwa kontrol akses pada DecMed tidak cukup ditentukan hanya berdasarkan \textit{role} dan \textit{purpose} yang terdapat pada token JWT. Klaim tersebut dapat membedakan kategori umum pengguna dan operasi yang dilakukan, tetapi belum merepresentasikan pasien yang datanya diakses, episode RME, kategori dataset, kategori fungsi klinis, masa berlaku akses, maupun batasan delegasi. Selain itu, \textit{role} \texttt{MedicalPersonnel} pada DecMed masih terlalu umum untuk membedakan kewenangan dokter, perawat, petugas laboratorium, dan apoteker.
+
+Keterbatasan tersebut berkaitan terutama dengan masalah \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, dan \texttt{M-TA-05}. Kontrol akses yang lebih luas membutuhkan model kebijakan untuk menghubungkan aktor dengan operasi yang diizinkan terhadap bagian RME tertentu. Segmentasi data yang telah dianalisis pada Subbab \ref{subsec:analisis-segmentasi-data-rme} menyediakan objek yang dapat dilindungi, tetapi segmentasi tersebut belum menentukan siapa yang dapat mengakses setiap segmen dan dalam kondisi apa akses dapat diberikan. Oleh karena itu, dibutuhkan model kebijakan yang dapat merepresentasikan hubungan antara pengguna, objek RME, hak akses, dan kondisi akses secara terstruktur. Model inilah yang menjawab keterbatasan kontrol \textit{coarse-grained} pada DecMed, sementara token otorisasi berperan sebagai media pembawa kapabilitas hasil dari kebijakan tersebut.
+
+Terdapat tiga pendekatan yang dipertimbangkan untuk mendefinisikan kebijakan akses pada pengembangan DecMed. Perbandingan pendekatan tersebut ditunjukkan pada Tabel \ref{tab:analisis-pendekatan-model-kebijakan}.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Analisis Pendekatan Pemodelan Kebijakan Akses}
+    \label{tab:analisis-pendekatan-model-kebijakan}
+    \small
+    \begin{tabular}{|p{0.20\textwidth}|p{0.32\textwidth}|p{0.35\textwidth}|}
+        \hline
+        \textbf{Pendekatan}
+         & \textbf{Keunggulan}
+         & \textbf{Keterbatasan}                                                                                                                                                         \\ \hline
+
+        Kontrol akses berbasis \textit{role}
+         & Sederhana dan sesuai dengan struktur \textit{role} pengguna yang telah terdapat pada DecMed.
+         & Belum dapat membatasi akses berdasarkan pasien, episode RME, kategori dataset, kategori fungsi klinis, waktu berlaku, dan rantai delegasi.                                    \\ \hline
+
+        Perancangan \textit{caveat} secara langsung
+         & Batasan akses dapat langsung direpresentasikan dalam token Macaroon tanpa membentuk model kebijakan tersendiri.
+         & Hubungan antara aktor, objek, hak akses, dan kondisi akses tidak dimodelkan secara eksplisit sehingga ketertelusuran kebijakan terhadap kebutuhan sistem menjadi lebih sulit. \\ \hline
+
+        PBAC dengan adaptasi elemen \textit{Policy Machine}
+         & Dapat memisahkan pengguna, atribut pengguna, objek, atribut objek, hak akses, relasi penugasan, dan asosiasi hak akses secara terstruktur.
+         & Membutuhkan pemetaan tambahan dari model konseptual ke token Macaroon, metadata segmen, dan fungsi verifikasi pada \textit{Server} PRE.                                       \\ \hline
+    \end{tabular}
+
+\end{table}
+
+Pendekatan berbasis \textit{role} saja tidak dipilih karena keputusan akses pada DecMed tidak hanya bergantung pada profesi atau kedudukan pengguna. Sebagai contoh, dua pengguna dengan \textit{subrole} dokter tidak selalu memiliki akses terhadap pasien dan episode RME yang sama. Demikian pula, petugas laboratorium yang terlibat dalam satu episode pelayanan tidak memerlukan akses terhadap seluruh data klinis pasien. Peran pengguna tetap diperlukan untuk merepresentasikan kewenangan kelembagaan, tetapi belum cukup untuk menjadi satu-satunya dasar keputusan akses.
+
+Perancangan \textit{caveat} secara langsung sebenarnya dapat digunakan untuk mengimplementasikan pembatasan akses. Namun, pendekatan tersebut hanya menjelaskan bentuk token dan belum memberikan model konseptual yang menghubungkan kebutuhan aktor, objek RME, serta hak akses. Tanpa model kebijakan, setiap \textit{caveat} berisiko dipandang sebagai batasan yang berdiri sendiri dan hubungan antara token, segmentasi data, serta validasi \textit{role} menjadi kurang jelas.
+
+Berdasarkan pertimbangan tersebut, pendekatan \textit{Policy-Based Access Control} digunakan dengan mengadaptasi elemen inti \textit{Policy Machine}. \textit{Policy Machine} menyediakan struktur untuk merepresentasikan pengguna, atribut pengguna, objek, atribut objek, kelas kebijakan, hak akses, relasi penugasan, dan asosiasi hak akses sesuai dengan penjelasan pada \ref{subsec:policy-based-access-control}. Struktur tersebut sesuai dengan kebutuhan DecMed karena pengguna dapat dikelompokkan berdasarkan \textit{role} atau \textit{subrole}, sedangkan segmen RME dapat dikelompokkan secara hierarkis berdasarkan rumah sakit, pasien, episode RME, kategori dataset, dan kategori fungsi klinis.
+
+Adaptasi \textit{Policy Machine} juga memungkinkan pemisahan antara kebijakan akses dan mekanisme implementasinya. Pada tingkat kebijakan, model menentukan aktor, objek, dan operasi yang diizinkan. Pada tingkat implementasi, cakupan kebijakan direpresentasikan melalui \textit{caveat} Macaroon, metadata segmen pada IOTA, dan informasi \textit{role} serta \textit{subrole} aktor. Permintaan akses kemudian dievaluasi dan ditegakkan oleh \textit{Server} PRE sebelum data terenkripsi diambil atau diproses melalui mekanisme \textit{re-encryption}.
+
+Model kebijakan yang dibutuhkan DecMed mencakup beberapa dimensi berikut.
+
+\begin{enumerate}
+    \item \textbf{Aktor akses}, yaitu alamat dompet aktor pemohon beserta \textit{role} atau \textit{subrole} yang tercatat pada sistem.
+
+    \item \textbf{Pemilik dan konteks data}, yaitu pasien, rumah sakit, dan episode RME yang menjadi cakupan akses.
+
+    \item \textbf{Objek akses}, yaitu segmen RME yang diklasifikasikan menggunakan \texttt{dataset\_category} dan \texttt{function\_category}.
+
+    \item \textbf{Operasi akses}, yaitu operasi \texttt{Read} atau \texttt{Update} terhadap segmen RME.
+
+    \item \textbf{Kondisi akses}, yaitu masa berlaku token, validitas identitas aktor pada rantai delegasi, status revokasi, dan kesesuaian rantai delegasi.
+
+    \item \textbf{Batasan delegasi}, yaitu ketentuan bahwa token turunan tidak boleh memiliki cakupan data, operasi, masa berlaku, atau kemampuan delegasi yang melebihi token induknya.
+
+\end{enumerate}
+
+Dalam ruang lingkup ini, \textit{Policy Machine} tidak diimplementasikan sebagai mesin kebijakan lengkap. Seluruh fungsi administratif, \textit{prohibition}, \textit{obligation engine}, maupun penyimpanan graf kebijakan sebagaimana didefinisikan pada spesifikasi \textit{Policy Machine} tidak diimplementasikan. Elemen, relasi penugasan, dan asosiasi hak aksesnya digunakan sebagai kerangka konseptual untuk menyusun kebijakan akses DecMed. Keputusan akses aktual tetap dihasilkan melalui verifikasi Macaroon, metadata segmen, informasi aktor, dan bukti kepemilikan \textit{wallet} pada \textit{Server} PRE.
+
+Dengan pembagian tersebut, model PBAC menjawab keterbatasan kontrol \textit{coarse-grained} melalui perluasan kebijakan akses dari batasan \textit{role} dan \textit{purpose} menjadi hubungan antara aktor, objek, hak akses, dan kondisi. \textit{Policy Machine} menjelaskan struktur kebijakan tersebut, Macaroon membawa kapabilitas hasil kebijakan, IOTA menyediakan metadata dan atribut yang menjadi dasar evaluasi, sedangkan \textit{Server} PRE menjadi titik evaluasi dan penegakan kebijakan.

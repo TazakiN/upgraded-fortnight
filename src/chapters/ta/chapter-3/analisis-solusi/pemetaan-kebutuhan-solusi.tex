@@ -12,10 +12,10 @@ Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \t
 	\begin{tabular}{|p{0.12\textwidth}|p{0.5\textwidth}|p{0.25\textwidth}|}
 		\hline
 		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                        & \textbf{Masalah Terkait}                                                                 \\ \hline
-		\texttt{S-TA-01} & Token otorisasi berbasis Macaroons dengan \textit{caveats}                                                                  & \texttt{M-TA-01}, \texttt{M-TA-04}                                                       \\ \hline
+		\texttt{S-TA-01} & Model kebijakan PBAC dengan adaptasi elemen \textit{Policy Machine}                                                      & \texttt{M-TA-01}                                                                         \\ \hline
 		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                                         \\ \hline
-		\texttt{S-TA-03} & Delegasi akses melalui atenuasi \textit{offline} Macaroons                                                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                                       \\ \hline
-		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{effective capability}, \textit{wallet proof}, dan metadata segmen & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
+		\texttt{S-TA-03} & Token Macaroons dengan \textit{caveats} dan atenuasi \textit{offline} untuk delegasi akses                                  & \texttt{M-TA-03}, \texttt{M-TA-04}                                                       \\ \hline
+		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis kebijakan PBAC, kapabilitas efektif, \textit{wallet proof}, dan metadata  & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
 		\texttt{S-TA-05} & Validasi subrole tenaga medis terhadap dataset untuk operasi tulis                                                          & \texttt{M-TA-05}                                                                         \\ \hline
 		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                                         \\ \hline
 	\end{tabular}

@@ -1,9 +1,7 @@
 \begin{abstract}
-	This document is a model and instructions for \LaTeX.
-	This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL:\ Do Not Use Symbols, Special Characters, Footnotes,
-	or Math in Paper Title or Abstract.
+	Electronic medical records (EMRs) require access controls that preserve patient authority while supporting multi-actor clinical workflows. The previous DecMed prototype combined IOTA, the InterPlanetary File System, and proxy re-encryption (PRE), but authorized requests using JSON Web Token claims limited to actor role and read/update purpose, stored clinical data as a comparatively large encrypted object, and required a patient-issued grant for each recipient. This work extends DecMed with segment-level authorization and offline delegation. Clinical records are split by dataset and function categories; Macaroons encode patient, episode, hospital, operation, category, expiry, and delegation constraints as append-only caveats. The PRE Server validates parent-to-child attenuation, wallet ownership, institutional role, revocation state in Redis, and segment metadata recorded on IOTA before re-encryption or writes to IPFS. Here, offline delegation means that an authorized healthcare actor can delegate after the patient's initial grant without the patient's direct involvement; the client, PRE Server, ledger, and network remain online. Evaluation used 12 manual functional scenarios for outpatient and inpatient workflows and 13 unit, integration, and client-level authorization tests. The documented results fulfilled all mapped requirements and included rejection of out-of-scope, expired, expanded, malformed-chain, mismatched-wallet, and revoked access. These results establish functional correctness within the evaluated prototype, not performance or formal security guarantees.
 \end{abstract}
 
 \begin{IEEEkeywords}
-	component, formatting, style, styling, insert
+	electronic medical records, granular access control, capability-based access control, Macaroons, offline delegation, proxy re-encryption
 \end{IEEEkeywords}

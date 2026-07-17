@@ -1,179 +1,128 @@
-\section{Prepare Your Paper Before Styling}
-Before you begin to format your paper, first write and save the content as a
-separate text file. Complete all content and organizational editing before
-formatting. Please note sections\ \ref{AA}--\ref{SCM} below for more information on
-proofreading, spelling and grammar.
+\section{System Design and Architecture}
+\label{sec:architecture}
 
-Keep your text and graphic files separate until after the text has been
-formatted and styled. Do not number text heads---{\LaTeX} will do that
-for you.
+\subsection{Component Responsibilities}
 
-\subsection{Abbreviations and Acronyms}\label{AA}
-Define abbreviations and acronyms the first time they are used in the text,
-even after they have been defined in the abstract. Abbreviations such as
-IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use
-abbreviations in the title or heads unless they are unavoidable.
+The extension preserves the principal DecMed components and changes their authorization responsibilities. The Patient Client creates the initial consent request, signs the patient's nonce, reviews delegation history, and initiates revocation. The Hospital Client is used by records personnel and medical actors to retrieve encrypted access metadata, access permitted record segments, and request delegation. The PRE Server issues root Macaroons, validates attenuation and data requests, enforces category and institutional constraints, and performs re-encryption. Redis stores ephemeral PRE material and revocation keys. IOTA stores personnel state, segment metadata, encrypted access metadata, and delegation audit records, while IPFS stores encrypted segment objects.
 
-\subsection{Units}
-\begin{itemize}
-	\item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
-	\item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
-	\item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``$.\ .\ .\ $a few henries'', not ``$.\ .\ .\ $ a few H''.
-	\item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.
-\end{itemize}
+Fig.~\ref{fig:decmed-data-flow} shows the DecMed system context retained by the extension. Patient, hospital, and ministry actors remain outside the DecMed boundary, while encrypted record objects and on-chain transactions flow to IPFS and IOTA, respectively. Within the boundary, hospital requests pass through the proxy API and authentication/access-control path before medical-record management can invoke PRE or interact with the stores. The extension therefore does not replace DecMed's storage or PRE architecture; it narrows the conditions under which those paths execute.
 
-\subsection{Equations}
-Number equations consecutively. To make your
-equations more compact, you may use the solidus (~/~), the exp function, or
-appropriate exponents. Italicize Roman symbols for quantities and variables,
-but not Greek symbols. Use a long dash rather than a hyphen for a minus
-sign. Punctuate equations with commas or periods when they are part of a
-sentence, as in:
-\begin{equation}
-	a+b=\gamma\label{eq}
-\end{equation}
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{resources/paper/decmed-data-flow.png}
+	\caption{DecMed system context retained by the access-control extension, with patient and institutional actors, encrypted IPFS storage, and IOTA transactions (thesis artifact).}
+	\label{fig:decmed-data-flow}
+\end{figure*}
 
-Be sure that the
-symbols in your equation have been defined before or immediately following
-the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation\ \eqref{eq}'', except at
-the beginning of a sentence: ``Equation\ \eqref{eq} is $.\ .\ .\ $'
+\subsection{Initial Grant}
 
-\subsection{\LaTeX-Specific Advice}
+The patient remains the authority for the first grant. Records personnel display a QR value containing the hospital identifier, IOTA wallet address, and PRE public key. After scanning it, the Patient Client checks the personnel record on IOTA and lets the patient choose outpatient or inpatient service, read/update mode, and expiry. The client obtains a nonce from PRE and signs it with the patient's IOTA key. PRE verifies the patient and confirms that the recipient is active administrative personnel at the selected hospital.
 
-Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
-of ``hard'' references (e.g., \verb|(1)|). That will make it possible
-to combine sections, add equations, or change the order of figures or
-citations without having to go through the file line by line.
+PRE then issues separate read and update Macaroons. A read token initially covers the implemented datasets and functions; an update token is limited to the selected encounter dataset plus laboratory and pharmacy and is bound to a newly generated \texttt{related\_rme\_id}. Both carry the hospital, recipient root subject, expiration, and maximum delegation depth. Broad root scope does not itself authorize records personnel to write clinical data because every request is also checked against their on-chain role.
 
-Please don't use the \verb|{eqnarray}| equation environment. Use
-\verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
-environment leaves unsightly spaces around relation symbols.
+The Patient Client generates the PRE data seed and encrypts it for the initial recipient. The token, token hash, encrypted seed, and access metadata are encrypted with the recipient's PRE public key and recorded through the IOTA \texttt{create\_access} function. PRE stores the associated re-encryption material in Redis with a lifetime derived from the access expiry. Thus, the ledger distributes encrypted access metadata rather than a plaintext bearer token.
 
-Please note that the \verb|{subequations}| environment in {\LaTeX}
-will increment the main equation counter even when there are no
-equation numbers displayed. If you forget that, you might write an
-article in which the equation numbers skip from (17) to (20), causing
-the copy editors to wonder if you've discovered a new method of
-counting.
+\subsection{Offline Delegation and Request Verification}
 
-	{\BibTeX} does not work by magic. It doesn't get the bibliographic
-data from thin air but from \texttt{.bib} files. If you use {\BibTeX} to produce a
-bibliography you must send the \texttt{.bib} files.
+After the initial grant, records personnel may delegate to a nurse or physician. A physician may further delegate a restricted capability to laboratory personnel or a pharmacist. The root token has depth two; the first child has one remaining level, and the second-level child has zero. Presets implement task-specific scopes: a nurse receives initial-examination functions, laboratory personnel receive supporting-examination read scope and laboratory write scope, and a pharmacist receives therapy/prescription read scope and pharmacy write scope.
 
-	{\LaTeX} can't read your mind. If you assign the same label to a
-subsubsection and a table, you might find that Table I has been cross
-referenced as Table IV-B3.
+The delegator's Hospital Client obtains the candidate's public information from IOTA, decrypts the existing data seed, and re-encrypts it for the delegatee. It sends the parent token, requested scope and expiry, actor addresses, and a wallet-signed \texttt{DelegationRequestProofContext} to PRE. PRE authenticates the parent, checks all parent and ancestor revocation keys, verifies the delegator signature, computes the effective capability, and obtains an IOTA access snapshot. The snapshot confirms active accounts, a common hospital, parent validity, current depth, and the absence of a conflicting active delegation for the same recipient subrole. If the request is monotonic, PRE appends the child caveats and returns the child token and hash.
 
-{\LaTeX} does not have precognitive abilities. If you put a
-\verb|\label| command before the command that updates the counter it's
-supposed to be using, the label will pick up the last counter to be
-cross referenced instead. In particular, a \verb|\label| command
-should not go before the caption of a figure or a table.
+The client signs a \texttt{DelegationProofContext}, packages the child token, proof, re-encrypted seed, and metadata, and encrypts the package for the delegatee. The IOTA \texttt{create\_delegated\_access} function records the encrypted package and an audit entry containing delegator, root subject, delegatee, mode, episode, depth, parent and child token hashes, and expiry. The patient is not part of these steps, but the client, PRE Server, IOTA, Redis, and network are still required.
 
-Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
-will not stop equation numbers inside \verb|{array}| (there won't be
-any anyway) and it might stop a wanted equation number in the
-surrounding equation.
+To use the grant, the delegatee decrypts its access package locally and sends the Macaroon with a request. PRE reconstructs the ordered delegation chain; the last \texttt{delegated\_to} value is the active subject. It then checks chained-HMAC authenticity, expiration, depth, revocation, actor role/subrole on IOTA, and segment context. A wallet proof signs the token identifier, patient, episode, operation, segment, dataset, function, and timestamp. Only after the proof matches the active subject does a read trigger IPFS retrieval and Umbral re-encryption, or a write store ciphertext in IPFS and metadata in IOTA.
 
-\subsection{Some Common Mistakes}\label{SCM}
-\begin{itemize}
-	\item The word ``data'' is plural, not singular.
-	\item The subscript for the permeability of vacuum $\mu_{0}$, and other common scientific constants, is zero with subscript formatting, not a lowercase letter ``o''.
-	\item In American English, commas, semicolons, periods, question and exclamation marks are located within quotation marks only when a complete thought or name is cited, such as a title or full quotation. When quotation marks are used, instead of a bold or italic typeface, to highlight a word or phrase, punctuation should appear outside of the quotation marks. A parenthetical phrase or statement at the end of a sentence is punctuated outside of the closing parenthesis (like this). (A parenthetical sentence is punctuated within the parentheses.)
-	\item A graph within a graph is an ``inset'', not an ``insert''. The word alternatively is preferred to the word ``alternately'' (unless you really mean something that alternates).
-	\item Do not use the word ``essentially'' to mean ``approximately'' or ``effectively''.
-	\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
-	\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
-	\item Do not confuse ``imply'' and ``infer''.
-	\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
-	\item There is no period after the ``et'' in the Latin abbreviation ``\textnormal{et al.}''.
-	\item The abbreviation ``\textnormal{i.e.}'' means ``that is'', and the abbreviation ``\textnormal{e.g.}'' means ``for example''.
-\end{itemize}
-An excellent style manual for science writers is\ \cite{b7}.
+\section{Implementation}
+\label{sec:implementation}
 
-\subsection{Authors and Affiliations}
-\textbf{The class file is designed for, but not limited to, six authors.} A
-minimum of one author is required for all conference articles. Author names
-should be listed starting from left to right and then moving down to the
-next line. This is the author sequence that will be used in future citations
-and by indexing services. Names should not be listed in columns nor group by
-affiliation. Please keep your affiliations as succinct as possible (for
-example, do not differentiate among departments of the same organization).
+The prototype was implemented mainly in Rust and retained the existing Tauri clients and IOTA Move contracts. Fig.~\ref{fig:package-diagram} summarizes the shared packages introduced for the extension. \texttt{decmed-rme-segment} defines category enums, segment data and metadata, validation, and integrity-hash utilities. \texttt{decmed-macaroon-auth} wraps the adapted open-source \texttt{macaroon} crate with DecMed issuance, caveat parsing, effective-capability calculation, attenuation, chain construction, wallet-proof context, and revocation-key functions. The Patient Client, Hospital Client, and PRE Server consequently share the same segment schema; the Hospital Client and PRE Server also share authorization types.
 
-\subsection{Identify the Headings}
-Headings, or heads, are organizational devices that guide the reader through
-your paper. There are two types: component heads and text heads.
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{resources/paper/implementation-package-diagram.png}
+	\caption{Shared implementation packages for segmentation and Macaroon authorization (thesis artifact).}
+	\label{fig:package-diagram}
+\end{figure*}
 
-Component heads identify the different components of your paper and are not
-topically subordinate to each other. Examples include Acknowledgments and
-References and, for these, the correct style to use is ``Heading 5''. Use
-``figure caption'' for your Figure captions, and ``table head'' for your
-table title. Run-in heads, such as ``Abstract'', will require you to apply a
-style (in this case, italic) in addition to the style provided by the drop
-down menu to differentiate the head from the text.
+Each \texttt{RmeSegmentData} object contains segment and episode identifiers, categories, patient and author addresses, service date, payload, and payload hash. After client-side encryption and IPFS upload, \texttt{RmeSegmentMetadata} retains the contextual fields together with the IPFS CID, ciphertext integrity hash, PRE capsule, encrypted key/nonce, hospital identifier, and creation time. The metadata is serialized as base64-encoded JSON inside the existing flat IOTA metadata list, maintaining compatibility while making categories available to PRE.
 
-Text heads organize the topics on a relational, hierarchical basis. For
-example, the paper title is the primary text head because all subsequent
-material relates and elaborates on this one topic. If there are two or more
-sub-topics, the next level head (uppercase Roman numerals) should be used
-and, conversely, if there are not at least two sub-topics, then no subheads
-should be introduced.
+Authorization is implemented as PRE middleware plus operation-specific handlers. The middleware deserializes the bearer Macaroon, validates its chained HMAC, rejects unknown caveats, builds \texttt{EffectiveCapability} and \texttt{DelegationChain}, checks expiry and depth, and queries Redis using keys of the form \texttt{revoked:token:<hash>}. Read and write handlers then validate the metadata or payload preview against patient, episode, hospital, dataset, function, and operation constraints. They obtain the active actor's institutional role from the Move contract and verify the wallet signature. The accepted proof window is five minutes. On a read without a proof, PRE returns an authorization response containing the canonical context so the client can sign and retry.
 
-\subsection{Figures and Tables}
-\paragraph{Positioning Figures and Tables} Place figures and tables at the top and
-bottom of columns. Avoid placing them in the middle of columns. Large
-figures and tables may span across both columns. Figure captions should be
-below the figures; table heads should appear above the tables. Insert
-figures and tables after they are cited in the text. Use the abbreviation
-``Fig.~\ref{fig}'', even at the beginning of a sentence.
+Revocation combines immediate enforcement and durable state. The Patient Client first invokes the Move revocation path, which marks access and downstream delegations as revoked and records an audit event. It then asks PRE to store token hashes in Redis until token expiry and delete associated re-encryption material. When a descendant is presented, PRE checks its own hash and every \texttt{parent\_token\_hash}; a revoked ancestor therefore invalidates the derived request.
 
-\begin{table}[htbp]
-	\caption{Table Type Styles}\label{tab1}
-	\begin{center}
-		\begin{tabular}{c c c c}
-			\toprule
-			\textbf{Table} & \multicolumn{3}{|c|}{\textbf{Table Column Head}}                                                         \\
-			\cline{2-4}
-			\textbf{Head}  & \textbf{\textit{Table column subhead}}           & \textbf{\textit{Subhead}} & \textbf{\textit{Subhead}} \\
-			\midrule
-			copy           & More table copy$^{\mathrm{a}}$                   &                           &                           \\
-			\bottomrule
-			\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
-		\end{tabular}
-	\end{center}
-\end{table}
+\section{Evaluation}
+\label{sec:evaluation}
 
-\begin{figure}[htbp]
-	\centerline{\includegraphics[width=0.3\textwidth]{resources/cover-ganesha.jpg}}
-	\caption{Example of a figure caption.}\label{fig}
-\end{figure}
+\subsection{Environment and Method}
 
-Figure Labels: Use 8 point Times New Roman for Figure labels. Use words
-rather than symbols or abbreviations when writing Figure axis labels to
-avoid confusing the reader. As an example, write the quantity
-``Magnetization'', or ``Magnetization, M'', not just ``M''. If including
-units in the label, present them within parentheses. Do not label axes only
-with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization
-\{A[m\@(1)]\}'', not just ``A/m''. Do not label axes with a ratio of
-quantities and units. For example, write ``Temperature (K)'', not
-``Temperature/K''.
+The evaluation used a proof-of-concept deployment rather than an operational hospital system. Patient, hospital, and ministry clients and the PRE Server ran on Ubuntu 24.04.4 under WSL2 on an Intel Core i5-11400H host; WSL2 was allocated three physical cores, six logical threads, and 8~GB of the host's 16~GB RAM. Two Ubuntu 24.04.4 VPS instances, each with eight vCPUs and 8~GB RAM, hosted supporting services. The three-peer IPFS cluster, IOTA Gas Station, and IOTA Localnet deployment were placed on the VPS infrastructure.
 
-\subsection{References}
-Please number citations consecutively within brackets\ \cite{b1}. The
-sentence punctuation follows the bracket\ \cite{b2}. Refer simply to the reference
-number, as in\ \cite{b3}---do not use ``Ref.\ \cite{b3}'' or ``reference\ \cite{b3}'' except at
-the beginning of a sentence: ``Reference\ \cite{b3} was the first $\ldots$''
+Evaluation traced each stated requirement to implementation evidence and a test scenario. Twelve functional tests (\texttt{P-KF-01}--\texttt{P-KF-12}) were executed manually over outpatient and inpatient workflows. The inpatient path additionally exercised the discharge-planning segment. Thirteen nonfunctional tests (\texttt{P-KNF-01}--\texttt{P-KNF-13}) combined Rust unit/integration tests run with \texttt{cargo test} and client-level scenarios. These tests concern authorization correctness, traceability, and selected negative cases; they are not penetration tests or performance benchmarks.
 
-Number footnotes separately in superscripts. Place the actual footnote at
-the bottom of the column in which it was cited. Do not put footnotes in the
-abstract or reference list. Use letters for table footnotes.
+Table~\ref{tab:evaluation-summary} groups the 25 documented scenarios without treating each user-interface step as a separate scientific result. The thesis evaluation records all mapped functional and nonfunctional requirements as fulfilled.
 
-Unless there are six authors or more give all authors' names; do not use
-``\textnormal{et al.}''. Papers that have not been published, even if they have been
-submitted for publication, should be cited as ``unpublished''\ \cite{b4}. Papers
-that have been accepted for publication should be cited as ``in press''\ \cite{b5}.
-Capitalize only the first word in a paper title, except for proper nouns and
-element symbols.
+\begin{table*}[t]
+	\caption{Grouped Evaluation Evidence}
+	\label{tab:evaluation-summary}
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}p{0.18\textwidth}p{0.18\textwidth}p{0.48\textwidth}p{0.10\textwidth}@{}}
+		\toprule
+		\textbf{Category}                                                                                                                              & \textbf{Test IDs} & \textbf{Tested behavior and documented outcome} & \textbf{Status} \\
+		\midrule
+		Initial access and delegation                                                                                                                  &
+		\texttt{P-KF-01}--\texttt{03}, \texttt{06}, \texttt{09}                                                                                        &
+		Patient-to-records-personnel tokens and narrower nurse, physician, laboratory, and pharmacy child tokens were created for the clinical flow.   &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Role-scoped clinical operations                                                                                                                &
+		\texttt{P-KF-04}, \texttt{05}, \texttt{07}, \texttt{08}, \texttt{10}                                                                           &
+		Nurse initial-examination, physician clinical, laboratory, and pharmacy read/write operations processed their corresponding segments.          &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Patient control and traceability                                                                                                               &
+		\texttt{P-KF-11}, \texttt{12}                                                                                                                  &
+		The patient viewed the delegation history and revoked access; the delegatee could no longer access the record.                                 &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Out-of-scope data                                                                                                                              &
+		\texttt{P-KNF-01}, \texttt{02}                                                                                                                 &
+		PRE rejected a laboratory segment outside token caveats, and a pharmacist client did not expose laboratory data.                               &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Monotonic attenuation                                                                                                                          &
+		\texttt{P-KNF-03}--\texttt{06}                                                                                                                 &
+		Requests that added a write function/dataset, increased depth, or extended expiry beyond the parent were rejected.                             &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Token, chain, and wallet validity                                                                                                              &
+		\texttt{P-KNF-07}--\texttt{09}, \texttt{13}                                                                                                    &
+		Expired tokens, broken delegation chains, missing wallet proofs, and proofs from a non-active actor were rejected.                             &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Audit and revocation enforcement                                                                                                               &
+		\texttt{P-KNF-10}--\texttt{12}                                                                                                                 &
+		Delegation details were displayed; a matching revocation key rejected the token, and root revocation removed active root and delegated access. &
+		Fulfilled                                                                                                                                                                                                                              \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
 
-For papers published in translation journals, please give the English
-citation first, followed by the original foreign-language citation\ \cite{b6}.
+\subsection{Interpretation of Results}
+
+The positive scenarios establish an end-to-end path from an initial patient grant to task-specific access by four clinical actor types. They also connect segmentation to observable operations: the nurse writes initial examination data, the laboratory actor reads a supporting request and writes laboratory results, and the pharmacist reads prescription-related data and writes pharmacy service data. This evidence supports functional integration of category-aware authorization; it does not quantify usability or clinical effectiveness.
+
+The negative scenarios directly exercise the main attenuation and requester-binding invariants. Dataset/function expansion, increased depth, and later child expiry were rejected. Separate cases rejected an expired token, a discontinuous delegation chain, a missing wallet signature, and a physician signature presented for a laboratory-active token. Revocation tests covered both direct token-hash lookup and use after patient-initiated chain revocation. Together, these results support correctness of the implemented authorization rules within the tested cases. They do not demonstrate resistance to all attacks, formal cryptographic correctness, or behavior under high concurrency.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The results address the central mismatch in the earlier design: a granular token now has a granular storage object against which it can be enforced. PRE compares caveat intersections with on-chain segment metadata before returning re-encryption output, so an unauthorized category is rejected before the client obtains decryptable material. Institutional subrole checks further prevent a syntactically broad update token from authorizing a professional operation outside the actor's implemented responsibility.
+
+Offline delegation reduces repeated patient interaction while preserving patient control at two points: the patient authorizes the root grant and can revoke its chain. The term is deliberately narrow. Delegation remains an online distributed transaction involving PRE validation, encrypted metadata delivery through IOTA, Redis state, and client cryptography. This improves workflow continuity only when those components are available.
+
+PRE is also a material trust and availability boundary. It holds the Macaroon root key, computes effective capability, validates wallets and on-chain roles, and gates re-encryption. Redis availability affects revocation and PRE material; IOTA availability affects identity, access, and audit state; IPFS availability affects ciphertext retrieval. The evaluation did not benchmark these dependencies or test large-scale failure behavior.
+
+Other limitations follow the implemented scope. The prototype covers outpatient, inpatient, laboratory, and pharmacy datasets, represents segment payloads as text, and fixes delegation depth at two. It was evaluated locally and on VPS-hosted support services, not against a production hospital information system. The evaluation focuses on functional and authorization behavior rather than throughput, availability, scalability, broad adversarial testing, or a formal security proof; cryptographic properties are assumed from the selected libraries and schemes. Emergency access, the emergency-department dataset, and break-glass mechanisms are outside the study and are not contributions of this work.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This work extended DecMed with category-based EMR segmentation and Macaroon capabilities whose caveats constrain operation, patient, episode, hospital, data scope, expiry, and delegation chain. PRE-mediated attenuation prevents a requested child from exceeding its parent, while wallet proof, role/subrole validation, Redis revocation, and IOTA audit records bind the capability to the implemented workflow. Across 12 functional and 13 authorization-oriented tests, the documented prototype satisfied its mapped requirements and rejected the tested out-of-scope, non-monotonic, expired, malformed-chain, wallet-invalid, and revoked cases.
+
+The evidence supports functional correctness for the evaluated prototype, not a general claim of security or efficiency. Future work should validate the design in hospital-integrated and inter-facility workflows, map segments to SATUSEHAT/FHIR representations, and evaluate performance, availability, scalability, and security more extensively.

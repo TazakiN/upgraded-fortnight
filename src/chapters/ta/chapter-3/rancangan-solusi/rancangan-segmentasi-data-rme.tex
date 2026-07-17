@@ -3,7 +3,7 @@
 
 % Rancangan segmentasi data RME pada subbab ini direferensikan sebagai \texttt{R-TA-02}. Rancangan ini merealisasikan \texttt{S-TA-02} untuk menjawab \texttt{M-TA-02}, yaitu belum tersedianya objek data RME yang cukup granular untuk dijadikan dasar penegakan akses.
 
-Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, rancangan segmentasi data RME memecah data klinis menjadi beberapa segmen terenkripsi. Setiap segmen dibentuk berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. \textit{Dataset category} merepresentasikan konteks layanan, seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. \textit{Function category} merepresentasikan fungsi data di dalam \textit{dataset}, seperti anamnesis, diagnosis, terapi, pemeriksaan penunjang, atau \textit{dispensing}. Kombinasi kedua kategori tersebut menjadi unit data terkecil yang digunakan dalam proses kontrol akses.
+Sesuai dengan analisis solusi pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}, data klinis dipecah menjadi beberapa segmen terenkripsi pada rancangan segmentasi data RME. Setiap segmen dibentuk berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. \textit{Dataset category} merepresentasikan konteks layanan, seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. \textit{Function category} merepresentasikan fungsi data di dalam \textit{dataset}, seperti anamnesis, diagnosis, terapi, pemeriksaan penunjang, atau \textit{dispensing}. Kombinasi kedua kategori tersebut menjadi unit data terkecil yang digunakan dalam proses kontrol akses.
 
 Tabel \ref{tab:mapping-dataset-category} menunjukkan \textit{dataset category} yang digunakan pada rancangan ini.
 
@@ -22,7 +22,7 @@ Tabel \ref{tab:mapping-dataset-category} menunjukkan \textit{dataset category} y
 	\end{tabular}
 \end{table}
 
-Setiap \textit{dataset category} kemudian dibagi lagi berdasarkan \textit{function category}. Kategori fungsi klinis mengacu pada hasil klasifikasi metadata RME yang disajikan pada Lampiran \ref{lampiran:metadata-rme}. Selain fungsi klinis, rancangan ini juga tetap menyediakan kategori untuk dokumentasi administratif. Dokumentasi administratif tidak menjadi fokus utama Tugas Akhir ini, sehingga dokumen administratif dikelompokkan ke dalam satu kategori umum, yaitu \texttt{ADMINISTRATIVE\_GENERAL}. Kategori ini tetap disediakan karena beberapa kebutuhan fungsional DecMed masih bergantung pada keberadaan data administratif, khususnya F01, F06, F07, F14, dan F21 pada Tabel di Lampiran \ref{tab:kebutuhan-fungsional-decmed}.
+Setiap \textit{dataset category} kemudian dibagi lagi berdasarkan \textit{function category}. Kategori fungsi klinis mengacu pada hasil klasifikasi metadata RME yang disajikan pada Lampiran \ref{lampiran:metadata-rme}. Selain fungsi klinis, kategori untuk dokumentasi administratif tetap disediakan pada rancangan ini. Dokumentasi administratif tidak difokuskan pada Tugas Akhir ini, sehingga dokumen administratif dikelompokkan ke dalam satu kategori umum, yaitu \texttt{ADMINISTRATIVE\_GENERAL}. Kategori ini tetap disediakan karena beberapa kebutuhan fungsional DecMed masih bergantung pada keberadaan data administratif, khususnya F01, F06, F07, F14, dan F21 pada Tabel di Lampiran \ref{tab:kebutuhan-fungsional-decmed}.
 
 Tabel \ref{tab:mapping-function-category} menunjukkan \textit{function category} yang digunakan pada implementasi.
 
@@ -102,4 +102,4 @@ Pada rancangan ini, \textit{function category} tidak selalu dibentuk dari setiap
 
 Secara penyimpanan, satu entri metadata \textit{on-chain} menunjuk pada satu segmen data terenkripsi di penyimpanan \textit{off-chain}. Rincian skema metadata \textit{on-chain} disajikan pada Tabel \ref{tab:onchain-schema}, sedangkan skema objek data segmen \textit{off-chain} disajikan pada Tabel \ref{tab:offchain-schema}.
 
-Rancangan ini membuat \textit{Server} PRE dapat menegakkan akses pada tingkat segmen. Ketika aktor meminta akses terhadap data RME, \textit{Server} PRE mencocokkan \textit{caveats} pada token Macaroon dengan metadata segmen yang diminta. Sebagai contoh, token yang hanya mengizinkan akses tulis terhadap \textit{dataset} Laboratorium tidak dapat digunakan untuk menulis segmen pada \textit{dataset} Rawat Jalan.
+Dengan rancangan ini, akses pada tingkat segmen dapat ditegakkan oleh \textit{Server} PRE. Ketika aktor meminta akses terhadap data RME, \textit{Server} PRE mencocokkan \textit{caveats} pada token Macaroon dengan metadata segmen yang diminta. Sebagai contoh, token yang hanya mengizinkan akses tulis terhadap \textit{dataset} Laboratorium tidak dapat digunakan untuk menulis segmen pada \textit{dataset} Rawat Jalan.

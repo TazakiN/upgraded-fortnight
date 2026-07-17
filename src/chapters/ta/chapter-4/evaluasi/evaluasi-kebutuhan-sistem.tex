@@ -1,40 +1,10 @@
 \subsection{Evaluasi terhadap Kebutuhan Sistem}
 \label{subsec:evaluasi-kebutuhan-sistem}
 
-Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, implementasi dievaluasi terhadap kebutuhan fungsional dan nonfungsional yang menjadi dasar pengembangan DecMed. Evaluasi menghubungkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem} dengan implementasi dan pengujian yang telah dilakukan. Setiap kebutuhan diperiksa berdasarkan komponen yang merealisasikannya dan skenario pengujian yang memverifikasi perilakunya. Pemetaan ini menunjukkan keterhubungan antara kebutuhan, implementasi, dan pengujian tanpa memisahkan ketiganya sebagai daftar yang berdiri sendiri.
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, implementasi dievaluasi terhadap kebutuhan fungsional dan nonfungsional yang menjadi dasar pengembangan DecMed. Kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem} dihubungkan dengan implementasi dan pengujian yang telah dijalankan. Setiap kebutuhan diperiksa berdasarkan komponen yang merealisasikannya dan skenario pengujian yang memverifikasi perilakunya. Pemetaan ini menunjukkan keterhubungan antara kebutuhan, implementasi, dan pengujian tanpa memisahkan ketiganya sebagai daftar yang berdiri sendiri.
 
-Ringkasan pemetaan kebutuhan sistem terhadap implementasi dan pengujian ditunjukkan pada Tabel \ref{tab:evaluasi-kebutuhan-sistem}. Hasil evaluasi menunjukkan bahwa seluruh kebutuhan fungsional dan nonfungsional telah terpenuhi berdasarkan skenario pengujian manual serta pengujian unit atau integrasi yang telah dilakukan.
+Ringkasan pemetaan kebutuhan sistem terhadap implementasi dan pengujian disajikan pada Lampiran \ref{lampiran:pengujian-dan-evaluasi-kebutuhan-sistem}, Tabel \ref{tab:evaluasi-kebutuhan-sistem}. Hasil evaluasi menunjukkan bahwa seluruh kebutuhan fungsional dan nonfungsional telah terpenuhi berdasarkan skenario pengujian manual serta pengujian unit atau integrasi yang telah dijalankan.
 
-\begingroup
-\small
-\begin{longtable}{|p{0.14\textwidth}|p{0.32\textwidth}|p{0.30\textwidth}|p{0.14\textwidth}|}
-	\caption{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian}
-	\label{tab:evaluasi-kebutuhan-sistem}                                                                                                                                                                                   \\
-	\hline
-	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                        & \textbf{Pengujian Terkait}                                                                                                & \textbf{Status} \\ \hline
-	\endfirsthead
-	\caption[]{Evaluasi Kebutuhan Sistem terhadap Implementasi dan Pengujian (lanjutan)}                                                                                                                                    \\
-	\hline
-	\textbf{Kebutuhan} & \textbf{Implementasi Terkait}                        & \textbf{Pengujian Terkait}                                                                                                & \textbf{Status} \\ \hline
-	\endhead
-	\texttt{KF-TA-01}  & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-05} & \texttt{PS-TA-01}                                                                                                         & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-02}  & \texttt{I-TA-03}, \texttt{I-TA-04}, \texttt{I-TA-05} & \texttt{PS-TA-12}, \texttt{PU-TA-08}                                                                                      & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-03}  & \texttt{I-TA-04}, \texttt{I-TA-05}                   & \texttt{PS-TA-11}                                                                                                         & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-04}  & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06} & \texttt{PS-TA-02}, \texttt{PS-TA-03}                                                                                      & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-05}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PS-TA-05}, \texttt{PS-TA-08}                                                                                      & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-06}  & \texttt{I-TA-02}, \texttt{I-TA-04}, \texttt{I-TA-06} & \texttt{PS-TA-06}, \texttt{PS-TA-09}                                                                                      & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-07}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PS-TA-04}                                                                                                         & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-08}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PS-TA-07}                                                                                                         & Terpenuhi.      \\ \hline
-	\texttt{KF-TA-09}  & \texttt{I-TA-01}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PS-TA-10}                                                                                                         & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-01} & \texttt{I-TA-01}, \texttt{I-TA-02}, \texttt{I-TA-03} & \texttt{PU-TA-01} dan pengujian akses segmen pada \textit{client hospital}                                                & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-02} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PU-TA-02}, \texttt{PU-TA-03}, \texttt{PU-TA-04} dan pengujian atenuasi masa berlaku pada \textit{client hospital} & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-03} & \texttt{I-TA-02}, \texttt{I-TA-03}, \texttt{I-TA-06} & \texttt{PU-TA-05}, \texttt{PU-TA-06}, \texttt{PU-TA-07}                                                                   & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-04} & \texttt{I-TA-04}, \texttt{I-TA-05}, \texttt{I-TA-06} & \texttt{PS-TA-11} dan pengujian riwayat delegasi pada \textit{client} pasien                                              & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-05} & \texttt{I-TA-03}, \texttt{I-TA-05}                   & \texttt{PU-TA-08}, \texttt{PS-TA-12}                                                                                      & Terpenuhi.      \\ \hline
-	\texttt{KNF-TA-06} & \texttt{I-TA-03}, \texttt{I-TA-06}                   & \texttt{PU-TA-07}, \texttt{PU-TA-09}                                                                                      & Terpenuhi.      \\ \hline
-\end{longtable}
-\endgroup
-
-Dengan demikian, evaluasi menunjukkan bahwa implementasi Macaroons, segmentasi data RME, atenuasi delegasi, revokasi, audit delegasi, dan verifikasi bukti identitas aktor aktif telah memenuhi kebutuhan yang ditetapkan. Kebutuhan fungsional terpenuhi melalui skenario \texttt{PS-TA-01} sampai \texttt{PS-TA-12}, sedangkan kebutuhan nonfungsional terpenuhi melalui pengujian \texttt{KNF-TA-01} sampai \texttt{KNF-TA-06} yang didukung oleh pengujian unit \texttt{PU-TA-01} sampai \texttt{PU-TA-09}.
+Dengan demikian, hasil evaluasi menunjukkan bahwa implementasi Macaroons, segmentasi data RME, atenuasi delegasi, revokasi, audit delegasi, dan verifikasi bukti kepemilikan identitas aktor pada rantai delegasi telah memenuhi kebutuhan yang ditetapkan. Kebutuhan fungsional terpenuhi melalui skenario \texttt{P-KF-01} sampai \texttt{P-KF-12}, sedangkan kebutuhan nonfungsional terpenuhi melalui pengujian \texttt{P-KNF-01} sampai \texttt{P-KNF-13}.
 
 % Untuk memperlihatkan keterhubungan antarbagian secara ringkas, matriks ketertelusuran dari masalah, solusi, rancangan, implementasi, hingga bukti pengujian disajikan pada Lampiran \ref{lampiran:matriks-ketertelusuran-ta}.

@@ -33,9 +33,9 @@ Kontrol akses granular atau \textit{fine-grained access control} adalah pendekat
 
 Sebuah mekanisme kontrol akses dapat disebut granular apabila sistem mampu membedakan hak akses berdasarkan beberapa dimensi otorisasi secara lebih spesifik. Dimensi tersebut meliputi: (1) subjek yang meminta akses, misalnya identitas pengguna, peran, atau atribut; (2) objek atau sumber daya yang diakses, misalnya pengguna tertentu, sumber data tertentu, \textit{dataset} tertentu, atau bagian tertentu dari data; (3) operasi yang dilakukan, misalnya membaca, menulis, memperbarui, mendelegasikan, dan menghapus; dan (4) kondisi atau konteks akses, misalnya waktu berlaku, tujuan akses, lokasi, atau kondisi layanan tertentu \autocite{hu2014abac}.
 
-Granularitas dalam kontrol akses juga berkaitan erat dengan prinsip \textit{least privilege}, yaitu pemberian hak akses sebatas yang diperlukan untuk menjalankan tugas tertentu \autocite{nist80053r5}. Dengan pendekatan ini, pengguna tidak langsung memperoleh akses penuh terhadap seluruh sumber daya hanya karena memiliki peran tertentu. Sebagai contoh, tenaga medis tidak cukup hanya diberi akses berdasarkan peran umum sebagai ``dokter'', melainkan aksesnya dapat dibatasi hanya pada pasien tertentu, episode layanan tertentu, data tertentu, serta operasi tertentu yang sesuai dengan kebutuhan tugasnya. Dengan demikian, kontrol akses granular dapat mengurangi risiko akses berlebihan dan membatasi dampak apabila kredensial atau token akses disalahgunakan.
+Granularitas dalam kontrol akses juga berkaitan erat dengan prinsip \textit{least privilege}, yaitu pemberian hak akses sebatas yang diperlukan untuk menjalankan tugas tertentu \autocite{nist80053r5}. Dengan pendekatan ini, pengguna tidak langsung memperoleh akses penuh terhadap seluruh sumber daya hanya karena memiliki peran tertentu. Sebagai contoh, tenaga medis tidak cukup hanya diberi akses berdasarkan peran umum sebagai ``dokter'', melainkan aksesnya dapat dibatasi hanya pada pasien tertentu, episode layanan tertentu, data tertentu, dan operasi tertentu yang sesuai dengan kebutuhan tugasnya. Dengan demikian, kontrol akses granular dapat mengurangi risiko akses berlebihan dan membatasi dampak apabila kredensial atau token akses disalahgunakan.
 
-Pada Tugas Akhir ini, kontrol akses granular dimaknai sebagai kemampuan sistem untuk membatasi hak akses berdasarkan kombinasi antara subjek, data yang diakses, jenis operasi, waktu berlaku, serta batasan delegasi.
+Pada Tugas Akhir ini, perluasan kontrol akses dimaknai sebagai penerapan model kebijakan yang memperluas batasan akses dari \textit{role} dan \textit{purpose} menjadi kombinasi antara subjek, objek data, jenis operasi, waktu berlaku, kondisi akses, dan batasan delegasi.
 
 \subsection{Model CapBAC}
 \label{subsec:model-capbac}
@@ -53,3 +53,57 @@ CapBAC memungkinkan otorisasi terdesentralisasi karena mengandalkan token kapabi
 	\label{fig:sequence-diagram-capbac}
 \end{figure}
 
+\subsection{Policy-Based Access Control}
+\label{subsec:policy-based-access-control}
+
+\textit{Policy-Based Access Control} (PBAC) merupakan pendekatan kontrol akses yang menentukan keputusan otorisasi berdasarkan sekumpulan kebijakan eksplisit \autocite{ferraiolo2015policy}. PBAC tidak selalu diposisikan sebagai model yang sepenuhnya terpisah dari \textit{Role-Based Access Control} (RBAC) atau \textit{Attribute-Based Access Control} (ABAC). Peran dan atribut dapat digunakan sebagai bagian dari pertimbangan kebijakan dalam PBAC. Perbedaannya terletak pada cara keputusan akses dirumuskan. Pada RBAC, hak akses terutama diperoleh berdasarkan peran pengguna, sedangkan pada PBAC keputusan akses ditentukan melalui evaluasi aturan kebijakan yang dapat menggabungkan peran, atribut, konteks, tujuan, dan batasan lainnya. Oleh karena itu, PBAC dapat digunakan untuk membentuk kontrol akses yang lebih kontekstual dan granular dibandingkan penggunaan peran secara tunggal.
+
+Secara umum, suatu kebijakan akses dalam PBAC melibatkan elemen-elemen berikut \autocite{ferraiolo2015policy}.
+
+\begin{enumerate}
+	\item \textbf{Subjek}
+	      Subjek merupakan entitas yang mengajukan permintaan akses, seperti pengguna, aplikasi, atau layanan.
+
+	\item \textbf{Sumber daya}
+
+	      Sumber daya merupakan objek yang akan diakses. Sumber daya dapat dikelompokkan berdasarkan kategori, pemilik, tingkat sensitivitas, atau fungsi data.
+
+	\item \textbf{Tindakan}
+
+	      Tindakan menyatakan operasi yang akan dilakukan terhadap sumber daya, seperti \textit{read} atau \textit{write}.
+
+	\item \textbf{Konteks}
+
+	      Konteks merupakan kondisi tambahan ketika permintaan akses dilakukan.
+
+	\item \textbf{Tujuan penggunaan}
+
+	      Tujuan penggunaan menjelaskan alasan suatu data diakses. Dua \textit{request} dari subjek yang sama terhadap sumber daya yang sama dapat menghasilkan keputusan berbeda apabila memiliki tujuan penggunaan yang berbeda.
+
+	\item \textbf{Keputusan dan kewajiban}
+
+	      Hasil evaluasi kebijakan umumnya berupa keputusan \textit{permit} atau \textit{deny}. Kebijakan juga dapat menetapkan kewajiban yang harus dijalankan ketika akses diberikan.
+
+\end{enumerate}
+
+Berdasarkan elemen-elemen tersebut, suatu permintaan akses dapat direpresentasikan sebagai:
+
+\begin{equation}
+	q = \langle s, r, a, c, p \rangle,
+\end{equation}
+
+dengan $s$ sebagai subjek, $r$ sebagai sumber daya, $a$ sebagai tindakan, $c$ sebagai konteks, dan $p$ sebagai tujuan penggunaan. Keputusan akses diberikan dengan mengevaluasi permintaan tersebut terhadap seluruh kebijakan yang berlaku. Secara sederhana, keputusan akses dapat dinyatakan sebagai:
+
+\begin{equation}
+	\operatorname{Decision}(q) =
+	\begin{cases}
+		\operatorname{Permit}, & \text{jika seluruh kondisi kebijakan yang berlaku terpenuhi}, \\
+		\operatorname{Deny},   & \text{jika terdapat kondisi wajib yang tidak terpenuhi}.
+	\end{cases}
+\end{equation}
+
+Penerapan PBAC terdiri atas beberapa proses utama. Pertama, kebijakan didefinisikan dengan menentukan subjek, sumber daya, tindakan, dan kondisi yang diizinkan. Kedua, sistem membentuk konteks permintaan akses berdasarkan identitas pengguna dan sumber daya yang diminta. Ketiga, permintaan tersebut dievaluasi terhadap kebijakan yang berlaku untuk menghasilkan keputusan akses. Terakhir, keputusan tersebut ditegakkan pada sumber daya yang dilindungi serta dapat dicatat sebagai bagian dari proses audit.
+
+\textit{Policy Machine} merupakan salah satu kerangka formal yang dapat digunakan untuk merepresentasikan kebijakan melalui elemen kebijakan, hubungan penugasan, dan asosiasi antar elemen. Kerangka tersebut dapat mendukung berbagai pola kebijakan, termasuk kebijakan berbasis peran, atribut, atau tujuan penggunaan \autocite{ferraiolo2015policy}. Namun, \textit{Policy Machine} bukan satu-satunya bentuk PBAC. PBAC dapat diimplementasikan menggunakan berbagai cara, selama keputusan akses tetap didasarkan pada evaluasi kebijakan yang telah ditetapkan.
+
+% Pada penelitian ini, PBAC digunakan sebagai landasan untuk mendefinisikan hak akses berdasarkan aktor, pasien, kategori dataset, fungsi data, tindakan, masa berlaku, dan batasan delegasi. Kebijakan tersebut kemudian direpresentasikan dalam bentuk \textit{caveat} pada Macaroons.

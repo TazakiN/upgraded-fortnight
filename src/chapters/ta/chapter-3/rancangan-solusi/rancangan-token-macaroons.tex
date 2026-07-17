@@ -1,105 +1,471 @@
-\subsection{Rancangan Token Otorisasi Berbasis Macaroons}
+\subsection{Rancangan Representasi Kebijakan pada Token Macaroons}
 \label{subsec:rancangan-token-macaroons}
 
-% Rancangan token otorisasi berbasis Macaroons pada subbab ini direferensikan sebagai \texttt{R-TA-03} untuk rancangan \textit{caveats} dan \texttt{R-TA-04} untuk rancangan rantai delegasi. Kedua rancangan tersebut merealisasikan \texttt{S-TA-01} dan \texttt{S-TA-03} untuk menjawab \texttt{M-TA-01}, \texttt{M-TA-03}, dan \texttt{M-TA-04}.
+% Rancangan token otorisasi berbasis Macaroons pada subbab ini direferensikan sebagai \texttt{R-TA-04}. Rancangan ini merealisasikan \texttt{S-TA-03} untuk menjawab \texttt{M-TA-03} dan \texttt{M-TA-04}, serta merepresentasikan kapabilitas yang diturunkan dari model PBAC pada \texttt{R-TA-03}.
 
-Macaroons digunakan sebagai pengganti token JWT DecMed sesuai dengan hasil analisis solusi pada Subbab \ref{subsec:analisis-pemilihan-token-otorisasi}. Token Macaroon tetap mengikuti model CapBAC karena token berperan sebagai bukti kapabilitas yang dibawa oleh pemegang akses.
+Berdasarkan model PBAC pada Subbab \ref{subsec:rancangan-model-pbac-decmed}, keputusan akses pada DecMed ditentukan berdasarkan hubungan antara pengguna, atribut pengguna, objek, atribut objek, hak akses, dan kondisi akses. Model tersebut masih berada pada tingkat konseptual sehingga membutuhkan representasi yang dapat dibawa oleh pengguna dan diverifikasi pada saat permintaan akses dilakukan.
 
-Pada rancangan ini, \textit{Server} PRE bertindak sebagai \textit{issuer} token Macaroon awal dan memegang \texttt{RootKey} yang digunakan untuk proses penandatanganan token. \texttt{RootKey} disimpan pada \textit{environment variable} \textit{Server} PRE dan tidak pernah diberikan kepada \textit{client}. Token awal diterbitkan oleh \textit{Server} PRE setelah terdapat persetujuan dari pasien sebagai pemilik data. Dengan demikian, sifat \textit{patient-centric} tetap dipertahankan karena penerbitan akses awal tetap bergantung pada persetujuan pasien, sedangkan otoritas kriptografis penerbitan token berada pada \textit{Server} PRE.Setelah token awal diterbitkan, pemegang token dapat melakukan atenuasi melalui \textit{client} miliknya dan mengirimkan \textit{request} untuk mengatenuasi Macaroons ke \textit{server} PRE.
+Pada rancangan ini, Macaroon digunakan untuk merepresentasikan kapabilitas dan sebagian kondisi kebijakan akses. Token memuat identitas aktor yang berwenang menggunakan kapabilitas, cakupan objek yang dapat diakses, hak akses yang diberikan, masa berlaku, dan batasan delegasi. Namun, token tidak memuat seluruh keadaan kebijakan DecMed. Atribut kelembagaan pengguna, metadata objek, status revokasi, dan bukti kepemilikan alamat dompet diperoleh atau diverifikasi dari komponen sistem lain.
 
-Karena \textit{caveat} pada Macaroons bersifat \textit{append-only}, \textit{caveat} pada token induk tidak dapat dihapus atau diganti pada token turunan. Oleh karena itu, rancangan \textit{caveat} harus dibuat dalam bentuk batasan yang bersifat monoton. Setiap \textit{caveat} baru hanya dapat mempersempit hak akses dan tidak dapat memperluas hak akses. Dengan demikian, token turunan yang dibuat pada \textit{client} tetap aman karena seluruh batasan pada token induk tetap ikut terbawa dan diverifikasi oleh \textit{server} PRE.
+Dengan demikian, pembagian representasi kebijakan pada DecMed adalah sebagai berikut:
 
-Berdasarkan implementasi DecMed sebelumnya, token memiliki \textit{claim} \texttt{purpose} dan terdapat dua buah token untuk operasi baca atau tulis. Implementasi Move \textit{smart contract}, \textit{client}, dan PRE juga mencatat akses yang telah diberikan kepada tenaga medis untuk 2 \textit{purpose}, yaitu \texttt{Read} dan \texttt{Update}. Pada pengembangan ini, pola 2 buah token masih dipertahankan dengan membedakan nilai \textit{caveat} \texttt{purpose}, yaitu \texttt{Read} atau \texttt{Update}. Hal ini dilakukan sehingga rancangan token Macaroon tetap kompatibel dengan implementasi DecMed.
+\begin{enumerate}
+	\item Macaroon merepresentasikan atribut kapabilitas pengguna, hak akses, cakupan objek, masa berlaku, dan rantai delegasi.
+	\item Penyimpanan \textit{on-chain} IOTA menyediakan atribut kelembagaan pengguna serta metadata pasien, rumah sakit, episode RME, kategori dataset, dan kategori fungsi dari objek.
+	\item Redis menyediakan informasi yang diperlukan untuk memeriksa status revokasi token.
+	\item Tanda tangan permintaan atau bukti kepemilikan \textit{wallet} mengikat penggunaan token dengan alamat dompet salah satu aktor pada rantai delegasi.
+	\item \textit{Server} PRE menggabungkan seluruh informasi tersebut untuk menghasilkan keputusan \textit{permit} atau \textit{deny}.
+\end{enumerate}
 
-Pada rancangan ini, tidak ada \textit{caveat} yang digunakan sebagai penanda pemegang token saat ini. Hal ini disebabkan karena nilai pemegang token akan berubah ketika token didelegasikan, sedangkan Macaroon tidak mendukung penghapusan atau penggantian \textit{caveat} lama. Apabila token induk memiliki \texttt{holder\_address = 0xPETUGAS\_REKAM\_MEDIS} dan token turunan menambahkan \texttt{holder\_address = 0xDOKTER}, maka token tersebut akan memiliki dua \textit{caveat} identitas yang saling kontra. Kondisi tersebut dapat menyebabkan token tidak dapat digunakan karena satu permintaan akses tidak mungkin berasal dari dua alamat pemegang yang berbeda.
+Macaroon tetap mengikuti model \textit{Capability-Based Access Control} karena token berfungsi sebagai bukti kapabilitas yang dibawa oleh pengguna. Sementara itu, aturan yang digunakan untuk menafsirkan dan memvalidasi kapabilitas tersebut ditentukan oleh model PBAC. Oleh karena itu, PBAC dan CapBAC tidak diposisikan sebagai dua pendekatan yang saling menggantikan. Kebijakan akses didefinisikan melalui PBAC, sedangkan Macaroon menjadi media pembawa kapabilitas yang dibatasi oleh kebijakan tersebut.
 
-Sebagai gantinya, rancangan ini menggunakan pendekatan rantai delegasi dengan \textit{caveat} \texttt{root\_subject}, \texttt{delegated\_by}, dan \texttt{delegated\_to}. \texttt{root\_subject} menyatakan aktor penerima token awal dari pasien, sedangkan \texttt{delegated\_by} dan \texttt{delegated\_to} digunakan untuk merepresentasikan proses delegasi pada token turunan. Dengan pendekatan ini, sistem dapat menambahkan informasi delegasi baru tanpa perlu mengubah \textit{caveat} yang sudah ada sebelumnya. Untuk memastikan delegasi berjalan hanya pada satu fasyankes, \textit{caveat} \texttt{hospital\_cid} digunakan untuk mengikat token terhadap ID rumah sakit.
+\subsubsection{Struktur Kapabilitas Efektif Token}
 
-Selain informasi delegasi, token juga memuat batasan akses terhadap data RME tertentu. \textit{Caveat} \texttt{patient\_address} digunakan untuk mengikat token terhadap data RME pasien tertentu. \textit{Caveat} \texttt{related\_rme\_id} digunakan untuk membatasi token terhadap satu episode pelayanan. Kedua \textit{caveat} tersebut memastikan bahwa token tidak dapat digunakan untuk mengakses data pasien lain atau episode pelayanan lain yang tidak termasuk dalam cakupan token.
+Sebuah token Macaroon $\tau$ secara konseptual terdiri atas identitas token, himpunan \textit{caveat}, dan tanda tangan autentikasi:
 
-Namun \textit{caveat} \texttt{related\_rme\_id} hanya berlaku untuk token \texttt{Update} dan tidak berlaku untuk token \texttt{Read}. Hal ini karena pada skenario alur klinis pada pelayanan kesehatan di sebuah fasyankes, seorang dokter pada umumnya membutuhkan akses ke semua data RME pasien untuk menentukan tindakan medis yang tepat. Namun, untuk aksi \texttt{Update} pada data RME, dokter hanya perlu mengakses data RME yang berkaitan dengan episode pelayanan yang sedang berlangsung.
+\begin{equation}
+	\tau =
+	\langle
+	id_{\tau},
+	C_{\tau},
+	\sigma_{\tau}
+	\rangle,
+\end{equation}
 
-Pada rancangan ini, \texttt{related\_rme\_id} menggunakan format \texttt{RME-\char`\{sequence\_6\_digit\char`\}}, misalnya \texttt{RME-000001}. Format ini mengikuti implementasi DecMed sebelumnya dan dipilih karena sudah cukup untuk kebutuhan prototipe.
+dengan $id_{\tau}$ sebagai identitas token, $C_{\tau}$ sebagai himpunan \textit{caveat}, dan $\sigma_{\tau}$ sebagai tanda tangan Macaroon.
 
-Mekanisme pembatasan kategori data dilakukan dengan metode \textit{whitelisting}. Token harus secara eksplisit menyatakan \textit{dataset category} dan \textit{function category} yang dapat diakses oleh pemegang token. Rancangan ini menggunakan \textit{caveat} \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}. Keempat \textit{caveat} tersebut disesuaikan dengan \textit{metadata} segmen RME yang disimpan pada penyimpanan \textit{on-chain}, yaitu \texttt{dataset\_category} dan \texttt{function\_category}. Dengan demikian, \textit{Server} PRE dapat memvalidasi apakah segmen yang diminta termasuk dalam cakupan akses yang diizinkan oleh token.
+Himpunan \textit{caveat} pada token dievaluasi untuk membentuk kapabilitas efektif:
 
-Pembatasan waktu akses dilakukan dengan \textit{caveat} \texttt{expires\_before}. \textit{Caveat} ini menyatakan batas waktu maksimum token dapat digunakan. Pada token turunan, nilai \texttt{expires\_before} harus sama dengan atau lebih awal daripada token induk. Pada proses verifikasi, \textit{caveat} \texttt{expires\_before} yang diambil adalah nilai paling awal dari seluruh \textit{caveat} \texttt{expires\_before}.
+\begin{equation}
+	\operatorname{Cap}_{\operatorname{eff}}(\tau)
+	=
+	\langle
+	U_{\operatorname{subj}}(\tau),
+	h,
+	p,
+	r,
+	D_{\operatorname{eff}},
+	F_{\operatorname{eff}},
+	AR_{\operatorname{eff}},
+	t_{\operatorname{exp}},
+	depth
+	\rangle,
+\end{equation}
 
-Pembatasan jumlah delegasi dilakukan dengan \textit{caveat} \texttt{max\_delegation\_depth}. Nilai ini menyatakan jumlah maksimum delegasi yang masih diperbolehkan dari token terkait. Token awal dapat memiliki nilai \texttt{max\_delegation\_depth = 2} yang menandakan bahwa token Macaroon tersebut dapat diturunkan 2 kali. Pada saat membuat token turunan, token turunan dapat ditambahkan \textit{caveat} \texttt{max\_delegation\_depth = 1}, yang berarti kemampuan menurunkan token lebih lanjut telah berkurang 1. \textit{Caveat} ini dapat divalidasi lebih lanjut lagi dengan memanfaatkan \textit{caveat} \texttt{delegated\_by} dan \texttt{delegated\_to} untuk berapa banyak turunan yang telah terjadi.
+dengan:
 
-Untuk membantu verifikasi token yang sudah direvokasi, \textit{caveat} \texttt{parent\_token\_hash} digunakan untuk mengikat token turunan dengan token induk. Nilai \texttt{parent\_token\_hash} adalah \textit{hash} dari token induk. Rincian lebih lanjut tentang mekanisme revokasi token Macaroon dijelaskan pada Subbab \ref{subsubsec:revokasi-token-macaroons}.
+\begin{description}
+	\item[$U_{\operatorname{subj}}(\tau)$] himpunan aktor yang berwenang menggunakan token berdasarkan rantai delegasi;
+	\item[$h$] rumah sakit yang menjadi konteks token;
+	\item[$p$] pasien pemilik data;
+	\item[$r$] episode RME yang dibatasi oleh token apabila berlaku;
+	\item[$D_{\operatorname{eff}}$] himpunan kategori dataset efektif;
+	\item[$F_{\operatorname{eff}}$] himpunan kategori fungsi efektif;
+	\item[$AR_{\operatorname{eff}}$] hak akses efektif;
+	\item[$t_{\operatorname{exp}}$] batas waktu efektif token; dan
+	\item[$depth$] kedalaman rantai delegasi.
+\end{description}
 
-Rancangan \textit{caveats} yang digunakan pada token Macaroon ditunjukkan pada Tabel \ref{tab:rancangan-caveats-macaroons-baru}.
+Kapabilitas efektif tersebut merupakan representasi dari atribut kapabilitas $ua_{\operatorname{cap}(\tau)}$ dan asosiasi hak akses yang telah didefinisikan pada Subbab \ref{subsec:rancangan-model-pbac-decmed}. Token tidak secara langsung menyimpan objek RME, tetapi menyimpan batasan yang akan dicocokkan dengan atribut objek pada metadata segmen.
+
+\subsubsection{Pemetaan Elemen Kebijakan ke Caveat}
+
+Pemetaan elemen kebijakan PBAC terhadap \textit{caveat} Macaroon ditunjukkan pada Tabel \ref{tab:pemetaan-policy-ke-caveat-macaroon}.
+
+\begin{longtable}{|p{0.18\textwidth}|p{0.21\textwidth}|p{0.40\textwidth}|p{0.12\textwidth}|}
+	\caption{Pemetaan Elemen Kebijakan ke \textit{Caveat} Macaroon}
+	\label{tab:pemetaan-policy-ke-caveat-macaroon}                                              \\
+
+	\hline
+	\textbf{Elemen Kebijakan}
+	 & \textbf{\textit{Caveat}}
+	 & \textbf{Fungsi}
+	 & \textbf{Token}                                                                           \\ \hline
+	\endfirsthead
+
+	\hline
+	\textbf{Elemen Kebijakan}
+	 & \textbf{\textit{Caveat}}
+	 & \textbf{Fungsi}
+	 & \textbf{Token}                                                                           \\ \hline
+	\endhead
+
+	Hak akses
+	 & \texttt{purpose}
+	 & Menyatakan operasi yang diizinkan, yaitu \texttt{Read} atau \texttt{Update}.
+	 & Keduanya                                                                                 \\ \hline
+
+	Atribut objek: pasien
+	 & \texttt{patient\_\newline address}
+	 & Membatasi kapabilitas terhadap RME milik pasien tertentu.
+	 & Keduanya                                                                                 \\ \hline
+
+	Atribut objek: rumah sakit
+	 & \texttt{hospital\_cid}
+	 & Membatasi penggunaan kapabilitas pada konteks rumah sakit tertentu.
+	 & Keduanya                                                                                 \\ \hline
+
+	Atribut objek: episode RME
+	 & \texttt{related\_rme\_id}
+	 & Membatasi operasi perubahan data pada satu episode RME.
+	 & \texttt{Update}                                                                          \\ \hline
+
+	Atribut kapabilitas: penerima awal
+	 & \texttt{root\_subject}
+	 & Menyatakan alamat dompet penerima token awal dari pasien.
+	 & Keduanya                                                                                 \\ \hline
+
+	Rantai delegasi
+	 & \texttt{delegated\_by}
+	 & Menyatakan alamat dompet aktor yang menurunkan token.
+	 & Turunan                                                                                  \\ \hline
+
+	Rantai delegasi
+	 & \texttt{delegated\_to}
+	 & Menyatakan alamat dompet penerima token turunan.
+	 & Turunan                                                                                  \\ \hline
+
+	Cakupan objek baca
+	 & \texttt{read\_dataset\_\newline in}
+	 & Membatasi kategori dataset yang dapat dibaca.
+	 & \texttt{Read}                                                                            \\ \hline
+
+	Cakupan objek tulis
+	 & \texttt{write\_dataset\_\newline in}
+	 & Membatasi kategori dataset yang dapat ditulis atau diperbarui.
+	 & \texttt{Update}                                                                          \\ \hline
+
+	Cakupan objek baca
+	 & \texttt{read\_function\newline \_in}
+	 & Membatasi kategori fungsi klinis yang dapat dibaca.
+	 & \texttt{Read}                                                                            \\ \hline
+
+	Cakupan objek tulis
+	 & \texttt{write\_function\newline \_in}
+	 & Membatasi kategori fungsi klinis yang dapat ditulis atau diperbarui.
+	 & \texttt{Update}                                                                          \\ \hline
+
+	Kondisi waktu
+	 & \texttt{expires\_before}
+	 & Menentukan batas waktu maksimum penggunaan kapabilitas.
+	 & Keduanya                                                                                 \\ \hline
+
+	Kondisi delegasi
+	 & \texttt{max\_delegation\newline \_depth}
+	 & Membatasi jumlah penurunan kapabilitas yang masih diizinkan.
+	 & Keduanya                                                                                 \\ \hline
+
+	Hubungan token
+	 & \texttt{parent\_token\_\newline hash}
+	 & Menghubungkan token turunan dengan token induknya untuk pemeriksaan rantai dan revokasi.
+	 & Turunan                                                                                  \\ \hline
+\end{longtable}
+
+Nama \textit{caveat} \texttt{purpose} dipertahankan untuk menjaga kompatibilitas dengan implementasi DecMed sebelumnya. Namun, karena nilai yang digunakan adalah \texttt{Read} dan \texttt{Update}, secara semantik \textit{caveat} tersebut merepresentasikan hak akses $AR$.
+
+\subsubsection{Pemisahan Kebijakan di Dalam dan di Luar Token}
+
+Tidak seluruh elemen kebijakan disimpan sebagai \textit{caveat} agar token tidak menjadi satu-satunya sumber kebenaran mengenai kondisi pengguna dan objek. Pemetaan elemen kebijakan yang diperiksa dari luar token ditunjukkan pada Tabel \ref{tab:kebijakan-eksternal-macaroon}.
 
 \begin{table}[!ht]
 	\centering
-	\caption{Rancangan \textit{Caveats} pada Token Macaroon}
-	\label{tab:rancangan-caveats-macaroons-baru}
+	\caption{Elemen Kebijakan yang Diverifikasi di Luar Token}
+	\label{tab:kebijakan-eksternal-macaroon}
 	\small
-	\begin{tabular}{|p{0.22\textwidth}|p{0.55\textwidth}|p{0.13\textwidth}|}
+	\begin{tabular}{|p{0.25\textwidth}|p{0.27\textwidth}|p{0.37\textwidth}|}
 		\hline
-		\textbf{\textit{Caveat}} & \textbf{Fungsi}                                                          & \textbf{Pada Token} \\ \hline
+		\textbf{Elemen}
+		 & \textbf{Sumber}
+		 & \textbf{Fungsi}                                                                                         \\ \hline
 
-		\texttt{purpose}
-		                         & Menyatakan tujuan penggunaan token (\texttt{Read} atau \texttt{Update}). & Keduanya
-		\\ \hline
+		\textit{Role} dan \textit{subrole}
+		 & Registri personel pada IOTA
+		 & Memastikan aktor masih mempunyai kewenangan kelembagaan yang sesuai dengan operasi dan kategori data.   \\ \hline
 
-		\texttt{patient\_address}
-		                         & Mengikat token terhadap data RME milik pasien tertentu.                  & Keduanya
-		\\ \hline
+		Atribut objek
+		 & Metadata segmen pada IOTA
+		 & Menyediakan pasien, rumah sakit, episode RME, kategori dataset, dan kategori fungsi aktual dari segmen. \\ \hline
 
-		\texttt{related\_rme\_id}
-		                         & Menentukan episode pelayanan atau data RME yang dapat diakses.           & Update
-		\\ \hline
+		Kepemilikan alamat dompet
+		 & Tanda tangan permintaan atau \textit{wallet proof}
+		 & Memastikan pemohon merupakan salah satu aktor yang tercatat pada rantai delegasi token.                 \\ \hline
 
-		\texttt{root\_subject}
-		                         & Menyatakan aktor penerima token awal dari pasien.                        & Keduanya
-		\\ \hline
+		Status revokasi
+		 & Redis dan hubungan \texttt{parent\_token\_hash}
+		 & Memastikan token dan token induknya belum dicabut.                                                      \\ \hline
 
-		\texttt{delegated\_by}
-		                         & Menyatakan aktor yang melakukan delegasi token.                          & Keduanya
-		\\ \hline
-
-		\texttt{delegated\_to}
-		                         & Menyatakan aktor penerima token turunan.                                 & Keduanya
-		\\ \hline
-
-		\texttt{read\_dataset\_in}
-		                         & Membatasi \textit{dataset category} yang dapat dibaca.                   & Read
-		\\ \hline
-
-		\texttt{write\_dataset\_\newline in}
-		                         & Membatasi \textit{dataset category} yang dapat ditulis.                  & Update
-		\\ \hline
-
-		\texttt{read\_function\_\newline in}
-		                         & Membatasi \textit{function category} yang dapat dibaca.                  & Read
-		\\ \hline
-
-		\texttt{write\_function\_\newline in}
-		                         & Membatasi \textit{function category} yang dapat ditulis.                 & Update
-		\\ \hline
-
-		\texttt{expires\_before}
-		                         & Membatasi masa berlaku token.                                            & Keduanya
-		\\ \hline
-
-		\texttt{max\_delegation\_\newline depth}
-		                         & Membatasi jumlah delegasi turunan yang masih diperbolehkan.              & Keduanya
-		\\ \hline
-
-		\texttt{hospital\_cid}
-		                         & Mengikat token dengan rumah sakit tertentu.                              & Keduanya
-		\\ \hline
-
-		\texttt{parent\_token\_\newline hash}
-		                         & Mengikat token turunan dengan token induk untuk proses revokasi.         & Keduanya
-		\\ \hline
+		Data terenkripsi
+		 & IPFS dan material kunci PRE
+		 & Memastikan data hanya dapat dipulihkan setelah kebijakan akses terpenuhi.                               \\ \hline
 	\end{tabular}
+
 \end{table}
 
-Sebagai contoh, pasien dapat memberikan token awal kepada petugas rekam medis dengan cakupan akses yang cukup untuk mengoordinasikan pelayanan pada satu episode RME tertentu. Petugas rekam medis diberikan token awal dengan cakupan yang luas karena berperan sebagai koordinator awal pelayanan. Meskipun cakupannya luas, namun aksi yang dilakukan oleh petugas rekam medis dapat dibatasi dengan penegakan otoritas berbasis \textit{role} yang akan dijelaskan pada Subbab \ref{subsubsec:verifikasi-role-tenaga-medis-untuk-akses-dataset}. Contoh \textit{caveat} token awal untuk petugas rekam medis disajikan pada Kode \ref{lst:contoh-token-baca-awal-rekam-medis} dan Kode \ref{lst:contoh-token-pembaruan-awal-rekam-medis}.
+\subsubsection{Rancangan Token Read dan Update}
 
-Pada saat token turunan digunakan oleh tenaga medis, \textit{Server} PRE akan memverifikasi seluruh \textit{caveat} yang terdapat pada token, baik \textit{caveat} dari token awal maupun \textit{caveat} tambahan dari token turunan. Mekanisme verifikasi token pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsubsec:verifikasi-caveats-macaroons-di-pre}.
+Implementasi DecMed sebelumnya menggunakan dua token terpisah untuk operasi baca dan perubahan data. Pola tersebut dipertahankan untuk menjaga kompatibilitas dengan \textit{smart contract}, \textit{client}, penyimpanan metadata akses, dan \textit{Server} PRE.
 
-Rancangan ini juga mendukung prinsip \textit{least privilege}. Dokter dapat memiliki cakupan akses yang relatif luas untuk menjalankan tugas klinisnya, tetapi token turunan yang diberikan kepada petugas laboratorium atau apoteker dapat dibatasi hanya pada segmen yang relevan. Sebagai contoh, petugas laboratorium hanya dapat membaca segmen \texttt{PEMERIKSAAN\_PENUNJANG} pada \textit{dataset} \texttt{RAWAT\_JALAN} dan menulis segmen \texttt{LABORATORIUM} pada \textit{dataset} \texttt{LABORATORIUM}. Petugas tersebut tidak dapat membaca diagnosis, anamnesis, resep, atau segmen klinis lain yang tidak relevan dengan tugasnya.
+Token baca memiliki:
+
+\begin{equation}
+	AR_{\operatorname{eff}}(\tau_{\operatorname{read}})
+	=
+	{\texttt{Read}},
+\end{equation}
+
+sedangkan token perubahan data memiliki:
+
+\begin{equation}
+	AR_{\operatorname{eff}}(\tau_{\operatorname{update}})
+	=
+	{\texttt{Update}}.
+\end{equation}
+
+Token baca menggunakan \texttt{read\_dataset\_in} dan \texttt{read\_function\_in}. Token perubahan data menggunakan \texttt{write\_dataset\_in} dan \texttt{write\_function\_in}. Pemisahan tersebut mencegah token baca digunakan sebagai dasar operasi tulis meskipun kategori dataset atau kategori fungsi yang diminta sama.
+
+Pada token \texttt{Read}, \texttt{related\_rme\_id} tidak diwajibkan. Token baca dapat digunakan untuk membaca episode RME pasien yang berada pada rumah sakit, kategori dataset, dan kategori fungsi yang diizinkan. Dengan rancangan ini, kebutuhan tenaga medis, terutama dokter, untuk meninjau riwayat RME pasien ketika menentukan tindakan klinis didukung.
+
+Pada token \texttt{Update}, \texttt{related\_rme\_id} wajib disertakan. Token tersebut hanya dapat digunakan untuk menulis atau memperbarui segmen pada episode pelayanan yang dinyatakan oleh \textit{caveat}. Pembatasan ini mencegah tenaga medis memperbarui episode RME lain hanya karena masih memiliki akses terhadap pasien yang sama.
+
+Nilai \texttt{related\_rme\_id} menggunakan format \texttt{RME-\char`\{sequence\_6\_digit\char`\}}, misalnya \texttt{RME-000001}. Format tersebut mengikuti implementasi DecMed sebelumnya dan digunakan sebagai identitas episode RME pada prototipe.
+
+\subsubsection{Rancangan Subjek Rantai Delegasi}
+
+\textit{Caveat} \texttt{holder\_address} tidak digunakan pada rancangan token untuk menyatakan pemegang token tunggal. Hal ini disebabkan oleh sifat \textit{append-only} pada Macaroon. Apabila token awal memuat:
+
+\begin{verbatim}
+holder_address = 0xPETUGAS_REKAM_MEDIS
+\end{verbatim}
+
+kemudian token turunan menambahkan:
+
+\begin{verbatim}
+holder_address = 0xDOKTER
+\end{verbatim}
+
+maka token akan memiliki dua batasan identitas yang tidak dapat dipenuhi secara bersamaan. \textit{Caveat} lama tidak dapat dihapus atau diganti ketika token diturunkan.
+
+Sebagai gantinya, aktor yang berwenang menggunakan token ditentukan dari rantai delegasi. \texttt{root\_subject} menyatakan aktor penerima token awal, sedangkan setiap proses delegasi menambahkan pasangan \texttt{delegated\_by} dan \texttt{delegated\_to}. Himpunan subjek token didefinisikan sebagai:
+
+\begin{equation}
+	\operatorname{Subjects}(\tau)
+	=
+	\left\{
+	\operatorname{root\_subject}(\tau)
+	\right\}
+	\cup
+	\left\{
+	\operatorname{delegated\_to}_i(\tau)
+	\mid
+	1 \leq i \leq n
+	\right\},
+\end{equation}
+
+dengan $n$ sebagai jumlah langkah delegasi pada token. Dengan demikian, seluruh aktor yang tercatat pada rantai delegasi berwenang menggunakan token tersebut, sepanjang mampu membuktikan kepemilikan \textit{wallet} masing-masing. Tanda tangan dari aktor di luar $\operatorname{Subjects}(\tau)$ ditolak.
+
+Untuk setiap pasangan delegasi ke-$i$, rantai harus memenuhi:
+
+\begin{equation}
+	\operatorname{delegated\_by}_{i}
+	=
+	\begin{cases}
+		\operatorname{root\_subject},
+		 & i=1, \\
+		\operatorname{delegated\_to}_{i-1},
+		 & i>1.
+	\end{cases}
+\end{equation}
+
+Pemeriksaan keanggotaan subjek dinyatakan sebagai:
+
+\begin{equation}
+	\operatorname{ContainsSubject}(\tau,u)
+	\iff
+	u \in \operatorname{Subjects}(\tau).
+\end{equation}
+
+\subsubsection{Penerbitan Token Awal}
+
+Pada rancangan ini, \textit{Server} PRE bertindak sebagai penerbit token awal dan menyimpan \texttt{RootKey} yang digunakan untuk membentuk tanda tangan Macaroon. \texttt{RootKey} disimpan pada \textit{environment variable} \textit{Server} PRE dan tidak pernah diberikan kepada \textit{client}.
+
+Token awal diterbitkan setelah alur pemberian akses oleh pasien telah terpenuhi. Pasien menentukan penerima awal, rumah sakit, cakupan kategori dataset, cakupan kategori fungsi, hak akses, masa berlaku, dan batas delegasi. Informasi tersebut menjadi dasar pembentukan \textit{caveat} pada token awal.
+
+Alur penerbitan token awal adalah sebagai berikut:
+
+\begin{enumerate}
+	\item Pasien memilih aktor penerima dan cakupan akses.
+	\item \textit{Client} pasien membentuk permintaan pemberian akses.
+	\item \textit{Server} PRE memvalidasi identitas pasien dan parameter akses.
+	\item \textit{Server} PRE membentuk token Macaroon menggunakan \texttt{RootKey}.
+	\item Token dan metadata akses dicatat sesuai mekanisme pemberian akses DecMed.
+	\item Token dapat digunakan oleh aktor yang ditentukan sebagai \texttt{root\_subject}.
+\end{enumerate}
+
+Pemisahan antara pasien dan penerbit token tidak menghilangkan sifat \textit{patient-centric}. Pasien tetap menjadi pihak yang menentukan pemberian akses awal, sedangkan \textit{Server} PRE menjalankan fungsi kriptografis untuk membentuk token yang dapat diverifikasi secara konsisten.
+
+\subsubsection{Atenuasi Token sebagai Realisasi Delegasi}
+
+Delegasi diwujudkan melalui pembentukan token turunan dengan penambahan \textit{caveat}. Pada rancangan ini, \textit{client} delegator tidak membentuk token turunan secara mandiri. \textit{Client} mengirimkan token induk, alamat penerima, cakupan yang diminta, masa berlaku, dan bukti identitas delegator kepada \textit{Server} PRE.
+
+\textit{Server} PRE kemudian:
+
+\begin{enumerate}
+	\item memverifikasi tanda tangan dan seluruh \textit{caveat} token induk;
+	\item membentuk himpunan subjek rantai delegasi token induk;
+	\item memverifikasi bahwa permintaan berasal dari salah satu subjek pada rantai tersebut;
+	\item memeriksa status revokasi token induk;
+	\item memeriksa batas kedalaman delegasi;
+	\item memastikan cakupan token turunan tidak melebihi token induk;
+	\item menambahkan \texttt{delegated\_by}, \texttt{delegated\_to}, dan \texttt{parent\_token\_hash};
+	\item menambahkan batasan dataset, fungsi, masa berlaku, atau kedalaman delegasi yang lebih sempit; dan
+	\item menghasilkan token turunan.
+\end{enumerate}
+
+Token turunan $\tau_c$ dari token induk $\tau_p$ harus memenuhi:
+
+\begin{equation}
+	D_{\operatorname{eff}}(\tau_c)
+	\subseteq
+	D_{\operatorname{eff}}(\tau_p),
+\end{equation}
+
+\begin{equation}
+	F_{\operatorname{eff}}(\tau_c)
+	\subseteq
+	F_{\operatorname{eff}}(\tau_p),
+\end{equation}
+
+\begin{equation}
+	AR_{\operatorname{eff}}(\tau_c)
+	\subseteq
+	AR_{\operatorname{eff}}(\tau_p),
+\end{equation}
+
+dan:
+
+\begin{equation}
+	Expiry_{\operatorname{eff}}(\tau_c)
+	\leq
+	Expiry_{\operatorname{eff}}(\tau_p).
+\end{equation}
+
+Pasien dan rumah sakit pada token turunan tidak dapat diubah:
+
+\begin{equation}
+	Patient(\tau_c)=Patient(\tau_p),
+\end{equation}
+
+\begin{equation}
+	Hospital(\tau_c)=Hospital(\tau_p).
+\end{equation}
+
+Untuk token \texttt{Update}, identitas episode RME juga harus tetap sama:
+
+\begin{equation}
+	RME(\tau_c)=RME(\tau_p).
+\end{equation}
+
+Sifat \textit{append-only} pada Macaroon memastikan seluruh \textit{caveat} token induk tetap terdapat pada token turunan. Nilai efektif dari batasan kategori dataset dan fungsi diperoleh melalui irisan seluruh batasan:
+
+\begin{equation}
+	D_{\operatorname{eff}}(\tau)
+	=
+	\bigcap_{i=1}^{n}D_i,
+\end{equation}
+
+\begin{equation}
+	F_{\operatorname{eff}}(\tau)
+	=
+	\bigcap_{i=1}^{m}F_i.
+\end{equation}
+
+Batas waktu efektif diperoleh dari nilai paling awal:
+
+\begin{equation}
+	Expiry_{\operatorname{eff}}(\tau)
+	=
+	\min
+	{
+		Expiry_1,Expiry_2,\ldots,Expiry_n
+	}.
+\end{equation}
+
+Dengan demikian, penambahan \textit{caveat} hanya dapat mempertahankan atau mempersempit kapabilitas. Token turunan tidak dapat menghapus batasan token induk untuk memperoleh cakupan akses yang lebih luas.
+
+\subsubsection{Pembatasan Kedalaman dan Hubungan Token}
+
+\textit{Caveat} \texttt{max\_delegation\_depth} menyatakan batas maksimum delegasi pada token. Kedalaman aktual dihitung dari jumlah pasangan \texttt{delegated\_by} dan \texttt{delegated\_to} pada rantai delegasi.
+
+Token hanya dapat diturunkan apabila:
+
+\begin{equation}
+	Depth(\tau)
+	<
+	MaxDepth_{\operatorname{eff}}(\tau).
+\end{equation}
+
+Token turunan dapat menambahkan nilai \texttt{max\_delegation\_depth} yang lebih kecil untuk mengurangi kemampuan delegasi lebih lanjut. Nilai efektifnya diperoleh dari nilai minimum seluruh batasan kedalaman yang terdapat pada token.
+
+\textit{Caveat} \texttt{parent\_token\_hash} hanya ditambahkan pada token turunan. Nilainya merupakan \textit{hash} token induk dan digunakan untuk membentuk hubungan antar-token. Hubungan tersebut mendukung pemeriksaan rantai delegasi dan mekanisme revokasi hierarkis.
+% Rincian mekanisme revokasi dijelaskan pada Subbab \ref{subsubsec:revokasi-token-macaroons}.
+
+\subsubsection{Penerapan Whitelisting dan Least Privilege}
+
+Pendekatan \textit{whitelisting} digunakan untuk pembatasan kategori data. Token harus secara eksplisit mencantumkan kategori dataset dan kategori fungsi yang diizinkan. Kategori yang tidak dicantumkan dianggap tidak termasuk dalam cakupan token.
+
+Pada token baca, sebuah segmen $o_s$ termasuk dalam cakupan apabila:
+
+\begin{equation}
+	\begin{split}
+		o_s \in \operatorname{Scope}(\tau_{\operatorname{read}})
+		\iff {} &
+		p(s)=Patient(\tau)                                    \\
+		        & \land h(s)=Hospital(\tau)                   \\
+		        & \land d(s)\in D_{\operatorname{eff}}(\tau)  \\
+		        & \land f(s)\in F_{\operatorname{eff}}(\tau).
+	\end{split}
+\end{equation}
+
+Pada token perubahan data, syarat tersebut ditambah dengan kesesuaian episode RME:
+
+\begin{equation}
+	\begin{split}
+		o_s \in \operatorname{Scope}(\tau_{\operatorname{update}})
+		\iff {} &
+		p(s)=Patient(\tau)                                    \\
+		        & \land h(s)=Hospital(\tau)                   \\
+		        & \land r(s)=RME(\tau)                        \\
+		        & \land d(s)\in D_{\operatorname{eff}}(\tau)  \\
+		        & \land f(s)\in F_{\operatorname{eff}}(\tau).
+	\end{split}
+\end{equation}
+
+Prinsip \textit{least privilege} didukung oleh pendekatan ini. Dokter dapat memperoleh kapabilitas yang relatif luas sesuai kebutuhan pelayanan klinis, tetapi token turunan untuk petugas laboratorium atau apoteker dapat dibatasi hanya pada objek yang relevan.
+
+Sebagai contoh, petugas laboratorium dapat memperoleh hak membaca fungsi \texttt{PEMERIKSAAN\_PENUNJANG} pada dataset \texttt{RAWAT\_JALAN} dan hak memperbarui fungsi \texttt{LABORATORIUM} pada dataset \texttt{LABORATORIUM}. Petugas tersebut tidak memperoleh akses terhadap anamnesis, diagnosis, terapi, resep, atau fungsi klinis lain yang tidak dicantumkan dalam token.
+
+\subsubsection{Hubungan dengan Proses Verifikasi}
+
+Token Macaroon bukan satu-satunya masukan keputusan akses. Pada saat token digunakan, \textit{Server} PRE membentuk kapabilitas efektif dengan memproses seluruh \textit{caveat}, kemudian mencocokkannya dengan permintaan, metadata objek, atribut pengguna, status revokasi, dan bukti kepemilikan \textit{wallet} dari aktor yang tercatat pada rantai delegasi.
+
+Secara konseptual, penggunaan token hanya valid apabila:
+
+\begin{equation}
+	\begin{split}
+		\operatorname{TokenUsable}(\tau,q)
+		\iff {} &
+		\operatorname{SignatureValid}(\tau)                        \\
+		        & \land \operatorname{ContainsSubject}(\tau,u)     \\
+		        & \land \operatorname{ObjectScopeMatch}(\tau,q)    \\
+		        & \land \operatorname{AccessRightMatch}(\tau,q)    \\
+		        & \land \operatorname{TimeValid}(\tau)             \\
+		        & \land \operatorname{DelegationValid}(\tau)       \\
+		        & \land \neg\operatorname{Revoked}(\tau)           \\
+		        & \land \operatorname{ExternalAttributesValid}(q).
+	\end{split}
+	\label{eq:token-usable}
+\end{equation}
+
+$\operatorname{ExternalAttributesValid}(q)$ mencakup pemeriksaan \textit{role} atau \textit{subrole}, metadata segmen, dan bukti kepemilikan dompet. Rincian mekanisme penegakan tersebut dijelaskan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}.
+
+Contoh token awal untuk petugas rekam medis tetap disajikan pada Kode \ref{lst:contoh-token-baca-awal-rekam-medis} dan Kode \ref{lst:contoh-token-pembaruan-awal-rekam-medis}. Kedua contoh tersebut menunjukkan bagaimana kebijakan akses yang telah didefinisikan pada model PBAC direpresentasikan sebagai kumpulan \textit{caveat} yang dapat diverifikasi dan diatenuasi.

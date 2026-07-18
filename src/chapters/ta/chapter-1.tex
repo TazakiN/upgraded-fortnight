@@ -11,28 +11,29 @@ Berdasarkan latar belakang yang telah diuraikan pada subbab \ref{sec:latarbelaka
 \begin{enumerate}
 	\item Bagaimana rancangan dan implementasi mekanisme kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan Macaroons?
 	\item Bagaimana rancangan dan implementasi segmentasi data RME yang mendukung penegakan kontrol akses granular pada DecMed?
-	\item Bagaimana rancangan dan implementasi fitur \textit{offline attenuation} pada token otorisasi untuk memfasilitasi pendelegasian hak akses antar tenaga kesehatan yang terlibat dalam layanan klinis tanpa memerlukan intervensi langsung dari pasien?
+	\item Bagaimana rancangan dan implementasi mekanisme atenuasi token otorisasi untuk memfasilitasi pendelegasian hak akses antartenaga kesehatan yang terlibat dalam layanan klinis tanpa memerlukan intervensi langsung dari pasien?
 \end{enumerate}
 
 \section{Tujuan}
 
 Tujuan dari Tugas Akhir ini adalah:
 \begin{enumerate}
-	\item Kontrol akses berbasis kebijakan (PBAC) dirancang dan diterapkan pada kerangka kerja DecMed agar keputusan akses mencakup aktor, objek, hak akses, dan kondisi secara lebih luas.
-	\item Segmentasi data yang mendukung penegakan kontrol akses pada DecMed dirancang dan diterapkan.
-	\item Fitur atenuasi \textit{offline} dirancang dan diterapkan untuk memfasilitasi pendelegasian hak akses antar tenaga medis tanpa memerlukan intervensi langsung dari pasien.
+	\item Merancang dan menerapkan kontrol akses granular pada kerangka kerja DecMed dengan memanfaatkan teknologi Macaroons.
+	\item Merancang dan menerapkan segmentasi data RME yang mendukung penegakan kontrol akses granular pada DecMed.
+	\item Merancang dan menerapkan mekanisme atenuasi token untuk memfasilitasi pendelegasian hak akses antartenaga kesehatan tanpa memerlukan intervensi langsung dari pasien.
 \end{enumerate}
 
 \section{Batasan Masalah}
 
-Terdapat beberapa batasan masalah dari Tugas Akhir ini. Batasan masalah tersebut antara lain:
+Batasan Tugas Akhir ini adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Kajian dan pengembangan hanya mencakup implementasi kerangka kerja DecMed.
+	\item Kajian dan pengembangan hanya fokus pada kerangka kerja DecMed.
 	\item Masalah terkait \textit{performance} dan \textit{availability} tidak termasuk ke dalam kajian dan skenario uji.
 	\item Kasus skenario delegasi layanan klinis terbatas hanya pada aktor dokter, perawat, petugas laboratorium, dan apoteker pada alur Rawat Jalan dan Rawat Inap.
 	\item Data RME pada dataset Instalasi Gawat Darurat (IGD) tidak termasuk dalam kajian rancangan dan implementasi.
 	\item Segmentasi data RME hanya dilakukan untuk dokumentasi klinis. Dokumentasi administratif tidak termasuk ke dalam fokus Tugas Akhir ini dan hanya diimplementasikan sesuai dengan implementasi DecMed sebelumnya.
+	\item Manajemen kunci BIP39, termasuk ketika pengguna lupa kunci \textit{mnemonic}, tidak menjadi fokus Tugas Akhir ini.
 \end{enumerate}
 
 \input{chapters/ta/chapter-1/metodologi.tex}

@@ -3,14 +3,14 @@
 
 \section{Kesimpulan}
 
-Berdasarkan hasil analisis, perancangan, implementasi, dan evaluasi yang telah dilakukan, dapat disimpulkan beberapa hal sebagai berikut:
+Penelitian ini menyimpulkan tiga hal berikut.
 
 \begin{enumerate}
-	\item Kontrol akses granular pada DecMed dirancang dan diimplementasikan dengan Macaroons sebagai token otorisasi. Batasan akses direpresentasikan melalui \textit{caveats}, sedangkan penegakan otoritas dilakukan pada \textit{Server} PRE sebelum data diakses.
+	\item Kontrol akses granular pada DecMed dirancang dan diimplementasikan dengan Macaroons sebagai token otorisasi. Batasan akses direpresentasikan melalui \textit{caveats} yang disusun berdasarkan \textit{policy} PBAC, mencakup elemen aktor, objek RME, hak akses, dan kondisi akses. Penegakan otoritas dilakukan pada \textit{Server} PRE sebelum data diakses.
 
-	\item Segmentasi data RME diterapkan dengan memecah data \textit{off-chain} berdasarkan \textit{dataset category} dan \textit{function category}. Dengan struktur ini, data RME tidak lagi diperlakukan sebagai satu \textit{encrypted blob} besar, tetapi sebagai kumpulan segmen klinis. Metadata setiap segmen digunakan untuk menentukan segmen yang dapat diakses oleh aktor sesuai cakupan token.
+	\item Segmentasi data RME diterapkan dengan memecah data \textit{off-chain} berdasarkan \textit{dataset category} dan \textit{function category}. Data RME tidak lagi diperlakukan sebagai satu \textit{encrypted blob} besar, melainkan sebagai kumpulan segmen klinis. Metadata setiap segmen digunakan untuk menentukan segmen yang dapat diakses sesuai cakupan token.
 
-	\item Atenuasi \textit{offline} diterapkan untuk mendukung pendelegasian akses antar tenaga kesehatan tanpa penerbitan token baru oleh pasien pada setiap perpindahan akses. Pemegang token membentuk token turunan secara \textit{offline} dengan menambahkan \textit{caveats} yang mempersempit cakupan token induk. Pencatatan delegasi, pembatasan kedalaman delegasi, validasi agar token turunan tidak memperluas hak akses token induk, serta revokasi berantai juga dicakup dalam implementasi.
+	\item Mekanisme atenuasi token diterapkan untuk mendukung pendelegasian akses antartenaga kesehatan tanpa penerbitan ulang oleh pasien pada setiap perpindahan akses. Macaroons secara konseptual mendukung atenuasi tanpa penerbit awal, sedangkan pada implementasi \textit{Hospital Client} mengajukan permintaan atenuasi dan \textit{Server} PRE membentuk token turunan dengan \textit{caveats} yang mempersempit cakupan token induk. Pencatatan delegasi, \textit{caveat} kedalaman delegasi, validasi agar token turunan tidak memperluas hak akses token induk, serta revokasi berantai juga dicakup dalam implementasi.
 \end{enumerate}
 
 \section{Saran}
@@ -18,11 +18,13 @@ Berdasarkan hasil analisis, perancangan, implementasi, dan evaluasi yang telah d
 Berdasarkan batasan dan hasil evaluasi Tugas Akhir ini, beberapa saran untuk pengembangan berikutnya adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Cakupan skenario layanan klinis diperluas hingga pelayanan antar fasyankes agar skenario nyata seperti rujukan antar fasyankes dapat didukung.
+	\item Cakupan skenario layanan klinis diperluas hingga pelayanan antarfasyankes, termasuk rujukan antarfasyankes.
 
-	\item Cakupan skenario layanan klinis diperluas hingga pelayanan gawat darurat. Data IGD dan mekanisme akses ketika pasien tidak sadar perlu diimplementasikan agar skenario nyata gawat darurat dapat didukung.
+	\item Skenario gawat darurat ditambahkan. Data IGD dan mekanisme akses ketika pasien tidak sadar perlu diimplementasikan agar pelayanan gawat darurat dapat didukung.
 
 	\item Integrasi dengan standar interoperabilitas data kesehatan dapat diteliti lebih lanjut. Segmentasi RME dapat dikembangkan untuk integrasi dengan SATUSEHAT atau pemetaan ke standar FHIR.
 
 	\item Integrasi dan pengujian dengan sistem rumah sakit dikembangkan untuk mendukung penggunaan sistem dalam konteks nyata, disesuaikan dengan tata laksana atau dokumen Pedoman Nasional Pelayanan Kesehatan.
+
+	\item Pengujian keamanan lebih lanjut dapat dijadikan penelitian lanjutan, misalnya pengujian penetrasi.
 \end{enumerate}

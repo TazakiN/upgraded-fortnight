@@ -1,14 +1,14 @@
 \subsection{Pengujian Kebutuhan Nonfungsional}
 \label{subsec:pengujian-kebutuhan-nonfungsional}
 
-Pengujian kebutuhan nonfungsional dijalankan untuk mengevaluasi pemenuhan aspek keamanan dan keterlacakan pada sistem, khususnya pada komponen yang menangani token Macaroon, segmentasi data RME, validasi akses, \textit{wallet proof}, revokasi, pencatatan delegasi, dan \textit{Server} PRE. Setiap pengujian dikaitkan dengan kebutuhan nonfungsional yang telah didefinisikan pada Tabel \ref{tab:kebutuhan-nonfungsional-tambahan-decmed}. Untuk memudahkan ketertelusuran evaluasi, pengujian yang terkait kebutuhan nonfungsional diberi ID \texttt{P-KNF}.
+Pengujian kebutuhan nonfungsional dijalankan untuk mengevaluasi pemenuhan aspek keamanan dan keterlacakan pada sistem, khususnya pada komponen yang menangani token Macaroon, segmentasi data RME, validasi akses, \textit{wallet proof}, revokasi, pencatatan delegasi, dan \textit{Server} PRE. Setiap pengujian dikaitkan dengan kebutuhan nonfungsional yang telah didefinisikan pada Tabel \ref{tab:kebutuhan-nonfungsional-tambahan-decmed}. Untuk memudahkan ketertelusuran evaluasi, pengujian yang terkait kebutuhan nonfungsional diberi ID \texttt{P-KNF}. \textit{Unit testing} pada bagian ini menyimulasikan skenario ancaman yang telah diidentifikasi melalui analisis STRIDE pada Subbab \ref{subsec:analisis-stride-decmed}, khususnya ancaman yang dipetakan ke kebutuhan nonfungsional.
 
 \subsubsection{Pengujian KNF-TA-01}
 \label{subsubsec:pengujian-knf-ta-01}
 
-Pengujian \texttt{KNF-TA-01} memastikan bahwa penerima akses hanya dapat memperoleh data RME dalam bentuk \textit{plaintext} apabila segmen yang diminta berada dalam cakupan otorisasi token. Dengan demikian, permintaan terhadap segmen di luar cakupan harus ditolak sebelum proses \textit{re-encryption} menghasilkan data yang dapat didekripsi oleh penerima akses.
+Pengujian \texttt{KNF-TA-01} memastikan bahwa penerima akses hanya dapat memperoleh data RME dalam bentuk \textit{plaintext} apabila segmen yang diminta berada dalam cakupan otorisasi token. Dengan demikian, permintaan terhadap segmen di luar cakupan harus ditolak sebelum proses \textit{re-encryption} menghasilkan data yang dapat didekripsi oleh penerima akses. Pengujian ini menguji mitigasi terhadap skenario ancaman T05 (\textit{information disclosure}) pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian pertama, yaitu \texttt{P-KNF-01}, dijalankan melalui \textit{unit testing} pada komponen PRE. Kondisi ketika aktor memiliki token baca, tetapi token tersebut tidak mencakup akses baca terhadap segmen data laboratorium, disimulasikan pada tes ini. Kemudian fungsi yang diuji, yaitu \texttt{verify\_segment\_access}, dipanggil dengan parameter Macaroon tanpa akses ke laboratorium dan segmen data laboratorium. Pada tes ini, akses diharapkan ditolak. Kode pengujian dapat dilihat pada Kode \ref{lst:kode-pengujian-knf-ta-01}.
+Pengujian pertama, yaitu \texttt{P-KNF-01}, dijalankan melalui \textit{unit testing} pada komponen PRE dan menyimulasikan skenario T05, yaitu upaya memperoleh segmen data di luar cakupan otorisasi. Kondisi ketika aktor memiliki token baca, tetapi token tersebut tidak mencakup akses baca terhadap segmen data laboratorium, disimulasikan pada tes ini. Kemudian fungsi yang diuji, yaitu \texttt{verify\_segment\_access}, dipanggil dengan parameter Macaroon tanpa akses ke laboratorium dan segmen data laboratorium. Pada tes ini, akses diharapkan ditolak. Kode pengujian dapat dilihat pada Kode \ref{lst:kode-pengujian-knf-ta-01}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-01 untuk KNF-TA-01, label=lst:kode-pengujian-knf-ta-01]
 #[test]
@@ -29,14 +29,14 @@ fn pre_rejects_segment_outside_caveats() {
 }
 \end{lstlisting}
 
-Pengujian kedua, yaitu \texttt{P-KNF-02}, dijalankan melalui \textit{client hospital} untuk memastikan aktor apoteker tidak dapat membuka atau memperoleh segmen data laboratorium. Pada skenario ini, akun apoteker tidak memiliki caveat akses terhadap kategori laboratorium, sehingga segmen laboratorium tidak ditampilkan sebagai data yang dapat diakses.
+Pengujian kedua, yaitu \texttt{P-KNF-02}, dijalankan melalui \textit{client hospital} dan menyimulasikan skenario T05, yaitu kebocoran data akibat akses lintas kewenangan aktor. Pengujian ini memastikan aktor apoteker tidak dapat membuka atau memperoleh segmen data laboratorium. Pada skenario ini, akun apoteker tidak memiliki caveat akses terhadap kategori laboratorium, sehingga segmen laboratorium tidak ditampilkan sebagai data yang dapat diakses.
 
 \subsubsection{Pengujian KNF-TA-02}
 \label{subsubsec:pengujian-knf-ta-02}
 
-Pengujian \texttt{KNF-TA-02} memastikan integritas token otorisasi dan batasan akses tetap terjaga selama proses delegasi. Secara khusus, pengujian diarahkan untuk memastikan bahwa token turunan tidak dapat memperluas cakupan akses, menaikkan kedalaman delegasi, atau memperpanjang masa berlaku melebihi token induk.
+Pengujian \texttt{KNF-TA-02} memastikan integritas token otorisasi dan \textit{caveats} tetap terjaga selama proses delegasi. Secara khusus, pengujian diarahkan untuk memastikan bahwa token turunan tidak dapat memperluas cakupan akses, menaikkan kedalaman delegasi, atau memperpanjang masa berlaku melebihi token induk. Pengujian ini menguji mitigasi terhadap skenario ancaman T05 dan T08 pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian pertama, yaitu \texttt{P-KNF-03}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-a}. Pada tes ini dipastikan bahwa token delegasi tidak dapat menambahkan hak akses \texttt{write\_function} yang tidak dimiliki oleh \textit{parent token}. Ketika \textit{child token} mencoba meminta \texttt{write\_functions} di luar scope \textit{parent token}, proses \texttt{attenuate\_macaroon()} ditolak dengan error \texttt{DelegationExpandsAccess}.
+Pengujian pertama, yaitu \texttt{P-KNF-03}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-a} dan menyimulasikan skenario T05 serta T08, yaitu perluasan hak tulis melalui delegasi. Pada tes ini dipastikan bahwa token delegasi tidak dapat menambahkan hak akses \texttt{write\_function} yang tidak dimiliki oleh \textit{parent token}. Ketika \textit{child token} mencoba meminta \texttt{write\_functions} di luar scope \textit{parent token}, proses \texttt{attenuate\_macaroon()} ditolak dengan error \texttt{DelegationExpandsAccess}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-03 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-a]
 #[test]
@@ -56,7 +56,7 @@ fn cannot_delegate_write_function_from_parent_read_only_scope() {
 }
 \end{lstlisting}
 
-Pengujian kedua, yaitu \texttt{P-KNF-04}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-b}. Pada tes ini dipastikan bahwa batas kedalaman delegasi tidak dapat dinaikkan oleh token turunan. Jika \textit{child token} mencoba menetapkan \texttt{max\_delegation\_depth} lebih besar dari batas \textit{parent token}, delegasi ditolak dengan error \texttt{DelegationDepthNotMonotonic}.
+Pengujian kedua, yaitu \texttt{P-KNF-04}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-b} dan menyimulasikan skenario T08, yaitu eskalasi hak melalui penambahan kedalaman delegasi. Pada tes ini dipastikan bahwa batas kedalaman delegasi tidak dapat dinaikkan oleh token turunan. Jika \textit{child token} mencoba menetapkan \texttt{max\_delegation\_depth} lebih besar dari batas \textit{parent token}, delegasi ditolak dengan error \texttt{DelegationDepthNotMonotonic}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-04 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-b]
 #[test]
@@ -73,7 +73,7 @@ fn cannot_increase_max_delegation_depth_on_delegate() {
 }	
 \end{lstlisting}
 
-Pengujian ketiga, yaitu \texttt{P-KNF-05}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-c}. Pada tes ini dipastikan bahwa delegasi dari token admin write tetap tidak dapat memperluas cakupan dataset. Ketika \textit{child token} mencoba meminta \texttt{write\_datasets} di luar cakupan \textit{parent token}, sistem menolak dengan error \texttt{DelegationExpandsAccess}.
+Pengujian ketiga, yaitu \texttt{P-KNF-05}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-02-c} dan menyimulasikan skenario T05 serta T08, yaitu perluasan cakupan dataset melalui delegasi. Pada tes ini dipastikan bahwa delegasi dari token admin write tetap tidak dapat memperluas cakupan dataset. Ketika \textit{child token} mencoba meminta \texttt{write\_datasets} di luar cakupan \textit{parent token}, sistem menolak dengan error \texttt{DelegationExpandsAccess}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-05 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-c]
 #[test]
@@ -90,14 +90,14 @@ fn admin_write_true_expansion_still_fails() {
 }
 \end{lstlisting}
 
-Pengujian terakhir, yaitu \texttt{P-KNF-06}, dijalankan melalui \textit{client hospital} untuk memastikan sistem menolak atenuasi hak akses dengan batas waktu yang melebihi masa berlaku token induk. Pada skenario ini, notifikasi \textit{error} ditampilkan pada halaman delegasi ketika pengguna mencoba membuat token turunan dengan waktu kedaluwarsa yang lebih panjang daripada token induk.
+Pengujian terakhir, yaitu \texttt{P-KNF-06}, dijalankan melalui \textit{client hospital} dan menyimulasikan skenario T08, yaitu eskalasi hak melalui perpanjangan masa berlaku token turunan. Pengujian ini memastikan sistem menolak atenuasi hak akses dengan batas waktu yang melebihi masa berlaku token induk. Pada skenario ini, notifikasi \textit{error} ditampilkan pada halaman delegasi ketika pengguna mencoba membuat token turunan dengan waktu kedaluwarsa yang lebih panjang daripada token induk.
 
 \subsubsection{Pengujian KNF-TA-03}
 \label{subsubsec:pengujian-knf-ta-03}
 
-Pengujian \texttt{KNF-TA-03} memastikan permintaan akses ditolak apabila token, rantai delegasi, atau bukti kepemilikan identitas aktor pemohon tidak valid.
+Pengujian \texttt{KNF-TA-03} memastikan permintaan akses ditolak apabila token, rantai delegasi, atau bukti kepemilikan identitas aktor pemohon tidak valid. Pengujian ini menguji mitigasi terhadap skenario ancaman T01, T02, dan T08 pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian pertama, yaitu \texttt{P-KNF-07}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-a}. Pada tes ini dipastikan bahwa token yang sudah melewati batas waktu berlaku tidak dapat digunakan untuk mengakses segmen RME. Pada skenario ini, waktu verifikasi dibuat berada setelah waktu kedaluwarsa token. Sistem menolak permintaan akses dengan error \texttt{ExpiredToken}.
+Pengujian pertama, yaitu \texttt{P-KNF-07}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-a} dan menyimulasikan skenario T01, yaitu penggunaan token akses yang tidak lagi sah. Pada tes ini dipastikan bahwa token yang sudah melewati batas waktu berlaku tidak dapat digunakan untuk mengakses segmen RME. Pada skenario ini, waktu verifikasi dibuat berada setelah waktu kedaluwarsa token. Sistem menolak permintaan akses dengan error \texttt{ExpiredToken}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-07 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-a]
 #[test]
@@ -116,7 +116,7 @@ fn expired_token_rejected() {
 }
 \end{lstlisting}
 
-Pengujian kedua, yaitu \texttt{P-KNF-08}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-b}. Pada tes ini dipastikan bahwa rantai delegasi yang tidak valid akan ditolak. Pada pengujian ini, token dimodifikasi dengan caveat \texttt{delegated\_by} yang tidak sesuai dengan rantai delegasi semestinya. Ketika token diverifikasi, sistem menolak permintaan dengan error \texttt{InvalidDelegationChain}.
+Pengujian kedua, yaitu \texttt{P-KNF-08}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-b} dan menyimulasikan skenario T02, yaitu manipulasi metadata rantai delegasi pada token. Pada tes ini dipastikan bahwa rantai delegasi yang tidak valid akan ditolak. Pada pengujian ini, token dimodifikasi dengan caveat \texttt{delegated\_by} yang tidak sesuai dengan rantai delegasi semestinya. Ketika token diverifikasi, sistem menolak permintaan dengan error \texttt{InvalidDelegationChain}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-08 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-b]
 #[test]
@@ -132,7 +132,7 @@ fn broken_delegation_chain_rejected() {
 }
 \end{lstlisting}
 
-Pengujian ketiga, yaitu \texttt{P-KNF-09}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c}. Pada tes ini dipastikan bahwa bukti kepemilikan \textit{wallet} harus cocok dengan salah satu subjek pada rantai delegasi. Pada skenario ini, token memuat rantai yang mencakup aktor \texttt{LAB}, tetapi permintaan pertama menggunakan tanda tangan dari aktor di luar rantai. Sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}.
+Pengujian ketiga, yaitu \texttt{P-KNF-09}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c} dan menyimulasikan skenario T01, yaitu penggunaan token oleh pihak yang bukan subjek sah pada rantai delegasi. Pada tes ini dipastikan bahwa bukti kepemilikan \textit{wallet} harus cocok dengan salah satu subjek pada rantai delegasi. Pada skenario ini, token memuat rantai yang mencakup aktor \texttt{LAB}, tetapi permintaan pertama menggunakan tanda tangan dari aktor di luar rantai. Sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-09 untuk KNF-TA-03 dan KNF-TA-06, label=lst:kode-pengujian-knf-ta-03-c]
 #[test]
@@ -158,16 +158,16 @@ fn wallet_proof_must_match_chain_subject() {
 \subsubsection{Pengujian KNF-TA-04}
 \label{subsubsec:pengujian-knf-ta-04}
 
-Pengujian \texttt{KNF-TA-04} memastikan sistem menyediakan keterlacakan akses dan delegasi melalui pencatatan metadata yang dapat ditinjau kembali oleh pasien.
+Pengujian \texttt{KNF-TA-04} memastikan sistem menyediakan keterlacakan akses dan delegasi melalui pencatatan metadata yang dapat ditinjau kembali oleh pasien. Pengujian ini menguji mitigasi terhadap skenario ancaman T04 pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian \texttt{P-KNF-10} dijalankan melalui \textit{client} pasien. Skenario dimulai dari pemberian akses awal oleh pasien kepada petugas rekam medis, kemudian dilanjutkan dengan delegasi dari petugas rekam medis kepada dokter. Setelah proses tersebut dijalankan, pasien membuka halaman riwayat delegasi untuk memastikan informasi delegator, delegatee, status, waktu, dan relasi delegasi dapat ditelusuri. Tangkapan layar halaman ini dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
+Pengujian \texttt{P-KNF-10} dijalankan melalui \textit{client} pasien dan menyimulasikan skenario T04, yaitu kebutuhan jejak audit agar pemberian atau penggunaan akses tidak dapat disangkal. Skenario dimulai dari pemberian akses awal oleh pasien kepada petugas rekam medis, kemudian dilanjutkan dengan delegasi dari petugas rekam medis kepada dokter. Setelah proses tersebut dijalankan, pasien membuka halaman riwayat delegasi untuk memastikan informasi delegator, delegatee, status, waktu, dan relasi delegasi dapat ditelusuri. Tangkapan layar halaman ini dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
 
 \subsubsection{Pengujian KNF-TA-05}
 \label{subsubsec:pengujian-knf-ta-05}
 
-Pengujian \texttt{KNF-TA-05} memastikan sistem menolak akses untuk hak akses yang sudah dicabut.
+Pengujian \texttt{KNF-TA-05} memastikan sistem menolak akses untuk hak akses yang sudah dicabut. Pengujian ini menguji mitigasi terhadap skenario ancaman T08 pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian pertama, yaitu \texttt{P-KNF-11}, dijalankan melalui tes pada Kode \ref{lst:kode-pengujian-knf-ta-05-a}. Pada tes ini dipastikan bahwa token yang sudah masuk daftar revokasi tidak dapat digunakan kembali. Pada skenario ini, token yang belum dicabut diverifikasi terlebih dahulu dan hasilnya berhasil. Setelah itu, \texttt{revocation key} token dibuat bernilai cocok dengan token yang sedang diverifikasi. Sistem kemudian menolak akses dengan status \texttt{UNAUTHORIZED}.
+Pengujian pertama, yaitu \texttt{P-KNF-11}, dijalankan melalui tes pada Kode \ref{lst:kode-pengujian-knf-ta-05-a} dan menyimulasikan skenario T08, yaitu upaya menggunakan kembali token yang telah dicabut. Pada tes ini dipastikan bahwa token yang sudah masuk daftar revokasi tidak dapat digunakan kembali. Pada skenario ini, token yang belum dicabut diverifikasi terlebih dahulu dan hasilnya berhasil. Setelah itu, \texttt{revocation key} token dibuat bernilai cocok dengan token yang sedang diverifikasi. Sistem kemudian menolak akses dengan status \texttt{UNAUTHORIZED}.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-11 untuk KNF-TA-05, label=lst:kode-pengujian-knf-ta-05-a]
 #[test]
@@ -192,14 +192,14 @@ fn revocation_key_rejects_revoked_token() {
 }
 \end{lstlisting}
 
-Pengujian kedua, yaitu \texttt{P-KNF-12}, dijalankan melalui \textit{client} pasien dan \textit{client hospital}. Pengujian dimulai dengan pasien mencabut hak akses yang sebelumnya diberikan kepada petugas rekam medis. Setelah revokasi dijalankan, akses dicoba kembali dari akun petugas rekam medis dan dokter yang memperoleh delegasi. Sistem dinyatakan memenuhi kebutuhan apabila hak akses yang telah dicabut tidak lagi dapat digunakan dan tidak lagi muncul sebagai akses aktif pada halaman \textit{Home} maupun halaman delegasi.
+Pengujian kedua, yaitu \texttt{P-KNF-12}, dijalankan melalui \textit{client} pasien dan \textit{client hospital} serta menyimulasikan skenario T08 pada rantai delegasi, yaitu penggunaan akses turunan setelah akses induk dicabut. Pengujian dimulai dengan pasien mencabut hak akses yang sebelumnya diberikan kepada petugas rekam medis. Setelah revokasi dijalankan, akses dicoba kembali dari akun petugas rekam medis dan dokter yang memperoleh delegasi. Sistem dinyatakan memenuhi kebutuhan apabila hak akses yang telah dicabut tidak lagi dapat digunakan dan tidak lagi muncul sebagai akses aktif pada halaman \textit{Home} maupun halaman delegasi.
 
 \subsubsection{Pengujian KNF-TA-06}
 \label{subsubsec:pengujian-knf-ta-06}
 
-Pengujian \texttt{KNF-TA-06} memastikan bukti kepemilikan identitas terikat terhadap aktor pada rantai delegasi, token akses, dan konteks permintaan akses.
+Pengujian \texttt{KNF-TA-06} memastikan bukti kepemilikan identitas terikat terhadap aktor pada rantai delegasi, token akses, dan konteks permintaan akses. Pengujian ini menguji mitigasi terhadap skenario ancaman T01 pada Tabel \ref{tab:stride-decmed}.
 
-Pengujian pertama, yaitu \texttt{P-KNF-13}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-06-a}. Pada tes ini dipastikan bahwa setiap permintaan akses menggunakan token DecMed harus menyertakan bukti kepemilikan identitas berupa tanda tangan wallet. Jika \texttt{wallet\_signature} tidak diberikan, sistem menolak permintaan dengan error \texttt{WalletSignatureRequired}. Hal ini menunjukkan bahwa token akses saja tidak cukup untuk memperoleh akses tanpa bukti identitas dari aktor yang tercatat pada rantai.
+Pengujian pertama, yaitu \texttt{P-KNF-13}, dijalankan melalui \textit{unit testing} pada Kode \ref{lst:kode-pengujian-knf-ta-06-a} dan menyimulasikan skenario T01, yaitu penggunaan token sebagai \textit{bearer token} tanpa bukti kepemilikan identitas. Pada tes ini dipastikan bahwa setiap permintaan akses menggunakan token DecMed harus menyertakan bukti kepemilikan identitas berupa tanda tangan wallet. Jika \texttt{wallet\_signature} tidak diberikan, sistem menolak permintaan dengan error \texttt{WalletSignatureRequired}. Hal ini menunjukkan bahwa token akses saja tidak cukup untuk memperoleh akses tanpa bukti identitas dari aktor yang tercatat pada rantai.
 
 \begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-13 untuk KNF-TA-06, label=lst:kode-pengujian-knf-ta-06-a]
 #[test]
@@ -217,6 +217,86 @@ fn wallet_signature_required_for_every_decmed_token() {
 }
 \end{lstlisting}
 
-Pengujian kedua dijalankan melalui \texttt{P-KNF-09} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c}, sama dengan yang digunakan sebelumnya untuk menguji \texttt{KNF-TA-03}. Pada tes ini dipastikan bahwa bukti identitas harus cocok dengan salah satu subjek pada rantai delegasi. Token pada skenario ini memuat subjek \texttt{LAB}. Ketika permintaan menggunakan tanda tangan dari aktor di luar rantai, sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}. Setelah tanda tangan diganti menjadi \texttt{lab-sig}, verifikasi token berhasil.
+Pengujian kedua dijalankan melalui \texttt{P-KNF-09} pada Kode \ref{lst:kode-pengujian-knf-ta-03-c}, sama dengan yang digunakan sebelumnya untuk menguji \texttt{KNF-TA-03}, dan kembali menyimulasikan skenario T01. Pada tes ini dipastikan bahwa bukti identitas harus cocok dengan salah satu subjek pada rantai delegasi. Token pada skenario ini memuat subjek \texttt{LAB}. Ketika permintaan menggunakan tanda tangan dari aktor di luar rantai, sistem menolak permintaan dengan error \texttt{InvalidWalletSignature}. Setelah tanda tangan diganti menjadi \texttt{lab-sig}, verifikasi token berhasil.
 
 Pada implementasinya, fungsi \texttt{verify\_decmed\_token()} membentuk \texttt{WalletProofContext} dari token dan konteks akses yang sedang diminta. Konteks tersebut memuat \texttt{token\_id}, alamat pasien, \texttt{related\_rme\_id}, mode operasi, \texttt{segment\_id}, kategori dataset, kategori fungsi, dan \texttt{timestamp}. Konteks ini kemudian diverifikasi terhadap seluruh subjek pada \texttt{DelegationChain::subjects()}, sehingga bukti kepemilikan identitas terikat pada aktor yang tercatat dalam rantai delegasi.
+
+\subsubsection{Pengujian KNF-TA-07}
+\label{subsubsec:pengujian-knf-ta-07}
+
+Pengujian \texttt{KNF-TA-07} memastikan bahwa data RME terenkripsi yang disimpan di \textit{off-chain} ditolak apabila \textit{hash} integritas \textit{ciphertext} tidak sesuai dengan nilai \texttt{integrity\_hash} pada metadata segmen. Pengujian ini merupakan mitigasi terhadap skenario ancaman T03 pada Tabel \ref{tab:stride-decmed}, khususnya manipulasi isi \textit{blob} terenkripsi.
+
+Pengujian pertama, yaitu \texttt{P-KNF-14}, dilakukan melalui \textit{unit testing} terhadap fungsi validasi \textit{hash} integritas, sebagaimana ditunjukkan pada Kode \ref{lst:kode-pengujian-knf-ta-07-a}. Metadata dibuat menggunakan \textit{hash} dari \textit{ciphertext} asli, sedangkan proses validasi diberikan \textit{ciphertext} yang telah diubah. Sistem diharapkan menghasilkan \texttt{SegmentValidationError::InvalidIntegrityHash}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-14 untuk KNF-TA-07, label=lst:kode-pengujian-knf-ta-07-a]
+#[test]
+fn metadata_rejects_mismatched_ipfs_ciphertext_integrity_hash() {
+    let metadata =
+        sample_metadata(b"original encrypted segment");
+
+    assert_eq!(
+        metadata
+            .validate_integrity_hash(
+                &STANDARD.encode(
+                    b"tampered encrypted segment"
+                )
+            )
+            .unwrap_err(),
+        SegmentValidationError::InvalidIntegrityHash
+    );
+}
+\end{lstlisting}
+
+Pengujian kedua, yaitu \texttt{P-KNF-15}, dilakukan pada fungsi validasi integritas yang digunakan dalam jalur pembacaan data medis pada \textit{Server} PRE, sebagaimana ditunjukkan pada Kode \ref{lst:kode-pengujian-knf-ta-07-b}. Pengujian ini memastikan bahwa pemeriksaan integritas tidak hanya tersedia pada tipe metadata, tetapi juga diterapkan pada proses pembacaan data yang berasal dari penyimpanan IPFS.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-15 untuk KNF-TA-07, label=lst:kode-pengujian-knf-ta-07-b]
+#[test]
+fn rejects_ipfs_ciphertext_with_mismatched_integrity_hash() {
+    let metadata =
+        stored_rme_metadata(b"original ciphertext");
+    let err = validate_stored_medical_data_integrity(
+        &metadata,
+        &STANDARD.encode(b"tampered ciphertext"),
+    )
+    .unwrap_err();
+    match err {
+        ProxyError::Anyhow { source, code } => {
+            assert_eq!(code, StatusCode::BAD_REQUEST);
+            assert_eq!(
+                source.to_string(),
+                "integrity_hash does not match encrypted segment"
+            );
+        }
+        other => panic!(
+            "expected integrity hash error, got {other:?}"
+        ),
+    }
+}
+\end{lstlisting}
+
+Berdasarkan kedua pengujian tersebut, \texttt{KNF-TA-07} telah memitigasi manipulasi isi \textit{blob} terenkripsi melalui pemeriksaan hash integritas. Akan tetapi, kontrol ini belum membuktikan keamanan terhadap seluruh variasi T03, terutama substitusi CID antarobjek, CID yang tidak valid, dan respons gateway IPFS yang tidak sesuai dengan CID yang diminta.
+
+\subsubsection{Pengujian KNF-TA-08}
+\label{subsubsec:pengujian-knf-ta-08}
+
+Pengujian \texttt{KNF-TA-08} memastikan bahwa representasi metadata segmen RME yang ditujukan untuk disimpan secara \textit{on-chain} tidak memuat \textit{payload} klinis dalam bentuk \textit{plaintext}. Pengujian ini berkaitan dengan skenario ancaman T06 pada Tabel \ref{tab:stride-decmed}, tetapi hanya mencakup pencegahan penyimpanan isi klinis secara langsung pada metadata.
+
+Pengujian \texttt{P-KNF-16} dilakukan melalui \textit{unit testing}, sebagaimana ditunjukkan pada Kode \ref{lst:kode-pengujian-knf-ta-08-a}. Struktur \texttt{RmeSegmentMetadata} diserialisasi menjadi objek JSON. Pengujian kemudian memastikan bahwa objek tersebut tidak memiliki \textit{field} \texttt{payload} dan tidak memuat nama \textit{field} medis \textit{plaintext} yang dilarang, seperti \texttt{diagnose}, \texttt{diagnosis}, \texttt{hasil\_lab}, dan \texttt{resep}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-16 untuk KNF-TA-08, label=lst:kode-pengujian-knf-ta-08-a]
+#[test]
+fn on_chain_metadata_does_not_contain_payload() {
+    let metadata = sample_metadata(b"encrypted segment");
+    metadata.validate().unwrap();
+    let value = serde_json::to_value(metadata).unwrap();
+    assert!(value.get("payload").is_none());
+    assert!(value.get("patient_address").is_some());
+    assert!(
+        assert_no_plaintext_medical_fields(&value).is_ok()
+    );
+}
+\end{lstlisting}
+
+Selain \texttt{patient\_address}, struktur metadata masih dapat memuat \texttt{related\_rme\_id}, \texttt{hospital\_cid}, kategori dataset, kategori fungsi, \texttt{ipfs\_cid}, \texttt{author\_address}, dan waktu pembuatan. Oleh karena itu, keberhasilan \texttt{P-KNF-16} tidak membuktikan bahwa metadata telah melindungi privasi identitas dan relasi pasien secara keseluruhan. Pengujian ini juga belum membaca transaksi atau objek aktual dari jaringan IOTA. Dengan demikian, \texttt{KNF-TA-08} hanya memverifikasi bentuk struktur metadata pada tingkat aplikasi dan belum mencakup pengujian observasi IOTA oleh pihak tanpa autentikasi, korelasi alamat pasien dengan tenaga kesehatan atau fasilitas pelayanan kesehatan, serta analisis kebocoran melalui argumen transaksi dan \textit{event}.
+
+Berdasarkan batasan tersebut, \texttt{KNF-TA-08} merupakan mitigasi terhadap T06. Pengujian berhasil memastikan tidak adanya isi klinis \textit{plaintext}, tetapi belum dapat digunakan untuk menyimpulkan bahwa metadata transaksi telah memenuhi perlindungan privasi secara menyeluruh.

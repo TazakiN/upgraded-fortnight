@@ -3,9 +3,7 @@
 
 % Implementasi segmentasi data RME pada subbab ini merupakan realisasi dari \texttt{R-TA-02} melalui komponen \texttt{I-TA-01}. Bagian metadata \textit{on-chain} yang mendukung segmentasi juga terkait dengan \texttt{I-TA-04}.
 
-Segmentasi data RME diimplementasikan dengan memecah satu data RME menjadi beberapa objek data terenkripsi berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. Kombinasi kategori tersebut mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}. Setiap segmen data RME disimpan sebagai satu entri metadata pada penyimpanan \textit{on-chain} dan satu objek data pada penyimpanan \textit{off-chain}.
-
-Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} yang digunakan sebagai atribut objek dalam penegakan kebijakan akses terhadap data RME. Rincian modul dan implementasi pada \textit{crate} \texttt{decmed-rme-segment} disajikan pada Lampiran \ref{lampiran:implementasi-crate-decmed-rme-segment}. Implementasi \texttt{DatasetCategory} ditunjukkan pada Kode \ref{lst:implementasi-dataset-category-segmentasi-rme}, implementasi \texttt{FunctionCategory} ditunjukkan pada Kode \ref{lst:implementasi-function-category-segmentasi-rme}.
+Segmentasi mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme} dan diwujudkan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{DatasetCategory} dan \texttt{FunctionCategory} sebagai atribut objek untuk penegakan \textit{policy}. Rincian modul ada pada Lampiran \ref{lampiran:implementasi-crate-decmed-rme-segment}. Implementasi enum ditunjukkan pada Kode \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi \texttt{DatasetCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-dataset-category-segmentasi-rme}]
 	pub enum DatasetCategory {
@@ -15,8 +13,6 @@ Segmentasi data RME diimplementasikan pada \textit{crate} \texttt{decmed-rme-seg
 		APOTEK,
 	}
 \end{lstlisting}
-
-Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat pada \textit{function category} \texttt{PERENCANAAN\_PEMULANGAN}. Segmen data ini hanya ada pada \textit{dataset category} \texttt{RAWAT\_INAP}, sedangkan pada \textit{dataset category} \texttt{RAWAT\_JALAN} tidak ada. Selain itu, \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL} ada pada setiap \textit{dataset category}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi \texttt{FunctionCategory} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-function-category-segmentasi-rme}]
 	pub enum FunctionCategory {
@@ -50,8 +46,7 @@ Perbedaan antara \textit{dataset category} rawat jalan dan rawat inap terdapat p
 \subsubsection{Implementasi Segmentasi Metadata RME pada Penyimpanan \textit{On-Chain}}
 \label{subsec:implementasi-segmentasi-metadata-rme-onchain}
 
-Definisi struktur metadata segmentasi ditulis pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentMetadata} yang merupakan representasi metadata segmen sebelum diserialisasi menjadi JSON base64 dan disimpan pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} yang sudah ditunjukkan pada Kode \ref{lst:decmed-patient-medical-metadata}. Implementasi struktur \texttt{RmeSegmentMetadata} terdapat pada Kode \ref{lst:implementasi-segmentasi-metadata-rme}.
-Struktur tersebut sesuai dengan rancangan skema metadata segmen RME pada Lampiran Tabel \ref{tab:onchain-schema}.
+\texttt{RmeSegmentMetadata} merepresentasikan metadata segmen sebelum diserialisasi menjadi JSON base64 dan disimpan pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} (Kode \ref{lst:decmed-patient-medical-metadata}). Struktur mengikuti skema Lampiran Tabel \ref{tab:onchain-schema}; implementasinya pada Kode \ref{lst:implementasi-segmentasi-metadata-rme}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi struktur \texttt{RmeSegmentMetadata} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-segmentasi-metadata-rme}]
 pub struct RmeSegmentMetadata {
@@ -70,12 +65,12 @@ pub struct RmeSegmentMetadata {
 }
 \end{lstlisting}
 
-Sebelum metadata segmen disimpan pada IOTA, struktur metadata divalidasi terlebih dahulu. Validasi tersebut mencakup pemeriksaan setiap \textit{field} wajib terisi, validitas kombinasi \texttt{dataset\_category} dan \texttt{function\_category}, serta kesesuaian \texttt{integrity\_hash} terhadap data terenkripsi. \texttt{dataset\_category} dan \texttt{function\_category} memiliki nilai sesuai dengan Kode \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{hospital\_cid} merupakan \textit{identifier} fasyankes, menunjukkan bahwa segmen data tersebut dihasilkan oleh tenaga medis dari fasyankes tersebut. \texttt{ipfs\_cid} merupakan \textit{pointer} ke data segmen terenkripsi yang disimpan pada penyimpanan \textit{off-chain}. \texttt{integrity\_hash} merupakan hash SHA-256 dari data segmen terenkripsi yang digunakan untuk memverifikasi integritas data. \texttt{capsule} merupakan kapsul PRE yang diperlukan untuk proses \textit{re-encryption}. \texttt{enc\_key\_and\_nonce} merupakan kunci simetris dan \textit{nonce} yang sudah terenkripsi untuk membuka segmen data. \texttt{created\_at} memuat informasi tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} serta informasi \textit{timezone}.
+Sebelum disimpan ke IOTA, metadata divalidasi: setiap \textit{field} wajib terisi, kombinasi \texttt{dataset\_category} dan \texttt{function\_category} sah, serta \texttt{integrity\_hash} sesuai data terenkripsi.
 
 \subsubsection{Implementasi Segmentasi Data RME pada Penyimpanan \textit{Off-Chain}}
 \label{subsec:implementasi-segmentasi-data-rme-offchain}
 
-Definisi struktur segmentasi data penyimpanan \textit{off-chain} didefinisikan pada \textit{crate} \texttt{decmed-rme-segment}. \textit{Crate} ini mendefinisikan \texttt{RmeSegmentData}, struktur data segmen RME yang disimpan pada penyimpanan \textit{off-chain}. Implementasi struktur \texttt{RmeSegmentData} terdapat pada Kode \ref{lst:implementasi-segmentasi-data-rme}. Struktur tersebut sesuai dengan rancangan skema data segmen RME pada Lampiran Tabel \ref{tab:offchain-schema}.
+\texttt{RmeSegmentData} merepresentasikan segmen sebelum enkripsi di sisi \textit{client}, sesuai skema Lampiran Tabel \ref{tab:offchain-schema}. Implementasinya pada Kode \ref{lst:implementasi-segmentasi-data-rme}. Pada implementasi ini, \texttt{payload} bertipe \texttt{Value} dan berisi data berbentuk \texttt{text}; \texttt{payload\_hash} adalah hash integritas dari konten \texttt{payload}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi struktur \texttt{RmeSegmentData} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-segmentasi-data-rme}]
 pub struct RmeSegmentData {
@@ -91,11 +86,9 @@ pub struct RmeSegmentData {
 }
 \end{lstlisting}
 
-\texttt{segment\_id} merupakan ID unik untuk satu segmen data RME. \texttt{dataset\_category} dan \texttt{function\_category} digunakan sebagai atribut objek untuk penegakan kebijakan akses terhadap data RME. Atribut tersebut memiliki nilai sesuai dengan Kode \ref{lst:implementasi-dataset-category-segmentasi-rme} dan \ref{lst:implementasi-function-category-segmentasi-rme}. \texttt{patient\_address} dan \texttt{author\_address} memuat \textit{address wallet} dari pasien dan aktor yang menulis isi segmen. \texttt{service\_date} merupakan tanggal dan waktu ketika segmen tercatat dengan format \texttt{YYYY-MM-DD HH:MM:SS} beserta informasi \textit{timezone}. \texttt{payload} berisi konten utama segmen dengan tipe data \texttt{Value}. Pada implementasi ini, \texttt{payload} berisi data dalam bentuk \texttt{text}. \texttt{payload\_hash} merupakan hash integritas dari konten \texttt{payload}.
+Saat penyimpanan, \textit{Hospital Client} membentuk objek per segmen, mengenkripsinya, mengunggah ke IPFS, lalu menyimpan CID bersama metadata pada IOTA sebagai JSON base64 di \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata}. Pendekatan ini menjaga kompatibilitas dengan daftar metadata \textit{flat} DecMed, sambil memungkinkan PRE membaca kategori segmentasi dari isi metadata.
 
 % \texttt{payload\_hash} dihitung dari isi \texttt{payload} sebelum enkripsi, sedangkan \texttt{integrity\_hash} dihitung dari data segmen terenkripsi yang disimpan di IPFS. Dengan demikian, \texttt{payload\_hash} digunakan untuk integritas isi segmen sebelum enkripsi, sedangkan \texttt{integrity\_hash} digunakan untuk memverifikasi kesesuaian \textit{ciphertext} IPFS dengan metadata pada IOTA.
-
-Pada saat data RME disimpan, \textit{Hospital Client} membentuk objek untuk setiap segmen. Setiap segmen berisi data klinis atau administratif sesuai kategorinya, kemudian dienkripsi sebelum diunggah ke IPFS. Hasil unggahan IPFS berupa CID disimpan bersama metadata segmen pada IOTA sebagai \texttt{ipfs\_cid}. Metadata tersebut disimpan dalam bentuk serialisasi JSON dan dikodekan dalam base64 pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata}. Keputusan ini menjaga kompatibilitas dengan struktur penyimpanan DecMed yang masih berbentuk daftar metadata \textit{flat}, tetapi tetap memungkinkan \textit{Server} PRE membaca kategori segmentasi dari isi metadata.
 
 % Pada implementasi ini, \texttt{RmeSegmentData} digunakan sebagai representasi segmen sebelum enkripsi pada sisi \textit{client}. Setelah \texttt{payload} dienkripsi, segmen direpresentasikan sebagai \texttt{ClientEncryptedRmeSegment} yang masih memuat \textit{ciphertext}. Struktur tersebut kemudian dikonversi menjadi \texttt{RmeSegmentMetadata} dengan menghilangkan isi \textit{ciphertext} dan mempertahankan metadata yang diperlukan untuk pencarian, validasi integritas, dan proses PRE. Metadata ini kemudian diserialisasi sebagai JSON base64 sebelum disimpan pada field \texttt{metadata} di IOTA.
 

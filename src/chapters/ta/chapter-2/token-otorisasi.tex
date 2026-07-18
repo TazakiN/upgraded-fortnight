@@ -4,35 +4,17 @@
 \subsection{JSON Web Token}
 \label{subsec:json-web-token}
 
-JSON Web Token (JWT) adalah format token yang ringkas dan \textit{URL-safe} untuk merepresentasikan klaim yang dipertukarkan antara dua pihak \autocite{jones2015jwt}. Klaim pada JWT direpresentasikan dalam bentuk objek JSON dan dapat diamankan menggunakan JSON Web Signature (JWS) atau JSON Web Encryption (JWE). Dengan demikian, JWT dapat digunakan untuk membawa informasi seperti identitas pengguna, peran, cakupan akses, waktu penerbitan, dan waktu kedaluwarsa token.
-
-Secara umum, JWT terdiri dari tiga bagian utama, yaitu \textit{header}, \textit{payload}, dan \textit{signature}. Ketiga bagian tersebut dikodekan menggunakan \texttt{Base64URL} dan dipisahkan dengan tanda titik. Bentuk umum JWT dapat dituliskan sebagai berikut:
-
-\begin{equation*}
-	JWT = header.payload.signature
-\end{equation*}
-
-Bagian \textit{header} berisi informasi mengenai tipe token dan algoritma kriptografi yang digunakan. Bagian \textit{payload} berisi klaim yang menyatakan informasi mengenai subjek atau hak akses. Bagian \textit{signature} digunakan untuk memastikan integritas token sehingga perubahan pada \textit{header} atau \textit{payload} dapat terdeteksi oleh pihak yang memverifikasi token.
+JSON Web Token (JWT) adalah format token yang ringkas dan \textit{URL-safe} untuk merepresentasikan klaim yang dipertukarkan antara dua pihak \autocite{jones2015jwt}. JWT terdiri dari \textit{header}, \textit{payload}, dan \textit{signature} yang dikodekan \texttt{Base64URL} dan dipisahkan tanda titik. \textit{Payload} membawa klaim seperti identitas, peran, cakupan akses, dan waktu kedaluwarsa, sedangkan \textit{signature} menjamin integritas token. Dari sisi model otorisasi, JWT berperan sebagai pembawa klaim.
 
 \subsection{PASETO}
 \label{subsec:paseto}
 
-PASETO atau \textit{Platform-Agnostic Security Tokens} adalah format token yang dirancang sebagai alternatif terhadap JWT dengan pendekatan kriptografi yang lebih terarah \autocite{arciszewski2022paseto}. Seperti JWT, PASETO digunakan untuk merepresentasikan klaim dalam bentuk token yang ringkas dan dapat dipertukarkan antar pihak. Namun, PASETO membatasi pilihan algoritma kriptografi berdasarkan versi dan tujuan penggunaan token, sehingga mengurangi risiko kesalahan konfigurasi algoritma yang dapat terjadi pada token berbasis JWT.
-
-Secara umum, token PASETO $P$ dapat direpresentasikan sebagai:
-
-\begin{equation*}
-	P = version.purpose.message[.footer]
-\end{equation*}
-
-$version$ menunjukkan versi PASETO, $purpose$ menunjukkan tujuan penggunaan token , $message$ adalah \textit{payload} yang telah diproses secara kriptografis, dan $footer$ adalah \textit{footer} opsional. Nilai $purpose$ dapat berupa \texttt{local} atau \texttt{public}. Nilai \texttt{local} digunakan ketika isi token perlu dienkripsi menggunakan kunci simetris, sedangkan nilai \texttt{public} digunakan ketika token perlu ditandatangani menggunakan kriptografi kunci publik.
-
-Keunggulan PASETO terletak pada desainnya yang lebih \textit{opinionated} dibandingkan JWT, terutama dalam pemilihan algoritma kriptografi. Dengan membatasi pilihan algoritma, PASETO berupaya mengurangi fleksibilitas yang berpotensi menimbulkan kesalahan implementasi. Namun, dari sisi model otorisasi, PASETO tetap berperan sebagai token pembawa klaim. Artinya, pembatasan akses seperti peran, cakupan, dan waktu berlaku tetap perlu didefinisikan pada saat token diterbitkan.
+PASETO atau \textit{Platform-Agnostic Security Tokens} adalah alternatif JWT dengan pemilihan algoritma kriptografi yang lebih terarah berdasarkan versi dan tujuan penggunaan token \autocite{arciszewski2022paseto}. Token PASETO berbentuk $version.purpose.message[.footer]$, dengan $purpose$ berupa \texttt{local} (enkripsi simetris) atau \texttt{public} (tanda tangan kunci publik). Desain yang lebih \textit{opinionated} ini mengurangi risiko kesalahan konfigurasi algoritma.
 
 \subsection{Macaroons}
 \label{sec:macaroons}
 
-Macaroon adalah \textit{credential} otorisasi berbasis \textit{bearer} yang mendukung delegasi terdesentralisasi dalam sistem terdistribusi \autocite{birgisson2014macaroons}. Keunggulan utama Macaroon terletak pada penggunaan \textit{chained-HMAC}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat \textit{caveat} yang sesuai dengan konteks penggunaan.
+Macaroon adalah \textit{credential} otorisasi berbasis \textit{bearer} yang mendukung delegasi terdesentralisasi dalam sistem terdistribusi \autocite{birgisson2014macaroons}. Keunggulan utama Macaroon terletak pada penggunaan \textit{chained-HMAC}, yang memungkinkan proses delegasi bersifat terdesentralisasi secara efisien serta mendukung penambahan syarat \textit{caveat} yang sesuai dengan konteks penggunaan. Berbeda dari JWT dan PASETO, batasan akses tidak hanya ditetapkan saat penerbitan, tetapi dapat dipersempit kemudian oleh pemegang token.
 
 Sebuah Macaroon $M$ didefinisikan dengan struktur:
 
@@ -47,12 +29,12 @@ $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $\ve
 	sig_n & = \text{HMAC}(sig_{n-1}, c_n)
 \end{align*}
 
-$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Mekanisme ini memungkinkan delegasi terdesentralisasi yang aman dan fleksibel. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}.
+$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}. Pada pengembangan DecMed di bab selanjutnya, sifat konseptual tersebut dibedakan dari pembentukan token turunan yang dimediasi \textit{Server} PRE.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics
-	[width=0.8\textwidth]{resources/chapter-2/macaroons.png}
+	[width=0.7\textwidth]{resources/chapter-2/macaroons.png}
 	\caption{Contoh delegasi dan atenuasi kewenangan pada Macaroon. C memegang Macaroon yang diturunkan dari \textit{service} FS untuk mengakses data pada \textit{service} TS dengan batasan waktu, lokasi IP, dan target data yang spesifik. \autocite{birgisson2014macaroons}}
 	\label{fig:delegasi-macaroon}
 \end{figure}
@@ -60,8 +42,4 @@ $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon
 \subsection{Biscuit Token}
 \label{subsec:biscuit-token}
 
-Biscuit adalah token otorisasi yang dirancang untuk mendukung verifikasi terdesentralisasi, atenuasi \textit{offline}, dan penegakan kebijakan akses berbasis \textit{logic language} \autocite{biscuitsec}. Berbeda dari JWT dan PASETO yang berperan sebagai pembawa klaim, Biscuit dirancang sebagai token otorisasi berbasis \textit{capability}. Token ini memungkinkan suatu layanan memverifikasi hak akses menggunakan informasi publik, sehingga cocok untuk lingkungan terdistribusi.
-
-Biscuit menggunakan kriptografi kunci publik untuk memungkinkan verifikasi token oleh pihak yang memiliki kunci publik dari penerbit token. Biscuit mendukung atenuasi hak akses melalui penambahan blok baru pada token. Pemegang token dapat menambahkan batasan baru untuk mempersempit hak akses sebelum token diberikan ke pihak lain.
-
-Karakteristik utama Biscuit adalah penggunaan \textit{logic language} untuk mengekspresikan \textit{rule}. Informasi otorisasi dapat direpresentasikan dalam bentuk \textit{fact}, \textit{rule}, dan \textit{check}. Pada saat token digunakan, pihak \textit{verifier} dapat mengevaluasi token bersama dengan kebijakan lokal untuk menentukan apakah suatu permintaan akses diperbolehkan. Pendekatan ini membuat Biscuit lebih ekspresif dalam memodelkan kebijakan akses yang kompleks, misalnya kebijakan berbasis relasi antar aktor, sumber daya, aksi, dan konteks permintaan.
+Biscuit adalah token otorisasi berbasis \textit{capability} yang mendukung verifikasi terdesentralisasi, atenuasi \textit{offline}, dan penegakan \textit{policy} berbasis \textit{logic language} \autocite{biscuitsec}. Token diverifikasi menggunakan kunci publik penerbit; pemegang dapat menambahkan blok batasan baru sebelum mendelegasikan akses. Karakteristik utamanya adalah ekspresi otorisasi sebagai \textit{fact}, \textit{rule}, dan \textit{check} yang dievaluasi bersama \textit{policy} lokal \textit{verifier}. Biscuit lebih ekspresif untuk \textit{policy} kompleks dibanding Macaroons.

@@ -1,13 +1,13 @@
 \section{Analisis Solusi}
 \label{sec:analisis-solusi}
 
-DecMed sudah memiliki fondasi yang sesuai untuk sistem RME terdesentralisasi melalui IOTA, IPFS, dan PRE. Oleh karena itu, solusi yang dianalisis pada bagian ini diarahkan untuk memperluas kontrol akses melalui kebijakan yang lebih komprehensif dan memfasilitasi kemampuan delegasi antar tenaga kesehatan.
+DecMed sudah memiliki fondasi untuk sistem RME terdesentralisasi melalui IOTA, IPFS, dan PRE. Solusi yang dianalisis pada bagian ini diarahkan untuk memperluas kontrol akses melalui \textit{policy} yang lebih komprehensif dan memfasilitasi delegasi akses antartenaga kesehatan.
 
-Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, solusi yang dianalisis dikelompokkan ke dalam aspek utama berikut: model kebijakan akses, token otorisasi sebagai media kapabilitas, segmentasi objek data, delegasi akses antar tenaga kesehatan, serta penegakan otoritas. Pengelompokan ini diperlukan karena kontrol akses yang lebih luas tidak dapat ditegakkan hanya melalui penggantian format token. Model kebijakan diperlukan untuk mendefinisikan hubungan antara aktor, objek, hak akses, dan kondisi; token diperlukan untuk membawa kapabilitas; segmentasi data diperlukan agar kebijakan memiliki objek penegakan yang jelas; sedangkan \textit{Server} PRE diperlukan sebagai titik penegakan sebelum data terenkripsi diambil dan diproses \textit{re-encryption}. Dengan demikian, analisis solusi pada bagian ini berfungsi sebagai dasar pemilihan pendekatan sebelum rancangan teknis dijelaskan pada Subbab \ref{sec:rancangan-solusi}.
+Berdasarkan kebutuhan sistem pada Subbab \ref{subsec:kebutuhan-sistem}, analisis disusun dalam urutan berikut. Pertama, model PBAC mendefinisikan bentuk \textit{policy} akses. Kedua, segmentasi data RME menyediakan objek yang dapat diberi \textit{policy} granular. Ketiga, token Macaroons merepresentasikan \textit{policy} tersebut melalui \textit{caveats}. Keempat, mekanisme delegasi menurunkan hak akses dengan cakupan yang lebih terbatas. Kelima, PRE mendukung distribusi kemampuan dekripsi kepada penerima akses yang sah, tanpa menggantikan keputusan otorisasi yang ditentukan oleh \textit{policy} dan token. Analisis ini menjadi dasar pemilihan pendekatan sebelum rancangan teknis dijelaskan pada Subbab \ref{sec:rancangan-solusi}.
 
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-delegasi-atenuasi-offline.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-perbandingan-token-otorisasi.tex}
-\input{chapters/ta/chapter-3/analisis-solusi/analisis-segmentasi-data.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/analisis-pendekatan-pbac.tex}
+\input{chapters/ta/chapter-3/analisis-solusi/analisis-segmentasi-data.tex}
+\input{chapters/ta/chapter-3/analisis-solusi/analisis-perbandingan-token-otorisasi.tex}
+\input{chapters/ta/chapter-3/analisis-solusi/analisis-delegasi-atenuasi-offline.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/analisis-penegakan-otoritas-pre.tex}
 \input{chapters/ta/chapter-3/analisis-solusi/pemetaan-kebutuhan-solusi.tex}

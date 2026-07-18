@@ -1,21 +1,19 @@
 \section{Penelitian Terkait}
 \label{sec:penelitian-terkait}
 
-\noindent Bagian ini meninjau beberapa penelitian yang relevan dengan perancangan kontrol akses berbasis kebijakan pada sistem RME berbasis DLT serta representasi kapabilitas menggunakan Macaroons.
+\noindent Bagian ini meninjau beberapa penelitian yang relevan dengan perancangan kontrol akses berbasis \textit{policy} pada sistem RME berbasis DLT serta representasi kapabilitas menggunakan Macaroons.
 
 \subsection{Hybrid RBAC dan ABAC pada Sistem RME Berbasis Blockchain}
 \label{subsec:hybrid-rbac-abac}
 
-Singh dkk.\ mengusulkan model kontrol akses hibrida untuk sistem RME berbasis Blockchain dengan menggabungkan RBAC dan ABAC \autocite{singh2025granular}. Penelitian ini berangkat dari keterbatasan dua model tersebut ketika digunakan secara terpisah. RBAC dinilai terlalu kaku karena keputusan akses hanya bergantung pada peran pengguna. Pendekatan ini menyulitkan penerapan kontrol akses yang \textit{fine-grained} dan berpotensi menimbulkan \textit{role explosion} ketika kebutuhan akses semakin beragam. Di sisi lain, ABAC menawarkan fleksibilitas yang lebih tinggi karena keputusan akses mempertimbangkan atribut pengguna, objek, dan konteks, namun kompleksitas perancangan dan pengelolaan kebijakannya juga meningkat.
+Singh dkk.\ mengusulkan model kontrol akses hibrida untuk sistem RME berbasis Blockchain dengan menggabungkan RBAC dan ABAC \autocite{singh2025granular}. Penelitian ini berangkat dari keterbatasan dua model tersebut ketika digunakan secara terpisah. RBAC dinilai terlalu kaku karena keputusan akses hanya bergantung pada peran pengguna dan berpotensi menimbulkan \textit{role explosion}. ABAC lebih fleksibel karena mempertimbangkan atribut pengguna, objek, dan konteks, namun kompleksitas pengelolaan \textit{policy}-nya meningkat.
 
-Penelitian tersebut menunjukkan bahwa semakin banyak atribut yang digunakan dalam ABAC, semakin besar pula kemungkinan konflik kebijakan dan beban evaluasi aturan \autocite{singh2025granular}. Oleh karena itu, penulis mengusulkan pendekatan \textit{hybrid}, yaitu RBAC digunakan sebagai lapisan awal untuk menyaring akses berdasarkan peran utama, sedangkan ABAC digunakan untuk menambahkan batasan kontekstual yang lebih rinci. Hasil evaluasi pada \textit{smart contract} menunjukkan bahwa pendekatan \textit{hybrid} ini cukup efisien dari sisi konsumsi \textit{gas} dan tetap relatif sederhana untuk diimplementasikan dibandingkan penggunaan ABAC murni.
+Penelitian tersebut menunjukkan bahwa semakin banyak atribut yang digunakan dalam ABAC, semakin besar pula kemungkinan konflik \textit{policy} dan beban evaluasi aturan \autocite{singh2025granular}. Oleh karena itu, penulis mengusulkan pendekatan \textit{hybrid}: RBAC sebagai lapisan awal penyaringan peran, sedangkan ABAC menambahkan batasan kontekstual yang lebih rinci. Hasil evaluasi pada \textit{smart contract} menunjukkan pendekatan ini relatif efisien dari sisi konsumsi \textit{gas} dibandingkan ABAC murni.
 
 \subsection{Model Kontrol Akses Empat Lapis untuk RME Berbasis Blockchain}
 \label{subsec:empat-lapis-emr}
 
-Liu dan Chen meneliti model kontrol akses untuk RME berbasis Blockchain dengan menempatkan RME sebagai kasus \textit{big data} \autocite{liu2025accesscontrol}. Peran DLT dalam mengatasi masalah tersebut relevan untuk menjelaskan mengapa pendekatan DLT layak dipertimbangkan sebagai alternatif terhadap sistem RME terpusat, karena DLT menawarkan integritas data yang lebih kuat, jejak audit yang transparan, dan distribusi kendali yang lebih baik.
-
-Untuk menjawab permasalahan tersebut, penelitian ini mengusulkan model otorisasi empat lapis yang terdiri dari:
+Liu dan Chen meneliti model kontrol akses untuk RME berbasis Blockchain dengan menempatkan RME sebagai kasus \textit{big data} \autocite{liu2025accesscontrol}. Penelitian ini mengusulkan model otorisasi empat lapis yang terdiri dari:
 \begin{enumerate}
 	\item \textit{Role Check} menggunakan RBAC,
 	\item \textit{Identity Verification} menggunakan \textit{Identity-Based Encryption} (IBE),
@@ -23,25 +21,14 @@ Untuk menjawab permasalahan tersebut, penelitian ini mengusulkan model otorisasi
 	\item \textit{Data Volume Check} menggunakan pendekatan \textit{entropy}.
 \end{enumerate}
 
-% Model ini menunjukkan bahwa kontrol akses pada RME tidak cukup hanya memeriksa identitas atau peran, tetapi juga perlu mempertimbangkan mekanisme verifikasi identitas yang kuat, eksekusi kebijakan yang dapat diaudit, serta karakteristik volume data yang diakses \autocite{liu2025accesscontrol}. Kontribusi utama penelitian ini bagi Tugas Akhir adalah argumen bahwa DLT pantas digunakan untuk menggantikan atau melengkapi sistem terpusat karena dapat menjawab tiga masalah mendasar pada pengelolaan data medis.
-
-% Namun, fokus utama penelitian ini berada pada arsitektur otorisasi berlapis, bukan pada mekanisme delegasi akses yang praktis di lingkungan klinis yang kolaboratif. Dengan demikian, penelitian ini memberikan dasar konseptual yang kuat untuk adopsi DLT pada RME, tetapi masih menyisakan ruang untuk pengembangan mekanisme kontrol akses yang lebih ringan dan fleksibel pada tingkat operasional.
+Kontribusi utama penelitian ini bagi Tugas Akhir adalah justifikasi bahwa DLT dapat memperkuat integritas data, jejak audit, dan distribusi kendali pada pengelolaan RME, meskipun fokusnya belum pada mekanisme delegasi akses di lingkungan klinis kolaboratif.
 
 \subsection{Kontrol Akses Granular Menggunakan \textit{Composable NFT}}
 \label{subsec:composable-nft-rme}
 
-Amaracitra mengusulkan model \textit{Decentralized Medical Record} (DMR) yang menggunakan \textit{composable NFT} untuk mencapai keamanan data, interoperabilitas, dan privasi melalui akses data yang granular \autocite{amaracitra2025composable}. Nilai utama dari penelitian ini terletak pada cara data RME dipecah menjadi unit-unit yang lebih kecil, sehingga tidak seluruh data pasien harus selalu dibuka dalam satu paket akses.
+Amaracitra mengusulkan model \textit{Decentralized Medical Record} (DMR) yang menggunakan \textit{composable NFT} untuk mencapai keamanan data, interoperabilitas, dan privasi melalui akses data yang granular \autocite{amaracitra2025composable}. Nilai utama penelitian ini terletak pada pemecahan data RME menjadi unit-unit yang lebih kecil, sehingga tidak seluruh data pasien harus dibuka dalam satu paket akses.
 
-Dalam model tersebut, struktur data DMR disusun secara hierarkis ke dalam beberapa token, yaitu:
-\begin{enumerate}
-	\item \textit{DMR Token} sebagai token induk (\textit{root}/\textit{parent}),
-	\item \textit{Medical Record Token},
-	\item \textit{Doctor Diagnoses Token},
-	\item \textit{Laboratory Test Token}, dan
-	\item \textit{Pharmacy Data Token}.
-\end{enumerate}
-
-Ilustrasi struktur data dari implementasi DMR menggunakan composable NFT ini dapat dilihat pada Gambar \ref{fig:struktur-data-dmr}.
+Dalam model tersebut, struktur data DMR disusun secara hierarkis ke dalam \textit{DMR Token} sebagai token induk, \textit{Medical Record Token}, \textit{Doctor Diagnoses Token}, \textit{Laboratory Test Token}, dan \textit{Pharmacy Data Token}. Ilustrasi struktur tersebut dapat dilihat pada Gambar \ref{fig:struktur-data-dmr}.
 
 \begin{figure}[ht]
 	\centering
@@ -50,21 +37,9 @@ Ilustrasi struktur data dari implementasi DMR menggunakan composable NFT ini dap
 	\label{fig:struktur-data-dmr}
 \end{figure}
 
-Pemisahan ini penting karena menunjukkan bahwa granularitas akses tidak hanya bergantung pada mekanisme otorisasi, tetapi juga pada cara data medis dimodelkan sejak awal \autocite{amaracitra2025composable}. Dengan struktur seperti ini, akses dapat diberikan hanya pada bagian data yang relevan dengan kebutuhan tenaga kesehatan tertentu. Misalnya, tenaga laboratorium dapat berinteraksi dengan data pemeriksaan laboratorium tanpa harus memperoleh akses ke keseluruhan rekam medis pasien.
-
-% ? apa ini perlu dimasukkan?
-% Secara keseluruhan, ketiga penelitian tersebut menunjukkan bahwa tantangan utama pada RME terdesentralisasi bukan hanya terletak pada pemilihan platform DLT, tetapi juga pada keseimbangan antara granularitas akses, kompleksitas kebijakan, dan kemudahan implementasi. Penelitian ini mengambil pelajaran dari ketiganya: kebutuhan akan kontrol akses yang lebih kontekstual dari model \textit{hybrid} RBAC dengan ABAC, justifikasi adopsi DLT dari model empat lapis EMR, serta pentingnya pemodelan data yang granular.
+Pemisahan ini menunjukkan bahwa granularitas akses tidak hanya bergantung pada mekanisme otorisasi, tetapi juga pada cara data medis dimodelkan sejak awal \autocite{amaracitra2025composable}. Dengan struktur seperti ini, akses dapat diberikan hanya pada bagian data yang relevan dengan kebutuhan tenaga kesehatan tertentu.
 
 \subsection{Implementasi Macaroons untuk Delegasi Akses pada Sistem Nyata}
 \label{subsec:macaroons-delegasi-otorisasi}
 
-Selain diperkenalkan secara teoretis sebagai mekanisme otorisasi berbasis \textit{caveats}, Macaroons juga telah digunakan pada beberapa sistem penyimpanan terdistribusi. Salah satu contohnya adalah Storj, yaitu platform penyimpanan objek terdesentralisasi yang menggunakan Macaroons sebagai dasar pengelolaan akses pada jaringan Tardigrade \autocite{storj_macaroons}. Dalam implementasi tersebut, Macaroons diposisikan sebagai \textit{API key} yang berisi aturan akses yang melekat pada token tersebut. Aturan tersebut dapat membatasi operasi yang diperbolehkan, seperti \textit{read}, \textit{write}, \textit{delete}, dan \textit{list}, serta membatasi ruang lingkup akses berdasarkan \textit{bucket}, \textit{path}, \textit{path prefix}, dan jendela waktu akses. Dengan demikian, pengguna dapat membagikan akses terhadap objek data tertentu tanpa memberikan akses penuh terhadap seluruh akun atau seluruh ruang penyimpanan.
-
-Penerapan Macaroons pada Storj menunjukkan bahwa token otorisasi tersebut dapat digunakan pada lingkungan penyimpanan terdesentralisasi. Otoritas akses dibawa oleh token yang secara eksplisit memuat cakupan hak aksesnya. Token tersebut kemudian dapat diturunkan menjadi token dengan cakupan yang lebih sempit melalui penambahan \textit{caveats}.
-
-Contoh implementasi lain dapat ditemukan pada dCache, yaitu sistem penyimpanan data ilmiah berskala besar yang mendukung Macaroons sebagai \textit{bearer token} \autocite{dcache_macaroons}. Dalam dCache, Macaroons dirancang untuk mempermudah proses berbagi akses terhadap file atau direktori tertentu. Pengguna yang memiliki akses terhadap suatu \textit{resource} dapat meminta Macaroon, kemudian token tersebut dapat digunakan oleh pihak lain untuk mengakses sumber daya yang sama sesuai batasan yang tertanam di dalam token. dCache mendefinisikan beberapa \textit{caveats} yang merepresentasikan batasan akses, seperti \texttt{activity} untuk menentukan aktivitas yang diizinkan, \texttt{before} untuk membatasi masa berlaku token, \texttt{ip} untuk membatasi alamat jaringan pengguna, serta \texttt{path} dan \texttt{root} untuk membatasi ruang lingkup akses pada struktur direktori.
-
-Implementasi dCache juga menunjukkan bahwa beberapa \textit{caveats} dapat dikombinasikan untuk menghasilkan hak akses yang lebih terbatas. Sebagai contoh, beberapa \texttt{activity} caveat digabungkan dengan mengambil irisan dari aktivitas yang diizinkan, sehingga penambahan \textit{caveat} baru tidak memperluas hak akses token, melainkan mempersempitnya. Selain itu, pengguna yang telah memiliki Macaroon dapat membuat Macaroon baru dengan tambahan \textit{caveats}, baik secara mandiri menggunakan pustaka Macaroons maupun melalui permintaan ke dCache. Mekanisme ini memperlihatkan pola delegasi akses yang sesuai dengan prinsip atenuasi, yaitu token turunan tidak dapat memiliki hak akses yang lebih besar daripada token asal.
-
-Dari kedua implementasi tersebut, dapat disimpulkan bahwa Macaroons telah digunakan untuk membatasi dan mendelegasikan akses pada sistem penyimpanan data terdistribusi. Storj menekankan penggunaan Macaroons untuk pengelolaan akses objek data pada jaringan penyimpanan terdesentralisasi, sedangkan dCache menunjukkan bagaimana \textit{caveats} dapat digunakan untuk membatasi aktivitas, lokasi sumber daya, alamat jaringan, dan masa berlaku akses.
-
+Selain diperkenalkan secara teoretis, Macaroons juga telah digunakan pada sistem penyimpanan terdistribusi. Storj memakai Macaroons sebagai \textit{API key} pada jaringan Tardigrade untuk membatasi operasi (\textit{read}, \textit{write}, \textit{delete}, \textit{list}) serta ruang lingkup berdasarkan \textit{bucket}, \textit{path}, dan jendela waktu akses \autocite{storj_macaroons}. dCache, sistem penyimpanan data ilmiah berskala besar, memakai Macaroons sebagai \textit{bearer token} dengan \textit{caveats} seperti \texttt{activity}, \texttt{before}, \texttt{ip}, \texttt{path}, dan \texttt{root}; beberapa \textit{caveat} dapat dikombinasikan melalui irisan agar token turunan hanya mempersempit hak akses \autocite{dcache_macaroons}. Kedua kasus tersebut menunjukkan bahwa Macaroons praktis untuk membatasi dan mendelegasikan akses pada penyimpanan terdistribusi melalui atenuasi berbasis \textit{caveats}.

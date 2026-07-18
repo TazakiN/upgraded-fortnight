@@ -15,7 +15,7 @@ Setelah perubahan tersebut diterapkan, \textit{unit testing} pada \textit{crate}
 \subsubsection{Struktur \textit{Caveats} Macaroons}
 \label{subsubsec:struktur-caveats-macaroons}
 
-Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}. \textit{caveats} terdefinisi pada \textit{crate} \texttt{decmed-macaroon-auth}, sehingga \textit{hospital client} membentuk token dengan menambahkan \textit{caveats} sesuai dengan daftar \textit{caveats} yang terdefinisi pada \textit{crate}, dan PRE akan menolak \textit{request} jika terdapat \textit{caveats} yang tidak termasuk ke dalam daftar \textit{caveats}.
+Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}. \textit{Caveats} terdefinisi pada \textit{crate} \texttt{decmed-macaroon-auth}. \textit{Hospital Client} mengirim parameter akses sesuai daftar tersebut, sedangkan \textit{Server} PRE yang menerbitkan atau mengatenuasi token. PRE menolak permintaan jika terdapat \textit{caveat} di luar daftar yang didukung.
 
 \begin{table}[!ht]
 	\centering
@@ -60,22 +60,14 @@ Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan 
 \subsubsection{Penerbitan Token Macaroon}
 \label{subsubsec:penerbitan-awal-token-macaroons}
 
-Token otorisasi diimplementasikan menggunakan Macaroons sesuai rancangan pada Subbab \ref{subsec:rancangan-token-macaroons}. Pada implementasi ini, penerbitan token dilakukan oleh \textit{Server} PRE setelah permintaan akses dari pasien dinyatakan valid.
-
-Pada proses penerbitan akses awal, \textit{Server} PRE menerbitkan dua jenis token untuk penerima akses, yaitu token \texttt{Read} dan token \texttt{Update}. Token \texttt{Read} memuat \textit{caveat} utama berupa \texttt{patient\_address}, \texttt{root\_subject}, \texttt{read\_dataset\_in}, \texttt{read\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = Read}. Token \texttt{Update} memuat \textit{caveat} berupa \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{root\_subject}, \texttt{write\_dataset\_in}, \texttt{write\_function\_in}, \texttt{expires\_before}, \texttt{max\_delegation\_depth}, \texttt{hospital\_cid}, dan \texttt{purpose = Update}.
-
-Pada penerbitan untuk petugas rekam medis, fungsi yang dipanggil adalah \texttt{issue\_admin\_personnel\_token} yang termasuk implementasi pada \textit{crate} \texttt{decmed-macaroon-auth}. Alur lengkap pemberian akses awal dari pasien kepada petugas rekam medis, termasuk pemindaian QR code, verifikasi identitas, pembentukan material PRE, penyimpanan ke Redis, dan pencatatan grant akses ke \textit{smart contract}, dijelaskan pada subbab \ref{subsec:implementasi-atenuasi-offline-delegasi}.
+Penerbitan mengikuti rancangan pada Subbab \ref{subsec:rancangan-token-macaroons}. PRE menerbitkan token setelah permintaan pasien valid, melalui fungsi \texttt{issue\_admin\_personnel\_token} pada \textit{crate} \texttt{decmed-macaroon-auth}. Token \texttt{Read} dan \texttt{Update} memakai subset \textit{caveat} dari Tabel \ref{tab:implementasi-caveats-macaroons}: token baca memakai \texttt{read\_dataset\_in}/\texttt{read\_function\_in} dan \texttt{purpose = Read}; token tulis memakai \texttt{related\_rme\_id}, \texttt{write\_dataset\_in}/\texttt{write\_function\_in}, dan \texttt{purpose = Update}. Detail \textit{endpoint}, material PRE, dan pencatatan \textit{on-chain} ada pada Subbab \ref{subsec:implementasi-atenuasi-offline-delegasi}.
 
 \subsubsection{Atenuasi Token Macaroon}
 \label{subsubsec:atenuasi-token-macaroons}
 
-Pada implementasi ini, pemegang token utama adalah para tenaga kesehatan, dengan role \texttt{AdministrativePersonnel} atau \texttt{MedicalPersonnel}. Pemegang token melakukan atenuasi token melalui \textit{hospital client} dengan mengirim \textit{request} atenuasi token ke \textit{server} PRE. Implementasi dari fungsi atenuasi ini terdapat pada \textit{crate} \texttt{decmed-macaroon-auth} dengan nama fungsi \texttt{attenuate\_macaroon}. Fungsi ini bekerja dengan tahapan sebagai berikut: token Macaroon dideserialisasi, lalu \textit{caveat} baru ditambahkan sesuai dengan \textit{caveats} yang ingin ditambahkan, kemudian token Macaroon yang telah diatenuasi diserialisasi kembali sebelum dikembalikan sebagai \textit{response}. Perhitungan \textit{signature} baru dari Macaroon pada proses \textit{chained-HMAC} dilakukan setiap kali \textit{caveat} baru ditambahkan.
+Atenuasi dipicu dari \textit{Hospital Client} dan dijalankan di PRE melalui \texttt{attenuate\_macaroon} pada \textit{crate} \texttt{decmed-macaroon-auth}: deserialisasi token induk, penambahan \textit{caveat} (dengan \textit{chained-HMAC} baru), lalu serialisasi ulang. Alur delegasi dan parameter permintaan dijelaskan pada Subbab \ref{subsec:implementasi-atenuasi-offline-delegasi}.
 
 \subsubsection{Revokasi Token Macaroon}
 \label{subsubsec:revokasi-token-macaroons}
 
-Revokasi token pada implementasi ini sesuai dengan rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}. Implementasi revokasi akses melibatkan pencatatan di IOTA \textit{on-chain}, Redis PRE, dan \textit{server} PRE.
-
-Setiap token turunan menyimpan keterkaitan terhadap token induknya melalui \textit{caveat} \texttt{parent\_token\_hash}. Informasi ini digunakan untuk mendukung pencabutan berantai, sehingga pencabutan terhadap token pada tingkat tertentu dapat berdampak pada token-token turunan yang bergantung kepadanya.
-
-Pemeriksaan pencabutan dilakukan oleh \textit{Server} PRE sebelum akses terhadap data terenkripsi diberikan. Saat \textit{request} diterima oleh PRE, maka PRE akan memeriksa \textit{hash} dari token Macaroon yang digunakan, dan mengecek apakah ada di daftar \textit{revoked keys} yang tersimpan pada Redis PRE dengan pola \verb|revoked:token:<hash>|. Pemeriksaan yang sama juga diterapkan terhadap semua \textit{hash} token yang ada pada \textit{caveat} \texttt{parent\_token\_hash}. Jika ada salah satu \textit{hash} yang ditemukan, maka \textit{request} akan ditolak. Selain itu, hak akses yang tercatat pada \textit{on-chain} juga ditandai sebagai \textit{revoked}.
+Revokasi mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas} dan melibatkan IOTA, Redis PRE, serta \textit{Server} PRE. Token turunan menautkan induk lewat \texttt{parent\_token\_hash}. Saat permintaan akses, PRE memeriksa \textit{hash} token dan seluruh \texttt{parent\_token\_hash} terhadap kunci Redis \verb|revoked:token:<hash>|; jika ada yang cocok, permintaan ditolak. Status hak akses \textit{on-chain} juga ditandai \textit{revoked}.

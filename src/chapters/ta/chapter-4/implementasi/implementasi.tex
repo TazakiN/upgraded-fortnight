@@ -1,9 +1,9 @@
 \section{Implementasi Sistem}
 \label{sec:implementasi-sistem}
 
-Pada bagian ini dijelaskan implementasi dari rancangan solusi yang telah dijabarkan pada Bab \ref{chap:analisis-dan-rancangan}. Implementasi difokuskan pada penerapan kebijakan akses PBAC melalui representasi kapabilitas pada Macaroons, segmentasi data RME, mekanisme atenuasi dan delegasi akses, penegakan otoritas pada \textit{Server} PRE, perubahan \textit{smart contract} IOTA Move, dan penyesuaian antarmuka \textit{client}.
+Bagian ini menjabarkan realisasi teknis dari rancangan pada Bab \ref{chap:analisis-dan-rancangan}. Narasi konsep dan alur yang sudah ditetapkan di Bab III dirujuk ulang; fokus di sini adalah komponen kode, antarmuka, dan perilaku konkret sistem.
 
-Daftar komponen implementasi dan keterkaitannya dengan rancangan solusi ditunjukkan pada Tabel \ref{tab:daftar-implementasi-sistem}. ID \texttt{I-TA} digunakan sebagai rujukan pada implementasi terkait. Rancangan ID \texttt{R-TA-01} merupakan rancangan arsitektur sistem yang implementasinya merupakan keseluruhan implementasi sistem DecMed, sehingga tidak muncul pada tabel.
+Daftar komponen dan keterkaitannya dengan rancangan ditunjukkan pada Tabel \ref{tab:daftar-implementasi-sistem}. ID \texttt{I-TA} dipakai sebagai rujukan. \texttt{R-TA-01} (arsitektur) mencakup keseluruhan sistem sehingga tidak muncul sebagai baris tersendiri.
 
 \begin{table}[!ht]
 	\centering
@@ -18,7 +18,7 @@ Daftar komponen implementasi dan keterkaitannya dengan rancangan solusi ditunjuk
 		\texttt{I-TA-03} & Implementasi penegakan otoritas pada \textit{Server} PRE.                                                  & \texttt{R-TA-05}, \texttt{R-TA-06}, \texttt{R-TA-07} \\ \hline
 		\texttt{I-TA-04} & Implementasi \textit{smart contract} IOTA Move untuk metadata segmen, akses, dan audit.                    & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-07} \\ \hline
 		\texttt{I-TA-05} & Implementasi \textit{Patient Client} untuk pemberian akses awal, pencabutan, dan audit.                    & \texttt{R-TA-07}, \texttt{R-TA-08}                   \\ \hline
-		\texttt{I-TA-06} & Implementasi \textit{Hospital Client} untuk akses baca dan tulis segmen RME dan delegasi antar tenaga kesehatan. & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-08} \\ \hline
+		\texttt{I-TA-06} & Implementasi \textit{Hospital Client} untuk akses baca dan tulis segmen RME dan delegasi antartenaga kesehatan. & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-08} \\ \hline
 	\end{tabular}
 \end{table}
 

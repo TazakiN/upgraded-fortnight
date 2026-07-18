@@ -2,36 +2,24 @@
 \label{subsec:implementasi-patient-client}
 
 % \textit{Patient Client} diimplementasikan sebagai \texttt{I-TA-05} untuk merealisasikan \texttt{R-TA-07} dan \texttt{R-TA-08}. 
-\textit{Patient Client} disesuaikan untuk mendukung skenario penerbitan token awal oleh pasien, pembacaan RME, peninjauan audit akses, dan pencabutan akses. \textit{Patient Client} tidak hanya berfungsi sebagai tampilan pengguna, tetapi juga sebagai titik pembentukan konteks permintaan pasien yang dikirimkan ke \textit{Server} PRE. Tangkapan layar implementasi disajikan pada Lampiran \ref{lampiran:implementasi-patient-client}.
-
-Beberapa bagian dari \textit{Patient Client} yang sudah ada dari implementasi DecMed sebelumnya, seperti halaman register, halaman login, halaman \textit{Home}, halaman Profil, halaman log akses, halaman \textit{scan} QR, dan halaman detail RME, diadaptasi dan disesuaikan untuk mendukung implementasi Tugas Akhir ini. Penyesuaian dan tambahan halaman baru pada \textit{Patient Client} diterapkan untuk halaman-halaman berikut.
+\textit{Patient Client} disesuaikan untuk penerbitan token awal, pembacaan RME tersegmentasi, audit delegasi, dan pencabutan akses. Tangkapan layar ada pada Lampiran \ref{lampiran:implementasi-patient-client}. Halaman lama DecMed (register, login, profil, log akses, dan sejenisnya) diadaptasi; penyesuaian utama diuraikan berikut.
 
 \subsubsection{Halaman \textit{Home} (\textit{List} RME)}
 \label{subsubsec:halaman-home-daftar-rme}
 
-Halaman \textit{home} merupakan halaman utama yang pertama kali dilihat pasien setelah berhasil masuk ke dalam aplikasi. Halaman ini menampilkan seluruh RME pasien dalam bentuk daftar \textit{card} yang tersusun secara vertikal. Setiap \textit{card} merepresentasikan satu RME unik dan menampilkan tanggal pembuatan RME dan ID RME. Daftar RME diurutkan berdasarkan tanggal terbaru, sehingga RME yang paling baru selalu muncul di bagian atas. Setiap \textit{card} dapat diklik, di mana klik tersebut akan mengarahkan pasien menuju halaman detail RME yang bersangkutan.
-
-Tampilan dari halaman \textit{home} dapat dilihat pada
-Gambar \ref{fig:halaman-home-daftar-rme}.
+Halaman utama menampilkan daftar RME pasien sebagai \textit{card} (tanggal dan ID), diurutkan dari yang terbaru, dengan navigasi ke halaman detail. Tampilan pada Gambar \ref{fig:halaman-home-daftar-rme}.
 
 \subsubsection{Halaman Detail RME}
 \label{subsubsec:halaman-detail-rme}
 
-Halaman detail RME ditampilkan setelah pasien memilih salah satu \textit{card} dari daftar RME pada halaman \textit{home}. Halaman ini menampilkan detail lengkap dari sebuah RME per dataset. Bagian atas halaman menampilkan ID dari RME. Di bawahnya, terdapat \textit{tab} daftar \textit{dataset category} RME tersebut. \textit{Tab} yang terpilih menentukan entri data RME yang ditampilkan dalam bentuk \textit{card} yang memuat nama \textit{function category}. Pasien juga dapat kembali ke halaman \textit{home} melalui tautan navigasi balik yang tersedia di bagian atas halaman.
-
-Tampilan dari halaman detail RME dapat dilihat pada Gambar \ref{fig:halaman-detail-rme}.
+Detail RME dikelompokkan per \textit{dataset category} melalui \textit{tab}; setiap entri menampilkan \textit{function category} terkait. Tampilan pada Gambar \ref{fig:halaman-detail-rme}.
 
 \subsubsection{Halaman Audit Delegasi}
 \label{subsubsec:halaman-audit-delegasi}
 
-Halaman audit delegasi menampilkan informasi mengenai seluruh rantai delegasi akses yang terbentuk dari token Macaroon yang telah diterbitkan oleh pasien. Setiap entri pada halaman ini merepresentasikan satu rantai delegasi dan menampilkan identitas personel rumah sakit yang menjadi penerima akses awal, jenis akses yang diberikan, ID RME yang terkait, dan tanggal kedaluwarsa dari akses awal tersebut. Status keseluruhan rantai delegasi juga ditampilkan dalam bentuk label berwarna, yakni \textit{Active} berwarna hijau, \textit{Expired} berwarna kuning, atau \textit{Revoked} berwarna merah. Di dalam setiap entri rantai delegasi, terdapat subdaftar yang merinci setiap delegasi, yaitu pasangan delegasi dari satu personel ke personel lainnya, beserta informasi kedalaman delegasi, tanggal kedaluwarsa, dan status aktif atau dicabutnya delegasi tersebut.
-
-Tampilan dari halaman detail audit delegasi RME dapat dilihat pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
+Halaman ini menampilkan rantai delegasi dari token yang diterbitkan pasien: penerima akses awal, jenis akses, ID RME, kedaluwarsa, dan status (\textit{Active}/\textit{Expired}/\textit{Revoked}), beserta subdaftar pasangan delegasi. Tampilan pada Gambar \ref{fig:halaman-detail-audit-delegasi}.
 
 \subsubsection{Halaman Detail \textit{Scan} QR}
 \label{subsubsec:halaman-detail-scan-qr}
 
-Halaman \textit{scan} QR merupakan halaman yang digunakan pasien untuk memulai proses pemberian akses kepada personel rumah sakit. Halaman ini menyediakan antarmuka unggah berkas gambar QR yang diperoleh dari rumah sakit, di mana pasien dapat memilih berkas gambar dalam format PNG atau JPEG. Setelah berkas QR diunggah dan diproses, isi QR divalidasi dan identitas personel rumah sakit yang terkandung di dalamnya diidentifikasi. Apabila QR valid, sebuah dialog konfirmasi ditampilkan yang memuat nama personel dan nama rumah sakit tujuan pemberian akses. Pada dialog konfirmasi ini, pasien dapat mengonfigurasi cakupan akses yang akan diberikan, meliputi jenis layanan medis berupa rawat jalan atau
-rawat inap, mode akses berupa \textit{Read}, \textit{Update}, atau keduanya, serta tanggal dan waktu kedaluwarsa akses. Setelah mengonfirmasi pilihan tersebut, pasien diarahkan ke dialog masukan PIN enam digit sebagai verifikasi identitas sebelum token Macaroon awal diterbitkan dan akses resmi diberikan kepada personel rumah sakit yang dituju.
-
-Tampilan dari halaman \textit{scan} QR dan halaman konfirmasi akses awal dapat dilihat pada Gambar \ref{fig:halaman-detail-scan-qr} dan Gambar \ref{fig:halaman-konfirmasi-akses-awal}.
+Pasien mengunggah gambar QR (PNG/JPEG) untuk memulai pemberian akses. Setelah validasi, dialog konfirmasi menampilkan identitas petugas/fasyankes serta konfigurasi layanan (\texttt{RAWAT\_JALAN}/\texttt{RAWAT\_INAP}), mode akses (\textit{Read}/\textit{Update}/keduanya), dan kedaluwarsa, diikuti verifikasi PIN enam digit sebelum token diterbitkan. Alur teknis penerbitan ada pada Subbab \ref{subsubsec:delegasi-akses-dari-pasien-kepada-petugas-rekam-medis}. Tampilan pada Gambar \ref{fig:halaman-detail-scan-qr} dan \ref{fig:halaman-konfirmasi-akses-awal}.

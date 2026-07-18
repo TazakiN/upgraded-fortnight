@@ -1,23 +1,21 @@
 \subsection{Analisis Pemilihan Token Otorisasi}
 \label{subsec:analisis-pemilihan-token-otorisasi}
 
-Berdasarkan masalah yang telah diidentifikasi pada Subbab \ref{subsec:identifikasi-masalah},
-mekanisme otorisasi pada DecMed perlu mendukung representasi kapabilitas yang sesuai dengan kebijakan akses serta memiliki mekanisme atenuasi. Selain itu, pada Subbab \ref{subsec:analisis-delegasi-atenuasi-offline} dibahas bahwa mekanisme delegasi antaraktor perlu mendukung atenuasi \textit{offline}.
-Oleh karena itu, perbandingan terhadap beberapa pendekatan token otorisasi dianalisis untuk menentukan teknologi token yang paling sesuai sebagai media pembawa kapabilitas.
+Berdasarkan model PBAC pada Subbab \ref{subsec:analisis-pendekatan-model-pbac} dan segmentasi data pada Subbab \ref{subsec:analisis-segmentasi-data-rme}, mekanisme otorisasi pada DecMed perlu mendukung representasi kapabilitas yang sesuai dengan \textit{policy} akses serta memungkinkan atenuasi untuk delegasi terbatas. Perbandingan beberapa pendekatan token otorisasi dilakukan untuk menentukan teknologi yang paling sesuai sebagai media pembawa kapabilitas.
 
-Alternatif token otorisasi yang dibandingkan pada analisis ini adalah JWT, PASETO, Macaroons, dan Biscuit. JWT dipilih sebagai pembanding karena merupakan bentuk token yang digunakan pada rancangan DecMed awal dan umum digunakan untuk merepresentasikan klaim otorisasi. PASETO dipilih karena memiliki tujuan penggunaan yang serupa dengan JWT, tetapi dengan kriptografi yang \textit{opinionated}. Macaroons dianalisis sebagai kandidat utama karena menyediakan mekanisme \textit{caveat} yang memungkinkan atenuasi \textit{offline}. Biscuit dianalisis sebagai pembanding karena mendukung verifikasi terdesentralisasi dan atenuasi \textit{offline}, tetapi menggunakan pendekatan yang lebih ekspresif melalui aturan berbasis \textit{logic language}.
+Alternatif token otorisasi yang dibandingkan adalah JWT, PASETO, Macaroons, dan Biscuit. JWT dipilih sebagai pembanding karena digunakan pada rancangan DecMed awal. PASETO dipilih karena memiliki tujuan penggunaan yang serupa dengan JWT, tetapi dengan kriptografi yang \textit{opinionated}. Macaroons dianalisis sebagai kandidat utama karena menyediakan mekanisme \textit{caveat} yang secara konseptual memungkinkan atenuasi tanpa penerbitan ulang oleh penerbit awal. Biscuit dianalisis sebagai pembanding karena mendukung verifikasi terdesentralisasi dan atenuasi serupa, tetapi menggunakan pendekatan yang lebih ekspresif melalui aturan berbasis \textit{logic language}.
 
-Kriteria evaluasi antar token diturunkan dari kebutuhan sebagai berikut:
+Kriteria evaluasi antartoken diturunkan dari kebutuhan sebagai berikut:
 \begin{enumerate}
 	\item \textbf{Representasi kapabilitas dan batasan akses}
 
-	      Menilai apakah token dapat membawa kapabilitas dan batasan yang telah ditetapkan oleh kebijakan akses.
-	\item \textbf{Atenuasi \textit{offline}}
+	      Menilai apakah token dapat membawa kapabilitas dan batasan yang telah ditetapkan oleh \textit{policy} PBAC.
+	\item \textbf{Dukungan atenuasi untuk delegasi}
 
-	      Menilai apakah pemegang token dapat menambahkan batasan baru tanpa harus melibatkan pasien dan menerbitkan token baru. Sesuai dengan solusi dari Subbab \ref{subsec:analisis-delegasi-atenuasi-offline}.
-	\item \textbf{Jaminan token turunan tidak memperluas hak akses}
+	      Menilai apakah batasan baru dapat ditambahkan tanpa melibatkan pasien sebagai penerbit awal, sesuai kebutuhan delegasi antartenaga kesehatan.
+	\item \textbf{Token turunan tidak memperluas hak akses}
 
-	      Menganalisis jenis kunci kriptografi yang digunakan dan seberapa kuat sistem delegasi token mencegah token turunan digunakan untuk mengakses lebih banyak atau lebih luas daripada token induknya.
+	      Menganalisis jenis kunci kriptografi yang digunakan dan seberapa kuat mekanisme delegasi mencegah token turunan digunakan untuk mengakses cakupan yang lebih luas daripada token induk.
 	\item \textbf{Model verifikasi dan pengelolaan kunci}
 
 	      Mengkaji bagaimana masing-masing token diverifikasi dan bagaimana pengelolaan kuncinya.
@@ -29,7 +27,7 @@ Kriteria evaluasi antar token diturunkan dari kebutuhan sebagai berikut:
 	      membahas tingkat kesulitan integrasi ke dalam sistem PRE sebagai penegak otoritas akses.
 \end{enumerate}
 
-Tabel \ref{tab:perbandingan-token-otorisasi} menunjukkan perbandingan antar token otorisasi berdasarkan kriteria evaluasi.
+Tabel \ref{tab:perbandingan-token-otorisasi} menunjukkan perbandingan antartoken otorisasi berdasarkan kriteria evaluasi.
 
 \begin{table}[!ht]
 	\centering
@@ -78,10 +76,10 @@ Tabel \ref{tab:perbandingan-token-otorisasi} menunjukkan perbandingan antar toke
 
 \end{table}
 
-JWT dan PASETO dapat digunakan untuk membawa informasi otorisasi dalam bentuk klaim, seperti identitas subjek, cakupan akses, dan waktu kedaluwarsa. Namun, keduanya tidak menyediakan mekanisme bawaan untuk menambahkan batasan baru pada token yang sudah diterbitkan. Akibatnya, delegasi hak akses yang lebih sempit tetap membutuhkan penerbitan token baru oleh pihak penerbit atau mekanisme tambahan di sisi \textit{server}. Karakteristik tersebut kurang sesuai dengan kebutuhan delegasi antar tenaga kesehatan yang dianalisis.
+JWT dan PASETO dapat digunakan untuk membawa informasi otorisasi dalam bentuk klaim, seperti identitas subjek, cakupan akses, dan waktu kedaluwarsa. Namun, keduanya tidak menyediakan mekanisme bawaan untuk menambahkan batasan baru pada token yang sudah diterbitkan. Akibatnya, delegasi hak akses yang lebih sempit tetap membutuhkan penerbitan token baru oleh pihak penerbit atau mekanisme tambahan di sisi \textit{server}. Karakteristik tersebut kurang sesuai dengan kebutuhan delegasi antartenaga kesehatan yang dianalisis.
 
-Macaroons dan Biscuit lebih dekat dengan kebutuhan karena keduanya mendukung atenuasi \textit{offline}. Perbedaan utama keduanya terletak pada model pembatasan dan model verifikasi. Macaroons menggunakan \textit{caveats} untuk menambahkan batasan pada token, sedangkan Biscuit menggunakan blok berisi \textit{fact}, \textit{rule}, dan \textit{check}. Model Biscuit memberikan ekspresivitas yang lebih tinggi, tetapi kebutuhan pembatasan akses pada DecMed masih dapat direpresentasikan melalui klaim pada token, seperti identitas pasien, identitas aktor, cakupan data, aksi, dan masa berlaku. Pembatasan tersebut hanya memanfaatkan \textit{fact} saja, karena pemeriksaan otoritas dari klaim pada token sudah cukup ditangani oleh \textit{server} PRE. Oleh karena itu, penggunaan Biscuit dinilai menambah kompleksitas integrasi yang tidak diperlukan untuk ruang lingkup yang dianalisis.
+Macaroons dan Biscuit lebih dekat dengan kebutuhan karena keduanya mendukung atenuasi tanpa penerbitan ulang oleh penerbit awal. Perbedaan utama keduanya terletak pada model pembatasan dan model verifikasi. Macaroons menggunakan \textit{caveats} pada token, sedangkan Biscuit menggunakan blok berisi \textit{fact}, \textit{rule}, dan \textit{check}. Model Biscuit memberikan ekspresivitas yang lebih tinggi, tetapi kebutuhan pembatasan akses pada DecMed masih dapat direpresentasikan melalui klaim pada token, seperti identitas pasien, identitas aktor, cakupan data, aksi, dan masa berlaku. Penggunaan Biscuit dinilai menambah kompleksitas integrasi yang tidak diperlukan untuk ruang lingkup yang dianalisis.
 
-Dari sisi model verifikasi, Macaroons lebih sesuai dengan rancangan DecMed karena proses verifikasi token tetap dipusatkan pada \textit{Server} PRE sebagai titik penegakan otorisasi. Dengan model tersebut, kunci verifikasi tidak perlu disebarkan ke banyak layanan. Biscuit lebih sesuai untuk arsitektur yang membutuhkan verifikasi token oleh banyak komponen berbeda menggunakan kunci publik. Pada rancangan DecMed, kebutuhan tersebut tidak menjadi fokus karena seluruh akses data RME tetap melewati PRE.
+Dari sisi model verifikasi, Macaroons lebih sesuai karena verifikasi token pada DecMed tetap dipusatkan pada satu titik penegakan sebelum data terenkripsi diproses. Kunci verifikasi tidak perlu disebarkan ke banyak layanan. Biscuit lebih sesuai untuk arsitektur yang membutuhkan verifikasi oleh banyak komponen berbeda menggunakan kunci publik, sehingga tidak menjadi fokus pada DecMed.
 
-Berdasarkan perbandingan tersebut, Macaroons dipilih sebagai media pembawa kapabilitas pada DecMed karena memberikan keseimbangan antara kemampuan merepresentasikan batasan yang diturunkan dari kebijakan akses, dukungan delegasi terbatas melalui atenuasi \textit{offline}, dan kompleksitas integrasi yang sesuai dengan ruang lingkup yang dianalisis. Melalui mekanisme \textit{caveats}, token dapat membawa batasan kapabilitas dan pemegang token dapat menambahkan batasan baru secara lokal untuk mempersempit hak akses sebelum token didelegasikan kepada aktor lain. Perluasan kontrol akses itu sendiri tetap didasarkan pada model PBAC, bukan pada format token semata.
+Macaroons dipilih sebagai media pembawa kapabilitas karena menyeimbangkan representasi batasan \textit{policy} sebagai \textit{caveats}, dukungan atenuasi untuk delegasi terbatas, dan kompleksitas integrasi yang sesuai dengan ruang lingkup analisis.

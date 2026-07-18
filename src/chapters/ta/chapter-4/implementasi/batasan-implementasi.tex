@@ -1,18 +1,4 @@
 \subsection{Batasan Implementasi}
 \label{subsec:batasan-implementasi}
 
-Implementasi pada Tugas Akhir ini memiliki beberapa batasan sebagai berikut:
-
-\begin{enumerate}
-	\item Implementasi dilakukan dalam lingkungan komputer lokal dan VPS.
-	      \begin{itemize}
-		      \item Semua \textit{client} dan \textit{Server} PRE dijalankan langsung di komputer lokal.
-		      \item VPS menjalankan kluster IPFS dan IOTA \textit{Gas Station}.
-		      \item \textit{Smart contract} yang digunakan di-\textit{deploy} pada IOTA Localnet yang berjalan di VPS.
-	      \end{itemize}
-	\item Implementasi mempertahankan arsitektur kerangka kerja DecMed sebagaimana yang dijelaskan pada Subbab \ref{subsec:rancangan-arsitektur-solusi}.
-	\item Komponen perangkat lunak yang digunakan mengikuti dependensi dari implementasi DecMed sebelumnya. Daftar dependensi langsung setiap komponen disajikan pada Lampiran \ref{lampiran:daftar-dependensi-perangkat-lunak}.
-	\item Kluster IPFS yang digunakan dalam implementasi hanya menggunakan konfigurasi \textit{default} sesuai implementasi DecMed sebelumnya. Konfigurasi tersebut terdiri atas tiga buah \textit{peers}.
-	\item Segmentasi data sesuai dengan yang dibahas pada \ref{subsec:rancangan-segmentasi-data-rme} hanya dilakukan hingga tingkat kombinasi \textit{dataset category} dan \textit{function category}, kemudian disimpan sebagai \textit{text}.
-	\item Nilai \texttt{max\_delegation\_depth} pada token Macaroon hanya diatur sampai tingkat 2. Hal ini untuk memastikan bahwa token turunan hanya dapat diturunkan sebanyak 2 kali sesuai dengan skenario pada Subbab \ref{subsubsec:analisis-skenario-layanan-klinis} dan rancangan pada Subbab \ref{subsec:rancangan-alur-akses-dan-delegasi-macaroon}.
-\end{enumerate}
+Implementasi mempertahankan arsitektur kerangka kerja DecMed sebagaimana dijelaskan pada Subbab \ref{subsec:rancangan-arsitektur-solusi}. Komponen perangkat lunak mengikuti dependensi implementasi DecMed sebelumnya; daftar dependensi langsung setiap komponen disajikan pada Lampiran \ref{lampiran:daftar-dependensi-perangkat-lunak}. Batasan lingkungan eksekusi, konfigurasi IPFS, tingkat segmentasi data, dan nilai \texttt{max\_delegation\_depth} diuraikan pada Subbab \ref{subsec:keterbatasan-implementasi}.

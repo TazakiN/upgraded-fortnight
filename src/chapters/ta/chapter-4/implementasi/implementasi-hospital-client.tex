@@ -1,44 +1,29 @@
 \subsection{Implementasi \textit{Hospital Client}}
 \label{subsec:implementasi-hospital-client}
 
-\textit{Hospital Client} disesuaikan untuk mendukung skenario penggunaan token oleh tenaga medis, pembuatan token turunan, dan akses terhadap segmen data RME. Tangkapan layar implementasi disajikan pada Lampiran \ref{lampiran:implementasi-hospital-client}.
+\textit{Hospital Client} mendukung penggunaan token, atenuasi untuk delegasi, serta baca/tulis segmen RME. Tangkapan layar ada pada Lampiran \ref{lampiran:implementasi-hospital-client}.
 
 \subsubsection{Halaman \textit{Dashboard} (\textit{List} RME)}
 \label{subsubsec:halaman-dashboard-hospital-client}
 
-Halaman \textit{dashboard} merupakan halaman utama yang ditampilkan setelah aktor rumah sakit berhasil masuk ke sistem. Konten halaman ini bersifat \textit{role-based}, sehingga tampilan yang disajikan berbeda-beda bergantung pada peran aktor yang sedang aktif. Untuk peran \texttt{MedicalPersonnel}, halaman ini menampilkan dua tab yang dapat dipilih secara bergantian, yaitu tab \textit{Read} dan tab \textit{Write}.
-
-Tab \textit{Read} menampilkan daftar pasien yang token aksesnya memiliki kapabilitas baca, sedangkan tab \textit{Write} menampilkan daftar pasien yang token aksesnya memiliki kapabilitas tulis. Setiap entri dalam kedua tab tersebut menampilkan nama pasien dan dapat diklik untuk menavigasi ke halaman berikutnya. Untuk entri pada tab \textit{Read}, klik akan membawa aktor menuju halaman daftar RME pasien yang terkait dengan token baca. Untuk entri pada tab \textit{Write}, klik akan membawa aktor langsung menuju halaman formulir penulisan segmen RME, dengan konteks token tulis yang sesuai.
-
-Tampilan dari halaman \textit{dashboard} untuk peran \texttt{MedicalPersonnel} dapat dilihat pada Gambar \ref{fig:halaman-dashboard-medical-personnel}.
+Untuk \texttt{MedicalPersonnel}, dashboard bersifat \textit{role-based} dengan tab \textit{Read} dan \textit{Write} yang memuat daftar pasien sesuai kapabilitas token. Tab baca mengarah ke daftar RME; tab tulis mengarah ke formulir penulisan segmen. Tampilan pada Gambar \ref{fig:halaman-dashboard-medical-personnel}.
 
 \subsubsection{Halaman Delegasi Akses}
 \label{subsubsec:halaman-delegasi-akses-hospital-client}
 
-Halaman delegasi akses digunakan oleh aktor yang memiliki hak untuk mendelegasikan token aksesnya kepada personel lain di fasyankes. Pada atas halaman ini terdapat ringkasan hak akses yang saat ini dimiliki oleh aktor, berupa daftar pasien. Di bawahnya adalah \textit{form} delegasi yang aktif apabila terdapat setidaknya satu akses pasien yang tersedia. Pada formulir ini, aktor dapat memilih pasien sebagai hak akses yang akan didelegasikan, menentukan mode delegasi berupa \textit{Read}, \textit{Write}, atau keduanya, memilih \textit{preset} \textit{role} penerima delegasi seperti dokter atau perawat, serta menetapkan tanggal dan waktu kedaluwarsa delegasi. Waktu kedaluwarsa maksimum dibatasi secara otomatis sesuai token induk yang sedang digunakan. Formulir juga menyediakan pratinjau cakupan baca dan tulis berupa daftar \textit{dataset category} dan \textit{function category} yang dapat dipilih atau dihilangkan secara individual sesuai kapabilitas token induk. Terakhir, aktor memilih penerima delegasi dari daftar kandidat personel yang tersedia di fasyankes, kemudian menekan tombol \textit{Delegate} untuk memulai proses delegasi.
-
-Tampilan halaman delegasi akses dapat dilihat pada Gambar \ref{fig:halaman-delegasi-akses-bagian-1} dan Gambar \ref{fig:halaman-delegasi-akses-bagian-2}.
+Formulir delegasi memungkinkan pemilihan pasien, mode (\textit{Read}/\textit{Write}/keduanya), \textit{preset} \textit{role} penerima, kedaluwarsa (dibatasi token induk), pratinjau cakupan \textit{dataset}/\textit{function category}, dan pemilihan kandidat personel fasyankes. Alur teknis atenuasi ada pada Subbab \ref{subsubsec:delegasi-akses-antar-tenaga-kesehatan}. Tampilan pada Gambar \ref{fig:halaman-delegasi-akses-bagian-1} dan \ref{fig:halaman-delegasi-akses-bagian-2}.
 
 \subsubsection{Halaman Daftar RME Pasien}
 \label{subsubsec:halaman-daftar-emr-pasien-hospital-client}
 
-Halaman daftar RME pasien menampilkan seluruh RME yang dimiliki oleh pasien tertentu dan dapat diakses oleh aktor sesuai token yang dibawa. Bagian atas halaman menampilkan nama pasien sebagai judul halaman. Di bawahnya, terdapat daftar RME dalam bentuk \textit{card} yang masing-masing memuat ID RME, tanggal pembuatannya, serta kumpulan label \textit{badge} yang merepresentasikan kategori dataset yang terdapat dalam RME tersebut. Setiap \textit{card} RME dapat diklik dan akan mengarahkan aktor menuju halaman detail RME dari RME yang dipilih, dengan konteks token akses yang diteruskan melalui \textit{query string}. Apabila tidak terdapat RME yang dapat diakses, halaman menampilkan pesan kosong.
-
-Tampilan halaman daftar RME pasien dapat dilihat pada Gambar \ref{fig:halaman-daftar-rme-pasien-hospital-client}.
+Daftar RME pasien menampilkan ID, tanggal, dan \textit{badge} \textit{dataset category} per \textit{card}, dengan navigasi ke detail serta konteks token lewat \textit{query string}. Tampilan pada Gambar \ref{fig:halaman-daftar-rme-pasien-hospital-client}.
 
 \subsubsection{Halaman Baca Detail RME}
 \label{subsubsec:halaman-baca-detail-rme-hospital-client}
 
-Halaman detail RME menampilkan isi lengkap dari sebuah RME yang dipilih oleh aktor. Bagian atas halaman memuat ID RME sebagai identifikasi, diikuti oleh tab navigasi yang merepresentasikan masing-masing \textit{dataset category} yang terdapat dalam RME tersebut. Aktor dapat berpindah antarklasifikasi dataset dengan mengklik tab yang sesuai. Pada setiap tab dataset, ditampilkan daftar kartu segmen yang memuat nama \textit{function category} dari segmen tersebut. Setiap kartu segmen dilengkapi dengan tombol ikon informasi yang dapat diklik untuk menampilkan atau menyembunyikan metadata. Konten payload segmen dimuat secara \textit{on-demand} dan ditampilkan dalam bentuk \textit{textarea} hanya-baca, atau dalam format tabel data
-khusus apabila segmen termasuk \textit{function category} \texttt{ADMINISTRATIVE\_GENERAL}.
-
-Tampilan halaman detail RME dapat dilihat pada Gambar \ref{fig:halaman-detail-rme-hospital-client}.
+Detail dikelompokkan per \textit{dataset category}; payload segmen dimuat \textit{on-demand} (textarea hanya-baca, atau tabel untuk \texttt{ADMINISTRATIVE\_GENERAL}), dengan metadata yang dapat ditampilkan/disembunyikan. Tampilan pada Gambar \ref{fig:halaman-detail-rme-hospital-client}.
 
 \subsubsection{Halaman Tulis Segmen RME}
 \label{subsubsec:halaman-penulisan-segmen-rme-hospital-client}
 
-Halaman penulisan segmen RME digunakan ketika aktor memiliki kapabilitas tulis terhadap RME pasien tertentu. Halaman ini dapat diakses dari daftar pasien pada tab \textit{Write} di halaman \textit{dashboard}.
-
-Bagian atas halaman menampilkan nama pasien sebagai konteks identifikasi. Di bawahnya, terdapat menu pilihan \textit{dataset category} yang hanya memuat kategori yang diizinkan oleh token tulis yang aktif. Daftar formulir \textit{textarea} yang bersesuaian dengan \textit{function category} yang diizinkan dalam dataset tersebut ditampilkan secara otomatis, di mana setiap \textit{textarea} merepresentasikan satu jenis data klinis yang dapat diisikan. Aktor hanya perlu mengisi \textit{textarea} untuk \textit{function category} yang ingin dituliskan, karena hanya entri yang terisi yang akan dikirimkan. Setelah mengisi data yang diperlukan, aktor menekan tombol \textit{Write} untuk menyimpan segmen-segmen baru ke dalam RME pasien.
-
-Tampilan halaman penulisan segmen RME dapat dilihat pada Gambar \ref{fig:halaman-penulisan-segmen-rme-hospital-client}.
+Formulir tulis hanya menampilkan \textit{dataset}/\textit{function category} yang diizinkan token aktif; hanya entri terisi yang dikirim saat tombol \textit{Write} ditekan. Tampilan pada Gambar \ref{fig:halaman-penulisan-segmen-rme-hospital-client}.

@@ -3,56 +3,27 @@
 \subsection{Definisi RME}
 \label{subsec:definisi-rme}
 
-Di Indonesia, definisi dari Rekam Medis dan Rekam Medis Elektronik didefinisikan pada Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 (Permenkes 24/2022). "Rekam Medis adalah dokumen yang berisikan identitas pasien, pemeriksaan, pengobatan, tindakan, dan pelayanan lain yang telah diberikan pada pasien" sedangkan "Rekam Medis Elektronik adalah Rekam Medis yang dibuat dengan menggunakan sistem elektronik yang diperuntukkan bagi penyelenggaraan Rekam Medis." \autocite{permenkes24_2022}.
+Di Indonesia, Rekam Medis dan Rekam Medis Elektronik didefinisikan dalam Peraturan Menteri Kesehatan Republik Indonesia Nomor 24 Tahun 2022 (Permenkes 24/2022). "Rekam Medis adalah dokumen yang berisikan identitas pasien, pemeriksaan, pengobatan, tindakan, dan pelayanan lain yang telah diberikan pada pasien" sedangkan "Rekam Medis Elektronik adalah Rekam Medis yang dibuat dengan menggunakan sistem elektronik yang diperuntukkan bagi penyelenggaraan Rekam Medis." \autocite{permenkes24_2022}.
 
-Berdasarkan definisi tersebut, rekam medis adalah salah satu komponen vital dalam sistem kesehatan di Indonesia. Rekam medis bukanlah sebuah catatan biasa yang dibuat lalu disimpan, melainkan sebuah catatan yang terus diperbarui. Keberadaan Rekam Medis bertujuan untuk meningkatkan mutu pelayanan kesehatan dan memberikan kepastian hukum dalam peristiwa medis.
+Rekam medis berperan penting dalam sistem kesehatan di Indonesia. Rekam medis bukanlah catatan yang dibuat sekali lalu disimpan, melainkan catatan yang terus diperbarui. Keberadaan rekam medis bertujuan untuk meningkatkan mutu pelayanan kesehatan dan memberikan kepastian hukum dalam peristiwa medis.
 
 \subsection{Isi RME}
 \label{subsec:isi-rme}
 
-Berdasarkan Permenkes 24/2022 Pasal 27 Ayat 1 \autocite{permenkes24_2022}, isi dari Rekam Medis Elektronik terbagi menjadi dua bagian, yaitu:
-
-\begin{enumerate}
-	\item Dokumentasi Administratif
-	\item Dokumentasi Klinis
-\end{enumerate}
-
-Panduan lebih rinci terkait isi dari Rekam Medis Elektronik diatur pada Keputusan Menteri Kesehatan (KMK) No. HK.01.07/MENKES/1423/2022 tentang Pedoman Variabel dan metadata pada Penyelenggaraan Rekam Medis Elektronik \autocite{kemenkes1423-2022}. Pada setiap data RME, terdapat dokumentasi administratif dan dokumentasi klinis. Dokumentasi Klinis kemudian dibagi berdasarkan kategori fungsi klinis. KMK ini mengatur variabel dan metadata yang terdapat pada RME dengan dataset yang terdiri dari:
-
-\begin{enumerate}[label=\arabic*.]
-	\item IGD (Instalasi Gawat Darurat).
-	\item Rawat Jalan.
-	\item Rawat Inap.
-	\item Laboratorium.
-	\item Apotek.
-\end{enumerate}
-
-Detail metadata dataset RME untuk dataset Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek dapat dilihat pada Lampiran \ref{lampiran:metadata-rme}.
+Berdasarkan Permenkes 24/2022 Pasal 27 Ayat 1 \autocite{permenkes24_2022}, isi RME terbagi menjadi dokumentasi administratif dan dokumentasi klinis. Panduan lebih rinci diatur pada Keputusan Menteri Kesehatan (KMK) No. HK.01.07/MENKES/1423/2022 tentang Pedoman Variabel dan Metadata pada Penyelenggaraan Rekam Medis Elektronik \autocite{kemenkes1423-2022}. KMK tersebut mengatur variabel dan metadata RME dalam dataset yang terdiri dari IGD (Instalasi Gawat Darurat), Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. Detail metadata untuk dataset Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek dapat dilihat pada Lampiran \ref{lampiran:metadata-rme}.
 
 \subsection{RME dalam Alur Pelayanan Kesehatan Kolaboratif}
 \label{subsec:rme-layanan-kolaboratif}
 
-Penyelenggaraan layanan kesehatan pada praktiknya tidak selalu dilakukan oleh satu aktor tunggal, melainkan melibatkan beberapa tenaga kesehatan dan tenaga lain yang bekerja sesuai kewenangan masing-masing \autocite{who2010_interprofessional_collaborative_practice}. Dalam konteks layanan kolaboratif, pasien dapat berinteraksi dengan petugas rekam medis pada tahap pendaftaran, perawat pada tahap pemeriksaan awal, dokter pada tahap pemeriksaan dan pengambilan keputusan klinis, petugas laboratorium pada tahap pemeriksaan penunjang, serta apoteker atau tenaga kefarmasian pada tahap pelayanan resep dan obat. Pola ini sejalan dengan konsep praktik kolaboratif antarprofesi, yaitu ketika tenaga kesehatan dari latar belakang profesi berbeda bekerja bersama pasien untuk memberikan pelayanan yang bermutu \autocite{srinivas2023synergistic}.
+Penyelenggaraan layanan kesehatan pada praktiknya melibatkan beberapa tenaga kesehatan yang bekerja sesuai kewenangan masing-masing \autocite{who2010_interprofessional_collaborative_practice}. Pasien dapat berinteraksi dengan petugas rekam medis pada tahap pendaftaran, perawat pada pemeriksaan awal, dokter pada pemeriksaan dan pengambilan keputusan klinis, petugas laboratorium pada pemeriksaan penunjang, serta apoteker pada pelayanan resep dan obat. Pola ini sejalan dengan praktik kolaboratif antarprofesi \autocite{srinivas2023synergistic}.
 
-Struktur RME di Indonesia juga menunjukkan bahwa data kesehatan pasien tidak bersifat tunggal, melainkan terdiri dari dokumentasi administratif dan dokumentasi klinis \autocite{permenkes24_2022}. Pembagian ini menunjukkan bahwa kebutuhan akses terhadap RME dapat berbeda antara aktor administratif dan aktor klinis.
-
-Standar Akreditasi Rumah Sakit memberikan dasar bahwa pelayanan pasien dilakukan melalui kerja kolaboratif antarprofesi. Dalam standar tersebut, DPJP (Dokter Penanggung Jawab Pasien) ditempatkan sebagai \textit{clinical leader}, sedangkan PPA (Profesional Pemberi Asuhan) bekerja sebagai tim interdisiplin dalam proses asuhan pasien \autocite{kmk1128_2022}. Standar yang sama juga menunjukkan keterlibatan perawat dalam pengkajian dan asuhan keperawatan, laboratorium sebagai layanan penunjang untuk memenuhi kebutuhan pasien dan PPA, serta apoteker dalam proses penggunaan obat yang terkoordinasi.
-
-Alur operasional layanan tersebut diperjelas oleh panduan interoperabilitas SATUSEHAT untuk layanan Rawat Jalan dan Rawat Inap. Panduan tersebut memuat tahapan layanan seperti pendaftaran pasien, pendaftaran kunjungan, anamnesis, pemeriksaan, rencana rawat, instruksi medik dan keperawatan, pemeriksaan penunjang, diagnosis, tindakan, peresepan, pengkajian resep, pemberian obat, tindak lanjut, dan resume medis \autocite{satusehat_rme_rawat_jalan,satusehat_rawat_inap_new}. Sementara itu, Pedoman Variabel dan Metadata RME dari Kementerian Kesehatan memetakan dokumentasi RME ke dalam dataset seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek \autocite{kemenkes1423-2022}. Kombinasi antara alur pelayanan, keterlibatan aktor, dan struktur dataset tersebut menunjukkan bahwa kebutuhan akses terhadap RME berbeda menurut tahap layanan, peran aktor, dan jenis data yang digunakan.
+Standar Akreditasi Rumah Sakit menempatkan DPJP (Dokter Penanggung Jawab Pasien) sebagai \textit{clinical leader}, sedangkan PPA (Profesional Pemberi Asuhan) bekerja sebagai tim interdisiplin \autocite{kmk1128_2022}. Alur operasional diperjelas oleh panduan interoperabilitas SATUSEHAT untuk Rawat Jalan dan Rawat Inap, yang memuat tahapan dari pendaftaran hingga resume medis \autocite{satusehat_rme_rawat_jalan,satusehat_rawat_inap_new}. Kombinasi alur pelayanan, keterlibatan aktor, dan struktur dataset pada Subbab \ref{subsec:isi-rme} menunjukkan bahwa kebutuhan akses terhadap RME berbeda menurut tahap layanan, peran aktor, dan jenis data yang digunakan.
 
 \subsection{Hak Akses RME}
 \label{subsec:hak-akses-rme}
 
-Karena RME memuat data administratif dan klinis yang termasuk data pribadi spesifik, akses terhadap RME harus dibatasi berdasarkan kewenangan, tindakan, dan kebutuhan pelayanan. Tenaga kesehatan dapat melakukan beberapa aksi terhadap data RME pasien, yaitu \autocite{permenkes24_2022}:
+Karena RME memuat data pribadi spesifik, akses harus dibatasi berdasarkan kewenangan, tindakan, dan kebutuhan pelayanan. Tenaga kesehatan dapat menambahkan data baru, memperbaiki data, serta melihat atau membaca data \autocite{permenkes24_2022}.
 
-\begin{enumerate}
-	\item Menambahkan data baru.
-	\item Melakukan perbaikan data.
-	\item Melihat atau membaca data.
-\end{enumerate}
+Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) menjadi landasan yuridis utama. Pasal 4 ayat 2 huruf a mengklasifikasikan data dan informasi kesehatan sebagai data pribadi spesifik \autocite{uu27-2022-pdp}. Pengendali data pribadi diwajibkan melindungi keamanan data yang diproses (Pasal 35), menyediakan \textit{audit trail} (Pasal 32), melindungi data dari pemrosesan yang tidak sah (Pasal 38), dan mencegah akses yang tidak sah (Pasal 39) \autocite{uu27-2022-pdp}.
 
-Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) menjadi landasan yuridis utama yang menetapkan standar keamanan bagi sistem data rekam medis. Pasal 4 ayat 2 huruf a UU PDP mengklasifikasikan data dan informasi kesehatan sebagai data pribadi spesifik \autocite{uu27-2022-pdp}. Pengendali data pribadi diwajibkan untuk melindungi dan memastikan keamanan data yang diprosesnya (Pasal 35), mewajibkan pengendali data pribadi untuk menyediakan \textit{audit trail} pemrosesan data pribadi (Pasal 32), wajib melindungi data dari pemrosesan yang tidak sah (Pasal 38) dan mencegah akses yang tidak sah melalui sistem keamanan yang andal (Pasal 39) \autocite{uu27-2022-pdp}.
-
-Berdasarkan Permenkes No. 73 Tahun 2016 tentang Standar Pelayanan Kefarmasian di Apotek, pelayanan farmasi klinik mencakup pengkajian resep dan \textit{dispensing} \autocite{permenkes73_2016}. Hal ini menunjukkan bahwa apoteker memerlukan akses terhadap informasi yang relevan dengan resep, terapi, dan penggunaan obat pasien untuk memastikan kesesuaian, keamanan, dan ketepatan pelayanan obat.
-
-Kebutuhan akses pada petugas laboratorium dapat diturunkan dari struktur metadata RME pada KMK 1423/2022 \autocite{kemenkes1423-2022}. Pada pedoman tersebut, permintaan pemeriksaan laboratorium yang diminta oleh dokter untuk pasien dicantumkan sebagai bagian dari data pemeriksaan penunjang. Hal ini menunjukkan bahwa dalam alur pelayanan, petugas laboratorium tidak perlu memperoleh akses terhadap seluruh data klinis pasien, tetapi cukup terhadap informasi yang relevan untuk memproses pemeriksaan penunjang terkait laboratorium.
+Prinsip pembatasan akses tersebut tercermin pada kebutuhan aktor penunjang. Berdasarkan Permenkes No. 73 Tahun 2016, pelayanan farmasi klinik mencakup pengkajian resep dan \textit{dispensing}, sehingga apoteker memerlukan akses terhadap informasi yang relevan dengan terapi dan penggunaan obat \autocite{permenkes73_2016}. Demikian pula, pada metadata KMK 1423/2022, permintaan pemeriksaan laboratorium dicantumkan sebagai bagian data pemeriksaan penunjang; petugas laboratorium cukup memperoleh informasi yang relevan untuk memproses pemeriksaan tersebut, bukan seluruh data klinis pasien \autocite{kemenkes1423-2022}.

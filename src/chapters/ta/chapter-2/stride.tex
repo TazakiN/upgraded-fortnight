@@ -1,12 +1,7 @@
 \section{Pemodelan Ancaman STRIDE}
 \label{sec:stride}
 
-STRIDE merupakan metode \textit{threat modeling} yang dikembangkan oleh Microsoft untuk membantu mengidentifikasi ancaman keamanan pada sistem perangkat lunak sejak tahap perancangan. Metode ini mengelompokkan ancaman ke dalam enam kategori utama, yaitu \textit{Spoofing}, \textit{Tampering}, \textit{Repudiation}, \textit{Information Disclosure}, \textit{Denial of Service}, dan \textit{Elevation of Privilege} \autocite{shostack2014threatmodeling,microsoft2006msdnstride}.
-
-Dalam praktiknya, STRIDE biasanya digunakan bersama \textit{Data Flow Diagram} (DFD) untuk memetakan kemungkinan ancaman terhadap komponen sistem, aliran data, penyimpanan data, dan batas kepercayaan (\textit{trust boundary}) \autocite{shostack2014threatmodeling}.
-Pendekatan ini membantu perancang sistem mengidentifikasi kebutuhan kontrol keamanan seperti otentikasi, otorisasi, enkripsi, integritas data, dan \textit{audit logging} sejak tahap desain \autocite{shostack2014threatmodeling}.
-
-Tabel~\ref{tab:stride-components} merangkum enam kategori ancaman pada STRIDE beserta fokus keamanan yang terkait.
+STRIDE merupakan metode \textit{threat modeling} yang dikembangkan oleh Microsoft untuk mengidentifikasi ancaman keamanan pada sistem perangkat lunak sejak tahap perancangan. Metode ini mengelompokkan ancaman ke dalam enam kategori utama dan biasanya digunakan bersama \textit{Data Flow Diagram} (DFD) untuk memetakan ancaman terhadap komponen sistem, aliran data, penyimpanan data, dan batas kepercayaan (\textit{trust boundary}) \autocite{shostack2014threatmodeling,microsoft2006msdnstride}. Tabel~\ref{tab:stride-components} merangkum kategori tersebut beserta fokus keamanan yang terkait.
 
 \begin{table}[ht]
 	\centering
@@ -47,5 +42,3 @@ Tabel~\ref{tab:stride-components} merangkum enam kategori ancaman pada STRIDE be
 		\hline
 	\end{tabularx}
 \end{table}
-
-Melalui STRIDE, pengembang dapat mengidentifikasi ancaman keamanan secara sistematis serta menentukan kontrol mitigasi yang sesuai pada tahap perancangan sistem \autocite{shostack2014threatmodeling}.

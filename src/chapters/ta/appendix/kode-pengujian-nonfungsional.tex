@@ -1,0 +1,221 @@
+\chapter{Kode Pengujian Kebutuhan Nonfungsional}
+\label{lampiran:kode-pengujian-nonfungsional}
+
+Lampiran ini memuat cuplikan kode pengujian unit dan integrasi yang diacu pada Subbab~\ref{subsec:pengujian-kebutuhan-nonfungsional}.
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-01 untuk KNF-TA-01, label=lst:kode-pengujian-knf-ta-01]
+#[test]
+fn pre_rejects_segment_outside_caveats() {
+	let (_token, mac, verified) = verified_read_token();
+	let outside_scope = segment(
+		DatasetCategory::LABORATORIUM,
+		FunctionCategory::LABORATORIUM,
+	);
+
+	let err = verify_segment_for_token(
+		...,
+		&outside_scope,
+		&mac,
+	)
+	.unwrap_err();
+	// assert error DatasetCategoryNotAllowed
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-03 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-a]
+#[test]
+fn cannot_delegate_write_function_from_parent_read_only_scope() {
+    let write_functions: Vec<_> = ... // tidak mencakup PERESEPAN
+    let parent = scoped_token(
+        ...
+        &write_functions,
+        Some("Read"),
+    );
+    let params = DelegationAttenuationParams {
+        write_functions: vec![FunctionCategory::PERESEPAN],
+        ...
+    };
+    let err = attenuate_macaroon(&parent, &params).unwrap_err();
+	// assert error DelegationExpandsAccess
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-04 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-b]
+#[test]
+fn cannot_increase_max_delegation_depth_on_delegate() {
+    let mut params = DelegationAttenuationParams {
+        ...,
+        max_delegation_depth: 99
+    };
+    let err = attenuate_macaroon(
+		&doctor_token(), // max depth 1
+		&params
+	)
+	// assert error DelegationDepthNotMonotonic
+}	
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-05 untuk KNF-TA-02, label=lst:kode-pengujian-knf-ta-02-c]
+#[test]
+fn admin_write_true_expansion_still_fails() {
+    let params = DelegationAttenuationParams {
+        ...,
+        write_datasets: vec![DatasetCategory::RAWAT_INAP],
+    };
+    let err = attenuate_macaroon(
+		&admin_write_token(), // write token RAWAT_JALAN
+		&params
+	)
+	// assert error DelegationExpandsAccess
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-07 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-a]
+#[test]
+fn expired_token_rejected() {
+    let mac = ... // token dokter, expired 2026-07-02
+    let future = ... // 2031-01-01T00:00:00+00:00
+    let err = verify_decmed_token(
+		...
+        &mac,
+        &ctx({
+            ...,
+            now: future,
+        }),
+    )
+    // assert error ExpiredToken
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-08 untuk KNF-TA-03, label=lst:kode-pengujian-knf-ta-03-b]
+#[test]
+fn broken_delegation_chain_rejected() {
+    let mut mac = ... // token dokter
+    add_caveat_to_macaroon(&mut mac, "delegated_by", "0xAPOTEK");
+    add_caveat_to_macaroon(&mut mac, "delegated_to", LAB);
+    let err = verify_ctx(
+        &mac,
+        ...
+    )
+    // assert error InvalidDelegationChain
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-09 untuk KNF-TA-03 dan KNF-TA-06, label=lst:kode-pengujian-knf-ta-03-c]
+#[test]
+fn wallet_proof_must_match_chain_subject() {
+    let mac = ... // token dengan subjects memuat LAB
+    let verifier = ChainSubjectVerifier {
+        subjects: vec![LAB],
+        valid_sig: "lab-sig",
+	};
+    let ctx = TokenVerificationContext {
+        ...,
+        wallet_signature: Some("outsider-sig"),
+    };
+    let err = verify_decmed_token(
+        &mac,
+        &ctx,
+        Some(&verifier),
+    )
+	// assert error InvalidWalletSignature
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-11 untuk KNF-TA-05, label=lst:kode-pengujian-knf-ta-05-a]
+#[test]
+fn revocation_key_rejects_revoked_token() {
+    let token = verified_read_token(); // token valid
+    let revoked_key = ... // hash token valid
+
+    ensure_token_not_revoked(
+		...,
+        &token,
+        |_| Ok(false), // simulasi Redis kosong
+    ) // success
+
+    let err = ensure_token_not_revoked(
+        ...,
+        &token,
+        |key| Ok(key == revoked_key), // simulasi revoked key 
+		// terdapat pada Redis
+    ) // error UNAUTHORIZED
+
+    // assert status UNAUTHORIZED
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-13 untuk KNF-TA-06, label=lst:kode-pengujian-knf-ta-06-a]
+#[test]
+fn wallet_signature_required_for_every_decmed_token() {
+    let mac = ... // token dokter 
+    let err = verify_decmed_token(
+        &mac,
+        ...,
+        &TokenVerificationContext {
+			...,
+            wallet_signature: None, // tidak ada
+        },
+    )
+    // assert error WalletSignatureRequired
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-14 untuk KNF-TA-07, label=lst:kode-pengujian-knf-ta-07-a]
+#[test]
+fn metadata_rejects_mismatched_ipfs_ciphertext_integrity_hash() {
+    let metadata =
+        sample_metadata(b"original encrypted segment");
+
+    assert_eq!(
+        metadata
+            .validate_integrity_hash(
+                &STANDARD.encode(
+                    b"tampered encrypted segment"
+                )
+            )
+            .unwrap_err(),
+        SegmentValidationError::InvalidIntegrityHash
+    );
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-15 untuk KNF-TA-07, label=lst:kode-pengujian-knf-ta-07-b]
+#[test]
+fn rejects_ipfs_ciphertext_with_mismatched_integrity_hash() {
+    let metadata =
+        stored_rme_metadata(b"original ciphertext");
+    let err = validate_stored_medical_data_integrity(
+        &metadata,
+        &STANDARD.encode(b"tampered ciphertext"),
+    )
+    .unwrap_err();
+    match err {
+        ProxyError::Anyhow { source, code } => {
+            assert_eq!(code, StatusCode::BAD_REQUEST);
+            assert_eq!(
+                source.to_string(),
+                "integrity_hash does not match encrypted segment"
+            );
+        }
+        other => panic!(
+            "expected integrity hash error, got {other:?}"
+        ),
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Rust, caption=Pengujian P-KNF-16 untuk KNF-TA-08, label=lst:kode-pengujian-knf-ta-08-a]
+#[test]
+fn on_chain_metadata_does_not_contain_payload() {
+    let metadata = sample_metadata(b"encrypted segment");
+    metadata.validate().unwrap();
+    let value = serde_json::to_value(metadata).unwrap();
+    assert!(value.get("payload").is_none());
+    assert!(value.get("patient_address").is_some());
+    assert!(
+        assert_no_plaintext_medical_fields(&value).is_ok()
+    );
+}
+\end{lstlisting}
+

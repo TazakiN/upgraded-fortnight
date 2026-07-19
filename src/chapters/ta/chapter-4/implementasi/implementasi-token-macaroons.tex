@@ -17,7 +17,7 @@ Setelah perubahan tersebut diterapkan, \textit{unit testing} pada \textit{crate}
 
 Struktur \textit{caveats} pada token Macaroon pada implementasi ini ditunjukkan pada Tabel \ref{tab:implementasi-caveats-macaroons}. \textit{Caveats} terdefinisi pada \textit{crate} \texttt{decmed-macaroon-auth}. \textit{Hospital Client} mengirim parameter akses sesuai daftar tersebut, sedangkan \textit{Server} PRE yang menerbitkan atau mengatenuasi token. PRE menolak permintaan jika terdapat \textit{caveat} di luar daftar yang didukung.
 
-\begin{table}[!ht]
+\begin{table}[htbp]
 	\centering
 	\caption{\textit{Caveats} yang Diimplementasikan pada Token Macaroon}
 	\label{tab:implementasi-caveats-macaroons}
@@ -70,4 +70,14 @@ Atenuasi dipicu dari \textit{Hospital Client} dan dijalankan di PRE melalui \tex
 \subsubsection{Revokasi Token Macaroon}
 \label{subsubsec:revokasi-token-macaroons}
 
-Revokasi mengikuti rancangan pada Subbab \ref{subsec:rancangan-penegakan-otoritas} dan melibatkan IOTA, Redis PRE, serta \textit{Server} PRE. Token turunan menautkan induk lewat \texttt{parent\_token\_hash}. Saat permintaan akses, PRE memeriksa \textit{hash} token dan seluruh \texttt{parent\_token\_hash} terhadap kunci Redis \verb|revoked:token:<hash>|; jika ada yang cocok, permintaan ditolak. Status hak akses \textit{on-chain} juga ditandai \textit{revoked}.
+Revokasi mengikuti rancangan pada Subbab \ref{subsubsec:pencabutan-hak-akses-macaroon-delegasi} dan melibatkan IOTA, Redis PRE, serta \textit{Server} PRE. Pada implementasi ini, pencabutan operasional hanya dapat dilakukan oleh pasien melalui \textit{Patient Client}; permintaan revokasi dari tenaga kesehatan rumah sakit ditolak. Alur ketika pasien mencabut akses diuraikan berikut.
+
+Pertama, \textit{Patient Client} mengirim transaksi revokasi ke IOTA melalui fungsi \texttt{revoke\_access} pada \textit{smart contract} Move. Untuk akses utama yang diberikan pasien, entri \texttt{PatientAccessLog} ditandai \texttt{is\_revoked = true}. Untuk akses hasil delegasi, entri akses personel terkait dihapus dari penyimpanan \textit{on-chain}. Pada langkah yang sama, hak akses \texttt{Read}, \texttt{Update}, atau keduanya dihapus dari peta akses personel rumah sakit.
+
+Kedua, pencabutan bersifat berantai. Kontrak menelusuri personel lain yang memperoleh akses dari personel yang dicabut melalui atribut \texttt{delegated\_by}, lalu mengulang proses hingga seluruh \textit{subtree} delegasi tercabut. Setiap pencabutan delegasi langsung maupun turunan dicatat pada audit delegasi dengan status \texttt{Revoked}. Untuk akses utama, status revokasi tetap disimpan pada \texttt{PatientAccessLog.is\_revoked}. Selain itu, \texttt{PatientCascadeRevokedEvent} diterbitkan untuk setiap personel turunan yang terkena \textit{cascade}; tidak ada \textit{event} khusus untuk pencabutan akses utama atau \textit{edge} delegasi langsung.
+
+Ketiga, setelah transaksi IOTA berhasil, \textit{Patient Client} memanggil \textit{endpoint} \texttt{POST /api/v1/revocations/patient}. \textit{Server} PRE menyimpan penanda revokasi di Redis dengan kunci \verb|revoked:token:<token_hash>|. Pada saat permintaan akses, \textit{middleware} PRE memeriksa status revokasi melalui \textit{crate} \texttt{decmed-macaroon-auth}: \textit{hash} token yang digunakan dan \textit{hash} token induk pada \textit{caveat} \texttt{parent\_token\_hash} dibandingkan terhadap daftar revokasi Redis. Jika salah satu cocok, permintaan ditolak dengan status \texttt{401 UNAUTHORIZED} dan pesan bahwa token telah dicabut. Dengan demikian, token yang dicabut beserta seluruh turunannya tidak dapat digunakan kembali.
+
+Keempat, material PRE dan data medis tidak dihapus saat revokasi. \texttt{k\_frag} tetap disimpan di Redis karena material tersebut mungkin masih digunakan oleh rantai delegasi lain yang belum dicabut. Revokasi hanya menghilangkan hak akses \textit{on-chain} dan memblokir penggunaan token melalui penanda Redis.
+
+Urutan eksekusi bersifat berurutan tetapi tidak atomik. Perubahan IOTA dilakukan terlebih dahulu, kemudian penanda Redis dibuat. Apabila transaksi IOTA berhasil tetapi penyimpanan penanda di PRE/Redis gagal, hak akses \textit{on-chain} sudah dicabut, sementara token lama masih berpotensi digunakan hingga penanda revokasi berhasil dibuat atau token kedaluwarsa.

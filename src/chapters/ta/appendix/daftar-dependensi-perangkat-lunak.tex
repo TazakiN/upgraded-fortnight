@@ -1,7 +1,7 @@
 \chapter{Daftar Dependensi DecMed}
 \label{lampiran:daftar-dependensi-perangkat-lunak}
 
-Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem.
+Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-masing komponen, bukan seluruh dependensi transitif. Dependensi internal yang ditandai dengan \texttt{path} merupakan \textit{crate} lokal yang dikembangkan sebagai bagian dari sistem. Tabel~\ref{tab:dependensi-umum} sampai Tabel~\ref{tab:dependensi-decmed-macaroon-auth} merinci dependensi tersebut per kelompok komponen.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi Umum yang Digunakan pada Beberapa Komponen}
@@ -47,6 +47,8 @@ Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-ma
 	\texttt{thiserror}                    & \texttt{2.0}              \\ \hline
 \end{longtable}
 
+Tabel~\ref{tab:dependensi-umum} menunjukkan fondasi bersama untuk serialisasi, kriptografi, dan integrasi IOTA yang dipakai lintas komponen.
+
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi PRE}
 	\label{tab:dependensi-backend-pre}                    \\
@@ -70,6 +72,8 @@ Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-ma
 	\texttt{decmed-rme-segment}   & \texttt{path}         \\ \hline
 	\texttt{decmed-macaroon-auth} & \texttt{path}         \\ \hline
 \end{longtable}
+
+Tabel~\ref{tab:dependensi-backend-pre} menegaskan bahwa \textit{Server} PRE bertumpu pada \textit{stack} layanan web asinkron, Redis, serta \textit{crate} lokal segmentasi dan otorisasi.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi \textit{Client}}
@@ -97,6 +101,8 @@ Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-ma
 	\texttt{tauri-build}              & \texttt{2}            \\ \hline
 \end{longtable}
 
+Tabel~\ref{tab:dependensi-client-tauri} menunjukkan ketergantungan antarmuka desktop Tauri, penyimpanan kunci lokal, serta kemampuan pemindaian QR pada sisi \textit{client}.
+
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi \texttt{decmed-rme-segment}}
 	\label{tab:dependensi-decmed-rme-segment}       \\
@@ -115,6 +121,8 @@ Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-ma
 	\texttt{sha2}           & \texttt{0.10}         \\ \hline
 	\texttt{uuid}           & \texttt{1}            \\ \hline
 \end{longtable}
+
+Tabel~\ref{tab:dependensi-decmed-rme-segment} menegaskan bahwa \textit{crate} segmentasi RME bersifat ringan dan berfokus pada serialisasi serta hashing.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{0.55\textwidth}|>{\raggedright\arraybackslash}p{0.38\textwidth}|}
 	\caption{Dependensi \texttt{decmed-macaroon-auth}}
@@ -138,3 +146,5 @@ Daftar ini hanya mencakup dependensi langsung yang dideklarasikan pada masing-ma
 	\texttt{macaroon}           & \texttt{path}         \\ \hline
 	\texttt{decmed-rme-segment} & \texttt{path}         \\ \hline
 \end{longtable}
+
+Tabel~\ref{tab:dependensi-decmed-macaroon-auth} menunjukkan bahwa otorisasi Macaroon dibangun di atas pustaka token lokal dan tipe kategori dari \texttt{decmed-rme-segment}.

@@ -1,23 +1,25 @@
 \subsection{Pemetaan Rancangan terhadap Solusi}
 \label{subsec:pemetaan-rancangan-solusi}
 
-Setelah rancangan solusi diuraikan, setiap rancangan dipetakan kembali terhadap solusi yang telah dianalisis pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}. Melalui pemetaan ini, keterkaitan langsung setiap rancangan \texttt{R-TA} dengan solusi \texttt{S-TA} yang diusulkan ditunjukkan. Hasil pemetaan rancangan terhadap solusi ditunjukkan pada Tabel \ref{tab:daftar-rancangan-solusi}.
+Setelah rancangan solusi diuraikan, setiap rancangan dipetakan kembali terhadap solusi yang telah dianalisis pada Subbab \ref{subsec:pemetaan-kebutuhan-solusi}. Melalui pemetaan ini, keterkaitan langsung setiap rancangan \texttt{R-TA} dengan solusi \texttt{S-TA} yang diusulkan ditunjukkan. Hasil pemetaan rancangan terhadap solusi ditunjukkan pada Tabel~\ref{tab:daftar-rancangan-solusi}.
 
-\begin{table}[!ht]
+\begin{table}[htbp]
 	\centering
 	\caption{Pemetaan Rancangan terhadap Solusi}
 	\label{tab:daftar-rancangan-solusi}
 	\small
 	\begin{tabular}{|p{0.12\textwidth}|p{0.54\textwidth}|p{0.24\textwidth}|}
 		\hline
-		\textbf{ID}      & \textbf{Nama Rancangan}                                                                                                                            & \textbf{Merealisasikan Solusi}                                         \\ \hline
-		\texttt{R-TA-01} & Rancangan arsitektur solusi DecMed dengan PBAC, Macaroons, segmentasi, dan PRE sebagai \textit{policy enforcement point}.                  & \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, \texttt{S-TA-04} \\ \hline
-		\texttt{R-TA-02} & Rancangan segmentasi data RME berdasarkan \textit{dataset} dan \textit{function category}.                                                         & \texttt{S-TA-02}                                                       \\ \hline
-		\texttt{R-TA-03} & Rancangan model PBAC pada DecMed.                                                                                                                  & \texttt{S-TA-01}                                                       \\ \hline
-		\texttt{R-TA-04} & Rancangan representasi kapabilitas pada \textit{caveats} Macaroons dan rantai delegasi.                                                            & \texttt{S-TA-03}                                                       \\ \hline
+		\textbf{ID}      & \textbf{Nama Rancangan}                                                                                                                                  & \textbf{Merealisasikan Solusi}                                         \\ \hline
+		\texttt{R-TA-01} & Rancangan arsitektur solusi DecMed dengan PBAC, Macaroons, segmentasi, dan PRE sebagai \textit{policy enforcement point}.                                & \texttt{S-TA-01}, \texttt{S-TA-02}, \texttt{S-TA-03}, \texttt{S-TA-04} \\ \hline
+		\texttt{R-TA-02} & Rancangan segmentasi data RME berdasarkan \textit{dataset} dan \textit{function category}.                                                               & \texttt{S-TA-02}                                                       \\ \hline
+		\texttt{R-TA-03} & Rancangan model PBAC pada DecMed.                                                                                                                        & \texttt{S-TA-01}                                                       \\ \hline
+		\texttt{R-TA-04} & Rancangan representasi kapabilitas pada \textit{caveats} Macaroons dan rantai delegasi.                                                                  & \texttt{S-TA-03}                                                       \\ \hline
 		\texttt{R-TA-05} & Rancangan penegakan \textit{policy} akses berdasarkan kapabilitas efektif token Macaroon dan bukti kepemilikan \textit{wallet} pada \textit{Server} PRE. & \texttt{S-TA-01}, \texttt{S-TA-04}                                     \\ \hline
-		\texttt{R-TA-06} & Rancangan validasi \textit{subrole} tenaga kesehatan terhadap \textit{dataset category}.                                                           & \texttt{S-TA-05}                                                       \\ \hline
-		\texttt{R-TA-07} & Rancangan revokasi berantai dan pencatatan audit akses/delegasi token Macaroons.                                                                   & \texttt{S-TA-06}                                                       \\ \hline
-		\texttt{R-TA-08} & Rancangan alur akses dan delegasi pada skenario layanan kesehatan kolaboratif.                                                                     & \texttt{S-TA-03}, \texttt{S-TA-04}, \texttt{S-TA-05}                   \\ \hline
+		\texttt{R-TA-06} & Rancangan validasi \textit{subrole} tenaga kesehatan terhadap \textit{dataset category}.                                                                 & \texttt{S-TA-05}                                                       \\ \hline
+		\texttt{R-TA-07} & Rancangan revokasi berantai dan pencatatan audit akses/delegasi token Macaroons.                                                                         & \texttt{S-TA-06}                                                       \\ \hline
+		\texttt{R-TA-08} & Rancangan alur akses dan delegasi pada skenario layanan kesehatan kolaboratif.                                                                           & \texttt{S-TA-03}, \texttt{S-TA-04}, \texttt{S-TA-05}                   \\ \hline
 	\end{tabular}
 \end{table}
+
+Tabel~\ref{tab:daftar-rancangan-solusi} memastikan setiap solusi \texttt{S-TA} memiliki rancangan \texttt{R-TA} yang merealisasikannya, sehingga ketertelusuran dari analisis solusi ke spesifikasi rancangan tetap terjaga.

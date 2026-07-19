@@ -9,7 +9,7 @@ Tidak seluruh elemen \textit{policy} disimpan sebagai \textit{caveat}. Atribut k
 
 Penempatan \textit{caveat} menurut jenis token ditunjukkan pada Tabel~\ref{tab:penempatan-caveat-macaroon}.
 
-\begin{table}[!ht]
+\begin{table}[htbp]
 	\centering
 	\caption{Penempatan \textit{Caveat} menurut Jenis Token}
 	\label{tab:penempatan-caveat-macaroon}
@@ -39,19 +39,7 @@ Cakupan objek untuk kedua jenis token mengikuti $\operatorname{Scope}(\tau)$ pad
 
 \subsubsection{Rancangan Subjek Rantai Delegasi}
 
-\textit{Caveat} \texttt{holder\_address} tidak digunakan untuk menyatakan pemegang token tunggal. Hal ini disebabkan oleh sifat \textit{append-only} pada Macaroon. Apabila token awal memuat:
-
-\begin{verbatim}
-holder_address = 0xPETUGAS_REKAM_MEDIS
-\end{verbatim}
-
-kemudian token turunan menambahkan:
-
-\begin{verbatim}
-holder_address = 0xDOKTER
-\end{verbatim}
-
-maka token akan memiliki dua \textit{caveat} identitas yang tidak dapat dipenuhi secara bersamaan. \textit{Caveat} lama tidak dapat dihapus atau diganti ketika token diturunkan.
+\textit{Caveat} \texttt{holder\_address} tidak digunakan untuk menyatakan pemegang token tunggal. Hal ini disebabkan oleh sifat \textit{append-only} pada Macaroon. Apabila token awal memuat \texttt{holder\_address = 0xPETUGAS\_REKAM\_MEDIS} kemudian token turunan menambahkan \texttt{holder\_address = 0xDOKTER}, maka token akan memiliki dua \textit{caveat} identitas yang tidak dapat dipenuhi secara bersamaan. \textit{Caveat} lama tidak dapat dihapus atau diganti ketika token diturunkan. Contoh representasi \textit{caveat} pada token awal dan token turunan disajikan pada Lampiran~\ref{lampiran:contoh-caveat-macaroon}.
 
 Sebagai gantinya, aktor berwenang ditentukan dari rantai delegasi melalui \texttt{root\_subject} serta pasangan \texttt{delegated\_by} dan \texttt{delegated\_to}. Definisi $\operatorname{Subjects}(\tau)$ dan $\operatorname{ContainsSubject}(\tau,u)$ mengikuti Subbab~\ref{subsec:rancangan-model-pbac-decmed}. Untuk setiap pasangan delegasi ke-$i$, rantai harus memenuhi:
 

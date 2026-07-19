@@ -1,7 +1,7 @@
 \chapter{Skema Penyimpanan Data RME}
 \label{lampiran:skema-penyimpanan-rme}
 
-Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada rancangan segmentasi data. Skema penyimpanan dibagi menjadi metadata segmen yang disimpan pada penyimpanan \textit{on-chain} dan isi segmen terenkripsi yang disimpan pada penyimpanan \textit{off-chain}.
+Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada rancangan segmentasi data. Tabel~\ref{tab:onchain-schema} dan Tabel~\ref{tab:offchain-schema} masing-masing menjabarkan metadata segmen pada penyimpanan \textit{on-chain} dan isi segmen terenkripsi pada penyimpanan \textit{off-chain}.
 
 \begin{longtable}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.4cm}|}
 	\caption{Skema Metadata Segmen RME \textit{On-Chain}} \label{tab:onchain-schema}                                                              \\
@@ -26,9 +26,9 @@ Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada ranca
 
 	\multirow{2}{2.8cm}{\textbf{Kategori Data}}
 	                  & \texttt{dataset\_category}
-	                  & Kategori dataset. Sesuai dengan tabel \ref{tab:mapping-dataset-category}.                                                 \\ \cline{2-3}
+	                  & Kategori dataset. Sesuai dengan Tabel~\ref{tab:mapping-dataset-category}.                                                 \\ \cline{2-3}
 	                  & \texttt{function\_category}
-	                  & Kategori fungsi klinis atau administratif. Sesuai dengan tabel \ref{tab:mapping-function-category}.                       \\ \hline
+	                  & Kategori fungsi klinis atau administratif. Sesuai dengan Tabel~\ref{tab:mapping-function-category}.                       \\ \hline
 
 	\multirow{2}{2.8cm}{\textbf{Pointer dan Integritas}}
 	                  & \texttt{ipfs\_cid}
@@ -66,9 +66,9 @@ Lampiran ini memuat rincian skema penyimpanan data RME yang digunakan pada ranca
 	                  & \texttt{related\_rme\_id}
 	                  & ID RME atau episode pelayanan yang menjadi induk segmen, dengan format \verb|RME-{6_digit}|.                                                   \\ \cline{2-3}
 	                  & \texttt{dataset\_category}
-	                  & Kategori dataset sesuai Tabel \ref{tab:mapping-dataset-category}.                                                                              \\ \cline{2-3}
+	                  & Kategori dataset sesuai Tabel~\ref{tab:mapping-dataset-category}.                                                                              \\ \cline{2-3}
 	                  & \texttt{function\_category}
-	                  & Kategori fungsi sesuai dengan Tabel \ref{tab:mapping-function-category}.                                                                       \\ \hline
+	                  & Kategori fungsi sesuai dengan Tabel~\ref{tab:mapping-function-category}.                                                                       \\ \hline
 
 	\multirow{4}{2.8cm}{\textbf{Konteks Medis}}
 	                  & \texttt{patient\_address}

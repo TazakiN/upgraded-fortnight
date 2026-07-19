@@ -29,15 +29,17 @@ $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $\ve
 	sig_n & = \text{HMAC}(sig_{n-1}, c_n)
 \end{align*}
 
-$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar \ref{fig:delegasi-macaroon}. Pada pengembangan DecMed di bab selanjutnya, sifat konseptual tersebut dibedakan dari pembentukan token turunan yang dimediasi \textit{Server} PRE.
+$RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar~\ref{fig:delegasi-macaroon}. Pada pengembangan DecMed di bab selanjutnya, sifat konseptual tersebut dibedakan dari pembentukan token turunan yang dimediasi \textit{Server} PRE.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics
 	[width=0.7\textwidth]{resources/chapter-2/macaroons.png}
 	\caption{Contoh delegasi dan atenuasi kewenangan pada Macaroon. C memegang Macaroon yang diturunkan dari \textit{service} FS untuk mengakses data pada \textit{service} TS dengan batasan waktu, lokasi IP, dan target data yang spesifik. \autocite{birgisson2014macaroons}}
 	\label{fig:delegasi-macaroon}
 \end{figure}
+
+Gambar~\ref{fig:delegasi-macaroon} menunjukkan bahwa setiap langkah delegasi dapat memperketat, bukan memperluas, cakupan akses melalui penambahan \textit{caveat}, sehingga hak turunan tetap berada di bawah batas token induk.
 
 \subsection{Biscuit Token}
 \label{subsec:biscuit-token}

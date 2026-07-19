@@ -2,28 +2,30 @@
 \label{subsec:pemetaan-kebutuhan-solusi}
 \label{subsec:pemetaan-masalah-solusi}
 
-Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel \ref{tab:daftar-solusi-ta}.
+Setelah pendekatan solusi dianalisis, setiap solusi pada bagian ini diberi ID \texttt{S-TA} untuk menjaga ketertelusuran terhadap masalah yang telah diidentifikasi pada Tabel \ref{tab:identifikasi-masalah-decmed}. Daftar solusi utama ditunjukkan pada Tabel~\ref{tab:daftar-solusi-ta}.
 
-\begin{table}[!ht]
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar Solusi yang Diusulkan Berdasarkan Hasil Analisis}
 	\label{tab:daftar-solusi-ta}
 	\small
 	\begin{tabular}{|p{0.12\textwidth}|p{0.5\textwidth}|p{0.25\textwidth}|}
 		\hline
-		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                        & \textbf{Masalah Terkait}                                                                 \\ \hline
-		\texttt{S-TA-01} & Model \textit{policy} PBAC dengan adaptasi elemen \textit{Policy Machine}                                                      & \texttt{M-TA-01}                                                                         \\ \hline
-		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                  & \texttt{M-TA-02}                                                                         \\ \hline
-		\texttt{S-TA-03} & Token Macaroons dengan \textit{caveats} dan atenuasi untuk delegasi (pembentukan token turunan dimediasi \textit{Server} PRE) & \texttt{M-TA-03}, \texttt{M-TA-04}                                                       \\ \hline
-		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{policy} PBAC, kapabilitas efektif, \textit{wallet proof}, dan metadata  & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
-		\texttt{S-TA-05} & Validasi \textit{subrole} tenaga kesehatan terhadap dataset untuk operasi tulis                                                 & \texttt{M-TA-05}                                                                         \\ \hline
-		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                  & \texttt{M-TA-06}                                                                         \\ \hline
+		\textbf{ID}      & \textbf{Nama Solusi}                                                                                                             & \textbf{Masalah Terkait}                                                                 \\ \hline
+		\texttt{S-TA-01} & Model \textit{policy} PBAC dengan adaptasi elemen \textit{Policy Machine}                                                        & \texttt{M-TA-01}                                                                         \\ \hline
+		\texttt{S-TA-02} & Segmentasi data RME berdasarkan \texttt{dataset\_category} dan \texttt{function\_category}                                       & \texttt{M-TA-02}                                                                         \\ \hline
+		\texttt{S-TA-03} & Token Macaroons dengan \textit{caveats} dan atenuasi untuk delegasi (pembentukan token turunan dimediasi \textit{Server} PRE)    & \texttt{M-TA-03}, \texttt{M-TA-04}                                                       \\ \hline
+		\texttt{S-TA-04} & Penegakan akses pada \textit{Server} PRE berbasis \textit{policy} PBAC, kapabilitas efektif, \textit{wallet proof}, dan metadata & \texttt{M-TA-01}, \texttt{M-TA-02}, \texttt{M-TA-04}, \texttt{M-TA-05}, \texttt{M-TA-07} \\ \hline
+		\texttt{S-TA-05} & Validasi \textit{subrole} tenaga kesehatan terhadap dataset untuk operasi tulis                                                  & \texttt{M-TA-05}                                                                         \\ \hline
+		\texttt{S-TA-06} & Pencabutan akses berantai dan audit log akses dan delegasi                                                                       & \texttt{M-TA-06}                                                                         \\ \hline
 	\end{tabular}
 \end{table}
 
+Tabel~\ref{tab:daftar-solusi-ta} merangkum arah penyelesaian yang dipilih: model PBAC, segmentasi RME, Macaroons dengan atenuasi, penegakan pada \textit{Server} PRE, validasi \textit{subrole}, serta revokasi dan audit berantai. Setiap solusi \texttt{S-TA} menjadi acuan ketertelusuran pada rancangan, implementasi, dan pengujian berikutnya.
+
 % Untuk menunjukkan posisi rancangan DecMed awal dan kontribusi pengembangan pada Tugas Akhir ini, perbandingan aspek utama disajikan pada Tabel~\ref{tab:perbandingan-decmed-ta}.
 
-% \begin{table}[!ht]
+% \begin{table}[htbp]
 % 	\centering
 % 	\caption{Perbandingan DecMed Awal dan Pengembangan pada Tugas Akhir}
 % 	\label{tab:perbandingan-decmed-ta}

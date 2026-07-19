@@ -24,14 +24,12 @@
 \let\thesis@defaulttable\table
 \let\endthesis@defaulttable\endtable
 \newcommand{\usemainfloatplacements}{%
-  \renewenvironment{figure}[1][!b]{\@float{figure}[!b]}{\end@float}%
-  \renewenvironment{table}[1][!t]{\@float{table}[!t]}{\end@float}%
+  \renewenvironment{figure}[1][]{\@float{figure}[htbp]}{\end@float}%
+  \renewenvironment{table}[1][]{\@float{table}[htbp]}{\end@float}%
 }
 \newcommand{\restoredefaultfloatplacements}{%
-  \let\figure\thesis@defaultfigure
-  \let\endfigure\endthesis@defaultfigure
-  \let\table\thesis@defaulttable
-  \let\endtable\endthesis@defaulttable
+  \renewenvironment{figure}[1][]{\@float{figure}[htbp]}{\end@float}%
+  \renewenvironment{table}[1][]{\@float{table}[htbp]}{\end@float}%
 }
 
 \makeatother
@@ -40,13 +38,13 @@
 
 \begin{document}
 
-\title{Pengembangan Kontrol Akses Granular dan Delegasi Akses Antartenaga Kesehatan pada Sistem Rekam Medis Elektronik DecMed Menggunakan Macaroons}
+\title{Pengembangan Kontrol Akses Granular dan Delegasi Akses Antartenaga Kesehatan pada Sistem RME DecMed Menggunakan Macaroons}
 \date{}
 \author{
   Tazkia Nizami \\
   NIM: 13522032
 }
-\newcommand\tanggalpengesahan{2 Juli 2026}
+\newcommand\tanggalpengesahan{19 Juli 2026}
 
 \pagenumbering{roman}
 \setcounter{page}{1}
@@ -58,6 +56,7 @@
 \input{chapters/ta/ai-statement}
 
 \pagestyle{plain}
+\setcounter{page}{3}
 
 \input{chapters/ta/abstract-id}
 % \input{chapters/ta/abstract-en}
@@ -73,7 +72,7 @@
 \renewcommand{\listtablename}{DAFTAR TABEL}
 \renewcommand{\lstlistingname}{Kode}
 \renewcommand{\lstlistlistingname}{DAFTAR KODE PROGRAM}
-\renewcommand{\bibname}{DAFTAR REFERENSI}
+\renewcommand{\bibname}{DAFTAR PUSTAKA}
 
 % daftar isi, lampiran, gambar, table
 \tableofcontents
@@ -91,7 +90,7 @@
 % Konfigurasi Bab
 %----------------------------------------------------------------%
 \setcounter{page}{1}
-\renewcommand{\chaptername}{BAB}
+\renewcommand{\chaptername}{Bab}
 \renewcommand{\thechapter}{\Roman{chapter}}
 \usemainfloatplacements
 %----------------------------------------------------------------%

@@ -16,15 +16,17 @@ Kontrol akses granular atau \textit{fine-grained access control} memungkinkan ke
 \textit{Capability-Based Access Control} (CapBAC) adalah model kontrol akses yang hak aksesnya direpresentasikan sebagai \textit{"capability token"} yang tidak dapat dipalsukan \autocite{li2022capability, anagnostopoulou2025bolstering}. Token tersebut menyatakan otoritas untuk melakukan operasi tertentu terhadap objek atau sumber daya tertentu. Dalam implementasi tertentu, capability token juga dapat dibatasi dengan identitas subjek, waktu berlaku, cakupan operasi, atau kondisi tambahan lain untuk mempersempit hak akses yang diberikan.
 
 Secara garis besar, model CapBAC bekerja dalam 2 tahapan, (1) Pengguna meminta capability token dari sebuah \textit{Authorization Server}, kemudian (2) Pengguna menggunakan capability token yang diperoleh dari tahap pertama untuk melakukan akses ke \textit{Resource Server} \autocite{li2022capability}.
-\textit{Sequence diagram} dari model CapBAC dapat dilihat pada Gambar \ref{fig:sequence-diagram-capbac}.
+\textit{Sequence diagram} dari model CapBAC dapat dilihat pada Gambar~\ref{fig:sequence-diagram-capbac}.
 CapBAC memungkinkan otorisasi terdesentralisasi karena mengandalkan token kapabilitas yang tidak dapat dipalsukan sebagai bukti.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{resources/chapter-2/capbac-seqdiagram.png}
 	\caption{\textit{Sequence diagram} dari model CapBAC. (Dokumentasi penulis)}
 	\label{fig:sequence-diagram-capbac}
 \end{figure}
+
+Gambar~\ref{fig:sequence-diagram-capbac} memperlihatkan bahwa keputusan akses tidak bergantung pada sesi terpusat semata, melainkan pada kepemilikan dan penunjukan capability token yang valid terhadap sumber daya yang diminta.
 
 \subsection{Policy-Based Access Control}
 \label{subsec:policy-based-access-control}
@@ -72,5 +74,7 @@ dengan $s$ sebagai subjek, $r$ sebagai \textit{resource}, $a$ sebagai \textit{ac
 		\operatorname{Deny},   & \text{jika terdapat kondisi wajib yang tidak terpenuhi}.
 	\end{cases}
 \end{equation}
+
+Dalam arsitektur kontrol akses berbasis \textit{policy}, fungsi administrasi, penyediaan informasi, pengambilan keputusan, dan penegakan sering dipetakan ke empat peran logis: \textit{Policy Administration Point} (PAP) mengelola \textit{policy}; \textit{Policy Information Point} (PIP) menyediakan informasi evaluasi; \textit{Policy Decision Point} (PDP) menghasilkan keputusan akses; dan \textit{Policy Enforcement Point} (PEP) menegakkan keputusan tersebut \autocite{hu2014abac}. Keempat peran tersebut bersifat logis sehingga satu komponen sistem dapat menjalankan lebih dari satu fungsi. Pemetaan peran tersebut terhadap komponen DecMed disajikan pada Tabel~\ref{tab:pemetaan-pap-pip-pdp-pep-decmed}.
 
 Penerapan PBAC meliputi pendefinisian \textit{policy}, pembentukan konteks permintaan, evaluasi terhadap \textit{policy} yang berlaku, serta penegakan keputusan pada sumber daya yang dilindungi. \textit{Policy Machine} merupakan kerangka formal untuk merepresentasikan \textit{policy} melalui elemen \textit{policy}, hubungan penugasan, dan asosiasi antarelemen, termasuk pola berbasis peran, atribut, atau tujuan penggunaan \autocite{ferraiolo2015policy}. Kerangka tersebut diadaptasi pada perancangan model kontrol akses DecMed di bab selanjutnya.

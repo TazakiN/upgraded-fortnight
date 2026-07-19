@@ -7,26 +7,18 @@ Pada implementasi DecMed sebelumnya, semua komponen dijalankan pada lingkungan l
 
 Komponen \textit{client} dan \textit{Server} PRE dijalankan pada lingkungan lokal. Lingkungan lokal digunakan untuk memudahkan pengembangan fitur, pengujian alur akses, dan pengamatan sistem. Komponen pendukung yang membutuhkan ketersediaan jaringan, yaitu kluster IPFS dan IOTA \textit{Gas Station}, dijalankan pada VPS. \textit{Smart contract} IOTA Move di-\textit{deploy} pada jaringan IOTA Localnet yang juga berjalan di VPS. IOTA Localnet digunakan karena sudah memadai untuk menyimulasikan interaksi dengan jaringan IOTA. VPS digunakan untuk menjalankan komponen pendukung karena komponen tersebut tidak banyak berubah selama implementasi, tetapi tetap dibutuhkan selama pengembangan. Beban perangkat lokal juga dikurangi melalui pemanfaatan VPS karena perangkat lokal tidak perlu menjalankan seluruh komponen pendukung.
 
-Berikut adalah spesifikasi dari perangkat lokal yang digunakan untuk implementasi:
-\begin{itemize}
-	\item Sistem Operasi: Ubuntu 24.04.4, berjalan di lingkungan WSL2
-	\item CPU: Intel Core i5-11400H (3 core fisik dan 6 \textit{logical thread} dialokasikan untuk WSL2)
-	\item Memori RAM: 16 GB (8 GB teralokasi untuk WSL2)
-	\item \textit{Tools}:
-	      \begin{itemize}
-		      \item Rust (\texttt{rustc 1.93.0}, \texttt{cargo 1.93.0})
-		      \item Node.js \texttt{v24.13.0}
-		      \item Docker \texttt{29.5.3}
-	      \end{itemize}
-\end{itemize}
+Spesifikasi perangkat lokal yang digunakan untuk implementasi adalah sebagai berikut:
+\begin{enumerate}
+	\item Sistem Operasi: Ubuntu 24.04.4, berjalan di lingkungan WSL2.
+	\item CPU: Intel Core i5-11400H (3 \textit{core} fisik dan 6 \textit{logical thread} dialokasikan untuk WSL2).
+	\item Memori RAM: 16 GB (8 GB teralokasi untuk WSL2).
+	\item Perangkat bantu pengembangan: Rust (\texttt{rustc 1.93.0}, \texttt{cargo 1.93.0}), Node.js \texttt{v24.13.0}, dan Docker \texttt{29.5.3}.
+\end{enumerate}
 
 Sementara itu, spesifikasi kedua VPS yang digunakan adalah sebagai berikut:
-\begin{itemize}
-	\item Sistem Operasi: Ubuntu 24.04.4 LTS
-	\item Jumlah vCPU: 8 vCPU
-	\item Memori RAM: 8 GB
-	\item \textit{Tools}:
-	      \begin{itemize}
-		      \item Docker: Docker \texttt{29.4.2}
-	      \end{itemize}
-\end{itemize}
+\begin{enumerate}
+	\item Sistem Operasi: Ubuntu 24.04.4 LTS.
+	\item Jumlah vCPU: 8 vCPU.
+	\item Memori RAM: 8 GB.
+	\item Perangkat bantu: Docker \texttt{29.4.2}.
+\end{enumerate}

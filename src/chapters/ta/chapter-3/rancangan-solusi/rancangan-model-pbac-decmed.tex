@@ -6,23 +6,23 @@ Subbab ini merumuskan \textit{policy} akses atas objek. Berdasarkan analisis pad
 Elemen \textit{policy} pada DecMed didefinisikan sebagai:
 
 \begin{equation}
-    PE_{\text{DecMed}}
-    =
-    U \cup UA \cup O \cup OA \cup PC,
+	PE_{\text{DecMed}}
+	=
+	U \cup UA \cup O \cup OA \cup PC,
 \end{equation}
 
 dengan [$U$] himpunan pengguna, [$UA$] himpunan atribut pengguna, [$O$] himpunan objek yang dilindungi, [$OA$] himpunan atribut objek, dan [$PC$] himpunan kelas \textit{policy}. Berdasarkan elemen tersebut, model \textit{policy} pada DecMed dirumuskan sebagai:
 
 \begin{equation}
-    PM_{\text{DecMed}}
-    =
-    \langle
-    PE_{\text{DecMed}},
-    AR,
-    ASSIGN,
-    ASSOCIATION,
-    \mathcal{C}
-    \rangle,
+	PM_{\text{DecMed}}
+	=
+	\langle
+	PE_{\text{DecMed}},
+	AR,
+	ASSIGN,
+	ASSOCIATION,
+	\mathcal{C}
+	\rangle,
 \end{equation}
 
 dengan $AR$ sebagai himpunan hak akses, $ASSIGN$ sebagai relasi penugasan, $ASSOCIATION$ sebagai relasi asosiasi hak akses, dan $\mathcal{C}$ sebagai himpunan kondisi akses DecMed.
@@ -34,58 +34,58 @@ Elemen $\mathcal{C}$ merupakan perluasan pada rancangan ini untuk merepresentasi
 Himpunan pengguna $U$ berisi pengguna DecMed yaitu:
 
 \begin{equation}
-    U =
-    {
-    u_{\text{pasien}},
-    u_{\text{petugas-rm}},
-    u_{\text{perawat}},
-    u_{\text{dokter}},
-    u_{\text{laboratorium}},
-    u_{\text{apoteker}}
-    }.
+	U =
+	{
+	u_{\text{pasien}},
+	u_{\text{petugas-rm}},
+	u_{\text{perawat}},
+	u_{\text{dokter}},
+	u_{\text{laboratorium}},
+	u_{\text{apoteker}}
+	}.
 \end{equation}
 
 Elemen pada himpunan tersebut merepresentasikan alamat dompet aktual, bukan hanya nama peran. Sebagai contoh, $u_{\text{dokter-A}}$ dan $u_{\text{dokter-B}}$ merupakan dua pengguna yang berbeda meskipun keduanya memiliki atribut \textit{subrole} dokter. Atribut pengguna dibagi menjadi atribut kelembagaan dan atribut kapabilitas:
 
 \begin{equation}
-    UA = UA_{\text{role}} \cup UA_{\text{capability}}.
+	UA = UA_{\text{role}} \cup UA_{\text{capability}}.
 \end{equation}
 
 Atribut kelembagaan menyatakan \textit{role} atau \textit{subrole} pengguna yang tercatat pada penyimpanan \textit{on-chain}:
 
 \begin{equation}
-    UA_{\text{role}} =
-        {
-            ua_{\text{patient}},
-            ua_{\text{administrative-personnel}},
-            ua_{\text{nurse}},
-            ua_{\text{doctor}},
-            ua_{\text{laboratory}},
-            ua_{\text{pharmacist}}
-        }.
+	UA_{\text{role}} =
+		{
+			ua_{\text{patient}},
+			ua_{\text{administrative-personnel}},
+			ua_{\text{nurse}},
+			ua_{\text{doctor}},
+			ua_{\text{laboratory}},
+			ua_{\text{pharmacist}}
+		}.
 \end{equation}
 
 Relasi penugasan pengguna terhadap atribut perannya dinyatakan sebagai:
 
 \begin{equation}
-    u ; ASSIGN ; ua_{\operatorname{role}(u)}
+	u ; ASSIGN ; ua_{\operatorname{role}(u)}
 \end{equation}
 
 Atribut kapabilitas merupakan abstraksi terhadap kapabilitas efektif yang diperoleh dari suatu token Macaroon. Untuk token $\tau$, atribut kapabilitasnya dinyatakan sebagai:
 
 \begin{equation}
-    ua_{\operatorname{cap}(\tau)}
-    \in UA_{\text{capability}}
+	ua_{\operatorname{cap}(\tau)}
+	\in UA_{\text{capability}}
 \end{equation}
 
 Atribut kapabilitas dibentuk secara konseptual ketika \textit{Server} PRE mengevaluasi token dan membentuk himpunan subjek dari \texttt{root\_subject} serta seluruh \texttt{delegated\_to} pada rantai delegasi. Pengguna hanya dianggap memiliki atribut kapabilitas apabila pengguna tersebut termasuk dalam himpunan subjek token dan dapat membuktikan kepemilikan \textit{wallet}:
 
 \begin{equation}
-    u ; ASSIGN ; ua_{\operatorname{cap}(\tau)}
-    \iff
-    \operatorname{ContainsSubject}(\tau,u)
-    \land
-    \operatorname{WalletProofValid}(u).
+	u ; ASSIGN ; ua_{\operatorname{cap}(\tau)}
+	\iff
+	\operatorname{ContainsSubject}(\tau,u)
+	\land
+	\operatorname{WalletProofValid}(u).
 \end{equation}
 
 Pemisahan atribut peran dan atribut kapabilitas diperlukan karena keduanya memiliki fungsi yang berbeda. Atribut kapabilitas menentukan cakupan data yang diberikan melalui token, sedangkan atribut peran menentukan apakah pengguna masih memiliki kewenangan kelembagaan yang sesuai. Dengan demikian, kepemilikan \textit{subrole} dokter tidak secara otomatis memberikan akses terhadap seluruh RME pasien.
@@ -95,7 +95,7 @@ Pemisahan atribut peran dan atribut kapabilitas diperlukan karena keduanya memil
 Himpunan objek $O$ terdiri atas segmen RME terenkripsi yang disimpan pada IPFS:
 
 \begin{equation}
-    O = {o_1,o_2,\ldots,o_n}.
+	O = {o_1,o_2,\ldots,o_n}.
 \end{equation}
 
 Setiap objek merepresentasikan satu segmen klinis. Informasi mengenai objek, seperti pasien, episode RME, kategori dataset, kategori fungsi, dan CID data terenkripsi, direpresentasikan melalui metadata pada IOTA.
@@ -103,31 +103,31 @@ Setiap objek merepresentasikan satu segmen klinis. Informasi mengenai objek, sep
 Atribut objek $OA$ digunakan untuk mengelompokkan segmen berdasarkan beberapa tingkat yaitu:
 
 \begin{enumerate}
-    \item rumah sakit;
-    \item pasien;
-    \item episode RME;
-    \item kategori dataset; dan
-    \item kategori fungsi klinis.
+	\item rumah sakit;
+	\item pasien;
+	\item episode RME;
+	\item kategori dataset; dan
+	\item kategori fungsi klinis.
 \end{enumerate}
 
 Contoh relasi penugasan untuk satu segmen diagnosis adalah:
 
 \begin{equation}
-    \begin{aligned}
-        o_{\text{diagnosis-17}}
-         & ; ASSIGN ;
-        oa_{\text{diagnosis-RME-17}}   \\
-         & ; ASSIGN ;
-        oa_{\text{rawat-jalan-RME-17}} \\
-         & ; ASSIGN ;
-        oa_{\text{RME-17}}             \\
-         & ; ASSIGN ;
-        oa_{\text{pasien-P}}           \\
-         & ; ASSIGN ;
-        oa_{\text{rumah-sakit-H}}      \\
-         & ; ASSIGN ;
-        pc_{\text{DecMed}}.
-    \end{aligned}
+	\begin{aligned}
+		o_{\text{diagnosis-17}}
+		 & ; ASSIGN ;
+		oa_{\text{diagnosis-RME-17}}   \\
+		 & ; ASSIGN ;
+		oa_{\text{rawat-jalan-RME-17}} \\
+		 & ; ASSIGN ;
+		oa_{\text{RME-17}}             \\
+		 & ; ASSIGN ;
+		oa_{\text{pasien-P}}           \\
+		 & ; ASSIGN ;
+		oa_{\text{rumah-sakit-H}}      \\
+		 & ; ASSIGN ;
+		pc_{\text{DecMed}}.
+	\end{aligned}
 \end{equation}
 
 Himpunan kategori dataset yang digunakan pada rancangan ini adalah $\texttt{RAWAT\_JALAN}$, $\texttt{RAWAT\_INAP}$, $\texttt{LABORATORIUM}$, dan $\texttt{APOTEK}$. Sementara itu, kategori fungsi mengikuti segmentasi data yang telah dijelaskan pada Subbab \ref{subsec:rancangan-segmentasi-data-rme}.
@@ -137,7 +137,7 @@ Himpunan kategori dataset yang digunakan pada rancangan ini adalah $\texttt{RAWA
 Himpunan hak akses yang digunakan adalah:
 
 \begin{equation}
-    AR = {\texttt{Read},\texttt{Update}}.
+	AR = {\texttt{Read},\texttt{Update}}.
 \end{equation}
 
 Hak \texttt{Read} menyatakan kemampuan membaca segmen RME, sedangkan hak \texttt{Update} menyatakan kemampuan menulis atau memperbarui segmen. Pada implementasi token, hak tersebut direpresentasikan melalui \textit{caveat} \texttt{purpose}. Cakupan objeknya direpresentasikan melalui \texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, dan \texttt{write\_function\_in}.
@@ -145,53 +145,53 @@ Hak \texttt{Read} menyatakan kemampuan membaca segmen RME, sedangkan hak \texttt
 Pada \textit{Policy Machine}, asosiasi dinyatakan sebagai hubungan antara atribut pengguna, himpunan hak akses, dan atribut target:
 
 \begin{equation}
-    (ua, ars, oa) \in ASSOCIATION.
+	(ua, ars, oa) \in ASSOCIATION.
 \end{equation}
 
 Dalam rancangan DecMed, asosiasi dibentuk secara konseptual dari kapabilitas efektif token:
 
 \begin{equation}
-    \left(
-    ua_{\operatorname{cap}(\tau)},
-    AR_{\operatorname{eff}}(\tau),
-    OA_{\operatorname{scope}}(\tau)
-    \right)
-    \in ASSOCIATION.
+	\left(
+	ua_{\operatorname{cap}(\tau)},
+	AR_{\operatorname{eff}}(\tau),
+	OA_{\operatorname{scope}}(\tau)
+	\right)
+	\in ASSOCIATION.
 \end{equation}
 
 $AR_{\operatorname{eff}}(\tau)$ merupakan hak akses efektif token, sedangkan $OA_{\operatorname{scope}}(\tau)$ merupakan himpunan atribut objek yang termasuk dalam cakupan token. Cakupan objek token didefinisikan sebagai:
 
 \begin{equation}
-    \begin{split}
-        \operatorname{Scope}(\tau)
-        =
-        \{ o_s \in O \mid {} &
-        p(s)=\operatorname{Patient}(\tau)                                 \\
-                             & \land h(s)=\operatorname{Hospital}(\tau)   \\
-                             & \land d(s)\in D_{\operatorname{eff}}(\tau) \\
-                             & \land f(s)\in F_{\operatorname{eff}}(\tau) \\
-                             & \land
-        (
-        \operatorname{Purpose}(\tau)=\texttt{Update}
-        \Rightarrow
-        r(s)=\operatorname{RME}(\tau)
-        )
-        \}.
-    \end{split}
+	\begin{split}
+		\operatorname{Scope}(\tau)
+		=
+		\{ o_s \in O \mid {} &
+		p(s)=\operatorname{Patient}(\tau)                                 \\
+		                     & \land h(s)=\operatorname{Hospital}(\tau)   \\
+		                     & \land d(s)\in D_{\operatorname{eff}}(\tau) \\
+		                     & \land f(s)\in F_{\operatorname{eff}}(\tau) \\
+		                     & \land
+		(
+		\operatorname{Purpose}(\tau)=\texttt{Update}
+		\Rightarrow
+		r(s)=\operatorname{RME}(\tau)
+		)
+		\}.
+	\end{split}
 \end{equation}
 
 $D_{\operatorname{eff}}(\tau)$ merupakan irisan seluruh \textit{caveats} \textit{dataset category} pada token, sedangkan $F_{\operatorname{eff}}(\tau)$ merupakan irisan seluruh \textit{caveats} \textit{function category}:
 
 \begin{equation}
-    D_{\operatorname{eff}}(\tau)
-    =
-    \bigcap_{i=1}^{n} D_i,
+	D_{\operatorname{eff}}(\tau)
+	=
+	\bigcap_{i=1}^{n} D_i,
 \end{equation}
 
 \begin{equation}
-    F_{\operatorname{eff}}(\tau)
-    =
-    \bigcap_{i=1}^{m} F_i.
+	F_{\operatorname{eff}}(\tau)
+	=
+	\bigcap_{i=1}^{m} F_i.
 \end{equation}
 
 Penggunaan operasi irisan memastikan bahwa penambahan \textit{caveat} pada token turunan hanya dapat mempertahankan atau mempersempit cakupan akses. Penambahan \textit{caveat} baru tidak dapat mengembalikan \textit{dataset category} atau \textit{function category} yang telah dikecualikan oleh token induk.
@@ -202,101 +202,101 @@ Untuk operasi \texttt{Read}, token dapat digunakan terhadap seluruh episode RME 
 
 Selain asosiasi antara kapabilitas dan objek, keputusan akses juga dipengaruhi oleh himpunan kondisi $\mathcal{C}$. Kondisi yang digunakan pada DecMed ditunjukkan pada Tabel \ref{tab:pemetaan-kondisi-policy-decmed}.
 
-\begin{table}[!ht]
-    \centering
-    \caption{Kondisi \textit{Policy} Akses DecMed}
-    \label{tab:pemetaan-kondisi-policy-decmed}
-    \small
-    \begin{tabular}{|p{0.24\textwidth}|p{0.32\textwidth}|p{0.31\textwidth}|}
-        \hline
-        \textbf{Kondisi}
-         & \textbf{Representasi}
-         & \textbf{Fungsi}                                                            \\ \hline
+\begin{table}[htbp]
+	\centering
+	\caption{Kondisi \textit{Policy} Akses DecMed}
+	\label{tab:pemetaan-kondisi-policy-decmed}
+	\small
+	\begin{tabular}{|p{0.24\textwidth}|p{0.32\textwidth}|p{0.31\textwidth}|}
+		\hline
+		\textbf{Kondisi}
+		 & \textbf{Representasi}
+		 & \textbf{Fungsi}                                                            \\ \hline
 
-        Identitas pasien
-         & \texttt{patient\_address}
-         & Membatasi token pada data milik pasien tertentu.                           \\ \hline
+		Identitas pasien
+		 & \texttt{patient\_address}
+		 & Membatasi token pada data milik pasien tertentu.                           \\ \hline
 
-        Rumah sakit
-         & \texttt{hospital\_cid}
-         & Membatasi penggunaan token pada konteks rumah sakit tertentu.              \\ \hline
+		Rumah sakit
+		 & \texttt{hospital\_cid}
+		 & Membatasi penggunaan token pada konteks rumah sakit tertentu.              \\ \hline
 
-        Episode RME
-         & \texttt{related\_rme\_id}
-         & Membatasi operasi \texttt{Update} pada episode RME tertentu.               \\ \hline
+		Episode RME
+		 & \texttt{related\_rme\_id}
+		 & Membatasi operasi \texttt{Update} pada episode RME tertentu.               \\ \hline
 
-        Subjek rantai delegasi
-         & \texttt{root\_subject} dan seluruh \texttt{delegated\_to}
-         & Menentukan himpunan alamat dompet yang berwenang menggunakan token.        \\ \hline
+		Subjek rantai delegasi
+		 & \texttt{root\_subject} dan seluruh \texttt{delegated\_to}
+		 & Menentukan himpunan alamat dompet yang berwenang menggunakan token.        \\ \hline
 
-        Identitas aktor pemohon
-         & \textit{Wallet proof}
-         & Membuktikan bahwa permintaan ditandatangani oleh salah satu subjek rantai. \\ \hline
+		Identitas aktor pemohon
+		 & \textit{Wallet proof}
+		 & Membuktikan bahwa permintaan ditandatangani oleh salah satu subjek rantai. \\ \hline
 
-        Masa berlaku
-         & \texttt{expires\_before}
-         & Membatasi waktu penggunaan token.                                          \\ \hline
+		Masa berlaku
+		 & \texttt{expires\_before}
+		 & Membatasi waktu penggunaan token.                                          \\ \hline
 
-        Kedalaman delegasi
-         & \texttt{max\_delegation\_depth} dan rantai delegasi
-         & Membatasi jumlah penurunan token.                                          \\ \hline
+		Kedalaman delegasi
+		 & \texttt{max\_delegation\_depth} dan rantai delegasi
+		 & Membatasi jumlah penurunan token.                                          \\ \hline
 
-        Hubungan token
-         & \texttt{parent\_token\_hash}
-         & Menghubungkan token turunan dengan token induk untuk revokasi.             \\ \hline
+		Hubungan token
+		 & \texttt{parent\_token\_hash}
+		 & Menghubungkan token turunan dengan token induk untuk revokasi.             \\ \hline
 
-        Otoritas kelembagaan
-         & \textit{Role} dan \textit{subrole} pada IOTA
-         & Membatasi operasi tulis sesuai kewenangan tenaga kesehatan.                \\ \hline
+		Otoritas kelembagaan
+		 & \textit{Role} dan \textit{subrole} pada IOTA
+		 & Membatasi operasi tulis sesuai kewenangan tenaga kesehatan.                \\ \hline
 
-        Status revokasi
-         & Catatan revokasi
-         & Menolak token awal atau token turunan yang telah dicabut.                  \\ \hline
-    \end{tabular}
+		Status revokasi
+		 & Catatan revokasi
+		 & Menolak token awal atau token turunan yang telah dicabut.                  \\ \hline
+	\end{tabular}
 
 \end{table}
 
 Masa berlaku efektif token merupakan nilai paling awal dari seluruh \textit{caveat} \texttt{expires\_before}:
 
 \begin{equation}
-    Expiry_{\operatorname{eff}}(\tau)
-    =
-    \min
-    {
-        Expiry_1,Expiry_2,\ldots,Expiry_n
-    }.
+	Expiry_{\operatorname{eff}}(\tau)
+	=
+	\min
+	{
+		Expiry_1,Expiry_2,\ldots,Expiry_n
+	}.
 \end{equation}
 
 Himpunan subjek yang berwenang menggunakan token ditentukan berdasarkan rantai delegasi:
 
 \begin{equation}
-    \operatorname{Subjects}(\tau)
-    =
-    \left\{
-    \operatorname{root\_subject}(\tau)
-    \right\}
-    \cup
-    \left\{
-    \operatorname{delegated\_to}_i(\tau)
-    \mid
-    1 \leq i \leq n
-    \right\},
+	\operatorname{Subjects}(\tau)
+	=
+	\left\{
+	\operatorname{root\_subject}(\tau)
+	\right\}
+	\cup
+	\left\{
+	\operatorname{delegated\_to}_i(\tau)
+	\mid
+	1 \leq i \leq n
+	\right\},
 \end{equation}
 
 dan permintaan dari aktor $u$ hanya diterima apabila:
 
 \begin{equation}
-    \operatorname{ContainsSubject}(\tau,u)
-    \iff
-    u \in \operatorname{Subjects}(\tau).
+	\operatorname{ContainsSubject}(\tau,u)
+	\iff
+	u \in \operatorname{Subjects}(\tau).
 \end{equation}
 
 Kedalaman delegasi dihitung berdasarkan jumlah perpindahan aktor pada rantai delegasi dan harus memenuhi:
 
 \begin{equation}
-    Depth(\tau)
-    \leq
-    MaxDepth(\tau).
+	Depth(\tau)
+	\leq
+	MaxDepth(\tau).
 \end{equation}
 
 \subsubsection{Rancangan \textit{Policy} Delegasi}
@@ -306,41 +306,41 @@ Delegasi dimodelkan sebagai pembentukan kapabilitas turunan $\tau_c$ dari kapabi
 Hubungan cakupan token harus memenuhi:
 
 \begin{equation}
-    \operatorname{Scope}(\tau_c)
-    \subseteq
-    \operatorname{Scope}(\tau_p).
+	\operatorname{Scope}(\tau_c)
+	\subseteq
+	\operatorname{Scope}(\tau_p).
 \end{equation}
 
 Hak akses token turunan juga harus memenuhi:
 
 \begin{equation}
-    AR_{\operatorname{eff}}(\tau_c)
-    \subseteq
-    AR_{\operatorname{eff}}(\tau_p).
+	AR_{\operatorname{eff}}(\tau_c)
+	\subseteq
+	AR_{\operatorname{eff}}(\tau_p).
 \end{equation}
 
 Batas waktu token turunan tidak boleh melebihi batas waktu token induk:
 
 \begin{equation}
-    Expiry_{\operatorname{eff}}(\tau_c)
-    \leq
-    Expiry_{\operatorname{eff}}(\tau_p).
+	Expiry_{\operatorname{eff}}(\tau_c)
+	\leq
+	Expiry_{\operatorname{eff}}(\tau_p).
 \end{equation}
 
 Selain itu, token turunan harus tetap berada dalam konteks pasien dan rumah sakit yang sama:
 
 \begin{equation}
-    Patient(\tau_c)=Patient(\tau_p),
+	Patient(\tau_c)=Patient(\tau_p),
 \end{equation}
 
 \begin{equation}
-    Hospital(\tau_c)=Hospital(\tau_p).
+	Hospital(\tau_c)=Hospital(\tau_p).
 \end{equation}
 
 Untuk token dengan operasi \texttt{Update}, episode RME token turunan juga tidak boleh berbeda dari token induk:
 
 \begin{equation}
-    RME(\tau_c)=RME(\tau_p).
+	RME(\tau_c)=RME(\tau_p).
 \end{equation}
 
 Hubungan antara token turunan dan token induk disimpan melalui \texttt{parent\_token\_hash}. Sementara itu, perubahan aktor direpresentasikan dengan menambahkan \texttt{delegated\_by} dan \texttt{delegated\_to}. Karena seluruh \textit{caveat} token induk tetap dipertahankan, proses delegasi hanya dapat menambahkan \textit{caveats} baru dan tidak dapat menghapus \textit{caveats} sebelumnya.
@@ -350,39 +350,39 @@ Hubungan antara token turunan dan token induk disimpan melalui \texttt{parent\_t
 Suatu permintaan akses terhadap segmen RME direpresentasikan sebagai:
 
 \begin{equation}
-    q =
-    \langle
-    u,h,p,r,d,f,a,t,\tau,\pi
-    \rangle,
-    \label{eq:permintaan-akses}
+	q =
+	\langle
+	u,h,p,r,d,f,a,t,\tau,\pi
+	\rangle,
+	\label{eq:permintaan-akses}
 \end{equation}
 
 dengan [$u$] alamat dompet pengguna yang melakukan permintaan, [$h$] identitas rumah sakit, [$p$] alamat pasien, [$r$] identitas episode RME, [$d$] kategori dataset, [$f$] kategori fungsi, [$a$] operasi yang diminta, [$t$] waktu permintaan, [$\tau$] token Macaroon, dan [$\pi$] bukti kepemilikan \textit{wallet}. Permintaan diberikan apabila seluruh kondisi \textit{policy} terpenuhi yaitu:
 
 \begin{equation}
-    \begin{split}
-        \operatorname{Permit}(q)
-        \iff {} &
-        \operatorname{TokenValid}(\tau)                           \\
-                & \land \operatorname{PurposeMatch}(a,\tau)       \\
-                & \land \operatorname{ContainsSubject}(\tau,u)    \\
-                & \land \operatorname{WalletProofValid}(\pi,q,u)  \\
-                & \land \operatorname{PatientMatch}(p,\tau)       \\
-                & \land \operatorname{HospitalMatch}(h,\tau)      \\
-                & \land \operatorname{DatasetAllowed}(d,\tau)     \\
-                & \land \operatorname{FunctionAllowed}(f,\tau)    \\
-                & \land \operatorname{TimeValid}(t,\tau)          \\
-                & \land \operatorname{DelegationChainValid}(\tau) \\
-                & \land \neg\operatorname{Revoked}(\tau)
-    \end{split}
-    \label{eq:permit-akses}
+	\begin{split}
+		\operatorname{Permit}(q)
+		\iff {} &
+		\operatorname{TokenValid}(\tau)                           \\
+		        & \land \operatorname{PurposeMatch}(a,\tau)       \\
+		        & \land \operatorname{ContainsSubject}(\tau,u)    \\
+		        & \land \operatorname{WalletProofValid}(\pi,q,u)  \\
+		        & \land \operatorname{PatientMatch}(p,\tau)       \\
+		        & \land \operatorname{HospitalMatch}(h,\tau)      \\
+		        & \land \operatorname{DatasetAllowed}(d,\tau)     \\
+		        & \land \operatorname{FunctionAllowed}(f,\tau)    \\
+		        & \land \operatorname{TimeValid}(t,\tau)          \\
+		        & \land \operatorname{DelegationChainValid}(\tau) \\
+		        & \land \neg\operatorname{Revoked}(\tau)
+	\end{split}
+	\label{eq:permit-akses}
 \end{equation}
 
 Apabila salah satu kondisi tidak terpenuhi, keputusan akses adalah:
 
 \begin{equation}
-    \operatorname{Decision}(q)=\operatorname{Deny}.
-    \label{eq:deny-akses}
+	\operatorname{Decision}(q)=\operatorname{Deny}.
+	\label{eq:deny-akses}
 \end{equation}
 
 Prinsip \textit{deny by default} diterapkan melalui fungsi tersebut. Kepemilikan token saja tidak cukup untuk memperoleh akses. Token harus valid, permintaan harus berasal dari salah satu aktor pada rantai delegasi, objek harus berada dalam cakupan token, token tidak boleh kedaluwarsa atau direvokasi, dan operasi tulis harus sesuai dengan \textit{subrole} tenaga kesehatan.
@@ -391,60 +391,97 @@ Prinsip \textit{deny by default} diterapkan melalui fungsi tersebut. Kepemilikan
 
 Pemetaan elemen model \textit{policy} terhadap komponen implementasi ditunjukkan pada Tabel \ref{tab:pemetaan-policy-machine-decmed}.
 
-\begin{table}[!ht]
-    \centering
-    \caption{Pemetaan Model \textit{Policy} terhadap Komponen DecMed}
-    \label{tab:pemetaan-policy-machine-decmed}
-    \small
-    \begin{tabular}{|p{0.18\textwidth}|p{0.29\textwidth}|p{0.39\textwidth}|}
-        \hline
-        \textbf{Elemen}
-         & \textbf{Representasi DecMed}
-         & \textbf{Sumber atau Mekanisme Implementasi}                              \\ \hline
+\begin{table}[htbp]
+	\centering
+	\caption{Pemetaan Model \textit{Policy} terhadap Komponen DecMed}
+	\label{tab:pemetaan-policy-machine-decmed}
+	\small
+	\begin{tabular}{|p{0.18\textwidth}|p{0.29\textwidth}|p{0.39\textwidth}|}
+		\hline
+		\textbf{Elemen}
+		 & \textbf{Representasi DecMed}
+		 & \textbf{Sumber atau Mekanisme Implementasi}                              \\ \hline
 
-        $U$
-         & Pengguna berdasarkan \textit{wallet address}
-         & \textit{wallet address} dan tanda tangan \textit{wallet}.                \\ \hline
+		$U$
+		 & Pengguna berdasarkan \textit{wallet address}
+		 & \textit{wallet address} dan tanda tangan \textit{wallet}.                \\ \hline
 
-        $UA_{\text{role}}$
-         & \textit{Role} dan \textit{subrole} pengguna
-         & \textit{Registry Personnel} pada IOTA.                                   \\ \hline
+		$UA_{\text{role}}$
+		 & \textit{Role} dan \textit{subrole} pengguna
+		 & \textit{Registry Personnel} pada IOTA.                                   \\ \hline
 
-        $UA_{\text{capability}}$
-         & Kapabilitas efektif pengguna
-         & Token Macaroon dan rantai delegasi.                                      \\ \hline
+		$UA_{\text{capability}}$
+		 & Kapabilitas efektif pengguna
+		 & Token Macaroon dan rantai delegasi.                                      \\ \hline
 
-        $O$
-         & Segmen RME terenkripsi
-         & Objek data pada IPFS.                                                    \\ \hline
+		$O$
+		 & Segmen RME terenkripsi
+		 & Objek data pada IPFS.                                                    \\ \hline
 
-        $OA$
-         & Rumah sakit, pasien, RME, dataset, dan fungsi
-         & Metadata segmen pada IOTA.                                               \\ \hline
+		$OA$
+		 & Rumah sakit, pasien, RME, dataset, dan fungsi
+		 & Metadata segmen pada IOTA.                                               \\ \hline
 
-        $PC$
-         & Kelas \textit{policy} DecMed
-         & Aturan kontrol akses yang diberlakukan pada sistem DecMed.               \\ \hline
+		$PC$
+		 & Kelas \textit{policy} DecMed
+		 & Aturan kontrol akses yang diberlakukan pada sistem DecMed.               \\ \hline
 
-        $AR$
-         & Operasi \texttt{Read} dan \texttt{Update}
-         & \texttt{purpose} dan \textit{caveats} baca atau tulis pada Macaroon.     \\ \hline
+		$AR$
+		 & Operasi \texttt{Read} dan \texttt{Update}
+		 & \texttt{purpose} dan \textit{caveats} baca atau tulis pada Macaroon.     \\ \hline
 
-        $ASSIGN$
-         & Penugasan pengguna ke peran dan segmen ke kategori
-         & Registri personel serta struktur metadata segmen.                        \\ \hline
+		$ASSIGN$
+		 & Penugasan pengguna ke peran dan segmen ke kategori
+		 & Registri personel serta struktur metadata segmen.                        \\ \hline
 
-        $ASSOCIATION$
-         & Hubungan kapabilitas dengan hak dan cakupan objek
-         & \textit{Effective capability} hasil evaluasi \textit{caveat}.            \\ \hline
+		$ASSOCIATION$
+		 & Hubungan kapabilitas dengan hak dan cakupan objek
+		 & \textit{Effective capability} hasil evaluasi \textit{caveat}.            \\ \hline
 
-        $\mathcal{C}$
-         & Masa berlaku, delegasi, revokasi, dan bukti identitas
-         & Macaroon, \textit{wallet proof}, Redis, IOTA, dan fungsi verifikasi PRE. \\ \hline
-    \end{tabular}
+		$\mathcal{C}$
+		 & Masa berlaku, delegasi, revokasi, dan bukti identitas
+		 & Macaroon, \textit{wallet proof}, Redis, IOTA, dan fungsi verifikasi PRE. \\ \hline
+	\end{tabular}
 
 \end{table}
 
 Berdasarkan rancangan tersebut, model CapBAC yang telah digunakan oleh DecMed tidak digantikan oleh model PBAC. Macaroon tetap berfungsi sebagai token kapabilitas yang dibawa oleh pengguna, sedangkan elemen dan kondisi yang harus diperiksa untuk menafsirkan kapabilitas tersebut ditentukan oleh model PBAC. Dengan demikian, cara otoritas dibawa oleh token dijelaskan melalui CapBAC, sedangkan \textit{policy} yang menentukan validitas penggunaan otoritas tersebut dijelaskan melalui PBAC.
 
-Rincian representasi \textit{policy} dalam bentuk \textit{caveat} dijelaskan pada Subbab \ref{subsec:rancangan-token-macaroons}. Mekanisme evaluasi dan penegakannya pada \textit{Server} PRE dijelaskan pada Subbab \ref{subsec:rancangan-penegakan-otoritas}.
+\subsubsection{Pemetaan Komponen Logis PAP, PIP, PDP, dan PEP}
+\label{subsubsec:pemetaan-pap-pip-pdp-pep}
+
+Proses administrasi, pengambilan keputusan, penyediaan informasi, dan penegakan \textit{policy} pada rancangan DecMed dapat dipetakan ke peran logis \textit{Policy Administration Point} (PAP), \textit{Policy Information Point} (PIP), \textit{Policy Decision Point} (PDP), dan \textit{Policy Enforcement Point} (PEP). Pemetaan tersebut bersifat logis dan tidak menyatakan pembagian DecMed menjadi empat layanan fisik yang terpisah. Satu komponen implementasi dapat menjalankan lebih dari satu fungsi peran tersebut, sebagaimana dirangkum pada Tabel~\ref{tab:pemetaan-pap-pip-pdp-pep-decmed}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Pemetaan PAP, PIP, PDP, dan PEP pada Rancangan DecMed}
+	\label{tab:pemetaan-pap-pip-pdp-pep-decmed}
+	\small
+	\begin{tabularx}{\textwidth}{%
+		|>{\raggedright\arraybackslash}p{0.22\textwidth}%
+		|>{\raggedright\arraybackslash}X%
+		|>{\raggedright\arraybackslash}X|}
+		\hline
+		\textbf{Komponen Logis}
+		 & \textbf{Realisasi pada DecMed}
+		 & \textbf{Keterangan}                                                                                                                                                                                         \\ \hline
+
+		\textit{Policy Administration Point} (PAP)
+		 & \textit{Patient Client}; pengajuan cakupan melalui \textit{Hospital Client}; \textit{Server} PRE pada atenuasi; \textit{caveat} Macaroon
+		 & Pasien menetapkan token awal; \textit{Hospital Client} hanya mengajukan cakupan; \textit{Server} PRE menolak perluasan cakupan token induk.                                                                 \\ \hline
+
+		\textit{Policy Information Point} (PIP)
+		 & \textit{Caveat} Macaroon; \textit{wallet proof}; \textit{role}/\textit{subrole} dan metadata pada IOTA; status revokasi Redis; konteks permintaan
+		 & Atribut kapabilitas dan kelembagaan, metadata objek, status revokasi, serta konteks $q$ (Persamaan~\ref{eq:permintaan-akses}).                                                                              \\ \hline
+
+		\textit{Policy Decision Point} (PDP)
+		 & Logika verifikasi \textit{Server} PRE atas $\operatorname{Permit}(q)$ dan $\operatorname{Decision}(q)$ (Persamaan~\ref{eq:permit-akses},~\ref{eq:deny-akses})
+		 & Validitas Macaroon dan \textit{EffectiveCapability}; operasi \texttt{Read}/\texttt{Update}; rantai delegasi; \textit{wallet proof}; kecocokan objek; kedaluwarsa; \textit{role}/\textit{subrole}; revokasi. \\ \hline
+
+		\textit{Policy Enforcement Point} (PEP)
+		 & \textit{Endpoint} dan \textit{middleware} \textit{Server} PRE; Move \textit{smart contract} pada IOTA
+		 & $\operatorname{Deny}$: tolak permintaan, tanpa \textit{re-encryption} dan \texttt{c\_frag}. $\operatorname{Permit}$: lanjutkan operasi \textit{re-encryption}.                                              \\ \hline
+	\end{tabularx}
+\end{table}
+
+\textit{Server} PRE menjalankan fungsi PDP dan PEP dalam komponen yang sama. Fungsi PIP tersebar pada Macaroon, IOTA, Redis, dan konteks permintaan. Fungsi PAP direalisasikan melalui penerbitan token awal dan pembentukan token turunan, dengan rincian representasi \textit{caveat} pada Subbab~\ref{subsec:rancangan-token-macaroons} dan penegakan otoritas pada Subbab~\ref{subsec:rancangan-penegakan-otoritas}.

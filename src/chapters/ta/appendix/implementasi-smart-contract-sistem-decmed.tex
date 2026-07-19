@@ -1,6 +1,8 @@
 \chapter{Implementasi Smart Contract Sistem DecMed}
 \label{lampiran:implementasi-smart-contract-sistem-decmed}
 
+Tabel~\ref{tab:daftar-module-smart-contract-decmed} sampai Tabel~\ref{tab:daftar-method-decmed-proxy} merinci modul Move dan method terkait yang digunakan pada implementasi \textit{smart contract} DecMed.
+
 \let\textunderscorewithoutbreak\_
 \newcommand{\breakabletextunderscore}{\textunderscorewithoutbreak\allowbreak{}}
 \newcolumntype{Y}[1]{>{\let\_\breakabletextunderscore\raggedright\arraybackslash}p{#1}<{\let\_\textunderscorewithoutbreak}}
@@ -24,6 +26,8 @@
 	\texttt{decmed::shared}              & Modul penyedia \texttt{GlobalAdminCap} dan \texttt{ProxyCap}                                                                                                \\ \hline
 \end{longtable}
 
+Tabel~\ref{tab:daftar-module-smart-contract-decmed} menegaskan pemisahan tanggung jawab antarmodul untuk administrasi fasyankes, akun personel, pasien, proxy PRE, dan kapabilitas bersama.
+
 \begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
 	\caption{Daftar Method pada Module \texttt{decmed::admin}}
 	\label{tab:daftar-method-decmed-admin}                                                                          \\
@@ -40,6 +44,8 @@
 	\texttt{update\_activation\_key} & Memperbarui activation key dan metadata admin rumah sakit.                   \\ \hline
 	\texttt{get\_hospitals}          & Mengambil daftar rumah sakit untuk client kementerian/global admin.          \\ \hline
 \end{longtable}
+
+Tabel~\ref{tab:daftar-method-decmed-admin} merangkum operasi registrasi dan aktivasi fasyankes pada sisi admin global.
 
 \begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
 	\caption{Daftar Method pada Module \texttt{decmed::hospital\_personnel}}
@@ -72,6 +78,8 @@
 	\texttt{create\_medical\_record}          & Membuat entri RME blob besar. (\textit{legacy})                                        \\ \hline
 \end{longtable}
 
+Tabel~\ref{tab:daftar-method-decmed-hospital-personnel} menunjukkan cakupan method untuk aktivasi, pengelolaan akun, serta pembentukan dan pembersihan akses tenaga fasyankes.
+
 \begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
 	\caption{Daftar Method pada Module \texttt{decmed::patient}}
 	\label{tab:daftar-method-decmed-patient}                                                                                   \\
@@ -98,6 +106,8 @@
 	\texttt{revoke\_access}                   & Mencabut akses tenaga fasyankes dan memicu \textit{cascade revoke delegation}. \\ \hline
 \end{longtable}
 
+Tabel~\ref{tab:daftar-method-decmed-patient} menegaskan peran pasien dalam pemberian akses, audit, dan pencabutan akses terhadap RME miliknya.
+
 \begin{longtable}{|Y{0.45\textwidth}|Y{0.47\textwidth}|}
 	\caption{Daftar Method pada Module \texttt{decmed::proxy}}
 	\label{tab:daftar-method-decmed-proxy}                                                                                                          \\
@@ -123,3 +133,5 @@
 	\texttt{get\_medical\_record\_update}         & Mengambil data RME untuk proses edit entri blob besar. (\textit{legacy})                        \\ \hline
 	\texttt{get\_delegation\_access\_snapshot}    & Mengambil \textit{snapshot} metadata akses delegasi.                                            \\ \hline
 \end{longtable}
+
+Tabel~\ref{tab:daftar-method-decmed-proxy} menegaskan bahwa modul proxy menyediakan antarmuka \textit{on-chain} bagi \textit{Server} PRE untuk membaca dan menulis metadata RME sesuai otorisasi.

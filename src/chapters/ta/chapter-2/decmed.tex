@@ -6,42 +6,46 @@ Sistem DecMed adalah sebuah kerangka kerja manajemen RME terdesentralisasi yang 
 \subsection{Arsitektur DecMed}
 \label{subsec:arsitektur-decmed}
 
-Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{off-chain} memanfaatkan IPFS untuk menyimpan data klinis pasien yang terenkripsi. Sementara itu, penyimpanan \textit{on-chain} memanfaatkan DLT IOTA untuk menyimpan data administratif dan metadata klinis, termasuk CID dari IPFS, guna menjamin integritas data. Untuk memastikan kedaulatan data pasien, DecMed mengimplementasikan CapBAC yang diintegrasikan dengan PRE. Skema PRE yang diterapkan pada DecMed adalah Umbral PRE yang dijelaskan pada Subbab \ref{subsec:umbral-pre}. Komponen utama pada arsitektur DecMed dan fungsinya dijelaskan pada Tabel~\ref{tab:decmed-komponen}.
+Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{off-chain} memanfaatkan IPFS untuk menyimpan data klinis pasien yang terenkripsi. Sementara itu, penyimpanan \textit{on-chain} memanfaatkan DLT IOTA untuk menyimpan data administratif dan metadata klinis, termasuk CID dari IPFS, guna menjamin integritas data. Untuk memastikan kedaulatan data pasien, DecMed mengimplementasikan CapBAC yang diintegrasikan dengan PRE. Skema PRE yang diterapkan pada DecMed adalah Umbral PRE yang dijelaskan pada Subbab \ref{subsec:umbral-pre}. Gambar~\ref{fig:decmed-archi} merangkum hubungan komponen tersebut.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/chapter-2/decmed_archi.png}
 	\caption{Arsitektur DecMed \autocite{sadewa2025decmed}.}
 	\label{fig:decmed-archi}
 \end{figure}
 
-\begin{table}[!ht]
+Gambar~\ref{fig:decmed-archi} menunjukkan pemisahan penyimpanan metadata pada IOTA dan data terenkripsi pada IPFS, dengan PRE sebagai titik verifikasi dan \textit{re-encryption} sebelum data dibuka oleh penerima akses. Peran tiap komponen dan aktor dirinci pada Tabel~\ref{tab:decmed-komponen}.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Komponen, aktor, dan fungsi dalam arsitektur DecMed}
 	\label{tab:decmed-komponen}
 	\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.26\textwidth}|>{\raggedright\arraybackslash}X|}
 		\hline
-		\textbf{Komponen / Aktor}     & \textbf{Fungsi}                                                                                                                 \\
+		\textbf{Komponen / Aktor} & \textbf{Fungsi}                                                                                                                                                    \\
 		\hline
-		IOTA DLT                  & Menyimpan metadata, referensi data, dan status akses                                                                            \\
+		IOTA DLT                  & Menyimpan metadata, referensi data, dan status akses                                                                                                               \\
 		\hline
-		IPFS                      & Menyimpan \textit{encrypted blob} data RME                                                                                      \\
+		IPFS                      & Menyimpan \textit{encrypted blob} data RME                                                                                                                         \\
 		\hline
-		PRE                       & Melakukan verifikasi token akses dan \textit{re-encryption} agar penerima akses dapat membuka data tanpa kunci privat pasien    \\
+		PRE                       & Melakukan verifikasi token akses dan \textit{re-encryption} agar penerima akses dapat membuka data tanpa kunci privat pasien                                       \\
 		\hline
 		Redis                     & Mengelola \textit{cache ephemeral} (\texttt{Nonce}, \texttt{Re-Encryption Key}, dan \texttt{Revoked Key})
 		\\
 		\hline
-		\textit{Patient Client}   & Digunakan pasien untuk mengelola identitas, menyimpan atau memperbarui data, serta memberi akses                                                                                       \\
+		\textit{Patient Client}   & Digunakan pasien untuk mengelola identitas, menyimpan atau memperbarui data, serta memberi akses                                                                   \\
 		\hline
-		\textit{Hospital Client}  & Digunakan tenaga kesehatan / fasyankes untuk mengakses atau memperbarui RME sesuai hak akses                                                              \\
+		\textit{Hospital Client}  & Digunakan tenaga kesehatan / fasyankes untuk mengakses atau memperbarui RME sesuai hak akses                                                                       \\
 		\hline
-		\textit{Ministry Client}  & Digunakan pemerintah untuk mengelola registrasi atau verifikasi fasyankes                                                                                                \\
+		\textit{Ministry Client}  & Digunakan pemerintah untuk mengelola registrasi atau verifikasi fasyankes                                                                                          \\
 		\hline
-		\textit{IOTA Gas Station} & Mensponsori transaksi \textit{on-chain} agar pengguna tidak perlu membayar \textit{gas} secara langsung; pada Tugas Akhir ini diasumsikan sebagai bagian dari IOTA                         \\
+		\textit{IOTA Gas Station} & Mensponsori transaksi \textit{on-chain} agar pengguna tidak perlu membayar \textit{gas} secara langsung; pada Tugas Akhir ini diasumsikan sebagai bagian dari IOTA \\
 		\hline
 	\end{tabularx}
 \end{table}
+
+Tabel~\ref{tab:decmed-komponen} menegaskan bahwa DecMed memisahkan peran penyimpanan, penegakan akses, dan antarmuka aktor: IOTA dan IPFS tidak menyimpan \textit{plaintext} klinis, sedangkan ketiga \textit{client} merepresentasikan kepentingan pasien, fasyankes, dan pemerintah.
 
 \subsection{Alur Pengelolaan dan Akses RME pada DecMed}
 

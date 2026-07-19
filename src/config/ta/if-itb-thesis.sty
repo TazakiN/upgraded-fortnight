@@ -14,7 +14,7 @@
 \special{papersize=210mm,297mm}
 
 % Setting margin
-\usepackage[top=2cm,bottom=2cm,left=4cm,right=3cm]{geometry}
+\usepackage[top=3cm,bottom=3cm,left=4cm,right=3cm]{geometry}
 
 % Math package
 \usepackage{mathptmx}
@@ -48,6 +48,8 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{labelsep=period,font=small,labelfont=bf}
 \usepackage{subfig}
 \usepackage{titling}
 \usepackage{booktabs}
@@ -124,7 +126,7 @@
 \titlecontents{chapter}
 [0pt]
 {\bfseries}
-{\MakeUppercase{Bab} \thecontentslabel\quad\uppercase}
+{Bab \thecontentslabel\quad\uppercase}
 {}
 {\mdseries\titlerule*[0.35em]{.}\bfseries\contentspage}
 \titlecontents{figure}

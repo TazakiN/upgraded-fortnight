@@ -3,24 +3,26 @@
 
 Bagian ini menjabarkan realisasi teknis dari rancangan pada Bab \ref{chap:analisis-dan-rancangan}. Narasi konsep dan alur yang sudah ditetapkan di Bab III dirujuk ulang; fokus di sini adalah komponen kode, antarmuka, dan perilaku konkret sistem.
 
-Daftar komponen dan keterkaitannya dengan rancangan ditunjukkan pada Tabel \ref{tab:daftar-implementasi-sistem}. ID \texttt{I-TA} dipakai sebagai rujukan. \texttt{R-TA-01} (arsitektur) mencakup keseluruhan sistem sehingga tidak muncul sebagai baris tersendiri.
+Daftar komponen dan keterkaitannya dengan rancangan ditunjukkan pada Tabel~\ref{tab:daftar-implementasi-sistem}. ID \texttt{I-TA} dipakai sebagai rujukan. \texttt{R-TA-01} (arsitektur) mencakup keseluruhan sistem sehingga tidak muncul sebagai baris tersendiri.
 
-\begin{table}[!ht]
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar Implementasi Sistem}
 	\label{tab:daftar-implementasi-sistem}
 	\small
 	\begin{tabular}{|p{0.12\textwidth}|p{0.48\textwidth}|p{0.30\textwidth}|}
 		\hline
-		\textbf{ID}      & \textbf{Komponen}                                                                                          & \textbf{Merealisasikan Rancangan}                    \\ \hline
-		\texttt{I-TA-01} & \textit{Crate} \texttt{decmed-rme-segment}.                                                                & \texttt{R-TA-02}                                     \\ \hline
-		\texttt{I-TA-02} & \textit{Crate} \texttt{decmed-macaroon-auth} dan \textit{Crate} \texttt{macaroon}.                         & \texttt{R-TA-04}, \texttt{R-TA-05}                   \\ \hline
-		\texttt{I-TA-03} & Implementasi penegakan otoritas pada \textit{Server} PRE.                                                  & \texttt{R-TA-05}, \texttt{R-TA-06}, \texttt{R-TA-07} \\ \hline
-		\texttt{I-TA-04} & Implementasi \textit{smart contract} IOTA Move untuk metadata segmen, akses, dan audit.                    & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-07} \\ \hline
-		\texttt{I-TA-05} & Implementasi \textit{Patient Client} untuk pemberian akses awal, pencabutan, dan audit.                    & \texttt{R-TA-07}, \texttt{R-TA-08}                   \\ \hline
+		\textbf{ID}      & \textbf{Komponen}                                                                                               & \textbf{Merealisasikan Rancangan}                    \\ \hline
+		\texttt{I-TA-01} & \textit{Crate} \texttt{decmed-rme-segment}.                                                                     & \texttt{R-TA-02}                                     \\ \hline
+		\texttt{I-TA-02} & \textit{Crate} \texttt{decmed-macaroon-auth} dan \textit{Crate} \texttt{macaroon}.                              & \texttt{R-TA-04}, \texttt{R-TA-05}                   \\ \hline
+		\texttt{I-TA-03} & Implementasi penegakan otoritas pada \textit{Server} PRE.                                                       & \texttt{R-TA-05}, \texttt{R-TA-06}, \texttt{R-TA-07} \\ \hline
+		\texttt{I-TA-04} & Implementasi \textit{smart contract} IOTA Move untuk metadata segmen, akses, dan audit.                         & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-07} \\ \hline
+		\texttt{I-TA-05} & Implementasi \textit{Patient Client} untuk pemberian akses awal, pencabutan, dan audit.                         & \texttt{R-TA-07}, \texttt{R-TA-08}                   \\ \hline
 		\texttt{I-TA-06} & Implementasi \textit{Hospital Client} untuk akses baca dan tulis segmen RME dan delegasi antartenaga kesehatan. & \texttt{R-TA-02}, \texttt{R-TA-04}, \texttt{R-TA-08} \\ \hline
 	\end{tabular}
 \end{table}
+
+Tabel~\ref{tab:daftar-implementasi-sistem} menjadi acuan urutan pembahasan implementasi berikut, dari segmentasi dan token hingga penegakan pada \textit{Server} PRE, \textit{smart contract}, serta kedua \textit{client}.
 
 \input{chapters/ta/chapter-4/implementasi/batasan-implementasi.tex}
 \input{chapters/ta/chapter-4/implementasi/implementasi-arsitektur-sistem.tex}

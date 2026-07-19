@@ -12,9 +12,8 @@ This paper extends DecMed with a Policy-Based Access Control (PBAC) model, segme
 The contributions are:
 \begin{enumerate}
 	\item a PBAC-based authorization model for DecMed, represented through Macaroon caveats for read/update scope, episode, hospital, expiration, delegation depth, and parent--child attenuation;
-	\item an EMR segmentation model that aligns authorization with combinations of \texttt{dataset\_category} and \texttt{function\_category};
-	\item PRE-mediated token attenuation for delegation among healthcare actors, integrated with active-wallet proof, institutional role checks, Redis-backed revocation, and IOTA audit records; and
-	\item a prototype evaluation covering collaborative outpatient and inpatient workflows and negative authorization cases.
+	\item an EMR segmentation model that aligns authorization with combinations of \texttt{dataset\_category} and \texttt{function\_category}; and
+	\item PRE-mediated token attenuation for delegation among healthcare actors without further patient involvement, with supporting wallet proof, institutional role/subrole checks, Redis-backed revocation, and IOTA audit records.
 \end{enumerate}
 
 Section~\ref{sec:background} summarizes the technical context and related work. Section~\ref{sec:approach} develops the problem analysis and proposed approach. Sections~\ref{sec:architecture} and \ref{sec:implementation} describe the system and its implementation. Sections~\ref{sec:evaluation} and \ref{sec:discussion} present the evidence and limitations, followed by the conclusion.

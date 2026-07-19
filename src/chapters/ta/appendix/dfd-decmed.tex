@@ -1,16 +1,16 @@
 \chapter{DFD DecMed}
 \label{lampiran:dfd-decmed}
 
-Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fig:dfd-decmed-level-0} dan \ref{fig:dfd-decmed-level-1}, sedangkan legenda pemodelan kedua DFD tersebut dapat dilihat pada Gambar \ref{fig:legenda-dfd}.
+Gambar~\ref{fig:legenda-dfd} menjelaskan notasi pemodelan DFD DecMed. Gambar~\ref{fig:dfd-decmed-level-0} dan Gambar~\ref{fig:dfd-decmed-level-1} masing-masing menyajikan DFD Level~0 dan Level~1 sebagai dasar penelusuran aliran data sistem.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/appendix/legenda-dfd.png}
 	\caption{Legenda \textit{Data Flow Diagram} (Dokumentasi Penulis)}
 	\label{fig:legenda-dfd}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/chapter-3/analisis/DFD-DecMed-Level-0.png}
 	\caption{DFD DecMed Level 0 (Dokumentasi Penulis)}
@@ -18,7 +18,7 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 \end{figure}
 
 \begin{landscape}
-	\begin{figure}[ht]
+	\begin{figure}[htbp]
 		\centering
 		\includegraphics[height=0.80\textheight]{resources/chapter-3/analisis/DFD-DecMed-Level-1.png}
 		\caption{DFD DecMed Level 1 (Dokumentasi Penulis)}
@@ -26,7 +26,9 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 	\end{figure}
 \end{landscape}
 
-\begin{table}[!ht]
+Gambar~\ref{fig:dfd-decmed-level-0} dan Gambar~\ref{fig:dfd-decmed-level-1} menempatkan interaksi aktor, proses, dan penyimpanan sebagai acuan analisis keamanan berikutnya. Tabel~\ref{tab:dfd-external-entities} sampai Tabel~\ref{tab:dfd-dataflow-level-1} merinci elemen DFD yang ditampilkan pada gambar tersebut.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar \textit{External Entities} pada DFD DecMed}
 	\label{tab:dfd-external-entities}
@@ -42,7 +44,9 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 	\end{tabular}
 \end{table}
 
-\begin{table}[!ht]
+Tabel~\ref{tab:dfd-external-entities} menegaskan aktor dan sistem eksternal yang berinteraksi dengan DecMed pada batas sistem.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar \textit{Process} DFD DecMed}
 	\label{tab:dfd-process}
@@ -62,7 +66,9 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 	\end{tabular}
 \end{table}
 
-\begin{table}[!ht]
+Tabel~\ref{tab:dfd-process} merangkum dekomposisi proses dari batas sistem hingga komponen inti penegakan akses dan pengelolaan RME.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar \textit{Data Store} pada DFD DecMed}
 	\label{tab:dfd-data-store}
@@ -77,7 +83,9 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 	\end{tabular}
 \end{table}
 
-\begin{table}[!ht]
+Tabel~\ref{tab:dfd-data-store} menunjukkan lokasi penyimpanan yang memuat data sensitif, mulai dari cache sementara hingga \textit{state on-chain}.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar Data Flow pada DFD DecMed (Level 0)}
 	\label{tab:dfd-dataflow-level-0}
@@ -99,7 +107,9 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 	\end{tabular}
 \end{table}
 
-\begin{table}[!ht]
+Tabel~\ref{tab:dfd-dataflow-level-0} merangkum aliran data pada batas sistem DecMed.
+
+\begin{table}[htbp]
 	\centering
 	\caption{Daftar Data Flow pada DFD DecMed (Level 1)}
 	\label{tab:dfd-dataflow-level-1}
@@ -138,3 +148,5 @@ Hasil pemodelan DFD DecMed Level 0 dan Level 1 dapat dilihat pada Gambar \ref{fi
 		F29         & Access Log View              & D4~$\rightarrow$~P2   \\ \hline
 	\end{tabular}
 \end{table}
+
+Tabel~\ref{tab:dfd-dataflow-level-1} memperinci aliran antarkomponen yang menjadi acuan analisis ancaman STRIDE.

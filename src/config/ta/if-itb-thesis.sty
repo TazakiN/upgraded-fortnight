@@ -55,6 +55,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{placeins}
+\usepackage{float}
 \usepackage{blindtext}
 \usepackage{sectsty}
 \usepackage{chngcntr}
@@ -120,6 +121,10 @@
 % Hilangkan titik pada toc
 \makeatletter
 \renewcommand{\@dotsep}{1}
+% Halaman float: konten di atas, sisa ruang di bawah (bukan terpusat vertikal)
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{8pt plus 1fil}
+\setlength{\@fpbot}{0pt plus 1fil}
 \makeatother
 
 % Setel title pada chapter-chapter di toc, lof, lot

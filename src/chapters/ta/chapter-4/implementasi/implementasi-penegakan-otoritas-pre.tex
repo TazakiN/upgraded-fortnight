@@ -6,7 +6,7 @@ Penegakan otoritas pada \textit{Server} PRE merealisasikan $\operatorname{Permit
 
 Alur implementasi disajikan pada Lampiran \ref{lampiran:alur-implementasi-penegakan-otoritas-pre} (Gambar \ref{fig:alur-penegakan-otoritas-pre-a} dan \ref{fig:alur-penegakan-otoritas-pre-b}). Daftar \textit{endpoint} REST API ada pada Lampiran \ref{lampiran:implementasi-rest-api-pre}. Status implementasi ditunjukkan pada Tabel~\ref{tab:status-implementasi-penegakan-otoritas-pre}.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Status Implementasi Penegakan Otoritas pada \textit{Server} PRE}
 	\label{tab:status-implementasi-penegakan-otoritas-pre}
@@ -106,7 +106,7 @@ Pada \textit{handler} baca, metadata segmen diambil dari IOTA lalu didekode dari
 
 Setelah otorisasi lolos, PRE menghubungkan \textit{ciphertext} di IPFS, metadata di IOTA, material \texttt{k\_frag}/\texttt{c\_frag} di Redis, dan respons ke \textit{client}. Dasar PRE dan analisis perannya dijelaskan pada Subbab \ref{subsec:umbral-pre} dan \ref{subsec:analisis-penegakan-otoritas-pre}. Alur baseline DecMed diilustrasikan pada Gambar~\ref{fig:proses-enkripsi-penyimpanan-rme}--\ref{fig:proses-reenkripsi-dekripsi-hospital-client}; skema metadata pada Lampiran \ref{lampiran:skema-penyimpanan-rme}. Respons tulis berisi ringkasan metadata segmen. PRE hanya mengubah akses terhadap \texttt{capsule}; \textit{plaintext} dan kunci AES muncul di sisi \textit{client} setelah dekripsi valid.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.55\textwidth,height=0.75\textheight,keepaspectratio]{resources/chapter-4/Proses Enkripsi dan Penyimpanan RME.png}
 	\caption{Proses enkripsi dan penyimpanan RME}
@@ -115,7 +115,7 @@ Setelah otorisasi lolos, PRE menghubungkan \textit{ciphertext} di IPFS, metadata
 
 Gambar~\ref{fig:proses-enkripsi-penyimpanan-rme} memperlihatkan bahwa data klinis dienkripsi di sisi \textit{client} sebelum disimpan ke IPFS, sementara metadata yang diperlukan penegakan akses dicatat terpisah pada IOTA.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.85\textwidth,height=0.70\textheight,keepaspectratio]{resources/chapter-4/Proses Dekripsi RME oleh Pasien.png}
 	\caption{Proses dekripsi RME oleh pasien}
@@ -124,7 +124,7 @@ Gambar~\ref{fig:proses-enkripsi-penyimpanan-rme} memperlihatkan bahwa data klini
 
 Gambar~\ref{fig:proses-dekripsi-rme-pasien} menunjukkan bahwa pasien membuka \textit{plaintext} secara lokal dengan kunci miliknya, tanpa menyerahkan kunci privat kepada \textit{Server} PRE maupun penyimpanan \textit{off-chain}.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.95\textwidth,height=0.70\textheight,keepaspectratio]{resources/chapter-4/Proses Pembentukan Akses PRE.png}
 	\caption{Proses pembentukan akses PRE saat pemberian akses}
@@ -133,7 +133,7 @@ Gambar~\ref{fig:proses-dekripsi-rme-pasien} menunjukkan bahwa pasien membuka \te
 
 Gambar~\ref{fig:proses-pembentukan-akses-pre} menegaskan bahwa pemberian akses menghasilkan material \textit{re-encryption} yang diperlukan proxy, tanpa membongkar isi RME pada tahap pembentukan akses.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.70\textwidth,height=0.75\textheight,keepaspectratio]{resources/chapter-4/Proses Re-enkripsi dan Dekripsi oleh Hospital Client.png}
 	\caption{Proses \textit{re-encryption} dan dekripsi oleh \textit{Hospital Client}}

@@ -3,14 +3,14 @@
 
 Gambar~\ref{fig:legenda-dfd} menjelaskan notasi pemodelan DFD DecMed. Gambar~\ref{fig:dfd-decmed-level-0} dan Gambar~\ref{fig:dfd-decmed-level-1} masing-masing menyajikan DFD Level~0 dan Level~1 sebagai dasar penelusuran aliran data sistem.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/appendix/legenda-dfd.png}
 	\caption{Legenda \textit{Data Flow Diagram} (Dokumentasi Penulis)}
 	\label{fig:legenda-dfd}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/chapter-3/analisis/DFD-DecMed-Level-0.png}
 	\caption{DFD DecMed Level 0 (Dokumentasi Penulis)}
@@ -18,17 +18,15 @@ Gambar~\ref{fig:legenda-dfd} menjelaskan notasi pemodelan DFD DecMed. Gambar~\re
 \end{figure}
 
 \begin{landscape}
-	\begin{figure}[htbp]
+	\begin{figure}[H]
 		\centering
-		\includegraphics[height=0.80\textheight]{resources/chapter-3/analisis/DFD-DecMed-Level-1.png}
+		\includegraphics[height=0.80\textwidth]{resources/chapter-3/analisis/DFD-DecMed-Level-1.png}
 		\caption{DFD DecMed Level 1 (Dokumentasi Penulis)}
 		\label{fig:dfd-decmed-level-1}
 	\end{figure}
 \end{landscape}
 
-Gambar~\ref{fig:dfd-decmed-level-0} dan Gambar~\ref{fig:dfd-decmed-level-1} menempatkan interaksi aktor, proses, dan penyimpanan sebagai acuan analisis keamanan berikutnya. Tabel~\ref{tab:dfd-external-entities} sampai Tabel~\ref{tab:dfd-dataflow-level-1} merinci elemen DFD yang ditampilkan pada gambar tersebut.
-
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Daftar \textit{External Entities} pada DFD DecMed}
 	\label{tab:dfd-external-entities}
@@ -44,9 +42,7 @@ Gambar~\ref{fig:dfd-decmed-level-0} dan Gambar~\ref{fig:dfd-decmed-level-1} mene
 	\end{tabular}
 \end{table}
 
-Tabel~\ref{tab:dfd-external-entities} menegaskan aktor dan sistem eksternal yang berinteraksi dengan DecMed pada batas sistem.
-
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Daftar \textit{Process} DFD DecMed}
 	\label{tab:dfd-process}
@@ -66,9 +62,7 @@ Tabel~\ref{tab:dfd-external-entities} menegaskan aktor dan sistem eksternal yang
 	\end{tabular}
 \end{table}
 
-Tabel~\ref{tab:dfd-process} merangkum dekomposisi proses dari batas sistem hingga komponen inti penegakan akses dan pengelolaan RME.
-
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Daftar \textit{Data Store} pada DFD DecMed}
 	\label{tab:dfd-data-store}
@@ -83,9 +77,7 @@ Tabel~\ref{tab:dfd-process} merangkum dekomposisi proses dari batas sistem hingg
 	\end{tabular}
 \end{table}
 
-Tabel~\ref{tab:dfd-data-store} menunjukkan lokasi penyimpanan yang memuat data sensitif, mulai dari cache sementara hingga \textit{state on-chain}.
-
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Daftar Data Flow pada DFD DecMed (Level 0)}
 	\label{tab:dfd-dataflow-level-0}
@@ -107,9 +99,7 @@ Tabel~\ref{tab:dfd-data-store} menunjukkan lokasi penyimpanan yang memuat data s
 	\end{tabular}
 \end{table}
 
-Tabel~\ref{tab:dfd-dataflow-level-0} merangkum aliran data pada batas sistem DecMed.
-
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Daftar Data Flow pada DFD DecMed (Level 1)}
 	\label{tab:dfd-dataflow-level-1}
@@ -148,5 +138,3 @@ Tabel~\ref{tab:dfd-dataflow-level-0} merangkum aliran data pada batas sistem Dec
 		F29         & Access Log View              & D4~$\rightarrow$~P2   \\ \hline
 	\end{tabular}
 \end{table}
-
-Tabel~\ref{tab:dfd-dataflow-level-1} memperinci aliran antarkomponen yang menjadi acuan analisis ancaman STRIDE.

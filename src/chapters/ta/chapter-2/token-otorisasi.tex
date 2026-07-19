@@ -31,7 +31,7 @@ $id$ adalah pengidentifikasi unik, $location$ adalah alamat layanan target, $\ve
 
 $RootKey$ adalah kunci rahasia yang digunakan untuk membangkitkan token Macaroon awal. Struktur ini memungkinkan pemegang Macaroon menambahkan \textit{caveat} baru $c_{new}$ (misalnya: \texttt{time < 24h}) dan menghasilkan $sig_{new}$ untuk diberikan ke pihak lain, tanpa mengetahui $RootKey$ yang asli. Kemampuan untuk menambahkan batasan baru pada token secara lokal tanpa melibatkan penerbit awal ini disebut dengan \textit{offline attenuation}. Gambaran mengenai delegasi dan atenuasi kewenangan melalui \textit{caveats} dapat dilihat pada Gambar~\ref{fig:delegasi-macaroon}. Pada pengembangan DecMed di bab selanjutnya, sifat konseptual tersebut dibedakan dari pembentukan token turunan yang dimediasi \textit{Server} PRE.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics
 	[width=0.7\textwidth]{resources/chapter-2/macaroons.png}

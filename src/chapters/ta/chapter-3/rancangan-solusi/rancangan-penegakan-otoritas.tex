@@ -7,7 +7,7 @@ Tiga aspek penegakan diuraikan berikut. Evaluasi keseluruhan pada \textit{Server
 
 Gambar~\ref{fig:seqdiag-overview-penegakan-otoritas} menunjukkan alur penegakan tersebut. Aktor mengirimkan permintaan melalui \textit{client} ke \textit{Server} PRE. \textit{Server} PRE mengevaluasi Persamaan~\ref{eq:permit-akses}; bila terpenuhi, proses dilanjutkan ke pengambilan daftar RME, pembacaan dengan \textit{re-encryption}, atau penulisan data. Bila gagal, keputusan mengikuti Persamaan~\ref{eq:deny-akses}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{resources/chapter-3/rancangan/penegakan otoritas/seqdiag-overview.png}
 	\caption{Alur penegakan otoritas pada \textit{Server} PRE}
@@ -26,7 +26,7 @@ Gambar~\ref{fig:seqdiag-overview-penegakan-otoritas} menempatkan \textit{Server}
 
 Kondisi $\operatorname{RoleScopeValid}(u,d,f)$ pada Persamaan~\ref{eq:permit-akses} memastikan operasi \texttt{Update} hanya dilakukan pada kategori data yang sesuai kewenangan kelembagaan aktor, sebagaimana dianalisis pada Subbab~\ref{subsec:analisis-verifikasi-aktor-operasi-tulis}. Sistem eksisting menggunakan peran teknis \texttt{MedicalPersonnel} untuk tenaga kesehatan klinis. Pada rancangan ini terdapat empat \textit{subrole} turunan---dokter, perawat, petugas laboratorium, dan apoteker---dengan pemetaan hak tulis pada Tabel~\ref{tab:pemetaan-hak-akses-update-subrole}.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Pemetaan Hak Akses Update Berdasarkan subrole Tenaga Medis}
 	\label{tab:pemetaan-hak-akses-update-subrole}
@@ -47,7 +47,7 @@ Kondisi $\operatorname{RoleScopeValid}(u,d,f)$ pada Persamaan~\ref{eq:permit-aks
 
 Alur validasi ditunjukkan pada Gambar~\ref{fig:seqdiag-validasi-subrole-dataset}. \textit{Server} PRE mengambil informasi \textit{subrole} aktor melalui \textit{smart contract}, kemudian memvalidasi kesesuaiannya terhadap kategori \textit{dataset} yang coba ditulis. Apabila tidak sesuai, permintaan ditolak. Bagian berlatar merah pada gambar menunjukkan alur yang ditambahkan dibanding implementasi DecMed sebelumnya: pengambilan \textit{subrole} dari \textit{smart contract} serta validasi kesesuaian \textit{role}, \textit{subrole}, dan kategori \textit{dataset} sebelum akses tulis diberikan. Pemeriksaan ini dilakukan setelah $\operatorname{WalletProofValid}(\pi,q,u)$ berhasil, dengan sumber atribut kelembagaan pada \textit{Registry Personnel} sebagaimana dipetakan pada Tabel~\ref{tab:pemetaan-policy-machine-decmed}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-validasi-subrole X dataset.png}
 	\caption{\textit{Sequence Diagram} Rancangan Validasi \textit{subrole} Tenaga Medis terhadap \textit{Dataset Category}}
@@ -70,7 +70,7 @@ Pemeriksaan $\neg\operatorname{Revoked}(\tau)$ pada Persamaan~\ref{eq:permit-aks
 
 Revokasi diwujudkan melalui pencatatan status di IOTA \textit{on-chain} dan Redis PRE. Lapisan \textit{on-chain} mencatat perubahan status akses dan \textit{audit trail}, sedangkan Redis menyimpan \textit{hash} token yang telah dicabut. Alur pencabutan ditunjukkan pada Gambar~\ref{fig:seqdiag-revoke-access}. Pasien memilih akses melalui \textit{Patient Client}, yang mengeksekusi \texttt{revoke\_access()} pada \textit{smart contract} Move untuk menandai akses sebagai dicabut, menghapus hak akses \textit{on-chain}, melakukan pencabutan berantai terhadap penerima delegasi turunan, serta mencatat kejadian ke \textit{audit log}. Setelah transaksi berhasil, \textit{Patient Client} mengirimkan \textit{payload} revokasi ke \textit{Server} PRE agar menyimpan \textit{hash} token pada Redis dan menghapus \textit{re-encryption key} terkait.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\textwidth,height=0.80\textheight,keepaspectratio]{resources/chapter-3/rancangan/seqdiag-revoke_access.png}
 	\caption{\textit{Sequence Diagram} Rancangan Alur Pencabutan Hak Akses Macaroon Delegasi}

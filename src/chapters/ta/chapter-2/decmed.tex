@@ -8,7 +8,7 @@ Sistem DecMed adalah sebuah kerangka kerja manajemen RME terdesentralisasi yang 
 
 Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \textit{on-chain} dan \textit{off-chain}. Penyimpanan \textit{off-chain} memanfaatkan IPFS untuk menyimpan data klinis pasien yang terenkripsi. Sementara itu, penyimpanan \textit{on-chain} memanfaatkan DLT IOTA untuk menyimpan data administratif dan metadata klinis, termasuk CID dari IPFS, guna menjamin integritas data. Untuk memastikan kedaulatan data pasien, DecMed mengimplementasikan CapBAC yang diintegrasikan dengan PRE. Skema PRE yang diterapkan pada DecMed adalah Umbral PRE yang dijelaskan pada Subbab \ref{subsec:umbral-pre}. Gambar~\ref{fig:decmed-archi} merangkum hubungan komponen tersebut.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{resources/chapter-2/decmed_archi.png}
 	\caption{Arsitektur DecMed \autocite{sadewa2025decmed}.}
@@ -17,7 +17,7 @@ Arsitektur DecMed membagi penyimpanan menjadi dua lapisan, yaitu penyimpanan \te
 
 Gambar~\ref{fig:decmed-archi} menunjukkan pemisahan penyimpanan metadata pada IOTA dan data terenkripsi pada IPFS, dengan PRE sebagai titik verifikasi dan \textit{re-encryption} sebelum data dibuka oleh penerima akses. Peran tiap komponen dan aktor dirinci pada Tabel~\ref{tab:decmed-komponen}.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Komponen, aktor, dan fungsi dalam arsitektur DecMed}
 	\label{tab:decmed-komponen}

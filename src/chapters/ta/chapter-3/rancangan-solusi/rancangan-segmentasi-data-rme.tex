@@ -3,7 +3,7 @@
 
 Subbab ini mendefinisikan objek data yang dikenai \textit{policy}. Sesuai analisis solusi pada Subbab \ref{subsec:analisis-segmentasi-data-rme}, data klinis dipecah menjadi beberapa segmen terenkripsi. Setiap segmen dibentuk berdasarkan kombinasi \textit{dataset category} dan \textit{function category}. \textit{Dataset category} merepresentasikan konteks layanan, seperti Rawat Jalan, Rawat Inap, Laboratorium, dan Apotek. \textit{Function category} merepresentasikan fungsi data di dalam \textit{dataset}, seperti anamnesis, diagnosis, terapi, pemeriksaan penunjang, atau \textit{dispensing}. Kombinasi kedua kategori tersebut menjadi unit data terkecil yang digunakan dalam proses kontrol akses. Tabel~\ref{tab:mapping-dataset-category} menunjukkan \textit{dataset category} pada rancangan ini.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Tabel Pemetaan \textit{Dataset Category}}
 	\label{tab:mapping-dataset-category}
@@ -22,7 +22,7 @@ Tabel~\ref{tab:mapping-dataset-category} membatasi konteks layanan yang dapat di
 
 Setiap \textit{dataset category} dibagi lagi berdasarkan \textit{function category}. Kategori fungsi klinis mengacu pada hasil klasifikasi metadata RME yang disajikan pada Lampiran \ref{lampiran:metadata-rme}. Selain fungsi klinis, kategori untuk dokumentasi administratif tetap disediakan pada rancangan ini. Dokumentasi administratif tidak difokuskan pada Tugas Akhir ini, sehingga dokumen administratif dikelompokkan ke dalam satu kategori umum, yaitu \texttt{ADMINISTRATIVE\_GENERAL}. Kategori ini tetap disediakan karena beberapa kebutuhan fungsional DecMed masih bergantung pada keberadaan data administratif, khususnya F01, F06, F07, F14, dan F21 pada Tabel~\ref{tab:kebutuhan-fungsional-decmed} di Lampiran~\ref{lampiran:kebutuhan-fungsional-decmed}. Tabel~\ref{tab:mapping-function-category} menunjukkan rancangan \textit{function category} pada rancangan ini.
 
-\begin{table}[htbp]
+\begin{table}[H]
 	\centering
 	\caption{Tabel Pemetaan \textit{Function Category}}
 	\label{tab:mapping-function-category}

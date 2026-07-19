@@ -8,7 +8,7 @@ Implementasi mengikuti rancangan pada Subbab \ref{subsec:rancangan-arsitektur-so
 \textit{Crate} yang diimplementasikan dan digunakan adalah \texttt{decmed-rme-segment} dan \texttt{decmed-macaroon-auth}.
 \texttt{decmed-rme-segment} berisi definisi struktur segmentasi RME, definisi \textit{dataset category} dan \textit{function category}, serta fungsi pendukungnya. Sementara itu, \texttt{decmed-macaroon-auth} berisi implementasi token otorisasi berbasis Macaroons di DecMed, termasuk pembuatan token, atenuasi token, dan proses verifikasi. \textit{crate} \texttt{decmed-macaroon-auth} memiliki dependensi utama yaitu \textit{crate} \texttt{macaroon} yang merupakan \textit{crate open source} implementasi Macaroons dengan pembaruan \textit{dependency}. \texttt{decmed-rme-segment} digunakan oleh \textit{Patient Client}, \textit{Hospital Client}, dan \textit{Server} PRE, sedangkan \texttt{decmed-macaroon-auth} digunakan oleh \textit{Hospital Client} dan \textit{Server} PRE. \textit{Ministry Client} tidak memiliki dependensi langsung terhadap kedua \textit{crate} tersebut karena perannya tetap terbatas pada kebutuhan registrasi dan aktivasi rumah sakit. Hubungan antarkomponen implementasi dan dependensi \textit{crate} bersama ditunjukkan pada \textit{package diagram} pada Gambar \ref{fig:package-diagram-implementasi} dengan legenda dari \textit{package diagram} tersebut dapat dilihat pada Lampiran \ref{lampiran:legenda-package-diagram}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{resources/chapter-4/Package Diagram.png}
 	\caption{Package Diagram Implementasi}

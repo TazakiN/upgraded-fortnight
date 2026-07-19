@@ -19,19 +19,9 @@
 \usepackage{pdflscape}
 
 \makeatletter
-\let\thesis@defaultfigure\figure
-\let\endthesis@defaultfigure\endfigure
-\let\thesis@defaulttable\table
-\let\endthesis@defaulttable\endtable
-\newcommand{\usemainfloatplacements}{%
-  \renewenvironment{figure}[1][]{\@float{figure}[htbp]}{\end@float}%
-  \renewenvironment{table}[1][]{\@float{table}[htbp]}{\end@float}%
-}
-\newcommand{\restoredefaultfloatplacements}{%
-  \renewenvironment{figure}[1][]{\@float{figure}[htbp]}{\end@float}%
-  \renewenvironment{table}[1][]{\@float{table}[htbp]}{\end@float}%
-}
-
+% Penempatan float: pakai [H] di sumber + paket float (tanpa override \@float).
+\newcommand{\usemainfloatplacements}{}%
+\newcommand{\restoredefaultfloatplacements}{}%
 \makeatother
 
 \addbibresource{references.ta.bib}
@@ -41,8 +31,8 @@
 \title{Pengembangan Kontrol Akses Granular dan Delegasi Akses Antartenaga Kesehatan pada Sistem RME DecMed Menggunakan Macaroons}
 \date{}
 \author{
-  Tazkia Nizami \\
-  NIM: 13522032
+	Tazkia Nizami \\
+	NIM: 13522032
 }
 \newcommand\tanggalpengesahan{19 Juli 2026}
 

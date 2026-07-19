@@ -46,7 +46,7 @@ Segmentasi mengikuti rancangan pada Subbab \ref{subsec:rancangan-segmentasi-data
 \subsubsection{Implementasi Segmentasi Metadata RME pada Penyimpanan \textit{On-Chain}}
 \label{subsec:implementasi-segmentasi-metadata-rme-onchain}
 
-\texttt{RmeSegmentMetadata} merepresentasikan metadata segmen sebelum diserialisasi menjadi JSON base64 dan disimpan pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} (Kode \ref{lst:decmed-patient-medical-metadata}). Struktur mengikuti skema Lampiran Tabel \ref{tab:onchain-schema}; implementasinya pada Kode \ref{lst:implementasi-segmentasi-metadata-rme}.
+\texttt{RmeSegmentMetadata} merepresentasikan metadata segmen sebelum diserialisasi menjadi JSON base64 dan disimpan pada \textit{field} \texttt{metadata} milik \texttt{PatientMedicalMetadata} (Kode \ref{lst:decmed-patient-medical-metadata}). Struktur mengikuti skema pada Tabel~\ref{tab:onchain-schema} di Lampiran~\ref{lampiran:skema-penyimpanan-rme}; implementasinya pada Kode~\ref{lst:implementasi-segmentasi-metadata-rme}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi struktur \texttt{RmeSegmentMetadata} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-segmentasi-metadata-rme}]
 pub struct RmeSegmentMetadata {
@@ -70,7 +70,7 @@ Sebelum disimpan ke IOTA, metadata divalidasi: setiap \textit{field} wajib teris
 \subsubsection{Implementasi Segmentasi Data RME pada Penyimpanan \textit{Off-Chain}}
 \label{subsec:implementasi-segmentasi-data-rme-offchain}
 
-\texttt{RmeSegmentData} merepresentasikan segmen sebelum enkripsi di sisi \textit{client}, sesuai skema Lampiran Tabel \ref{tab:offchain-schema}. Implementasinya pada Kode \ref{lst:implementasi-segmentasi-data-rme}. Pada implementasi ini, \texttt{payload} bertipe \texttt{Value} dan berisi data berbentuk \texttt{text}; \texttt{payload\_hash} adalah hash integritas dari konten \texttt{payload}.
+\texttt{RmeSegmentData} merepresentasikan segmen sebelum enkripsi di sisi \textit{client}, sesuai skema pada Tabel~\ref{tab:offchain-schema} di Lampiran~\ref{lampiran:skema-penyimpanan-rme}. Implementasinya pada Kode~\ref{lst:implementasi-segmentasi-data-rme}. Pada implementasi ini, \texttt{payload} bertipe \texttt{Value} dan berisi data berbentuk teks; \texttt{payload\_hash} adalah hash integritas dari konten \texttt{payload}.
 
 \begin{lstlisting}[language=Rust, caption=Implementasi struktur \texttt{RmeSegmentData} pada \textit{crate} \texttt{decmed-rme-segment}, label={lst:implementasi-segmentasi-data-rme}]
 pub struct RmeSegmentData {

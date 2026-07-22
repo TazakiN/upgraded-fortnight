@@ -1,0 +1,283 @@
+\makeatletter
+\def\input@path{{config/paper/}}
+\makeatother
+\documentclass[conference,a4paper,english]{IEEEtran}
+\usepackage{config/paper/IEEEpaper}
+
+
+\hyphenation {
+con-strained
+de-ploy-ment
+	de-activation
+re-source
+	re-mote
+zoo-keeper
+}
+ \hypersetup{
+  pdftitle={Granular Access Control and Delegation for DecMed Electronic Medical Records Using Macaroons},
+  pdfauthor={Tazkia Nizami},
+  pdfkeywords={electronic medical records, Policy-Based Access Control, Macaroons, Proxy Re-Encryption, IOTA}
+}
+
+\addbibresource{references.paper.bib}
+
+\begin{document}
+
+\title{Granular Access Control and Delegation for DecMed Electronic Medical Records Using Macaroons}
+
+\author{\IEEEauthorblockN{Tazkia Nizami}
+	\IEEEauthorblockA{\textit{Informatics Study Program}\\
+		\textit{School of Electrical Engineering and Informatics}\\
+		Institut Teknologi Bandung\\
+		Bandung, Indonesia}
+} 
+\maketitle
+
+\begin{abstract}
+	Electronic medical records (EMRs) require access control that preserves patient authority while supporting collaborative healthcare. DecMed, as a decentralized EMR framework, already uses IOTA, IPFS, and Proxy Re-Encryption (PRE), but still has three main limitations: access issuance depends on patient re-issuance, access policy remains coarse-grained and is based mainly on role and purpose, and EMR data are stored as large objects that are difficult to enforce according to the need-to-know principle. This work designs and implements an extension of granular access control on DecMed through three contributions. First, a Policy-Based Access Control (PBAC) model defines relations among actors, EMR objects, access rights, and access conditions, and is represented as Macaroon tokens with caveats. Second, off-chain EMR data are segmented by dataset category and function category so that policies can be enforced on clinical data units. Third, token attenuation supports delegation among healthcare personnel without direct patient intervention; derivative-token formation is mediated by the PRE Server so that the derived scope does not exceed the parent token. PRE serves both as a cryptographic mechanism that supports redistribution of decryption capability and as an enforcement point before encrypted data are processed. The prototype covers EMR segmentation, Macaroon tokens, enforcement on the PRE Server, IOTA Move smart contracts, and adaptations of the Patient Client and Hospital Client for outpatient and inpatient workflows involving medical record officers, nurses, physicians, laboratory officers, and pharmacists. Testing was conducted through functional scenarios \texttt{P-KF-01} to \texttt{P-KF-12} and nonfunctional tests \texttt{P-KNF-01} to \texttt{P-KNF-16}. Within the evaluated test scenarios and prototype boundaries, the tested functional and nonfunctional requirements are considered fulfilled.
+\end{abstract}
+
+\begin{IEEEkeywords}
+	electronic medical records, Policy-Based Access Control, Macaroons, Proxy Re-Encryption, IOTA
+\end{IEEEkeywords}
+ 
+\section{Introduction}
+\label{sec:introduction}
+
+Electronic medical records (EMRs) enable health information to follow a patient across services, but integration also enlarges the set of parties and systems that may process sensitive clinical data. Indonesian regulation requires healthcare facilities to implement integrated EMRs, while health information is classified as specific personal data that must be protected from unauthorized processing \cite{permenkes24_2022,uu27-2022-pdp}. Consequently, an integrated EMR system must support data availability for care without turning a valid clinical relationship into unrestricted access.
+
+Patient-centric access control gives patients authority over who may use their records \cite{peng2023patientcentric}. Direct care, however, is collaborative: medical-records personnel, nurses, physicians, laboratory personnel, and pharmacists participate at different stages and require different subsets of the record \cite{who2010_interprofessional_collaborative_practice}. The Indonesian EMR metadata guideline similarly separates outpatient, inpatient, laboratory, and pharmacy datasets and distinguishes administrative from clinical documentation \cite{kemenkes1423-2022}. These workflows require access decisions over the actor, operation, episode, data category, and time---not merely a distinction between administrative and medical personnel.
+
+DecMed is a patient-centric decentralized EMR prototype that combines IOTA for on-chain state, IPFS for encrypted off-chain records, and proxy re-encryption (PRE) for controlled data disclosure \cite{sadewa2025decmed}. Its previous capability token was a JSON Web Token (JWT) containing an IOTA address, a broad role, and a read/update purpose. The protected clinical record was also represented as a relatively large encrypted object. This combination created three connected limitations. First, access issuance still depended on the patient for each recipient. Second, the policy was coarse-grained because decisions were driven mainly by role and purpose. Third, the storage unit did not provide segments on which a finer policy could be enforced. The bearer-token workflow also needed evidence that the requester controlled the wallet associated with the active actor, together with revocation and audit semantics for derived grants.
+
+This paper extends DecMed with a Policy-Based Access Control (PBAC) model, segmented EMR objects, and Macaroon capability tokens. PBAC defines the relationships among actors, EMR objects, operations, and conditions. Macaroons were selected for their append-only caveats and attenuation property, rather than on a claim that they are universally more secure than JWT, PASETO, or Biscuit. A patient still authorizes the initial access. A legitimate holder can subsequently request a narrower child token from the PRE Server, which validates the parent capability before producing the attenuation result. Macaroons conceptually allow attenuation without involving the original issuer; in this implementation, child-token formation is mediated by the PRE Server so that parent token, delegator identity, requested scope, and delegation chain are checked before issuance. Delegation therefore does not require the patient's direct involvement at every handover among healthcare actors, but it still requires communication with the PRE Server.
+
+The contributions are:
+\begin{enumerate}
+	\item a PBAC-based authorization model for DecMed, represented through Macaroon caveats for read/update scope, episode, hospital, expiration, delegation depth, and parent--child attenuation;
+	\item an EMR segmentation model that aligns authorization with combinations of \texttt{dataset\_category} and \texttt{function\_category}; and
+	\item PRE-mediated token attenuation for delegation among healthcare actors without further patient involvement, with supporting wallet proof, institutional role/subrole checks, Redis-backed revocation, and IOTA audit records.
+\end{enumerate}
+
+Section~\ref{sec:background} summarizes the technical context and related work. Section~\ref{sec:approach} develops the problem analysis and proposed approach. Sections~\ref{sec:architecture} and \ref{sec:implementation} describe the system and its implementation. Sections~\ref{sec:evaluation} and \ref{sec:discussion} present the evidence and limitations, followed by the conclusion.
+ \section{Background and Related Work}
+\label{sec:background}
+
+\subsection{Capability-Based Authorization and Attenuation}
+
+Capability-Based Access Control (CapBAC) represents authority as a token that identifies permitted operations over a resource; possession of a valid capability is evaluated by the resource-side verifier \cite{li2022capability}. Policy-Based Access Control (PBAC) complements that view by making the decision criteria explicit: subjects, objects, operations, and contextual conditions are related through a policy before a capability is issued or checked \cite{ferraiolo2015policy}. In this work, PBAC defines what may be authorized, while Macaroons carry the resulting capability. Granularity therefore depends on both the policy vocabulary and the protected resource model. A token may distinguish operations and contexts, but that distinction is ineffective if the storage layer exposes only an entire record. Conversely, segmented storage does not prevent excessive access unless requests are checked against an authorization scope.
+
+A Macaroon is a bearer authorization credential whose signature is extended whenever a first-party caveat is appended \cite{birgisson2014macaroons}. For root key $K$, identifier $id$, and caveats $c_i$, the signature chain is
+\begin{equation}
+	s_0=\operatorname{HMAC}(K,id),\qquad
+	s_i=\operatorname{HMAC}(s_{i-1},c_i).
+	\label{eq:macaroon-chain}
+\end{equation}
+A holder can therefore add a restriction without learning $K$ or removing prior caveats. Verification recomputes the chain and evaluates every caveat. This append-only property is useful for delegation because a child credential can retain all parent restrictions and add narrower ones. In the Macaroon literature, that property is often called offline attenuation because the original issuer need not mint a new root token. The DecMed implementation preserves that issuer-independent semantics for the patient while mediating child-token formation at the PRE Server.
+
+JWT and PASETO can carry static authorization claims, but neither format provides attenuation as a built-in operation \cite{jones2015jwt,arciszewski2022paseto}. Biscuit supports attenuation and a rule language, but that language and its public-key verification model exceeded the direct attribute checks required by the DecMed prototype \cite{biscuitsec}. The choice of Macaroons in this work is thus an architectural fit: caveats encode PBAC-derived constraints, and the PRE Server remains the single verification and enforcement point.
+
+\subsection{DecMed Context and Research Gap}
+
+DecMed stores encrypted medical data in IPFS and records references and access state on IOTA; Umbral PRE transforms key material for an authorized recipient without exposing plaintext to the proxy \cite{sadewa2025decmed,benet2014ipfs,nunez2017umbral}. This separates bulk encrypted data from verifiable metadata, but the previous access unit and token claims remained coarse.
+
+Related EMR studies address complementary parts of this problem. Singh \emph{et al.} combine role- and attribute-based controls to obtain contextual blockchain authorization \cite{singh2025granular}. Liu and Chen place role, identity, policy, and data-volume checks in a layered blockchain model \cite{liu2025accesscontrol}. Amaracitra and Alamsyah use a composable-NFT hierarchy to represent medical-record, diagnosis, laboratory, and pharmacy units separately \cite{amaracitra2025composable}. These approaches motivate contextual policy and data decomposition, but they do not resolve the combined DecMed requirement of a patient-authorized root capability, segment-level PRE enforcement, and attenuated clinician-to-clinician delegation.
+
+Outside healthcare, dCache demonstrates that Macaroons can constrain storage operations, paths, network context, and time windows and can be shared after adding caveats \cite{dcache_macaroons}. This use confirms the practicality of caveat-based attenuation in distributed storage, while leaving healthcare-specific actor authority, patient episodes, revocation chains, and wallet-bound requests to the present design.
+
+\section{Problem Analysis and Proposed Approach}
+\label{sec:approach}
+
+\subsection{Baseline Limitations and Requirements}
+
+The previous DecMed JWT contained only \texttt{address}, \texttt{role}, and \texttt{purpose}, where the role was administrative or medical personnel and the purpose was read or update. It could not state a permitted dataset, clinical function, episode, expiry, or delegation depth. The medical role also did not distinguish physicians, nurses, laboratory personnel, and pharmacists. These actors have different write authority even when they participate in the same care episode.
+
+The off-chain record compounded this limitation. One on-chain \texttt{PatientMedicalMetadata} entry referenced a comparatively large encrypted clinical object. Granting PRE processing for that object could expose more plaintext than a task required. Filtering at the client would be too late because the client would already possess the decrypted record. The enforceable resource must instead be selected before retrieval and re-encryption.
+
+Finally, the prior grant flow ran from patient to one healthcare worker and provided neither parent--child delegation nor derived-token audit. A valid-looking bearer token also did not prove that the requester controlled the wallet represented by the active identity. The resulting requirements were to (1) align token scope with segmented data, (2) distinguish read and write authority by actor and context, (3) make every derived scope monotonically no broader than its parent, (4) bind use and delegation to wallet signatures, and (5) extend revocation and audit across a delegation chain.
+
+\subsection{Segmented Record Model}
+
+The proposed model segments clinical data before encryption and storage. The implemented \texttt{dataset\_category} values are \texttt{RAWAT\_JALAN} (outpatient), \texttt{RAWAT\_INAP} (inpatient), \texttt{LABORATORIUM}, and \texttt{APOTEK} (pharmacy), following the available Indonesian EMR metadata guideline \cite{kemenkes1423-2022}. Fifteen \texttt{function\_category} values refine those datasets, including administrative-general data, anamnesis, physical and psychological examinations, diagnosis, therapy, supporting examinations, laboratory data, prescribing, and dispensing. Inpatient data additionally includes discharge planning.
+
+One on-chain metadata entry refers to one encrypted off-chain segment. Metadata includes the segment and episode identifiers, patient and author wallets, hospital identifier, both categories, IPFS content identifier, ciphertext integrity hash, PRE capsule, encrypted key material, and creation time. The corresponding IPFS object contains the same contextual identifiers and the encrypted payload. This design selects an authorized segment using metadata before the PRE path can yield decryptable material.
+
+Category caveats are complemented by institutional authority. For writes, nurses are limited to initial-examination functions in outpatient or inpatient datasets; physicians can write clinical functions for the current encounter; laboratory personnel write the laboratory dataset; and pharmacists write prescribing or dispensing data in the pharmacy dataset. Administrative personnel can create only \texttt{ADMINISTRATIVE\_GENERAL} segments. The token scope and on-chain role/subrole check must both permit the operation.
+
+\subsection{PBAC, Macaroon Capability, and Delegation Model}
+
+The PBAC adaptation for DecMed relates users and institutional attributes to segmented EMR objects, read/update operations, and conditions such as expiry, revocation, wallet proof, and delegation depth. Macaroons then represent the issued capability; they do not replace the policy model. Table~\ref{tab:caveats} groups the implemented caveats by the decision they support. DecMed retains separate read and update tokens. \texttt{related\_rme\_id} binds an update token to one care episode; a read token may cover historical segments only within its category scope. The prototype limits the root delegation depth to two, corresponding to patient-to-records-personnel issuance followed by at most two clinician delegation levels. Note that \texttt{holder\_address} is not used: because Macaroons are append-only, successive holder values cannot replace one another, so subjects are derived from \texttt{root\_subject} and the \texttt{delegated\_by}/\texttt{delegated\_to} chain.
+
+\begin{table*}[t]
+	\caption{Implemented Macaroon Caveats and Their Enforcement}
+	\label{tab:caveats}
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}p{0.15\textwidth}p{0.31\textwidth}p{0.48\textwidth}@{}}
+		\toprule
+		\textbf{Decision dimension}                                                                                        & \textbf{Caveats} & \textbf{Enforced constraint} \\
+		\midrule
+		Resource and operation                                                                                             &
+		\texttt{purpose}, \texttt{patient\_address}, \texttt{related\_rme\_id}, \texttt{hospital\_cid}                     &
+		Restricts a read/update token to the patient, current episode where applicable, and issuing hospital.                                                                \\
+		Data scope                                                                                                         &
+		\texttt{read\_dataset\_in}, \texttt{write\_dataset\_in}, \texttt{read\_function\_in}, \texttt{write\_function\_in} &
+		Whitelists dataset/function pairs; repeated caveats are combined by intersection.                                                                                    \\
+		Delegation chain                                                                                                   &
+		\texttt{root\_subject}, \texttt{delegated\_by}, \texttt{delegated\_to}, \texttt{parent\_token\_hash}               &
+		Identifies the initial holder, ordered delegation steps, active subject, and parent token used for chain validation and revocation.                                  \\
+		Time and depth                                                                                                     &
+		\texttt{expires\_before}, \texttt{max\_delegation\_depth}                                                          &
+		Uses the earliest expiry and prevents a child from extending validity or increasing remaining depth.                                                                 \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+For caveat sets $D_i$ and $F_i$ and expiration values $t_i$, the PRE Server derives the effective capability as
+\begin{equation}
+	D_{\mathrm{eff}}=\bigcap_i D_i,\quad
+	F_{\mathrm{eff}}=\bigcap_i F_i,\quad
+	t_{\mathrm{eff}}=\min_i t_i .
+	\label{eq:effective-capability}
+\end{equation}
+An attenuation request is accepted only if every requested dataset and function is a subset of the parent's effective scope, the child expiry does not exceed $t_{\mathrm{eff}}$, and depth does not increase. A \texttt{parent\_token\_hash} is appended with each child so that verification can inspect revocation keys for both the presented token and its ancestors.
+
+Although Macaroons permit local caveat addition, this implementation asks the PRE Server to validate and produce the attenuated result. A client is not trusted to decide whether its requested scope is legitimate. The request includes a wallet-signed delegation context; PRE authenticates the parent, computes its effective capability and delegation chain, checks Redis revocation state, and consults the IOTA access snapshot before returning a child token. This mediation preserves attenuation without patient re-issuance while making PRE an explicit cryptographic and policy-enforcement boundary rather than the sole source of authorization rules.
+
+These responsibilities map to the logical PAP, PIP, PDP, and PEP roles of a policy-based access-control architecture \cite{hu2014abac}. The mapping is logical rather than a split into four physical services: one DecMed component may realize more than one role. Policy administration (PAP) is realized when the Patient Client establishes the initial grant, the Hospital Client proposes a narrower delegation scope, and the PRE Server validates attenuation and forms child tokens whose caveats encode policy. Policy information (PIP) is distributed across Macaroon caveats, wallet proofs, IOTA role/subrole and segment metadata, Redis revocation state, and request context. The PRE Server colocates the decision and enforcement points (PDP and PEP): it evaluates access against the effective capability and external conditions, then admits or denies re-encryption; Move smart contracts on IOTA provide additional on-chain enforcement for access-state changes. \section{System Design and Architecture}
+\label{sec:architecture}
+
+\subsection{Component Responsibilities}
+
+The extension preserves the principal DecMed components and changes their authorization responsibilities. The Patient Client creates the initial consent request, signs the patient's nonce, reviews delegation history, and initiates revocation. The Hospital Client is used by records personnel and medical actors to retrieve encrypted access metadata, access permitted record segments, and request delegation. The PRE Server issues root Macaroons, validates attenuation and data requests, enforces category and institutional constraints, and performs re-encryption; in the PAP/PIP/PDP/PEP mapping of Section~\ref{sec:approach}, it colocates PDP and PEP. Redis stores ephemeral PRE material and revocation keys. IOTA stores personnel state, segment metadata, encrypted access metadata, and delegation audit records, while IPFS stores encrypted segment objects.
+
+Fig.~\ref{fig:decmed-data-flow} shows the DecMed system context retained by the extension. Patient, hospital, and ministry actors remain outside the DecMed boundary, while encrypted record objects and on-chain transactions flow to IPFS and IOTA, respectively. Within the boundary, hospital requests pass through the proxy API and authentication/access-control path before medical-record management can invoke PRE or interact with the stores. The extension therefore does not replace DecMed's storage or PRE architecture; it narrows the conditions under which those paths execute.
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{resources/paper/decmed-data-flow.png}
+	\caption{DecMed system context retained by the access-control extension, with patient and institutional actors, encrypted IPFS storage, and IOTA transactions (thesis artifact).}
+	\label{fig:decmed-data-flow}
+\end{figure*}
+
+\subsection{Initial Grant}
+
+The patient remains the authority for the first grant. Records personnel display a QR value containing the hospital identifier, IOTA wallet address, and PRE public key. After scanning it, the Patient Client checks the personnel record on IOTA and lets the patient choose outpatient or inpatient service, read/update mode, and expiry. The client obtains a nonce from PRE and signs it with the patient's IOTA key. PRE verifies the patient and confirms that the recipient is active administrative personnel at the selected hospital.
+
+PRE then issues separate read and update Macaroons. A read token initially covers the implemented datasets and functions; an update token is limited to the selected encounter dataset plus laboratory and pharmacy and is bound to a newly generated \texttt{related\_rme\_id}. Both carry the hospital, recipient root subject, expiration, and maximum delegation depth. Broad root scope does not itself authorize records personnel to write clinical data because every request is also checked against their on-chain role.
+
+The Patient Client generates the PRE data seed and encrypts it for the initial recipient. The token, token hash, encrypted seed, and access metadata are encrypted with the recipient's PRE public key and recorded through the IOTA \texttt{create\_access} function. PRE stores the associated re-encryption material in Redis with a lifetime derived from the access expiry. Thus, the ledger distributes encrypted access metadata rather than a plaintext bearer token.
+
+\subsection{Delegation and Request Verification}
+
+After the initial grant, records personnel may delegate to a nurse or physician. A physician may further delegate a restricted capability to laboratory personnel or a pharmacist. The root token has depth two; the first child has one remaining level, and the second-level child has zero. Presets implement task-specific scopes: a nurse receives initial-examination functions, laboratory personnel receive supporting-examination read scope and laboratory write scope, and a pharmacist receives therapy/prescription read scope and pharmacy write scope.
+
+The delegator's Hospital Client obtains the candidate's public information from IOTA, decrypts the existing data seed, and re-encrypts it for the delegatee. It sends the parent token, requested scope and expiry, actor addresses, and a wallet-signed \texttt{DelegationRequestProofContext} to PRE. PRE authenticates the parent, checks all parent and ancestor revocation keys, verifies the delegator signature, computes the effective capability, and obtains an IOTA access snapshot. The snapshot confirms active accounts, a common hospital, parent validity, current depth, and the absence of a conflicting active delegation for the same recipient subrole. If the request is monotonic, PRE appends the child caveats and returns the child token and hash.
+
+The client signs a \texttt{DelegationProofContext}, packages the child token, proof, re-encrypted seed, and metadata, and encrypts the package for the delegatee. The IOTA \texttt{create\_delegated\_access} function records the encrypted package and an audit entry containing delegator, root subject, delegatee, mode, episode, depth, parent and child token hashes, and expiry. The patient is not part of these steps, but the client, PRE Server, IOTA, Redis, and network are still required.
+
+To use the grant, the delegatee decrypts its access package locally and sends the Macaroon with a request. PRE reconstructs the ordered delegation chain; the last \texttt{delegated\_to} value is the active subject. It then checks chained-HMAC authenticity, expiration, depth, revocation, actor role/subrole on IOTA, and segment context. A wallet proof signs the token identifier, patient, episode, operation, segment, dataset, function, and timestamp. Only after the proof matches the active subject does a read trigger IPFS retrieval and Umbral re-encryption, or a write store ciphertext in IPFS and metadata in IOTA.
+
+\section{Implementation}
+\label{sec:implementation}
+
+The prototype was implemented mainly in Rust and retained the existing Tauri clients and IOTA Move contracts. Fig.~\ref{fig:package-diagram} summarizes the shared packages introduced for the extension. \texttt{decmed-rme-segment} defines category enums, segment data and metadata, validation, and integrity-hash utilities. \texttt{decmed-macaroon-auth} wraps the adapted open-source \texttt{macaroon} crate with DecMed issuance, caveat parsing, effective-capability calculation, attenuation, chain construction, wallet-proof context, and revocation-key functions. The Patient Client, Hospital Client, and PRE Server consequently share the same segment schema; the Hospital Client and PRE Server also share authorization types.
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{resources/paper/implementation-package-diagram.png}
+	\caption{Shared implementation packages for segmentation and Macaroon authorization (thesis artifact).}
+	\label{fig:package-diagram}
+\end{figure*}
+
+Each \texttt{RmeSegmentData} object contains segment and episode identifiers, categories, patient and author addresses, service date, payload, and payload hash. After client-side encryption and IPFS upload, \texttt{RmeSegmentMetadata} retains the contextual fields together with the IPFS CID, ciphertext integrity hash, PRE capsule, encrypted key/nonce, hospital identifier, and creation time. The metadata is serialized as base64-encoded JSON inside the existing flat IOTA metadata list, maintaining compatibility while making categories available to PRE.
+
+Authorization is implemented as PRE middleware plus operation-specific handlers. The middleware deserializes the bearer Macaroon, validates its chained HMAC, rejects unknown caveats, builds \texttt{EffectiveCapability} and \texttt{DelegationChain}, checks expiry and depth, and queries Redis using keys of the form \texttt{revoked:token:<hash>}. Read and write handlers then validate the metadata or payload preview against patient, episode, hospital, dataset, function, and operation constraints. They obtain the active actor's institutional role from the Move contract and verify the wallet signature. The accepted proof window is five minutes. On a read without a proof, PRE returns an authorization response containing the canonical context so the client can sign and retry.
+
+Revocation combines immediate enforcement and durable state. The Patient Client first invokes the Move revocation path, which marks access and downstream delegations as revoked and records an audit event. It then asks PRE to store token hashes in Redis until token expiry and delete associated re-encryption material. When a descendant is presented, PRE checks its own hash and every \texttt{parent\_token\_hash}; a revoked ancestor therefore invalidates the derived request.
+
+\section{Evaluation}
+\label{sec:evaluation}
+
+\subsection{Environment and Method}
+
+The evaluation used a proof-of-concept deployment rather than an operational hospital system. Patient, hospital, and ministry clients and the PRE Server ran on Ubuntu 24.04.4 under WSL2 on an Intel Core i5-11400H host; WSL2 was allocated three physical cores, six logical threads, and 8~GB of the host's 16~GB RAM. Two Ubuntu 24.04.4 VPS instances, each with eight vCPUs and 8~GB RAM, hosted supporting services. The three-peer IPFS cluster, IOTA Gas Station, and IOTA Localnet deployment were placed on the VPS infrastructure.
+
+Evaluation traced each stated requirement to implementation evidence and a test scenario. Twelve functional tests (\texttt{P-KF-01}--\texttt{P-KF-12}) were executed manually over outpatient and inpatient workflows. The inpatient path additionally exercised the discharge-planning segment. Sixteen nonfunctional tests (\texttt{P-KNF-01}--\texttt{P-KNF-16}) combined Rust unit/integration tests run with \texttt{cargo test} and client-level scenarios. These tests concern authorization correctness, traceability, and selected negative cases; they are not penetration tests or performance benchmarks.
+
+Table~\ref{tab:evaluation-summary} groups the documented scenarios without treating each user-interface step as a separate scientific result. Within the evaluated test scenarios and prototype boundaries, the tested functional and nonfunctional requirements are considered fulfilled.
+
+\begin{table*}[t]
+	\caption{Grouped Evaluation Evidence}
+	\label{tab:evaluation-summary}
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{@{}p{0.18\textwidth}p{0.18\textwidth}p{0.48\textwidth}p{0.10\textwidth}@{}}
+		\toprule
+		\textbf{Category}                                                                                                                              & \textbf{Test IDs} & \textbf{Tested behavior and documented outcome} & \textbf{Status} \\
+		\midrule
+		Initial access and delegation                                                                                                                  &
+		\texttt{P-KF-01}--\texttt{03}, \texttt{06}, \texttt{09}                                                                                        &
+		Patient-to-records-personnel tokens and narrower nurse, physician, laboratory, and pharmacy child tokens were created for the clinical flow.   &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Role-scoped clinical operations                                                                                                                &
+		\texttt{P-KF-04}, \texttt{05}, \texttt{07}, \texttt{08}, \texttt{10}                                                                           &
+		Nurse initial-examination, physician clinical, laboratory, and pharmacy read/write operations processed their corresponding segments.          &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Patient control and traceability                                                                                                               &
+		\texttt{P-KF-11}, \texttt{12}                                                                                                                  &
+		The patient viewed the delegation history and revoked access; the delegatee could no longer access the record.                                 &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Out-of-scope data                                                                                                                              &
+		\texttt{P-KNF-01}, \texttt{02}                                                                                                                 &
+		PRE rejected a laboratory segment outside token caveats, and a pharmacist client did not expose laboratory data.                               &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Monotonic attenuation                                                                                                                          &
+		\texttt{P-KNF-03}--\texttt{06}                                                                                                                 &
+		Requests that added a write function/dataset, increased depth, or extended expiry beyond the parent were rejected.                             &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Token, chain, and wallet validity                                                                                                              &
+		\texttt{P-KNF-07}--\texttt{09}, \texttt{13}                                                                                                    &
+		Expired tokens, broken delegation chains, missing wallet proofs, and proofs from a non-active actor were rejected.                             &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Audit and revocation enforcement                                                                                                               &
+		\texttt{P-KNF-10}--\texttt{12}                                                                                                                 &
+		Delegation details were displayed; a matching revocation key rejected the token, and root revocation removed active root and delegated access. &
+		Fulfilled                                                                                                                                                                                                                              \\
+		Integrity and on-chain confidentiality constraints                                                                                             &
+		\texttt{P-KNF-14}--\texttt{16}                                                                                                                 &
+		Mismatched ciphertext integrity hashes were rejected, and clinical plaintext was not stored in on-chain metadata under the tested conditions.  &
+		Fulfilled                                                                                                                                                                                                                              \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+\subsection{Interpretation of Results}
+
+The positive scenarios establish an end-to-end path from an initial patient grant to task-specific access by four clinical actor types. They also connect segmentation to observable operations: the nurse writes initial examination data, the laboratory actor reads a supporting request and writes laboratory results, and the pharmacist reads prescription-related data and writes pharmacy service data. This evidence supports functional integration of category-aware authorization; it does not quantify usability or clinical effectiveness.
+
+The negative scenarios directly exercise the main attenuation and requester-binding invariants. Dataset/function expansion, increased depth, and later child expiry were rejected. Separate cases rejected an expired token, a discontinuous delegation chain, a missing wallet signature, and a physician signature presented for a laboratory-active token. Revocation tests covered both direct token-hash lookup and use after patient-initiated chain revocation. Together, these results support correctness of the implemented authorization rules within the tested cases. They do not demonstrate resistance to all attacks, formal cryptographic correctness, or behavior under high concurrency.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The results address the central mismatch in the earlier design: a PBAC-derived granular token now has a granular storage object against which it can be enforced. PRE compares caveat intersections with on-chain segment metadata before returning re-encryption output, so an unauthorized category is rejected before the client obtains decryptable material. Institutional subrole checks further prevent a syntactically broad update token from authorizing a professional operation outside the actor's implemented responsibility. The existing DecMed role identifier \texttt{MedicalPersonnel} continues to represent several healthcare actors; subroles distinguish nurses, physicians, laboratory personnel, and pharmacists.
+
+PRE-mediated attenuation reduces repeated patient interaction while preserving patient control at two points: the patient authorizes the root grant and can revoke its chain. Macaroons conceptually support attenuation without the original issuer; in this system, child tokens are still formed online by the PRE Server. Delegation is therefore free of further patient involvement, but it remains a distributed transaction involving PRE validation, encrypted metadata delivery through IOTA, Redis state, and client cryptography. This improves workflow continuity only when those components are available.
+
+PRE is a material trust and availability boundary, not the policy author. It holds the Macaroon root key, computes effective capability from PBAC-mapped caveats, validates wallets and on-chain roles, and gates re-encryption. Redis availability affects revocation and PRE material; IOTA availability affects identity, access, and audit state; IPFS availability affects ciphertext retrieval. The evaluation did not benchmark these dependencies or test large-scale failure behavior.
+
+Other limitations follow the implemented scope. The prototype covers outpatient, inpatient, laboratory, and pharmacy datasets, represents segment payloads as text, and fixes delegation depth at two. It was evaluated locally and on VPS-hosted support services, not against a production hospital information system. The evaluation focuses on functional and authorization behavior rather than throughput, availability, scalability, broad adversarial testing, or a formal security proof; cryptographic properties are assumed from the selected libraries and schemes. Emergency access, the emergency-department dataset, and break-glass mechanisms are outside the study and are not contributions of this work.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This work extended DecMed with a PBAC authorization model, category-based EMR segmentation, and Macaroon capabilities whose caveats constrain operation, patient, episode, hospital, data scope, expiry, and delegation chain. PRE-mediated attenuation prevents a requested child from exceeding its parent and supports delegation among healthcare actors without further patient involvement, while wallet proof, role/subrole validation, Redis revocation, and IOTA audit records bind the capability to the implemented workflow. Across 12 functional tests (\texttt{P-KF-01}--\texttt{P-KF-12}) and 16 nonfunctional tests (\texttt{P-KNF-01}--\texttt{P-KNF-16}), the tested requirements are considered fulfilled within the evaluated prototype scope, and the tested out-of-scope, non-monotonic, expired, malformed-chain, wallet-invalid, and revoked cases were rejected.
+
+The evidence supports functional correctness for the evaluated prototype, not a general claim of security or efficiency. Future work should validate the design in hospital-integrated and inter-facility workflows, add emergency/break-glass scenarios, map segments to SATUSEHAT/FHIR representations, and evaluate performance, availability, scalability, and security more extensively.
+ 
+\printbibliography[title={References}]
+
+\end{document}

@@ -15,6 +15,7 @@
 \input{config/ta/if-itb-thesis.sty}
 \input{config/hypenation-id.tex}
 \input{config/hypenation-en.tex}
+\usepackage{pdfpages}
 
 \makeatletter
 
@@ -24,22 +25,26 @@
 
 \begin{document}
 
-\title{Pengembangan Kontrol Akses Granular dan Delegasi Akses Antartenaga Kesehatan pada Sistem Rekam Medis Elektronik DecMed Menggunakan Macaroons}
+\title{Pengembangan Kontrol Akses Granular dan Delegasi Akses Antartenaga Kesehatan pada Sistem RME DecMed Menggunakan Macaroons}
 \date{}
 \author{
 	Tazkia Nizami \\
 	NIM: 13522032
 }
-\newcommand\tanggalpengesahan{2 Juli 2026}
+\newcommand\tanggalpengesahan{19 Juli 2026}
 
 \pagenumbering{gobble}
 
 \input{chapters/ta/cover}
 \input{chapters/ta/approval-1}
+% \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{../a.pdf}
 
 \pagestyle{plain}
 
 \input{chapters/ta/abstract-id}
+\begingroup
+\renewcommand{\thetitle}{Granular Access Control and Access Delegation Among Healthcare Professionals in the DecMed EMR System Using Macaroons}
 \input{chapters/ta/abstract-en}
+\endgroup
 
 \end{document}
